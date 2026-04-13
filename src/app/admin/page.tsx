@@ -32,7 +32,7 @@ export default async function AdminPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Admin Overview</h1>
+        <h1 className="font-black text-3xl text-slate-900">Admin Overview</h1>
         <p className="text-slate-500 text-sm mt-1">Platform health at a glance.</p>
       </div>
 

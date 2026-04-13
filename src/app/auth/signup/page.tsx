@@ -38,7 +38,7 @@ export default function SignupPage() {
           <div className="w-14 h-14 rounded-full bg-emerald-100 flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-7 h-7 text-emerald-600" />
           </div>
-          <h2 className="font-display text-2xl text-slate-900 mb-2">Check your email</h2>
+          <h2 className="font-black text-2xl text-slate-900 mb-2">Check your email</h2>
           <p className="text-slate-500 text-sm mb-6">
             We sent a confirmation link to <strong className="text-slate-700">{email}</strong>. Click it to activate your account and start finding scholarships.
           </p>
@@ -54,7 +54,7 @@ export default function SignupPage() {
     <div className="w-full max-w-md">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-card p-8">
         <div className="mb-8">
-          <h1 className="font-display text-3xl text-slate-900 mb-1">Create your account</h1>
+          <h1 className="font-black text-3xl text-slate-900 mb-1">Create your account</h1>
           <p className="text-slate-500 text-sm">Free forever. Find scholarships matched to you.</p>
         </div>
 

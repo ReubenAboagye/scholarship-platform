@@ -29,7 +29,7 @@ export default async function DashboardPage() {
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Good day, {firstName} 👋</h1>
+        <h1 className="font-black text-3xl text-slate-900">Good day, {firstName} 👋</h1>
         <p className="text-slate-500 mt-1 text-sm">Here&apos;s your scholarship overview.</p>
       </div>
 
@@ -75,7 +75,7 @@ export default async function DashboardPage() {
             <Sparkles className="w-5 h-5 text-blue-200" />
             <span className="text-blue-200 text-sm font-medium">AI Matching</span>
           </div>
-          <h2 className="font-display text-2xl mb-1">Find your best matches</h2>
+          <h2 className="font-black text-2xl mb-1">Find your best matches</h2>
           <p className="text-blue-200 text-sm mb-4 max-w-sm">
             {profileComplete
               ? "Your profile is complete. Run AI matching to see which scholarships fit you best."

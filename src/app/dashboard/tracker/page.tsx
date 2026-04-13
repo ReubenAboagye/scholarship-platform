@@ -42,7 +42,7 @@ export default function TrackerPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Application Tracker</h1>
+        <h1 className="font-black text-3xl text-slate-900">Application Tracker</h1>
         <p className="text-slate-500 text-sm mt-1">Track the status of your scholarship applications.</p>
       </div>
 

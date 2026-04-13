@@ -45,7 +45,7 @@ export default async function AdminAnalyticsPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Analytics</h1>
+        <h1 className="font-black text-3xl text-slate-900">Analytics</h1>
         <p className="text-slate-500 text-sm mt-1">Platform usage overview.</p>
       </div>
 

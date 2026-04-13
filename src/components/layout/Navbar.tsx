@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X, GraduationCap } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
   { href: "/scholarships", label: "Browse Scholarships" },
   { href: "/#how-it-works", label: "How It Works" },
-  { href: "/#countries", label: "Countries" },
+  { href: "/#countries",    label: "Destinations" },
 ];
 
 export default function Navbar() {
@@ -17,30 +17,27 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
+
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center shadow-brand group-hover:bg-brand-700 transition-colors">
-              <GraduationCap className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-display text-lg text-slate-900 leading-none">
-              Scholar<span className="text-brand-600">Match</span>
-            </span>
+          <Link href="/" className="flex items-center gap-1.5">
+            <span className="text-2xl font-black tracking-tight text-slate-900">Scholar</span>
+            <span className="text-2xl font-black tracking-tight text-blue-600">Match</span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-6">
             {navLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 className={cn(
-                  "px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  "text-sm font-medium transition-colors",
                   pathname === l.href
-                    ? "text-brand-600 bg-brand-50"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "text-blue-600"
+                    : "text-slate-600 hover:text-slate-900"
                 )}
               >
                 {l.label}
@@ -48,25 +45,25 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* CTA buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* CTA */}
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/auth/login"
-              className="px-4 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 transition-colors"
+              className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
             >
-              Sign In
+              Student Log In
             </Link>
             <Link
               href="/auth/signup"
-              className="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-lg transition-colors shadow-sm"
+              className="px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
             >
-              Get Started Free
+              Student Sign Up
             </Link>
           </div>
 
-          {/* Mobile hamburger */}
+          {/* Mobile */}
           <button
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+            className="md:hidden p-2 text-slate-600"
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
@@ -75,34 +72,21 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-3 space-y-1 animate-fade-in">
+        <div className="md:hidden border-t border-slate-100 bg-white px-4 py-3 space-y-1">
           {navLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50"
+              className="block py-2 text-sm font-medium text-slate-700"
             >
               {l.label}
             </Link>
           ))}
-          <div className="pt-2 flex flex-col gap-2">
-            <Link
-              href="/auth/login"
-              onClick={() => setOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-center border border-slate-200 rounded-lg text-slate-700"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/auth/signup"
-              onClick={() => setOpen(false)}
-              className="block px-3 py-2 text-sm font-medium text-center bg-brand-600 rounded-lg text-white"
-            >
-              Get Started Free
-            </Link>
+          <div className="pt-3 flex flex-col gap-2 border-t border-slate-100 mt-2">
+            <Link href="/auth/login"  onClick={() => setOpen(false)} className="block py-2 text-sm font-medium text-center text-slate-700">Student Log In</Link>
+            <Link href="/auth/signup" onClick={() => setOpen(false)} className="block py-2 text-sm font-bold text-center bg-blue-600 text-white rounded-lg">Student Sign Up</Link>
           </div>
         </div>
       )}

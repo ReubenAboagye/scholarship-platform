@@ -43,7 +43,7 @@ export default function DashboardSidebar({ profile }: Props) {
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center flex-shrink-0">
               <GraduationCap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-display text-base text-slate-900">
+            <span className="font-black text-base text-slate-900">
               Scholar<span className="text-blue-600">Match</span>
             </span>
           </Link>

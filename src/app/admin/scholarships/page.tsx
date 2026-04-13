@@ -46,7 +46,7 @@ export default function AdminScholarshipsPage() {
     <div className="max-w-6xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl text-slate-900">Scholarships</h1>
+          <h1 className="font-black text-3xl text-slate-900">Scholarships</h1>
           <p className="text-slate-500 text-sm mt-1">{scholarships.length} total scholarships</p>
         </div>
         <button

@@ -36,7 +36,7 @@ export default function AdminSidebar({ profile }: Props) {
           <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
             <GraduationCap className="w-4 h-4 text-white" />
           </div>
-          <span className="font-display text-base text-white">
+          <span className="font-black text-base text-white">
             Scholar<span className="text-blue-400">Match</span>
           </span>
         </Link>

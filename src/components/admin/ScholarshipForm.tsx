@@ -85,7 +85,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="font-display text-3xl text-slate-900">{initial ? "Edit Scholarship" : "Add Scholarship"}</h1>
+          <h1 className="font-black text-3xl text-slate-900">{initial ? "Edit Scholarship" : "Add Scholarship"}</h1>
           <p className="text-slate-500 text-sm mt-0.5">{initial ? "Update scholarship details." : "Add a new scholarship to the platform."}</p>
         </div>
       </div>

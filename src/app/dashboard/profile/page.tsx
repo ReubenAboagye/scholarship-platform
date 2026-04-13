@@ -69,7 +69,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Your Profile</h1>
+        <h1 className="font-black text-3xl text-slate-900">Your Profile</h1>
         <p className="text-slate-500 text-sm mt-1">Complete your profile to improve AI scholarship matching accuracy.</p>
       </div>
 

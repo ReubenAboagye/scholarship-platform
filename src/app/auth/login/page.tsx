@@ -36,7 +36,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-card p-8">
         {/* Heading */}
         <div className="mb-8">
-          <h1 className="font-display text-3xl text-slate-900 mb-1">Welcome back</h1>
+          <h1 className="font-black text-3xl text-slate-900 mb-1">Welcome back</h1>
           <p className="text-slate-500 text-sm">Sign in to access your scholarship matches.</p>
         </div>
 

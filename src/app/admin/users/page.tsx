@@ -11,7 +11,7 @@ export default async function AdminUsersPage() {
   return (
     <div className="max-w-5xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Users</h1>
+        <h1 className="font-black text-3xl text-slate-900">Users</h1>
         <p className="text-slate-500 text-sm mt-1">{users?.length ?? 0} registered users</p>
       </div>
 

@@ -56,7 +56,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-display text-4xl text-slate-900 mb-2">Browse Scholarships</h1>
+          <h1 className="font-black text-4xl text-slate-900 mb-2">Browse Scholarships</h1>
           <p className="text-slate-500">
             {scholarships?.length ?? 0} scholarships across the UK, USA, Germany, and Canada.
           </p>

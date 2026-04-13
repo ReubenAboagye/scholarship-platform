@@ -12,7 +12,7 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-brand-600 flex items-center justify-center">
                 <GraduationCap className="w-4 h-4 text-white" />
               </div>
-              <span className="font-display text-lg text-white">
+              <span className="font-black text-lg text-white">
                 Scholar<span className="text-brand-400">Match</span>
               </span>
             </Link>

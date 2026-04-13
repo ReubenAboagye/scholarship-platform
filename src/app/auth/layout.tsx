@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
               <GraduationCap className="w-4 h-4 text-white" />
             </div>
-            <span className="font-display text-lg text-slate-900">
+            <span className="font-black text-lg text-slate-900">
               Scholar<span className="text-blue-600">Match</span>
             </span>
           </Link>

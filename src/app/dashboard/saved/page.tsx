@@ -20,7 +20,7 @@ export default async function SavedPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-slate-900">Saved Scholarships</h1>
+        <h1 className="font-black text-3xl text-slate-900">Saved Scholarships</h1>
         <p className="text-slate-500 text-sm mt-1">
           {saved.length} scholarship{saved.length !== 1 ? "s" : ""} saved
         </p>
