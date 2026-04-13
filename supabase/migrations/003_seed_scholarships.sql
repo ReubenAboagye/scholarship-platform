@@ -1,0 +1,172 @@
+-- ============================================================
+-- 003_seed_scholarships.sql
+-- 20 curated scholarships: UK(5) USA(5) Germany(5) Canada(5)
+-- NOTE: After seeding, run the embedding generation script
+--       in /scripts/generate-embeddings.ts to populate vectors
+-- ============================================================
+
+INSERT INTO scholarships (name, provider, country, degree_levels, fields_of_study, funding_type, funding_amount, description, eligibility_criteria, application_deadline, application_url, is_active) VALUES
+
+-- ── UNITED KINGDOM ──────────────────────────────────────────
+('Chevening Scholarship',
+ 'UK Foreign, Commonwealth & Development Office', 'UK',
+ ARRAY['Masters'], ARRAY['Any'], 'Full',
+ 'Full tuition + £1,173/month stipend + return flights',
+ 'The UK government''s global scholarship programme, offering future leaders the opportunity to study at a UK university. Chevening Scholars are selected for their leadership potential and academic excellence.',
+ ARRAY['Minimum 2 years work experience','Bachelor''s degree (upper second or above)','Agree to return to home country for at least 2 years post-study','Not currently studying in the UK'],
+ '2024-11-05', 'https://www.chevening.org/scholarships/', TRUE),
+
+('Commonwealth Scholarship',
+ 'Commonwealth Scholarship Commission', 'UK',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ 'Full tuition + living allowance + return flights',
+ 'For citizens of Commonwealth countries to study in the UK. Supports talented individuals from developing Commonwealth countries to access UK higher education.',
+ ARRAY['Commonwealth citizen','First-class or upper-second undergraduate degree','Cannot be ordinarily resident in UK','Under 35 years old for some categories'],
+ '2024-12-11', 'https://cscuk.fcdo.gov.uk/scholarships/', TRUE),
+
+('Gates Cambridge Scholarship',
+ 'Bill & Melinda Gates Foundation / University of Cambridge', 'UK',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ 'Full tuition + £21,000/year maintenance + travel',
+ 'Awarded to outstanding applicants from outside the UK to pursue a full-time postgraduate degree at Cambridge. Scholars are selected for intellectual ability, leadership, and commitment to improving lives.',
+ ARRAY['Non-UK citizen','Apply to a Cambridge postgraduate programme','Exceptional academic record','Demonstrated leadership qualities'],
+ '2024-12-04', 'https://www.gatescambridge.org/', TRUE),
+
+('Rhodes Scholarship',
+ 'Rhodes Trust / University of Oxford', 'UK',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ 'Full tuition + £20,000/year stipend',
+ 'The oldest and most celebrated international scholarship in the world. Rhodes Scholars are chosen based on academic excellence, character, leadership, and commitment to service.',
+ ARRAY['Age 18–28','Bachelor''s degree','Strong leadership and community service record','Commitment to service'],
+ '2024-10-01', 'https://www.rhodeshouse.ox.ac.uk/scholarships/', TRUE),
+
+('GREAT Scholarship',
+ 'British Council / GREAT Britain Campaign', 'UK',
+ ARRAY['Masters'], ARRAY['Any'], 'Partial',
+ 'Minimum £10,000 towards tuition fees',
+ 'Offered in partnership with UK universities for students from selected countries. Gives ambitious students the opportunity to pursue a postgraduate degree in the UK.',
+ ARRAY['Citizen of an eligible country','Apply to a participating UK university','Meet university entry requirements'],
+ '2025-04-30', 'https://study-uk.britishcouncil.org/scholarships-funding/great-scholarships', TRUE),
+
+-- ── UNITED STATES ───────────────────────────────────────────
+('Fulbright Foreign Student Program',
+ 'U.S. Department of State', 'USA',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ 'Full tuition + living stipend + return flights + health insurance',
+ 'The flagship international educational exchange program of the U.S. government. Provides funding for students to pursue graduate study in the United States across all fields.',
+ ARRAY['Non-US citizen','Bachelor''s degree','Strong English proficiency','Apply through home country Fulbright Commission'],
+ '2024-10-15', 'https://foreign.fulbrightonline.org/', TRUE),
+
+('Hubert H. Humphrey Fellowship',
+ 'U.S. Department of State', 'USA',
+ ARRAY['Any'], ARRAY['Public Policy','Public Health','Education','Agriculture','Economic Development'], 'Full',
+ 'Full tuition + living expenses + professional development funding',
+ 'A non-degree program for accomplished mid-career professionals from designated countries for 10 months of academic study and professional development in the United States.',
+ ARRAY['Mid-career professional (5+ years experience)','Demonstrated leadership potential','Strong English proficiency','Non-US citizen from eligible country'],
+ '2025-03-01', 'https://www.humphreyfellowship.org/', TRUE),
+
+('Mastercard Foundation Scholars Program',
+ 'Mastercard Foundation', 'USA',
+ ARRAY['Undergraduate','Masters'], ARRAY['Any'], 'Full',
+ 'Full tuition + living stipend + mentorship + career support',
+ 'Enables academically talented young Africans from limited economic backgrounds to access quality higher education. Partners with leading universities across the USA, Canada, and Africa.',
+ ARRAY['African citizen','Demonstrated financial need','Strong academic record','Leadership qualities and community service commitment'],
+ '2025-01-31', 'https://mastercardfdn.org/all/scholars/', TRUE),
+
+('Joint Japan/World Bank Graduate Scholarship',
+ 'World Bank / Government of Japan', 'USA',
+ ARRAY['Masters'], ARRAY['Development Economics','Public Policy','Agriculture','Environment','Public Health'], 'Full',
+ 'Full tuition + living expenses + return travel',
+ 'For mid-career professionals from developing World Bank member countries pursuing development-related graduate studies. Aims to build capacity in developing nations.',
+ ARRAY['Citizen of World Bank developing member country','Age under 45','Minimum 3 years relevant development experience','Admission to an approved university program'],
+ '2025-04-10', 'https://www.worldbank.org/en/programs/scholarships', TRUE),
+
+('Aga Khan Foundation International Scholarship',
+ 'Aga Khan Foundation', 'USA',
+ ARRAY['Masters'], ARRAY['Any'], 'Full',
+ 'Combination of grant and loan covering all study costs',
+ 'Provides a limited number of scholarships each year to outstanding students from developing countries who have no other means of financing their postgraduate studies.',
+ ARRAY['Citizen of a developing country','Excellent bachelor''s degree results','Admission to a recognised university','Demonstrated financial need'],
+ '2025-03-31', 'https://www.akdn.org/our-agencies/aga-khan-foundation/social-development/education/scholarships', TRUE),
+
+-- ── GERMANY ─────────────────────────────────────────────────
+('DAAD Scholarship',
+ 'German Academic Exchange Service (DAAD)', 'Germany',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ '€934/month (Masters) or €1,200/month (PhD) + health insurance + travel',
+ 'DAAD is one of the world''s largest scholarship organisations, offering a wide range of scholarships for international students to study or conduct research in Germany.',
+ ARRAY['Bachelor''s degree','Minimum 2 years work experience (for some programs)','Strong academic record','Language proficiency (German or English depending on program)'],
+ '2024-11-15', 'https://www.daad.de/en/study-and-research-in-germany/scholarships/', TRUE),
+
+('Heinrich Böll Foundation Scholarship',
+ 'Heinrich Böll Foundation', 'Germany',
+ ARRAY['Undergraduate','Masters','PhD'], ARRAY['Any'], 'Full',
+ '€850/month (undergraduate) or €1,200/month (postgraduate)',
+ 'Affiliated with the German Green Party. Awards scholarships to politically engaged students committed to green values, social justice, and democratic principles.',
+ ARRAY['Enrolled in a German university','Above-average academic achievement','Social and political engagement','Commitment to environmental and democratic values'],
+ '2025-03-01', 'https://www.boell.de/en/foundation/scholarship-programme', TRUE),
+
+('Konrad-Adenauer-Stiftung Scholarship',
+ 'Konrad-Adenauer-Stiftung', 'Germany',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Full',
+ '€1,200/month + academic support and events',
+ 'For gifted international students studying in Germany who demonstrate a commitment to Christian-democratic values. One of Germany''s leading political foundations supporting academic excellence.',
+ ARRAY['Non-German citizen studying in Germany','Strong academic record','Social and political engagement','Christian-democratic values'],
+ '2025-01-15', 'https://www.kas.de/en/web/begabtenfoerderung-und-kultur/stipendien', TRUE),
+
+('Friedrich Ebert Foundation Scholarship',
+ 'Friedrich-Ebert-Stiftung', 'Germany',
+ ARRAY['Undergraduate','Masters','PhD'], ARRAY['Any'], 'Full',
+ '€850/month (undergraduate) or €1,200/month (postgraduate)',
+ 'Affiliated with the Social Democratic Party of Germany. Supports students committed to social democratic values, social justice, and democratic civic engagement.',
+ ARRAY['Enrolled in a German higher education institution','Strong academic performance','Social and political commitment','Social democratic values'],
+ '2025-04-15', 'https://www.fes.de/en/foundation/associations-of-the-fes/scholarship-holders/', TRUE),
+
+('Deutschlandstipendium',
+ 'Federal Ministry of Education and Research', 'Germany',
+ ARRAY['Undergraduate','Masters'], ARRAY['Any'], 'Partial',
+ '€300/month',
+ 'A national scholarship program funding high-achieving students at German universities. Half funded by the government, half by private sponsors. Open to both domestic and international students.',
+ ARRAY['Enrolled at a German higher education institution','Strong academic performance','Social engagement and voluntary work','Apply through your university'],
+ NULL, 'https://www.deutschlandstipendium.de/en/', TRUE),
+
+-- ── CANADA ──────────────────────────────────────────────────
+('Vanier Canada Graduate Scholarship',
+ 'Government of Canada', 'Canada',
+ ARRAY['PhD'], ARRAY['Health Sciences','Natural Sciences','Engineering','Social Sciences','Humanities'], 'Full',
+ 'CAD $50,000/year for up to 3 years',
+ 'Attracts and retains world-class doctoral students by supporting those who demonstrate leadership skills and high scholarly achievement in graduate studies at Canadian universities.',
+ ARRAY['Nominated by a Canadian university','Enrolled in a doctoral program at a Canadian institution','Demonstrated leadership qualities','Academic excellence (GPA 3.5+ equivalent)'],
+ '2024-11-01', 'https://vanier.gc.ca/en/home-accueil.html', TRUE),
+
+('Trudeau Foundation Scholarship',
+ 'Pierre Elliott Trudeau Foundation', 'Canada',
+ ARRAY['PhD'], ARRAY['Social Sciences','Humanities','Law','Human Rights','Public Policy'], 'Full',
+ 'CAD $40,000/year for up to 4 years + travel grants + mentorship',
+ 'Canada''s most prestigious doctoral scholarship. Awarded to exceptional PhD candidates committed to engaged citizenship and social justice whose research addresses critical social issues.',
+ ARRAY['Doctoral student at a Canadian university','Exceptional academic achievement','Commitment to social justice and public engagement','Research addressing critical social issues'],
+ '2024-12-01', 'https://www.trudeaufoundation.ca/programs/phd-scholarships', TRUE),
+
+('Ontario Trillium Scholarship',
+ 'Government of Ontario', 'Canada',
+ ARRAY['PhD'], ARRAY['Any'], 'Full',
+ 'CAD $40,000/year for up to 4 years',
+ 'Attracts top international doctoral students to study in Ontario. Offered at Ontario universities to help the province attract world-class doctoral talent from outside Canada.',
+ ARRAY['International student (non-Canadian citizen)','PhD program at an Ontario university','Exceptional academic record and research potential'],
+ '2025-01-31', 'https://www.ontario.ca/page/ontario-trillium-scholarship', TRUE),
+
+('University of British Columbia Graduate Award',
+ 'University of British Columbia', 'Canada',
+ ARRAY['Masters','PhD'], ARRAY['Any'], 'Partial',
+ 'CAD $18,200/year',
+ 'UBC offers a range of entrance scholarships and fellowship awards to outstanding graduate students. Merit-based and available to both domestic and international students across all faculties.',
+ ARRAY['Admitted to a UBC graduate program','Strong academic record (GPA 3.5+ equivalent)','Demonstrated research potential'],
+ '2025-01-15', 'https://www.grad.ubc.ca/scholarships-awards-funding', TRUE),
+
+('Lester B. Pearson International Scholarship',
+ 'University of Toronto', 'Canada',
+ ARRAY['Undergraduate'], ARRAY['Any'], 'Full',
+ 'Full tuition + books + incidental fees + living expenses for 4 years',
+ 'Recognises international students who demonstrate exceptional academic achievement, creativity, and leadership. One of the most prestigious undergraduate awards available in Canada.',
+ ARRAY['International student','Nominated by your secondary school','Exceptional academic achievement','Leadership qualities and creativity','Entering first year undergraduate at U of T'],
+ '2025-01-15', 'https://future.utoronto.ca/finances/awards/lester-b-pearson-international-scholarship/', TRUE);
