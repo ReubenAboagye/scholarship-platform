@@ -70,6 +70,63 @@
   .animate-fade-in {
     animation: fadeIn 0.35s ease both;
   }
+
+  /* Premium Hamburger Morph Animation */
+  .hamburger-line {
+    width: 20px;
+    height: 2px;
+    background-color: currentColor;
+    border-radius: 99px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+  }
+
+  .hamburger-open .line-1 {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .hamburger-open .line-2 {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  .hamburger-open .line-3 {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  /* Staggered Item Entrance (Top-Down) */
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-stagger-in {
+    animation: slideInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Mobile Menu Reveal */
+  .mobile-menu-container {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  .mobile-menu-container.is-open {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  .mobile-menu-inner {
+    min-height: 0;
+  }
 }
 
 @keyframes shimmer {

@@ -112,41 +112,53 @@ export default function Navbar() {
             <a href="/auth/signup" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm font-bold text-white transition-colors">Sign Up Free</a>
           </div>
 
-          <button className="p-2 text-slate-600 hover:bg-slate-100 transition-colors md:hidden"
+          <button className={`flex flex-col items-center justify-center w-10 h-10 gap-1.5 text-slate-600 hover:bg-slate-100 transition-colors md:hidden ${mobileOpen ? "hamburger-open" : ""}`}
             onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            <span className="hamburger-line line-1" />
+            <span className="hamburger-line line-2" />
+            <span className="hamburger-line line-3" />
           </button>
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className="border-t border-slate-200 bg-white md:hidden">
+      <div className={`mobile-menu-container border-t border-slate-200 bg-white md:hidden ${mobileOpen ? "is-open" : ""}`}>
+        <div className="mobile-menu-inner">
           <div className="px-4 py-3 space-y-1">
-            <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400">Students</p>
-            {studentsMenu.map((item) => (
-              <a key={item.title} href={item.href} className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors">
+            <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" style={{ animationDelay: '0.05s' }}>Students</p>
+            {studentsMenu.map((item, idx) => (
+              <a key={item.title} href={item.href} 
+                className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors animate-stagger-in"
+                style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
                 <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-blue-50">
                   <item.icon className="h-3.5 w-3.5 text-blue-600" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
             ))}
-            <p className="px-2 py-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Company</p>
-            {companyMenu.map((item) => (
-              <a key={item.title} href={item.href} className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors">
+            
+            <p className="px-2 py-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" 
+              style={{ animationDelay: `${(studentsMenu.length + 2) * 0.05}s` }}>
+              Company
+            </p>
+            {companyMenu.map((item, idx) => (
+              <a key={item.title} href={item.href} 
+                className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors animate-stagger-in"
+                style={{ animationDelay: `${(studentsMenu.length + idx + 3) * 0.05}s` }}>
                 <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-slate-100">
                   <item.icon className="h-3.5 w-3.5 text-slate-500" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
             ))}
-            <div className="pt-3 border-t border-slate-200 space-y-2">
+            
+            <div className="pt-3 border-t border-slate-200 space-y-2 animate-stagger-in"
+              style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
               <a href="/auth/login" className="block border border-slate-200 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
               <a href="/auth/signup" className="block bg-blue-600 hover:bg-blue-700 py-2.5 text-center text-sm font-bold text-white transition-colors">Sign Up Free</a>
             </div>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
