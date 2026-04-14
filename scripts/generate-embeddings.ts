@@ -1,19 +1,12 @@
 /**
  * generate-embeddings.ts
  * ============================================================
- * Run ONCE after seeding the scholarships table to generate
- * OpenAI embeddings and store them in Supabase pgvector.
- *
- * NOTE: Uses OpenAI directly for embeddings.
- *       OpenRouter does NOT support the embeddings endpoint.
+ * Generates embeddings for all scholarships using OpenRouter.
+ * Uses openai/text-embedding-3-small via OpenRouter — same
+ * 1,536-dimension vectors, no separate OpenAI key needed.
  *
  * Usage:
  *   pnpm tsx scripts/generate-embeddings.ts
- *
- * Required env vars in .env.local:
- *   NEXT_PUBLIC_SUPABASE_URL
- *   SUPABASE_SERVICE_ROLE_KEY
- *   OPENAI_API_KEY
  * ============================================================
  */
 
@@ -28,11 +21,18 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-// Embeddings must use OpenAI directly — OpenRouter does not support this endpoint
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// Route embeddings through OpenRouter — no separate OpenAI billing needed
+const client = new OpenAI({
+  apiKey:  process.env.OPENROUTER_API_KEY!,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "http://localhost:3000",
+    "X-Title":      "ScholarMatch",
+  },
+});
 
-async function buildScholarshipText(s: any): Promise<string> {
-  const parts = [
+function buildScholarshipText(s: any): string {
+  return [
     `Scholarship name: ${s.name}`,
     `Provider: ${s.provider}`,
     `Country: ${s.country}`,
@@ -42,13 +42,12 @@ async function buildScholarshipText(s: any): Promise<string> {
     `Fields of study: ${s.fields_of_study?.join(", ")}`,
     `Description: ${s.description}`,
     `Eligibility: ${s.eligibility_criteria?.join(". ")}`,
-  ];
-  return parts.join("\n");
+  ].join("\n");
 }
 
 async function generateEmbedding(text: string): Promise<number[]> {
-  const response = await openai.embeddings.create({
-    model: "text-embedding-3-small",
+  const response = await client.embeddings.create({
+    model: "openai/text-embedding-3-small",
     input: text,
   });
   return response.data[0].embedding;
@@ -64,15 +63,16 @@ async function main() {
     .eq("is_active", true);
 
   if (error) { console.error("Fetch error:", error); process.exit(1); }
-  if (!scholarships || scholarships.length === 0) {
-    console.log("✅ All scholarships already have embeddings."); return;
+  if (!scholarships?.length) {
+    console.log("✅ All scholarships already have embeddings.");
+    return;
   }
 
   console.log(`📝 Generating embeddings for ${scholarships.length} scholarships...\n`);
 
   for (const scholarship of scholarships) {
     try {
-      const text      = await buildScholarshipText(scholarship);
+      const text      = buildScholarshipText(scholarship);
       const embedding = await generateEmbedding(text);
 
       const { error: updateError } = await supabase
@@ -86,8 +86,8 @@ async function main() {
         console.log(`✅ ${scholarship.name}`);
       }
 
-      // Respect rate limits
-      await new Promise((r) => setTimeout(r, 50));
+      // Small delay to stay within rate limits
+      await new Promise((r) => setTimeout(r, 100));
     } catch (err: any) {
       console.error(`❌ ${scholarship.name}: ${err.message}`);
     }

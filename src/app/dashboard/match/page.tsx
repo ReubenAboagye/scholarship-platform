@@ -28,7 +28,6 @@ interface MatchResponse {
 }
 
 export default function MatchPage() {
-  const supabase = createClient();
   const [status,      setStatus]      = useState<"idle" | "loading" | "done" | "error">("idle");
   const [data,        setData]        = useState<MatchResponse | null>(null);
   const [errorMsg,    setErrorMsg]    = useState("");
@@ -39,6 +38,7 @@ export default function MatchPage() {
   // Load profile + saved scholarships on mount
   useEffect(() => {
     async function load() {
+      const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -77,6 +77,7 @@ export default function MatchPage() {
   }
 
   async function toggleSave(scholarshipId: string) {
+    const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 

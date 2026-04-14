@@ -1,10 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { BookOpen, Users, ListChecks, Bookmark, TrendingUp } from "lucide-react";
 import { countryFlag, formatDeadline } from "@/lib/utils";
-import Link from "next/link";
-
 export default async function AdminPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [
     { count: totalUsers },
@@ -39,7 +37,7 @@ export default async function AdminPage() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map((s) => (
-          <Link key={s.label} href={s.href} className="bg-white border border-slate-100 rounded-2xl p-5 hover:shadow-card transition-all group">
+          <a key={s.label} href={s.href} className="bg-white border border-slate-100 rounded-2xl p-5 hover:shadow-card transition-all group">
             <div className="flex items-center justify-between mb-3">
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${s.color}`}>
                 <s.icon className="w-5 h-5" />
@@ -48,7 +46,7 @@ export default async function AdminPage() {
             </div>
             <p className="text-3xl font-bold text-slate-900">{s.value}</p>
             <p className="text-sm text-slate-500 mt-1">{s.label}</p>
-          </Link>
+          </a>
         ))}
       </div>
 
@@ -57,7 +55,7 @@ export default async function AdminPage() {
         <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-900">Recent Scholarships</h2>
-            <Link href="/admin/scholarships" className="text-xs text-blue-600 hover:underline">Manage →</Link>
+            <a href="/admin/scholarships" className="text-xs text-blue-600 hover:underline">Manage →</a>
           </div>
           <div className="divide-y divide-slate-100">
             {recentScholarships?.map((s: any) => (
@@ -81,7 +79,7 @@ export default async function AdminPage() {
         <div className="bg-white border border-slate-100 rounded-2xl overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
             <h2 className="font-semibold text-slate-900">Recent Users</h2>
-            <Link href="/admin/users" className="text-xs text-blue-600 hover:underline">View all →</Link>
+            <a href="/admin/users" className="text-xs text-blue-600 hover:underline">View all →</a>
           </div>
           <div className="divide-y divide-slate-100">
             {recentUsers?.map((u: any) => (

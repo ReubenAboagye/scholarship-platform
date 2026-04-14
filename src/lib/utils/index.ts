@@ -24,6 +24,17 @@ export function timeAgo(dateStr: string): string {
   return formatDistanceToNow(new Date(dateStr), { addSuffix: true });
 }
 
+// Maps country name → ISO 3166-1 alpha-2 code for flagcdn.com
+const COUNTRY_CODES: Record<string, string> = {
+  UK: 'gb', USA: 'us', Germany: 'de', Canada: 'ca',
+};
+
+export function countryFlagUrl(country: string): string | null {
+  const code = COUNTRY_CODES[country];
+  return code ? `https://flagcdn.com/w40/${code}.png` : null;
+}
+
+// Keep for backwards compat — returns emoji (works on Mac/mobile, not Windows)
 export function countryFlag(country: string): string {
   const flags: Record<string, string> = {
     UK: '🇬🇧', USA: '🇺🇸', Germany: '🇩🇪', Canada: '🇨🇦',

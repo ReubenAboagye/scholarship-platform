@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Users } from "lucide-react";
 
 export default async function AdminUsersPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { data: users } = await supabase
     .from("profiles")
     .select("*")

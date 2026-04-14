@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import { createAdminClient } from '@/lib/supabase/server';
 import type { MatchResult, UserProfile, Scholarship } from '@/types';
 
-// OpenRouter: used for chat/inference (cheap, model-flexible)
+// Single client for everything — OpenRouter handles both embeddings and chat
 function getOpenRouterClient() {
   return new OpenAI({
     apiKey:  process.env.OPENROUTER_API_KEY!,
@@ -14,22 +14,17 @@ function getOpenRouterClient() {
   });
 }
 
-// OpenAI: used for embeddings only (OpenRouter does not support this endpoint)
-function getOpenAIClient() {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
-}
-
-// ── Embeddings (OpenAI — required for pgvector) ──────────────
+// ── Embeddings via OpenRouter ─────────────────────────────
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const openai   = getOpenAIClient();
-  const response = await openai.embeddings.create({
-    model: 'text-embedding-3-small',
+  const client   = getOpenRouterClient();
+  const response = await client.embeddings.create({
+    model: 'openai/text-embedding-3-small',
     input: text,
   });
   return response.data[0].embedding;
 }
 
-// ── Profile text builder ─────────────────────────────────────
+// ── Profile text builder ──────────────────────────────────
 export function buildProfileText(profile: Partial<UserProfile>): string {
   const parts = [
     profile.field_of_study    && `Field of study: ${profile.field_of_study}`,
@@ -41,7 +36,7 @@ export function buildProfileText(profile: Partial<UserProfile>): string {
   return parts.join('. ') || 'General student seeking scholarships';
 }
 
-// ── Vector similarity search via Supabase pgvector ───────────
+// ── Vector similarity search ──────────────────────────────
 export async function matchScholarships(
   profile: Partial<UserProfile>,
   limit = 10
@@ -52,7 +47,7 @@ export async function matchScholarships(
 
   const { data, error } = await supabase.rpc('match_scholarships', {
     query_embedding: embedding,
-    match_threshold: 0.5,
+    match_threshold: 0.3,
     match_count:     limit,
   });
 
@@ -77,7 +72,7 @@ function generateMatchReasons(scholarship: any, profile: Partial<UserProfile>): 
   return reasons.length > 0 ? reasons : ['Strong profile match based on academic background'];
 }
 
-// ── AI explanation via OpenRouter ────────────────────────────
+// ── AI explanation via OpenRouter chat ────────────────────
 export async function generateMatchExplanation(
   scholarships: Scholarship[],
   profile: Partial<UserProfile>

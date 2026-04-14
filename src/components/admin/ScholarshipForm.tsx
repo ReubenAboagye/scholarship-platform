@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Loader2, Save, ArrowLeft } from "lucide-react";
 
 const COUNTRIES   = ["UK", "USA", "Germany", "Canada"];
@@ -15,7 +14,6 @@ interface Props {
 }
 
 export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
-  const supabase = createClient();
   const [saving, setSaving] = useState(false);
   const [error,  setError]  = useState<string | null>(null);
 
@@ -64,12 +62,22 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
       is_active:             true,
     };
 
-    if (initial?.id) {
-      const { error } = await supabase.from("scholarships").update(payload).eq("id", initial.id);
-      if (error) { setError(error.message); setSaving(false); return; }
-    } else {
-      const { error } = await supabase.from("scholarships").insert(payload);
-      if (error) { setError(error.message); setSaving(false); return; }
+    const endpoint = initial?.id
+      ? `/api/scholarships/${initial.id}`
+      : "/api/scholarships";
+    const method = initial?.id ? "PATCH" : "POST";
+
+    const response = await fetch(endpoint, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json().catch(() => null);
+    if (!response.ok) {
+      setError(result?.error || "Unable to save scholarship.");
+      setSaving(false);
+      return;
     }
 
     setSaving(false);

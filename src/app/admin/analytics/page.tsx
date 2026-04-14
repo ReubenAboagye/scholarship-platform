@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { BarChart3, Users, BookOpen, ListChecks, Bookmark } from "lucide-react";
 
 export default async function AdminAnalyticsPage() {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const [
     { count: totalUsers },

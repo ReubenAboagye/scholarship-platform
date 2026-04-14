@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { requireAdminJson } from "@/lib/auth/admin";
+import { scholarshipCreateSchema } from "@/lib/validation/scholarship";
 
 export async function GET(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
   const { searchParams } = request.nextUrl;
 
   const country      = searchParams.get("country");
@@ -30,18 +32,26 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
-  // Admin-only: check role
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { data: profile } = await supabase
-    .from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  const adminCheck = await requireAdminJson(supabase);
+  if (!adminCheck.ok) return adminCheck.response;
 
   const body = await request.json();
-  const { data, error } = await supabase.from("scholarships").insert(body).select().single();
+  const parsed = scholarshipCreateSchema.safeParse(body);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: "Invalid scholarship payload", issues: parsed.error.flatten() },
+      { status: 400 }
+    );
+  }
+
+  const { data, error } = await supabase
+    .from("scholarships")
+    .insert(parsed.data)
+    .select()
+    .single();
+
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ data }, { status: 201 });
 }

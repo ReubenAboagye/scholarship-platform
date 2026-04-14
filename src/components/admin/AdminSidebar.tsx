@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { GraduationCap, LayoutDashboard, BookOpen, Users, BarChart3, LogOut, Shield } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -19,13 +19,11 @@ interface Props {
 
 export default function AdminSidebar({ profile }: Props) {
   const pathname = usePathname();
-  const router   = useRouter();
 
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
-    router.push("/");
-    router.refresh();
+    window.location.href = "/";
   }
 
   return (
