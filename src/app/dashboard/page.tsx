@@ -22,8 +22,8 @@ export default async function DashboardPage() {
   const firstName = profile?.full_name?.split(" ")[0] || "there";
 
   const statCards = [
-    { label: "Saved Scholarships",   value: saved?.length ?? 0,   icon: Bookmark,   href: "/dashboard/saved",   color: "bg-blue-50 text-blue-600" },
-    { label: "Applications Tracked", value: tracked?.length ?? 0, icon: ListChecks, href: "/dashboard/tracker", color: "bg-violet-50 text-violet-600" },
+    { label: "Saved Scholarships",   value: saved?.length ?? 0,   icon: Bookmark,   href: "/dashboard/saved",   color: "bg-brand-50 text-brand-700" },
+    { label: "Applications Tracked", value: tracked?.length ?? 0, icon: ListChecks, href: "/dashboard/tracker", color: "bg-indigo-50 text-indigo-700" },
   ];
 
   return (
@@ -112,8 +112,8 @@ export default async function DashboardPage() {
                   </div>
                 </div>
               </div>
-              <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${
-                s.funding_type === "Full" ? "bg-emerald-100 text-emerald-700" : "bg-brand-50 text-brand-600"
+              <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${
+                s.funding_type === "Full" ? "bg-emerald-50 text-emerald-700 border-emerald-100" : "bg-brand-50 text-brand-700 border-brand-100"
               }`}>{s.funding_type}</span>
             </Link>
           ))}

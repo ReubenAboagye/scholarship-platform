@@ -58,11 +58,11 @@ export default function Navbar() {
                     {studentsMenu.map((item) => (
                       <a key={item.title} href={item.href} onClick={() => setStudentsOpen(false)}
                         className="flex items-start gap-3 bg-white p-4 hover:bg-slate-50 transition-colors group">
-                        <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 group-hover:bg-brand-100 transition-colors">
+                        <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 transition-colors">
                           <item.icon className="h-4.5 w-4.5 text-brand-600" />
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{item.title}</p>
+                          <p className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">{item.title}</p>
                           <p className="mt-0.5 text-xs text-slate-500">{item.desc}</p>
                         </div>
                       </a>
@@ -94,7 +94,7 @@ export default function Navbar() {
                         <item.icon className="h-4 w-4 text-slate-500 group-hover:text-brand-600 transition-colors" />
                       </div>
                       <div>
-                        <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{item.title}</p>
+                        <p className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">{item.title}</p>
                         <p className="mt-0.5 text-xs text-slate-500">{item.desc}</p>
                       </div>
                     </a>
@@ -132,7 +132,7 @@ export default function Navbar() {
               <a key={item.title} href={item.href} 
                 className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
-                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-brand-50">
                   <item.icon className="h-4 w-4 text-brand-600" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>

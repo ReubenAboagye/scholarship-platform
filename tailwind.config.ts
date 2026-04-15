@@ -13,16 +13,16 @@ const config: Config = {
       },
       colors: {
         brand: {
-          50:  '#f0f7ff',
-          100: '#e0efff',
-          200: '#baddff',
-          300: '#7ec2ff',
-          400: '#389ef8',
-          500: '#0f7fe4',
-          600: '#0362c2',
-          700: '#044d9d',
-          800: '#084180',
-          900: '#0d366b',
+          50:  '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#8b5cf6',
+          600: '#4f46e5', // Primary Indigo
+          700: '#4338ca', // Hover Indigo
+          800: '#3730a3',
+          900: '#312e81', // Deep Indigo
         },
       },
       borderRadius: {

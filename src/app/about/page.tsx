@@ -17,7 +17,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="bg-[#e8f5f0] py-8 lg:py-10">
+      <section className="bg-slate-50 py-8 lg:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -87,7 +87,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-10 bg-slate-50">
+      <section className="py-10 bg-slate-50 border-y border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-xl mb-10">
             <h2 className="text-3xl font-black text-slate-900 mb-2">What we stand for</h2>
@@ -135,11 +135,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="py-10 bg-blue-600">
+      <section className="py-10 bg-brand-900">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-black text-white mb-3">Ready to find your scholarship?</h2>
-          <p className="text-blue-200 mb-6">Create a free profile and get matched in under 2 minutes.</p>
-          <a href="/auth/signup" className="inline-flex items-center px-7 py-3.5 bg-white hover:bg-slate-50 text-blue-700 font-black rounded-lg transition-colors text-sm">
+          <p className="text-brand-100 mb-6">Create a free profile and get matched in under 2 minutes.</p>
+          <a href="/auth/signup" className="inline-flex items-center px-7 py-3.5 bg-white hover:bg-brand-50 text-brand-900 font-black rounded-lg transition-colors text-sm">
             Get Started Free →
           </a>
         </div>

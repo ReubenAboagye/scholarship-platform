@@ -196,7 +196,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="bg-white py-8 border-y border-slate-100 relative z-20"
+        className="bg-slate-50 py-8 border-y border-slate-100 relative z-20"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -243,7 +243,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-10 bg-white border-t border-slate-100"
+        className="py-10 bg-slate-50 border-t border-slate-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -353,7 +353,7 @@ export default function HomePage() {
 
       <motion.section
         id="how-it-works"
-        className="py-10 bg-white border-t border-slate-200"
+        className="py-10 bg-slate-50 border-t border-slate-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}

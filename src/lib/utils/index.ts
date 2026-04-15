@@ -55,12 +55,12 @@ export function matchScoreColor(score: number): string {
 
 export function statusColor(status: string): string {
   const map: Record<string, string> = {
-    'Interested':         'bg-slate-100 text-slate-700',
-    'In Progress':        'bg-blue-100 text-blue-700',
-    'Submitted':          'bg-violet-100 text-violet-700',
-    'Awaiting Decision':  'bg-amber-100 text-amber-700',
-    'Accepted':           'bg-emerald-100 text-emerald-700',
-    'Rejected':           'bg-red-100 text-red-700',
+    'Interested':         'bg-slate-50 text-slate-500 border-slate-100 border',
+    'In Progress':        'bg-brand-50 text-brand-700 border-brand-100 border',
+    'Submitted':          'bg-brand-100 text-brand-900 border-brand-200 border',
+    'Awaiting Decision':  'bg-amber-50 text-amber-700 border-amber-100 border',
+    'Accepted':           'bg-emerald-50 text-emerald-700 border-emerald-100 border',
+    'Rejected':           'bg-rose-50 text-rose-700 border-rose-100 border',
     'Withdrawn':          'bg-slate-100 text-slate-500',
   };
   return map[status] ?? 'bg-slate-100 text-slate-700';
@@ -68,10 +68,10 @@ export function statusColor(status: string): string {
 
 export function fundingBadgeColor(type: string): string {
   const map: Record<string, string> = {
-    'Full':             'bg-emerald-100 text-emerald-700',
-    'Partial':          'bg-blue-100 text-blue-700',
-    'Tuition Only':     'bg-violet-100 text-violet-700',
-    'Living Allowance': 'bg-amber-100 text-amber-700',
+    'Full':             'bg-emerald-50 text-emerald-700 border-emerald-100 border',
+    'Partial':          'bg-brand-50 text-brand-700 border-brand-100 border',
+    'Tuition Only':     'bg-indigo-50 text-indigo-700 border-indigo-100 border',
+    'Living Allowance': 'bg-amber-50 text-amber-700 border-amber-100 border',
   };
-  return map[type] ?? 'bg-slate-100 text-slate-600';
+  return map[type] ?? 'bg-slate-50 text-slate-600 border-slate-100 border';
 }
