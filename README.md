@@ -1,4 +1,4 @@
-# ScholarMatch — Local Setup
+# ScholarBridge AI — Local Setup
 
 ## Prerequisites
 
@@ -40,7 +40,7 @@ pnpm tsx scripts/generate-embeddings.ts
 ```bash
 pnpm dev
 ```
-Open http://localhost:3000
+Open `http://localhost:3000` (or your configured port)
 
 ---
 

@@ -25,7 +25,7 @@ export default function TermsPage() {
 
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
               <p className="text-sm text-amber-800 font-medium">
-                By accessing or using ScholarMatch, you agree to be bound by these Terms of Use. If you do not agree, please do not use the platform. These terms are governed by the laws of Ghana.
+                By accessing or using ScholarBridge AI, you agree to be bound by these Terms of Use. If you do not agree, please do not use the platform. These terms are governed by the laws of Ghana.
               </p>
             </div>
 
@@ -33,7 +33,7 @@ export default function TermsPage() {
               {
                 title: "1. Acceptance of Terms",
                 content: [
-                  "These Terms of Use form a legally binding agreement between you and GenTech Solutions, the developers of ScholarMatch.",
+                  "These Terms of Use form a legally binding agreement between you and GenTech Solutions, the developers of ScholarBridge AI.",
                   "By creating an account or using any feature of the platform, you confirm that you have read, understood, and agreed to these terms.",
                   "We reserve the right to update these terms at any time. Continued use of the platform after changes are posted constitutes acceptance.",
                 ],
@@ -41,7 +41,7 @@ export default function TermsPage() {
               {
                 title: "2. Use of the Platform",
                 content: [
-                  "ScholarMatch is provided for personal, non-commercial use by students seeking scholarship opportunities.",
+                  "ScholarBridge AI is provided for personal, non-commercial use by students seeking scholarship opportunities.",
                   "You agree not to misuse the platform — including attempting to reverse-engineer, scrape, or automate access to its content.",
                   "You are responsible for maintaining the security of your account credentials.",
                   "You must be at least 16 years old to create an account.",
@@ -50,9 +50,9 @@ export default function TermsPage() {
               {
                 title: "3. Scholarship Information",
                 content: [
-                  "ScholarMatch curates and presents scholarship information in good faith. We make every reasonable effort to ensure accuracy.",
+                  "ScholarBridge AI curates and presents scholarship information in good faith. We make every reasonable effort to ensure accuracy.",
                   "However, scholarship details — including deadlines, eligibility criteria, and funding amounts — may change. We strongly recommend verifying all information directly with the scholarship provider before applying.",
-                  "ScholarMatch is not responsible for missed deadlines, rejected applications, or changes to scholarship terms made by third-party providers.",
+                  "ScholarBridge AI is not responsible for missed deadlines, rejected applications, or changes to scholarship terms made by third-party providers.",
                 ],
               },
               {
@@ -74,15 +74,15 @@ export default function TermsPage() {
               {
                 title: "6. Intellectual Property",
                 content: [
-                  "All content on ScholarMatch — including the platform design, code, copy, and branding — is owned by GenTech Solutions and protected by copyright.",
+                  "All content on ScholarBridge AI — including the platform design, code, copy, and branding — is owned by GenTech Solutions and protected by copyright.",
                   "Scholarship descriptions sourced from public scholarship provider websites remain the intellectual property of their respective owners.",
-                  "You may not reproduce, distribute, or create derivative works from ScholarMatch content without written permission.",
+                  "You may not reproduce, distribute, or create derivative works from ScholarBridge AI content without written permission.",
                 ],
               },
               {
                 title: "7. Limitation of Liability",
                 content: [
-                  "ScholarMatch is provided 'as is' without warranties of any kind, express or implied.",
+                  "ScholarBridge AI is provided 'as is' without warranties of any kind, express or implied.",
                   "GenTech Solutions is not liable for any direct, indirect, incidental, or consequential damages arising from your use of the platform.",
                   "We are not responsible for actions taken by scholarship providers, outcomes of applications, or third-party website content.",
                 ],

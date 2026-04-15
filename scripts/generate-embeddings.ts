@@ -23,11 +23,11 @@ const supabase = createClient(
 
 // Route embeddings through OpenRouter — no separate OpenAI billing needed
 const client = new OpenAI({
-  apiKey:  process.env.OPENROUTER_API_KEY!,
+  apiKey: process.env.OPENROUTER_API_KEY!,
   baseURL: "https://openrouter.ai/api/v1",
   defaultHeaders: {
-    "HTTP-Referer": "http://localhost:3000",
-    "X-Title":      "ScholarMatch",
+    "HTTP-Referer": "https://scholarbridgeai.netlify.app",
+    "X-Title": "ScholarBridge AI",
   },
 });
 
@@ -64,15 +64,15 @@ async function main() {
 
   if (error) { console.error("Fetch error:", error); process.exit(1); }
   if (!scholarships?.length) {
-    console.log("✅ All scholarships already have embeddings.");
+    console.log("All scholarships already have embeddings.");
     return;
   }
 
-  console.log(`📝 Generating embeddings for ${scholarships.length} scholarships...\n`);
+  console.log(`Generating embeddings for ${scholarships.length} scholarships...\n`);
 
   for (const scholarship of scholarships) {
     try {
-      const text      = buildScholarshipText(scholarship);
+      const text = buildScholarshipText(scholarship);
       const embedding = await generateEmbedding(text);
 
       const { error: updateError } = await supabase

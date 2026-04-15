@@ -39,7 +39,7 @@ export default function ContactPage() {
               We would love to hear from you
             </h1>
             <p className="text-lg text-slate-600 leading-relaxed">
-              Have a question about ScholarMatch, a scholarship you think we should add, or a partnership enquiry? Send a message and we will get back to you promptly.
+              Have a question about ScholarBridge AI, a scholarship you think we should add, or a partnership enquiry? Send a message and we will get back to you promptly.
             </p>
           </div>
         </div>

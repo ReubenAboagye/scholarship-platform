@@ -21,12 +21,12 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">About ScholarMatch</p>
+              <p className="text-sm font-bold text-blue-600 uppercase tracking-widest mb-3">About ScholarBridge AI</p>
               <h1 className="text-4xl sm:text-5xl font-black text-slate-900 leading-tight mb-5">
                 Built to help students find funding they can actually use
               </h1>
               <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                ScholarMatch exists because scholarship discovery is usually fragmented, repetitive, and hard to trust. We keep the experience focused: verified opportunities, clear filters, and an AI-assisted match engine that helps students narrow the field fast.
+                ScholarBridge AI exists because scholarship discovery is usually fragmented, repetitive, and hard to trust. We keep the experience focused: verified opportunities, clear filters, and an AI-assisted match engine that helps students narrow the field fast.
               </p>
               <a href="/auth/signup" className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg transition-colors text-sm">
                 Start Finding Scholarships →
@@ -74,7 +74,7 @@ export default function AboutPage() {
             <div className="order-1 lg:order-2">
               <h2 className="text-3xl font-black text-slate-900 mb-4">Our mission</h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                Thousands of fully-funded scholarships go unseen each year because students never reach the right source at the right time. ScholarMatch reduces that friction by combining curated listings with profile-based discovery.
+                Thousands of fully-funded scholarships go unseen each year because students never reach the right source at the right time. ScholarBridge AI reduces that friction by combining curated listings with profile-based discovery.
               </p>
               <p className="text-slate-600 leading-relaxed mb-4">
                 We focus on the UK, USA, Germany, and Canada and aim to make the path from research to application far clearer than a generic scholarship directory.
@@ -113,7 +113,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl font-black text-slate-900 mb-4">Built by GenTech Solutions</h2>
               <p className="text-slate-600 leading-relaxed mb-4">
-                ScholarMatch was designed and developed by <strong className="text-slate-800">GenTech Solutions</strong>, with a focus on clear workflows, dependable information, and practical AI use.
+                ScholarBridge AI was designed and developed by <strong className="text-slate-800">GenTech Solutions</strong>, with a focus on clear workflows, dependable information, and practical AI use.
               </p>
               <p className="text-slate-600 leading-relaxed mb-6">
                 The project is intended to feel credible to institutions and approachable to students at the same time, which is why the platform keeps both trust pages and a focused product experience.

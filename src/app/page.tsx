@@ -10,43 +10,43 @@ import Footer from "@/components/layout/Footer";
 
 const benefits = [
   { icon: CheckCircle, title: "Verified Data", desc: "Direct links to official sources only." },
-  { icon: ArrowRight,  title: "Always Free",  desc: "No hidden fees or credit cards." },
+  { icon: ArrowRight, title: "Always Free", desc: "No hidden fees or credit cards." },
   { icon: ChevronDown, title: "4 Tier-1 Countries", desc: "UK, USA, Germany, and Canada." },
-  { icon: ArrowRight,  title: "AI Matching",  desc: "Instant ranking for your profile." },
+  { icon: ArrowRight, title: "AI Matching", desc: "Instant ranking for your profile." },
 ];
 
 const FLAG_URL = (code: string) => `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
 
 const countries = [
-  { flag: "gb", name: "United Kingdom", code: "UK",      count: 5, top: "Chevening, Gates Cambridge, Rhodes" },
-  { flag: "us", name: "United States",  code: "USA",     count: 5, top: "Fulbright, Mastercard Foundation" },
-  { flag: "de", name: "Germany",        code: "Germany", count: 5, top: "DAAD, Heinrich Boll, Konrad-Adenauer" },
-  { flag: "ca", name: "Canada",         code: "Canada",  count: 5, top: "Vanier, Lester B. Pearson, Trudeau" },
+  { flag: "gb", name: "United Kingdom", code: "UK", count: 5, top: "Chevening, Gates Cambridge, Rhodes" },
+  { flag: "us", name: "United States", code: "USA", count: 5, top: "Fulbright, Mastercard Foundation" },
+  { flag: "de", name: "Germany", code: "Germany", count: 5, top: "DAAD, Heinrich Boll, Konrad-Adenauer" },
+  { flag: "ca", name: "Canada", code: "Canada", count: 5, top: "Vanier, Lester B. Pearson, Trudeau" },
 ];
 
 const featured = [
-  { name: "Chevening Scholarship",       country: "UK",     flag: "gb", funding: "Full", amount: "Tuition + GBP 1,173/mo + flights",  degree: "Masters" },
-  { name: "Fulbright Foreign Student",   country: "USA",    flag: "us", funding: "Full", amount: "Full tuition + stipend + flights",   degree: "Masters / PhD" },
-  { name: "DAAD Scholarship",            country: "Germany",flag: "de", funding: "Full", amount: "EUR 934–1,200/month + insurance",    degree: "Masters / PhD" },
-  { name: "Vanier Canada Graduate",      country: "Canada", flag: "ca", funding: "Full", amount: "CAD 50,000/year × 3 years",          degree: "PhD" },
-  { name: "Gates Cambridge Scholarship", country: "UK",     flag: "gb", funding: "Full", amount: "Full tuition + GBP 21,000/year",     degree: "Masters / PhD" },
-  { name: "Lester B. Pearson",           country: "Canada", flag: "ca", funding: "Full", amount: "Full 4-year undergraduate costs",    degree: "Undergraduate" },
+  { name: "Chevening Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Tuition + GBP 1,173/mo + flights", degree: "Masters" },
+  { name: "Fulbright Foreign Student", country: "USA", flag: "us", funding: "Full", amount: "Full tuition + stipend + flights", degree: "Masters / PhD" },
+  { name: "DAAD Scholarship", country: "Germany", flag: "de", funding: "Full", amount: "EUR 934–1,200/month + insurance", degree: "Masters / PhD" },
+  { name: "Vanier Canada Graduate", country: "Canada", flag: "ca", funding: "Full", amount: "CAD 50,000/year × 3 years", degree: "PhD" },
+  { name: "Gates Cambridge Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Full tuition + GBP 21,000/year", degree: "Masters / PhD" },
+  { name: "Lester B. Pearson", country: "Canada", flag: "ca", funding: "Full", amount: "Full 4-year undergraduate costs", degree: "Undergraduate" },
 ];
 
 const steps = [
-  { n: "01", title: "Create your free profile",  body: "Add your field of study, degree level, country, and academic background. Takes under 2 minutes." },
-  { n: "02", title: "Get personalized matches",  body: "We compare your profile to scholarship criteria, not just keywords." },
-  { n: "03", title: "Review ranked results",     body: "See match scores, funding details, eligibility criteria, and deadlines in one place." },
-  { n: "04", title: "Apply and track progress",  body: "Click straight through to apply and track every application from Interested to Accepted." },
+  { n: "01", title: "Create your free profile", body: "Add your field of study, degree level, country, and academic background. Takes under 2 minutes." },
+  { n: "02", title: "Get personalized matches", body: "We compare your profile to scholarship criteria, not just keywords." },
+  { n: "03", title: "Review ranked results", body: "See match scores, funding details, eligibility criteria, and deadlines in one place." },
+  { n: "04", title: "Apply and track progress", body: "Click straight through to apply and track every application from Interested to Accepted." },
 ];
 
 const faqs = [
-  { q: "What is ScholarMatch?",            a: "ScholarMatch is a free platform that helps international students find scholarships for the UK, USA, Germany, and Canada." },
-  { q: "Is ScholarMatch completely free?", a: "Yes. There is no subscription, no hidden fee, and no credit card requirement for students." },
-  { q: "How does the matching work?",      a: "We compare your academic profile to scholarship criteria and highlight the strongest fits." },
+  { q: "What is ScholarBridge AI?", a: "ScholarBridge AI is a free platform that helps international students find scholarships for the UK, USA, Germany, and Canada." },
+  { q: "Is ScholarBridge AI completely free?", a: "Yes. There is no subscription, no hidden fee, and no credit card requirement for students." },
+  { q: "How does the matching work?", a: "We compare your academic profile to scholarship criteria and highlight the strongest fits." },
   { q: "Are the scholarships legitimate?", a: "Every scholarship in the database is manually curated, verified, and linked to an official application page." },
-  { q: "Do I need an account to browse?",  a: "No. You can browse scholarships without an account, but you need one to run matches, save favorites, and track applications." },
-  { q: "Which countries are covered?",     a: "We currently cover the United Kingdom, United States, Germany, and Canada." },
+  { q: "Do I need an account to browse?", a: "No. You can browse scholarships without an account, but you need one to run matches, save favorites, and track applications." },
+  { q: "Which countries are covered?", a: "We currently cover the United Kingdom, United States, Germany, and Canada." },
 ];
 
 const stagger = {
@@ -105,7 +105,7 @@ export default function HomePage() {
         variants={stagger}
       >
         {/* Animated Background Depth Elements */}
-        <motion.div 
+        <motion.div
           className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-brand-50 rounded-full blur-3xl opacity-30 select-none pointer-events-none"
           animate={{
             x: [0, 30, 0],
@@ -113,7 +113,7 @@ export default function HomePage() {
           }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
         />
-        <motion.div 
+        <motion.div
           className="absolute top-[20%] -left-[10%] w-[600px] h-[600px] bg-slate-50 rounded-full blur-3xl opacity-40 select-none pointer-events-none"
           animate={{
             x: [0, -40, 0],
@@ -136,7 +136,7 @@ export default function HomePage() {
                 Stop scrolling through hundreds of listings. Tell us about your study goals and get scholarship matches that fit your profile.
               </p>
               <ul className="space-y-1.5 mb-8">
-                {["Scholarships for every type of student","Fully verified opportunities","Personalized matches for your profile","100% free, always"].map((p) => (
+                {["Scholarships for every type of student", "Fully verified opportunities", "Personalized matches for your profile", "100% free, always"].map((p) => (
                   <li key={p} className="flex items-center gap-2 text-sm font-medium text-slate-700">
                     <CheckCircle className="w-4 h-4 text-brand-600 flex-shrink-0" />{p}
                   </li>
@@ -172,7 +172,7 @@ export default function HomePage() {
                 <p className="text-[10px] font-bold uppercase tracking-widest text-brand-600 mb-3">Global Destination Coverage</p>
                 <div className="flex -space-x-3 mb-4">
                   {['gb', 'us', 'de', 'ca'].map((code) => (
-                    <motion.div 
+                    <motion.div
                       key={code}
                       className="w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-sm bg-slate-100"
                       whileHover={{ scale: 1.1, zIndex: 10, y: -5 }}
@@ -232,7 +232,7 @@ export default function HomePage() {
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-600 mb-3">Why Students Use It</p>
               <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-4 leading-tight">A focused platform, not a noisy directory</h2>
               <p className="text-slate-600 leading-relaxed max-w-2xl">
-                ScholarMatch keeps the process simple: verified opportunities, a fast match check, and a clean workflow for saving and tracking applications.
+                ScholarBridge AI keeps the process simple: verified opportunities, a fast match check, and a clean workflow for saving and tracking applications.
               </p>
             </div>
             <div className="relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
@@ -277,34 +277,34 @@ export default function HomePage() {
                   whileTap={{ scale: 0.98 }}
                   className="h-full"
                 >
-                {/* Glass Shine Effect */}
-                <div className="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none">
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                  />
-                </div>
+                  {/* Glass Shine Effect */}
+                  <div className="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none">
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+                    />
+                  </div>
 
-                <div className="flex items-start justify-between mb-6">
-                  <div className="w-12 h-12 flex items-center justify-center bg-slate-50 rounded-2xl border border-slate-100">
-                    <img src={FLAG_URL(s.flag)} alt={s.country} className="w-7 h-auto shadow-sm" />
+                  <div className="flex items-start justify-between mb-6">
+                    <div className="w-12 h-12 flex items-center justify-center bg-slate-50 rounded-2xl border border-slate-100">
+                      <img src={FLAG_URL(s.flag)} alt={s.country} className="w-7 h-auto shadow-sm" />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
+                      {s.funding} Funding
+                    </span>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-                    {s.funding} Funding
-                  </span>
-                </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-all leading-snug">{s.name}</h3>
-                <p className="text-xs font-medium text-slate-400 mb-6 flex items-center gap-1.5">
-                  <span className="w-1 h-1 rounded-full bg-slate-300" /> {s.country} · {s.degree}
-                </p>
-                <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Estimated Value</p>
-                    <p className="text-sm font-black text-slate-800 tracking-tight">{s.amount}</p>
+                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-all leading-snug">{s.name}</h3>
+                  <p className="text-xs font-medium text-slate-400 mb-6 flex items-center gap-1.5">
+                    <span className="w-1 h-1 rounded-full bg-slate-300" /> {s.country} · {s.degree}
+                  </p>
+                  <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <div>
+                      <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Estimated Value</p>
+                      <p className="text-sm font-black text-slate-800 tracking-tight">{s.amount}</p>
+                    </div>
+                    <div className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
+                      <ArrowRight className="w-4 h-4 text-brand-600" />
+                    </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
-                    <ArrowRight className="w-4 h-4 text-brand-600" />
-                  </div>
-                </div>
                 </motion.div>
               </Link>
             ))}
@@ -337,13 +337,13 @@ export default function HomePage() {
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -4 }}
                 >
-                <img src={FLAG_URL(c.flag)} alt={c.name} className="w-16 h-auto mx-auto mb-6 shadow-sm rounded-sm" />
-                <h3 className="font-bold text-slate-900 mb-1">{c.name}</h3>
-                <p className="text-xs text-brand-600 font-bold mb-4">{c.count} scholarships</p>
-                <p className="text-[11px] text-slate-400 leading-relaxed mb-6 line-clamp-2">{c.top}</p>
-                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-600 transition-all group-hover:gap-2">
-                  Browse Scholarships <ArrowRight className="w-3.5 h-3.5" />
-                </div>
+                  <img src={FLAG_URL(c.flag)} alt={c.name} className="w-16 h-auto mx-auto mb-6 shadow-sm rounded-sm" />
+                  <h3 className="font-bold text-slate-900 mb-1">{c.name}</h3>
+                  <p className="text-xs text-brand-600 font-bold mb-4">{c.count} scholarships</p>
+                  <p className="text-[11px] text-slate-400 leading-relaxed mb-6 line-clamp-2">{c.top}</p>
+                  <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-600 transition-all group-hover:gap-2">
+                    Browse Scholarships <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
                 </motion.div>
               </Link>
             ))}
@@ -361,7 +361,7 @@ export default function HomePage() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-xl mb-12">
-            <h2 className="text-3xl font-black text-slate-900 mb-2">How ScholarMatch Works</h2>
+            <h2 className="text-3xl font-black text-slate-900 mb-2">How ScholarBridge AI Works</h2>
             <p className="text-slate-500">From sign-up to matched scholarships in under 2 minutes.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -408,7 +408,7 @@ export default function HomePage() {
         variants={stagger}
       >
         <div className="absolute inset-0 opacity-20">
-          <motion.div 
+          <motion.div
             className="absolute top-0 right-0 w-96 h-96 bg-brand-600 rounded-full blur-[100px]"
             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 10, repeat: Infinity }}

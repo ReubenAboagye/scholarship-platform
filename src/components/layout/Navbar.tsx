@@ -5,31 +5,31 @@ import Link from "next/link";
 import { Menu, X, ChevronDown, Search, BookOpen, Cpu, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
 
 const studentsMenu = [
-  { icon: Search,          title: "Scholarship Search",    desc: "Find scholarships matched to your profile.", href: "/auth/signup" },
-  { icon: BookOpen,        title: "Scholarship Directory", desc: "Browse all scholarships by country or field.", href: "/scholarships" },
-  { icon: Cpu,             title: "AI Matching",           desc: "Let our AI rank opportunities for you.", href: "/dashboard/match" },
-  { icon: Bookmark,        title: "Saved Scholarships",    desc: "Access your bookmarked opportunities.", href: "/dashboard/saved" },
-  { icon: LayoutDashboard, title: "Application Tracker",   desc: "Track every application in one dashboard.", href: "/dashboard/tracker" },
-  { icon: Globe,           title: "Destinations",          desc: "UK, USA, Germany, and Canada covered.", href: "/#countries" },
+  { icon: Search, title: "Scholarship Search", desc: "Find scholarships matched to your profile.", href: "/auth/signup" },
+  { icon: BookOpen, title: "Scholarship Directory", desc: "Browse all scholarships by country or field.", href: "/scholarships" },
+  { icon: Cpu, title: "AI Matching", desc: "Let our AI rank opportunities for you.", href: "/dashboard/match" },
+  { icon: Bookmark, title: "Saved Scholarships", desc: "Access your bookmarked opportunities.", href: "/dashboard/saved" },
+  { icon: LayoutDashboard, title: "Application Tracker", desc: "Track every application in one dashboard.", href: "/dashboard/tracker" },
+  { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/#countries" },
 ];
 
 const companyMenu = [
-  { icon: Info,       title: "About Us", desc: "Who we are and why we built ScholarMatch.", href: "/about" },
-  { icon: HelpCircle, title: "FAQ",      desc: "Answers to common questions.", href: "/faq" },
-  { icon: Mail,       title: "Contact",  desc: "Get in touch with our team.", href: "/contact" },
+  { icon: Info, title: "About Us", desc: "Who we are and why we built ScholarBridge AI.", href: "/about" },
+  { icon: HelpCircle, title: "FAQ", desc: "Answers to common questions.", href: "/faq" },
+  { icon: Mail, title: "Contact", desc: "Get in touch with our team.", href: "/contact" },
 ];
 
 export default function Navbar() {
-  const [mobileOpen, setMobileOpen]     = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [studentsOpen, setStudentsOpen] = useState(false);
-  const [companyOpen, setCompanyOpen]   = useState(false);
+  const [companyOpen, setCompanyOpen] = useState(false);
   const studentsRef = useRef<HTMLDivElement>(null);
-  const companyRef  = useRef<HTMLDivElement>(null);
+  const companyRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (studentsRef.current && !studentsRef.current.contains(e.target as Node)) setStudentsOpen(false);
-      if (companyRef.current  && !companyRef.current.contains(e.target as Node))  setCompanyOpen(false);
+      if (companyRef.current && !companyRef.current.contains(e.target as Node)) setCompanyOpen(false);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -129,7 +129,7 @@ export default function Navbar() {
           <div className="px-4 py-3 space-y-1">
             <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" style={{ animationDelay: '0.05s' }}>Students</p>
             {studentsMenu.map((item, idx) => (
-              <a key={item.title} href={item.href} 
+              <a key={item.title} href={item.href}
                 className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
                 <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-brand-50">
@@ -138,13 +138,13 @@ export default function Navbar() {
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
             ))}
-            
-            <p className="px-2 py-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" 
+
+            <p className="px-2 py-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + 2) * 0.05}s` }}>
               Company
             </p>
             {companyMenu.map((item, idx) => (
-              <a key={item.title} href={item.href} 
+              <a key={item.title} href={item.href}
                 className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(studentsMenu.length + idx + 3) * 0.05}s` }}>
                 <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100">
@@ -153,7 +153,7 @@ export default function Navbar() {
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
             ))}
-            
+
             <div className="pt-4 border-t border-slate-100 space-y-3 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
               <Link href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</Link>

@@ -9,9 +9,9 @@ const faqs = [
   {
     category: "General",
     items: [
-      { q: "What is ScholarMatch?", a: "ScholarMatch is a free AI-powered platform that helps international students discover scholarships for the UK, USA, Germany, and Canada." },
-      { q: "Is ScholarMatch completely free?", a: "Yes. Students can browse scholarships, create accounts, and use core matching features without paying." },
-      { q: "Who is ScholarMatch for?", a: "It is built for students researching undergraduate, masters, and PhD funding opportunities abroad." },
+      { q: "What is ScholarBridge AI?", a: "ScholarBridge AI is a free AI-powered platform that helps international students discover scholarships for the UK, USA, Germany, and Canada." },
+      { q: "Is ScholarBridge AI completely free?", a: "Yes. Students can browse scholarships, create accounts, and use core matching features without paying." },
+      { q: "Who is ScholarBridge AI for?", a: "It is built for students researching undergraduate, masters, and PhD funding opportunities abroad." },
       { q: "Which countries are covered?", a: "The current platform coverage is the United Kingdom, United States, Germany, and Canada." },
     ],
   },
@@ -58,7 +58,7 @@ export default function FAQPage() {
                 Frequently Asked Questions
               </h1>
               <p className="text-lg text-slate-600 leading-relaxed mb-6">
-                Everything you need to know about ScholarMatch, AI matching, and the scholarship discovery process.
+                Everything you need to know about ScholarBridge AI, AI matching, and the scholarship discovery process.
               </p>
               <a href="/contact" className="inline-flex items-center px-6 py-3 border border-slate-300 hover:border-blue-400 text-slate-700 font-bold rounded-lg transition-colors text-sm">
                 Need more help? Contact us →

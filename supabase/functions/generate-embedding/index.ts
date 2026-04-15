@@ -13,8 +13,8 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const OPENROUTER_API_KEY = Deno.env.get("OPENROUTER_API_KEY")!;
-const SUPABASE_URL       = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_KEY       = Deno.env.get("SERVICE_ROLE_KEY")!;
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_KEY = Deno.env.get("SERVICE_ROLE_KEY")!;
 
 // ── Text builder — mirrors scripts/generate-embeddings.ts ──
 function buildScholarshipText(s: Record<string, unknown>): string {
@@ -37,9 +37,9 @@ async function generateEmbedding(text: string): Promise<number[]> {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
-      "Content-Type":  "application/json",
-      "HTTP-Referer":  "https://scholarmatch.app",
-      "X-Title":       "ScholarMatch",
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://ScholarBridge AI.app",
+      "X-Title": "ScholarBridge AI",
     },
     body: JSON.stringify({
       model: "openai/text-embedding-3-small",
@@ -92,7 +92,7 @@ Deno.serve(async (req: Request) => {
     }
 
     // Build text and generate embedding
-    const text      = buildScholarshipText(scholarship);
+    const text = buildScholarshipText(scholarship);
     const embedding = await generateEmbedding(text);
 
     // Write vector back to the row

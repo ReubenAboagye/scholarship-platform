@@ -25,7 +25,7 @@ export default function PrivacyPage() {
 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
               <p className="text-sm text-blue-800 font-medium">
-                ScholarMatch (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is operated by GenTech Solutions. This Privacy Policy explains how we collect, use, and protect your information when you use ScholarMatch at scholarmatch.com and related services.
+                ScholarBridge AI (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is operated by GenTech Solutions. This Privacy Policy explains how we collect, use, and protect your information when you use ScholarBridge AI at ScholarBridge AI.com and related services.
               </p>
             </div>
 
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
               {
                 title: "7. Children's Privacy",
                 content: [
-                  "ScholarMatch is intended for users who are 16 years of age or older.",
+                  "ScholarBridge AI is intended for users who are 16 years of age or older.",
                   "We do not knowingly collect personal data from children under 16.",
                 ],
               },
@@ -94,7 +94,7 @@ export default function PrivacyPage() {
                 title: "8. Changes to This Policy",
                 content: [
                   "We may update this Privacy Policy from time to time. Significant changes will be communicated via email or a prominent notice on the platform.",
-                  "Continued use of ScholarMatch after changes constitutes acceptance of the updated policy.",
+                  "Continued use of ScholarBridge AI after changes constitutes acceptance of the updated policy.",
                 ],
               },
               {

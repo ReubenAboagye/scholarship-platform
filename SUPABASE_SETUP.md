@@ -1,5 +1,5 @@
 # Supabase Setup Guide
-## ScholarMatch Platform
+## ScholarBridge AI Platform
 
 ---
 
@@ -8,7 +8,7 @@
 1. Go to https://supabase.com and sign in
 2. Click **New project**
 3. Fill in:
-   - **Name:** `scholarmatch` (or similar)
+   - **Name:** `ScholarBridge AI` (or similar)
    - **Database password:** generate a strong one and save it
    - **Region:** choose closest to Ghana (Europe West is fine — Frankfurt)
 4. Wait ~2 minutes for the project to provision
@@ -35,8 +35,8 @@ SUPABASE_SERVICE_ROLE_KEY     → "service_role" key (keep secret)
 Go to **Authentication → URL Configuration**
 
 Set:
-- **Site URL:** `http://localhost:3000` (change to your live URL after deploy)
-- **Redirect URLs:** add `http://localhost:3000/auth/callback`
+- **Site URL:** `http://localhost:3000` (or your production URL)
+- **Redirect URLs:** add `http://localhost:3000/auth/callback` (or your production callback)
 
 ---
 

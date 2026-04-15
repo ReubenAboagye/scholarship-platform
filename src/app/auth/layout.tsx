@@ -24,10 +24,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       <footer className="border-t border-slate-200 py-4 px-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between text-xs text-slate-400">
-          <span>© {new Date().getFullYear()} ScholarMatch · GenTech Solutions</span>
+          <span>© {new Date().getFullYear()} ScholarBridge AI · GenTech Solutions</span>
           <div className="flex items-center gap-4">
             <a href="/privacy" className="hover:text-slate-600 transition-colors">Privacy</a>
-            <a href="/terms"   className="hover:text-slate-600 transition-colors">Terms</a>
+            <a href="/terms" className="hover:text-slate-600 transition-colors">Terms</a>
           </div>
         </div>
       </footer>

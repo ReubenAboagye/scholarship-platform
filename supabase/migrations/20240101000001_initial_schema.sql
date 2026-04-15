@@ -1,6 +1,6 @@
 -- ============================================================
 -- 001_initial_schema.sql
--- ScholarMatch Platform — Supabase PostgreSQL
+-- ScholarBridge AI Platform — Supabase PostgreSQL
 -- Run in: Supabase Dashboard → SQL Editor
 -- ============================================================
 

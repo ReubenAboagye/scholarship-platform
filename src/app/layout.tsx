@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "ScholarMatch — Find Your Scholarship", template: "%s | ScholarMatch" },
+  title: { default: "ScholarBridge AI — Find Your Scholarship", template: "%s | ScholarBridge AI" },
   description:
     "AI-powered scholarship discovery for students pursuing higher education in the UK, USA, Germany, and Canada. Get matched to fully-funded opportunities in seconds.",
   keywords: ["scholarship", "international scholarship", "AI scholarship finder", "study abroad funding"],
