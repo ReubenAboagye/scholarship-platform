@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Bookmark, ArrowRight, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { countryFlag, formatDeadline, fundingBadgeColor } from "@/lib/utils";
+import TrackButton from "@/components/scholarship/TrackButton";
 
 export default async function SavedPage() {
   const supabase = await createClient();
@@ -16,6 +17,16 @@ export default async function SavedPage() {
     .order("saved_at", { ascending: false });
 
   const saved = data ?? [];
+
+  // Fetch all tracked scholarship IDs + statuses for this user in one query
+  const { data: trackedRows } = await supabase
+    .from("application_tracker")
+    .select("scholarship_id, status")
+    .eq("user_id", user.id);
+
+  const trackedMap = Object.fromEntries(
+    (trackedRows ?? []).map((r: any) => [r.scholarship_id, r.status])
+  );
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -55,11 +66,16 @@ export default async function SavedPage() {
                   <p className="text-xs text-slate-500">{s.provider} · Deadline: {formatDeadline(s.application_deadline)}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <a href={`/scholarships/${s.id}`} className="text-xs px-3 py-1.5 border border-slate-200 text-slate-700 hover:border-slate-400 transition-colors font-medium">
+                  <TrackButton
+                    scholarshipId={s.id}
+                    userId={user.id}
+                    initialStatus={trackedMap[s.id] ?? null}
+                  />
+                  <a href={`/scholarships/${s.slug ?? s.id}`} className="text-xs px-3 py-1.5 border border-slate-200 text-slate-700 hover:border-slate-400 transition-colors font-medium rounded-lg">
                     Details
                   </a>
                   <a href={s.application_url} target="_blank" rel="noopener noreferrer"
-                    className="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors flex items-center gap-1">
+                    className="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors flex items-center gap-1 rounded-lg">
                     Apply <ExternalLink className="w-3 h-3" />
                   </a>
                 </div>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { countryFlag, formatDeadline, statusColor } from "@/lib/utils";
-import { ListChecks, ExternalLink, Loader2, ArrowRight } from "lucide-react";
+import { ListChecks, ExternalLink, Loader2, ArrowRight, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 const STATUSES = ["Interested","In Progress","Submitted","Awaiting Decision","Accepted","Rejected","Withdrawn"] as const;
@@ -11,12 +11,14 @@ const STATUSES = ["Interested","In Progress","Submitted","Awaiting Decision","Ac
 export default function TrackerPage() {
   const [items,   setItems]   = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [userId,  setUserId]  = useState<string>("");
 
   useEffect(() => {
     const supabase = createClient();
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { window.location.href = "/auth/login"; return; }
+      setUserId(user.id);
       const { data } = await supabase
         .from("application_tracker")
         .select("*, scholarship:scholarships(*)")
@@ -34,6 +36,12 @@ export default function TrackerPage() {
     setItems((prev) => prev.map((i) => i.id === id ? { ...i, status } : i));
   }
 
+  async function removeItem(id: string) {
+    const supabase = createClient();
+    await supabase.from("application_tracker").delete().eq("id", id);
+    setItems((prev) => prev.filter((i) => i.id !== id));
+  }
+
   if (loading) return (
     <div className="flex items-center justify-center h-64">
       <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
@@ -42,9 +50,15 @@ export default function TrackerPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      <div className="border-b border-slate-200 pb-5">
-        <h1 className="font-black text-2xl text-slate-900">Application Tracker</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Track the status of your scholarship applications.</p>
+      <div className="border-b border-slate-200 pb-5 flex items-end justify-between">
+        <div>
+          <h1 className="font-black text-2xl text-slate-900">Application Tracker</h1>
+          <p className="text-slate-500 text-sm mt-0.5">Track the status of your scholarship applications.</p>
+        </div>
+        <Link href="/scholarships"
+          className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 hover:text-brand-700 bg-brand-50 hover:bg-brand-100 px-3 py-2 rounded-lg transition-colors">
+          Browse scholarships <ArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
       {items.length > 0 && (
@@ -53,9 +67,9 @@ export default function TrackerPage() {
             { label: "In Progress", status: "In Progress", color: "bg-blue-50 text-blue-600 border-blue-100" },
             { label: "Submitted",   status: "Submitted",   color: "bg-violet-50 text-violet-600 border-violet-100" },
             { label: "Accepted",    status: "Accepted",    color: "bg-emerald-50 text-emerald-600 border-emerald-100" },
-            { label: "Total Applications", status: null,   color: "bg-slate-50 text-slate-600 border-slate-100" },
+            { label: "Total",       status: null,          color: "bg-slate-50 text-slate-600 border-slate-100" },
           ].map((s) => (
-            <div key={s.label} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-ambient text-center animate-fade-up">
+            <div key={s.label} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-ambient text-center">
               <p className="text-3xl font-black text-slate-900 tracking-tight">
                 {s.status ? items.filter((i) => i.status === s.status).length : items.length}
               </p>
@@ -68,13 +82,15 @@ export default function TrackerPage() {
       )}
 
       {items.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-16 text-center animate-fade-in">
+        <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-16 text-center">
           <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <ListChecks className="w-6 h-6 text-slate-300" />
           </div>
           <h3 className="font-black text-slate-900 text-xl mb-2">No applications tracked yet</h3>
-          <p className="text-slate-500 text-sm mb-8 max-w-xs mx-auto">Start tracking your journey by adding scholarships to your dashboard.</p>
-          <Link href="/scholarships" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all active:scale-95 shadow-lg shadow-slate-900/10">
+          <p className="text-slate-500 text-sm mb-3 max-w-xs mx-auto">
+            Browse scholarships and click <strong>Track</strong> on any listing to add it here.
+          </p>
+          <Link href="/scholarships" className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all active:scale-95">
             Find Scholarships <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -84,23 +100,35 @@ export default function TrackerPage() {
             const s = item.scholarship;
             if (!s) return null;
             return (
-              <div key={item.id} className="bg-white rounded-2xl border border-slate-100 shadow-ambient p-6 hover:shadow-elevated transition-all animate-fade-up" style={{ animationDelay: `${idx * 0.05}s` }}>
-                <div className="flex flex-col md:flex-row md:items-center gap-6">
+              <div key={item.id}
+                className="bg-white rounded-2xl border border-slate-100 shadow-ambient p-6 hover:shadow-elevated transition-all"
+                style={{ animationDelay: `${idx * 0.05}s` }}>
+                <div className="flex flex-col md:flex-row md:items-start gap-6">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xlgrayscale group-hover:grayscale-0 transition-all">{countryFlag(s.country)}</span>
-                      <h3 className="font-black text-slate-900 text-lg leading-tight tracking-tight">{s.name}</h3>
-                    </div>
-                    <div className="flex items-center gap-4 text-slate-400 mb-6">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-black uppercase tracking-wider">{s.provider}</span>
+                    {/* Header */}
+                    <div className="flex items-start justify-between gap-3 mb-1">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{countryFlag(s.country)}</span>
+                        <h3 className="font-black text-slate-900 text-lg leading-tight tracking-tight">{s.name}</h3>
                       </div>
+                      <button
+                        onClick={() => removeItem(item.id)}
+                        className="flex-shrink-0 p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
+                        title="Remove from tracker"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-slate-400 mb-5 ml-10">
+                      <span className="text-[10px] font-black uppercase tracking-wider">{s.provider}</span>
                       <span className="text-slate-200">•</span>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-black uppercase tracking-wider">Deadline: {formatDeadline(s.application_deadline)}</span>
-                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-wider">
+                        Deadline: {formatDeadline(s.application_deadline)}
+                      </span>
                     </div>
-                    
+
+                    {/* Status buttons */}
                     <div className="flex flex-wrap gap-2">
                       {STATUSES.map((st) => (
                         <button key={st} onClick={() => updateStatus(item.id, st)}
@@ -114,12 +142,16 @@ export default function TrackerPage() {
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="flex md:flex-col gap-2 flex-shrink-0">
                     <a href={s.application_url} target="_blank" rel="noopener noreferrer"
                       className="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all shadow-sm active:scale-95">
                       Apply Now <ExternalLink className="w-3.5 h-3.5" />
                     </a>
+                    <Link href={`/scholarships/${s.slug ?? s.id}`}
+                      className="flex-1 md:flex-none flex items-center justify-center gap-1 px-4 py-2.5 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold hover:border-slate-300 transition-all">
+                      Details
+                    </Link>
                   </div>
                 </div>
               </div>
