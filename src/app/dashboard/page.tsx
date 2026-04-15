@@ -46,61 +46,74 @@ export default async function DashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-slate-200">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {statCards.map((s) => (
-          <Link key={s.label} href={s.href} className="bg-white p-5 hover:bg-slate-50 transition-colors group">
-            <div className="flex items-center justify-between">
+          <Link key={s.label} href={s.href} className="bg-white p-6 rounded-2xl border border-slate-100 shadow-ambient hover:shadow-elevated transition-all group relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-brand-50/30 rounded-full blur-3xl -mr-8 -mt-8 group-hover:bg-brand-100/50 transition-colors" />
+            <div className="flex items-center justify-between relative z-10">
               <div>
-                <p className="text-3xl font-bold text-slate-900">{s.value}</p>
-                <p className="text-sm text-slate-500 mt-1">{s.label}</p>
+                <p className="text-4xl font-black text-slate-900 tracking-tight">{s.value}</p>
+                <p className="text-sm font-semibold text-slate-500 mt-1 uppercase tracking-wide">{s.label}</p>
               </div>
-              <div className={`w-10 h-10 flex items-center justify-center ${s.color}`}>
-                <s.icon className="w-5 h-5" />
+              <div className={`w-12 h-12 flex items-center justify-center rounded-xl shadow-sm ${s.color}`}>
+                <s.icon className="w-6 h-6" />
               </div>
             </div>
-            <div className="flex items-center gap-1 mt-4 text-xs text-slate-400 group-hover:text-brand-600 transition-colors">
-              View all <ArrowRight className="w-3 h-3" />
+            <div className="flex items-center gap-1 mt-6 text-xs font-bold text-slate-400 group-hover:text-brand-600 transition-colors">
+              View all <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
             </div>
           </Link>
         ))}
       </div>
 
-      <div className="bg-brand-600 p-6 text-white">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-4 h-4 text-brand-200" />
-          <span className="text-brand-200 text-xs font-semibold uppercase tracking-wide">AI Matching</span>
+      <div className="bg-slate-900 p-8 rounded-3xl text-white relative overflow-hidden shadow-elevated">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-600/20 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600/20">
+              <Sparkles className="w-4 h-4 text-brand-400" />
+            </div>
+            <span className="text-brand-400 text-[10px] font-black uppercase tracking-[0.2em]">AI Intelligence</span>
+          </div>
+          <h2 className="font-black text-2xl lg:text-3xl mb-2 tracking-tight">Discover your perfect match</h2>
+          <p className="text-slate-400 text-sm mb-8 max-w-sm leading-relaxed">
+            {profileComplete
+              ? "Your profile is 100% complete. Our AI is ready to rank scholarships based on your unique academic background."
+              : "Complete your professional profile to unlock our proprietary AI matching engine and get personalized recommendations."}
+          </p>
+          <Link href={profileComplete ? "/dashboard/match" : "/dashboard/profile"}
+            className="inline-flex items-center gap-2.5 px-6 py-3 bg-brand-600 text-white font-bold text-sm rounded-xl hover:bg-brand-700 transition-all hover:shadow-brand-glow active:scale-95">
+            {profileComplete ? "Run AI Matching" : "Complete Profile First"}
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
-        <h2 className="font-black text-xl mb-1">Find your best matches</h2>
-        <p className="text-brand-100 text-sm mb-4 max-w-sm">
-          {profileComplete
-            ? "Your profile is complete. Run AI matching to see which scholarships fit you best."
-            : "Complete your profile first, then run AI matching to get personalised results."}
-        </p>
-        <Link href={profileComplete ? "/dashboard/match" : "/dashboard/profile"}
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white text-brand-700 font-semibold text-sm hover:bg-brand-50 transition-colors">
-          {profileComplete ? "Run AI Matching" : "Complete Profile First"}
-          <ArrowRight className="w-4 h-4" />
-        </Link>
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">Recently Added</h2>
-          <Link href="/scholarships" className="text-xs text-brand-600 hover:underline font-medium">View all →</Link>
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-2">
+            <div className="w-1.5 h-1.5 bg-brand-600 rounded-full" />
+            <h2 className="font-black text-slate-900 text-[10px] uppercase tracking-[0.2em]">Recently Added</h2>
+          </div>
+          <Link href="/scholarships" className="text-xs text-brand-600 hover:text-brand-700 font-bold transition-colors">View all →</Link>
         </div>
-        <div className="border border-slate-200 divide-y divide-slate-100">
+        <div className="bg-white rounded-3xl border border-slate-100 shadow-ambient overflow-hidden divide-y divide-slate-50">
           {scholarships?.map((s) => (
             <Link key={s.id} href={`/scholarships/${s.id}`}
-              className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 transition-colors group">
-              <div className="flex items-center gap-3">
-                <span className="text-lg">{countryFlag(s.country)}</span>
+              className="flex items-center justify-between px-6 py-4 hover:bg-slate-50/80 transition-all group">
+              <div className="flex items-center gap-4">
+                <span className="text-xl grayscale group-hover:grayscale-0 transition-all">{countryFlag(s.country)}</span>
                 <div>
-                  <p className="text-sm font-medium text-slate-900 group-hover:text-brand-700 transition-colors">{s.name}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{s.country} · Deadline: {formatDeadline(s.application_deadline)}</p>
+                  <p className="text-sm font-bold text-slate-900 group-hover:text-brand-700 transition-colors">{s.name}</p>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{s.country}</span>
+                    <span className="text-slate-200">•</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Deadline: {formatDeadline(s.application_deadline)}</span>
+                  </div>
                 </div>
               </div>
-              <span className={`text-xs px-2 py-0.5 font-medium ${
-                s.funding_type === "Full" ? "bg-emerald-100 text-emerald-700" : "bg-brand-100 text-brand-700"
+              <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full ${
+                s.funding_type === "Full" ? "bg-emerald-100 text-emerald-700" : "bg-brand-50 text-brand-600"
               }`}>{s.funding_type}</span>
             </Link>
           ))}

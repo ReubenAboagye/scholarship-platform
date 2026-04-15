@@ -99,7 +99,7 @@ export default function HomePage() {
       <Navbar />
 
       <motion.section
-        className="relative pt-20 pb-12 lg:pt-32 lg:pb-24 overflow-hidden bg-white"
+        className="relative py-8 lg:py-10 overflow-hidden bg-white"
         initial="hidden"
         animate="visible"
         variants={stagger}
@@ -124,12 +124,12 @@ export default function HomePage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div className="pb-6 lg:pb-10" variants={fadeInUp}>
+            <motion.div variants={fadeInUp}>
               <div className="inline-flex items-center gap-2 bg-white border border-slate-200 px-4 py-1.5 text-sm font-semibold text-slate-700 mb-6">
                 <span className="w-2 h-2 bg-green-500 inline-block"></span>
                 Personalized matches · Free for students
               </div>
-              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
+              <h1 className="text-4xl sm:text-5xl lg:text-5xl font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
                 Find <span className="text-brand-600">Scholarships</span><br /> Matched to You
               </h1>
               <p className="text-lg text-slate-600 mb-4 max-w-lg leading-relaxed">
@@ -164,8 +164,8 @@ export default function HomePage() {
               </div>
             </motion.div>
             <div className="relative">
-              <div className="relative overflow-hidden rounded-2xl border border-slate-200 shadow-xl">
-                <Image src="/images/marketing/students-collab.jpg" alt="Students studying together" width={1600} height={1067} className="h-[320px] sm:h-[420px] w-full object-cover" priority />
+              <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 shadow-xl">
+                <Image src="/images/marketing/students-collab.jpg" alt="Students studying together" width={1600} height={1067} className="h-80 lg:h-96 w-full object-cover" priority />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
               </div>
               <div className="absolute -bottom-8 left-4 right-4 sm:left-auto sm:-right-8 sm:bottom-12 sm:w-64 bg-white/90 backdrop-blur-md border border-white/50 p-5 rounded-2xl shadow-2xl">

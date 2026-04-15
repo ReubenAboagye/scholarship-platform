@@ -17,7 +17,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="bg-[#e8f5f0] py-16 lg:py-20">
+      <section className="bg-[#e8f5f0] py-8 lg:py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>

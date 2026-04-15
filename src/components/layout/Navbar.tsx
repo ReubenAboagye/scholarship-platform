@@ -36,9 +36,9 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white">
+    <header className="sticky top-0 z-50 border-b border-slate-200/50 bg-white/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-14 items-center justify-between">
+        <div className="flex h-16 items-center justify-between">
 
           <Link href="/" className="flex items-center gap-1">
             <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
@@ -53,13 +53,13 @@ export default function Navbar() {
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${studentsOpen ? "rotate-180" : ""}`} />
               </button>
               {studentsOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-1 w-[540px] -translate-x-1/2 border border-slate-200 bg-white shadow-lg">
-                  <div className="grid grid-cols-2 gap-px bg-slate-100 p-px">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-[540px] -translate-x-1/2 rounded-2xl border border-slate-200 bg-white shadow-elevated animate-scale-in">
+                  <div className="grid grid-cols-2 gap-px bg-slate-100 p-px overflow-hidden rounded-t-2xl">
                     {studentsMenu.map((item) => (
                       <a key={item.title} href={item.href} onClick={() => setStudentsOpen(false)}
                         className="flex items-start gap-3 bg-white p-4 hover:bg-slate-50 transition-colors group">
-                        <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center bg-blue-50">
-                          <item.icon className="h-4 w-4 text-brand-600" />
+                        <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-blue-50 group-hover:bg-brand-100 transition-colors">
+                          <item.icon className="h-4.5 w-4.5 text-brand-600" />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{item.title}</p>
@@ -68,11 +68,11 @@ export default function Navbar() {
                       </a>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
-                    <p className="text-xs text-slate-500">Free for all students · No credit card needed</p>
+                  <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4 bg-slate-50/50 rounded-b-2xl">
+                    <p className="text-xs text-slate-500 font-medium">Free for all students · No credit card needed</p>
                     <a href="/auth/signup" onClick={() => setStudentsOpen(false)}
-                      className="bg-brand-600 hover:bg-brand-700 px-3 py-1.5 text-xs font-bold text-white transition-colors">
-                      Get Started Free →
+                      className="bg-brand-600 hover:bg-brand-700 px-4 py-2 text-xs font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
+                      Get Started Free
                     </a>
                   </div>
                 </div>
@@ -86,12 +86,12 @@ export default function Navbar() {
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${companyOpen ? "rotate-180" : ""}`} />
               </button>
               {companyOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-1 w-64 -translate-x-1/2 border border-slate-200 bg-white shadow-lg">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-slate-200 bg-white shadow-elevated animate-scale-in overflow-hidden">
                   {companyMenu.map((item) => (
                     <a key={item.title} href={item.href} onClick={() => setCompanyOpen(false)}
                       className="flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors group border-b border-slate-100 last:border-0">
-                      <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center bg-slate-100">
-                        <item.icon className="h-4 w-4 text-slate-500 group-hover:text-blue-600 transition-colors" />
+                      <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 group-hover:bg-brand-50 transition-colors">
+                        <item.icon className="h-4 w-4 text-slate-500 group-hover:text-brand-600 transition-colors" />
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{item.title}</p>
@@ -108,9 +108,11 @@ export default function Navbar() {
             </Link>
           </nav>
 
-          <div className="hidden items-center gap-3 md:flex">
-            <a href="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
-            <a href="/auth/signup" className="bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-bold text-white transition-colors">Sign Up Free</a>
+          <div className="hidden items-center gap-4 md:flex">
+            <a href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
+            <a href="/auth/signup" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
+              <span className="relative z-10">Sign Up Free</span>
+            </a>
           </div>
 
           <button className={`flex flex-col items-center justify-center w-10 h-10 gap-1.5 text-slate-600 hover:bg-slate-100 transition-colors md:hidden ${mobileOpen ? "hamburger-open" : ""}`}
@@ -128,10 +130,10 @@ export default function Navbar() {
             <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" style={{ animationDelay: '0.05s' }}>Students</p>
             {studentsMenu.map((item, idx) => (
               <a key={item.title} href={item.href} 
-                className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors animate-stagger-in"
+                className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-blue-50">
-                  <item.icon className="h-3.5 w-3.5 text-brand-600" />
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50">
+                  <item.icon className="h-4 w-4 text-brand-600" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
@@ -143,19 +145,19 @@ export default function Navbar() {
             </p>
             {companyMenu.map((item, idx) => (
               <a key={item.title} href={item.href} 
-                className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors animate-stagger-in"
+                className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(studentsMenu.length + idx + 3) * 0.05}s` }}>
-                <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-slate-100">
-                  <item.icon className="h-3.5 w-3.5 text-slate-500" />
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100">
+                  <item.icon className="h-4 w-4 text-slate-500" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
             ))}
             
-            <div className="pt-3 border-t border-slate-200 space-y-2 animate-stagger-in"
+            <div className="pt-4 border-t border-slate-100 space-y-3 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
-              <Link href="/auth/login" className="block border border-slate-200 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">Log In</Link>
-              <Link href="/auth/signup" className="block bg-brand-600 hover:bg-brand-700 py-2.5 text-center text-sm font-bold text-white transition-colors">Sign Up Free</Link>
+              <Link href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</Link>
+              <Link href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</Link>
             </div>
           </div>
         </div>
