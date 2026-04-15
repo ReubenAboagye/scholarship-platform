@@ -6,27 +6,35 @@ import { ArrowLeft, ExternalLink, CheckCircle, Calendar, DollarSign, MapPin, Gra
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SaveButton from "@/components/scholarship/SaveButton";
+import TrackButton from "@/components/scholarship/TrackButton";
 
 // One distinct Unsplash image per destination — university / city landmark feel
 const COUNTRY_IMAGES: Record<string, string> = {
   UK:      "https://images.unsplash.com/photo-1526129318478-62ed807ebdf9?w=1600&q=80&auto=format&fit=crop", // Oxford
   USA:     "https://images.unsplash.com/photo-1562774053-701939374585?w=1600&q=80&auto=format&fit=crop", // campus
   Germany: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600&q=80&auto=format&fit=crop", // Berlin
-  Canada:  "https://images.unsplash.com/photo-1569038786784-e5716d5b14df?w=1600&q=80&auto=format&fit=crop", // Toronto
+  Canada:  "https://images.unsplash.com/photo-1517935706615-2717063c2225?w=1600&q=80&auto=format&fit=crop", // Toronto CN Tower
 };
 const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop";
 
 export default async function ScholarshipDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { id } = await params;
-  const { data: scholarship } = await supabase.from("scholarships").select("*").eq("id", id).single();
+
+  // Support both readable slugs (e.g. "chevening-scholarship") and legacy UUIDs
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const { data: scholarship } = isUuid
+    ? await supabase.from("scholarships").select("*").eq("id", id).single()
+    : await supabase.from("scholarships").select("*").eq("slug", id).single();
   if (!scholarship) notFound();
 
   const { data: { user } } = await supabase.auth.getUser();
-  const { data: saved } = user
-    ? await supabase.from("saved_scholarships").select("id").eq("user_id", user.id).eq("scholarship_id", id).single()
-    : { data: null };
-
+  const [{ data: saved }, { data: tracked }] = user
+    ? await Promise.all([
+        supabase.from("saved_scholarships").select("id").eq("user_id", user.id).eq("scholarship_id", scholarship.id).single(),
+        supabase.from("application_tracker").select("status").eq("user_id", user.id).eq("scholarship_id", scholarship.id).single(),
+      ])
+    : [{ data: null }, { data: null }];
   const heroImage = COUNTRY_IMAGES[scholarship.country] ?? FALLBACK_IMAGE;
   const isPast = scholarship.application_deadline && new Date(scholarship.application_deadline) < new Date();
 
@@ -91,8 +99,9 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               </div>
             ))}
             {user && (
-              <div className="ml-auto">
-                <SaveButton scholarshipId={scholarship.id} userId={user.id} initialSaved={!!saved} />
+              <div className="ml-auto flex items-center gap-2">
+                <SaveButton scholarshipId={scholarship.id} userId={user.id} initialSaved={!!saved} variant="hero" />
+                <TrackButton scholarshipId={scholarship.id} userId={user.id} initialStatus={(tracked as any)?.status ?? null} variant="hero" />
               </div>
             )}
           </div>
@@ -102,49 +111,39 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
 
       {/* ── CONTENT ──────────────────────────────────────────── */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
 
-          {/* ── LEFT: editorial article column ─────────────────── */}
-          <div className="lg:col-span-2 space-y-0">
+          {/* ── LEFT: article ──────────────────────────────────── */}
+          <div className="lg:col-span-2 space-y-7">
 
             {/* About */}
-            <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
-              <div className="border-l-[3px] border-brand-600 px-7 py-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600 mb-4">
-                  About this Scholarship
-                </h2>
-                <p className="text-slate-700 text-[15px] leading-[1.85] font-normal">
-                  {scholarship.description}
-                </p>
-              </div>
-            </article>
+            <section>
+              <h2 className="text-base font-bold text-slate-900 mb-3">About this Scholarship</h2>
+              <p className="text-slate-600 text-[15px] leading-[1.85]">{scholarship.description}</p>
+            </section>
+
+            <hr className="border-slate-100" />
 
             {/* Eligibility */}
-            <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
-              <div className="border-l-[3px] border-slate-300 px-7 py-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-5">
-                  Eligibility Criteria
-                </h2>
-                <ul className="space-y-4">
-                  {scholarship.eligibility_criteria?.map((c: string, i: number) => (
-                    <li key={i} className="flex items-start gap-3.5">
-                      <span className="mt-[3px] flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-emerald-600" />
-                      </span>
-                      <span className="text-[15px] text-slate-700 leading-relaxed">{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
+            <section>
+              <h2 className="text-base font-bold text-slate-900 mb-5">Eligibility Criteria</h2>
+              <ul className="space-y-4">
+                {scholarship.eligibility_criteria?.map((c: string, i: number) => (
+                  <li key={i} className="flex items-start gap-3.5">
+                    <span className="mt-[3px] flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                      <CheckCircle className="w-3 h-3 text-emerald-600" />
+                    </span>
+                    <span className="text-[15px] text-slate-600 leading-relaxed">{c}</span>
+                  </li>
+                ))}
+              </ul>
+            </section>
 
-            {/* Fields of study */}
             {scholarship.fields_of_study?.length > 0 && scholarship.fields_of_study[0] !== "Any" && (
-              <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
-                <div className="border-l-[3px] border-slate-300 px-7 py-6">
-                  <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-4">
-                    Fields of Study
-                  </h2>
+              <>
+                <hr className="border-slate-100" />
+                <section>
+                  <h2 className="text-base font-bold text-slate-900 mb-4">Fields of Study</h2>
                   <div className="flex flex-wrap gap-2">
                     {scholarship.fields_of_study.map((f: string) => (
                       <span key={f} className="text-sm px-3 py-1.5 border border-slate-200 bg-slate-50 text-slate-600 font-medium rounded-lg">
@@ -152,38 +151,33 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
                       </span>
                     ))}
                   </div>
-                </div>
-              </article>
+                </section>
+              </>
             )}
 
-            {/* How to apply */}
-            <article className="bg-slate-900 rounded-xl overflow-hidden mb-6">
-              <div className="border-l-[3px] border-brand-500 px-7 py-6">
-                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-400 mb-3">
-                  How to Apply
-                </h2>
-                <p className="text-slate-300 text-[15px] leading-[1.85] mb-5">
-                  Applications are submitted directly through the official scholarship portal. Make sure you have all required documents ready — including transcripts, references, and a personal statement — before starting your application.
-                </p>
-                <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold rounded-lg transition-colors">
-                  Go to official application <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-              </div>
-            </article>
+            <hr className="border-slate-100" />
+
+            {/* How to Apply — no card, plain content */}
+            <section>
+              <h2 className="text-base font-bold text-slate-900 mb-3">How to Apply</h2>
+              <p className="text-slate-600 text-[15px] leading-[1.85] mb-5">
+                Applications are submitted directly through the official scholarship portal. Make sure you have all required documents ready — including transcripts, references, and a personal statement — before starting your application.
+              </p>
+              <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg transition-colors">
+                Go to official application <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </section>
 
           </div>
 
           {/* ── RIGHT: sticky fact card ─────────────────────────── */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-
-            {/* Quick facts */}
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="px-5 py-4 border-b border-slate-100">
                 <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Quick Facts</p>
               </div>
               <div className="divide-y divide-slate-100">
-                {/* Country */}
                 <div className="flex items-center gap-3 px-5 py-3.5">
                   <MapPin className="w-4 h-4 text-slate-300 flex-shrink-0" />
                   <div className="min-w-0">
@@ -208,15 +202,12 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
                     </div>
                   </div>
                 ))}
-                {/* Award */}
                 <div className="px-5 py-4 bg-slate-50">
                   <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Award</p>
                   <p className="text-sm font-bold text-slate-900 leading-snug">{scholarship.funding_amount}</p>
                 </div>
               </div>
             </div>
-
-            {/* CTA */}
             <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold transition-colors text-sm rounded-xl shadow-md active:scale-95">
               Apply Now <ExternalLink className="w-4 h-4" />

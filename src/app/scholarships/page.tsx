@@ -19,7 +19,14 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
   if (resolvedSearchParams.search) query = query.or(`name.ilike.%${resolvedSearchParams.search}%,description.ilike.%${resolvedSearchParams.search}%`);
   const { data: scholarships } = await query;
 
-  const countries    = ["All", "UK", "USA", "Germany", "Canada"];
+  // Pull distinct countries live from the DB — no hardcoding needed
+  const { data: countryRows } = await supabase
+    .from("scholarships")
+    .select("country")
+    .eq("is_active", true)
+    .order("country", { ascending: true });
+  const countries = ["All", ...Array.from(new Set((countryRows ?? []).map((r: any) => r.country)))];
+
   const fundingTypes = ["All", "Full", "Partial", "Tuition Only", "Living Allowance"];
   const degreeLevels = ["All", "Undergraduate", "Masters", "PhD"];
 
@@ -58,7 +65,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
             Find the right scholarship<br className="hidden sm:block" /> for your ambitions.
           </h1>
           <p className="text-white/80 text-base max-w-lg leading-relaxed mb-8">
-            {scholarships?.length ?? 0} curated opportunities across the UK, USA, Germany, and Canada —
+            {scholarships?.length ?? 0} curated opportunities across {countries.length - 1} countries —
             matched to your profile, level, and field of study.
           </p>
 
@@ -82,7 +89,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
           {/* Stat pills */}
           <div className="flex flex-wrap justify-center gap-3 mt-7">
             {[
-              { label: "Countries", value: "4" },
+              { label: "Countries", value: `${countries.length - 1}` },
               { label: "Scholarships", value: `${scholarships?.length ?? 0}` },
               { label: "Funding Types", value: "4" },
             ].map((stat) => (

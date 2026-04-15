@@ -18,6 +18,7 @@ const FUNDING_STYLES: Record<string, { label: string; className: string }> = {
 };
 
 export default function ScholarshipCard({ scholarship: s, index }: ScholarshipCardProps) {
+  const href = `/scholarships/${s.slug ?? s.id}`;
   const funding = FUNDING_STYLES[s.funding_type] ?? { label: s.funding_type, className: "bg-slate-50 text-slate-600 border border-slate-100" };
   const isPast  = s.application_deadline && new Date(s.application_deadline) < new Date();
 
@@ -48,7 +49,7 @@ export default function ScholarshipCard({ scholarship: s, index }: ScholarshipCa
 
         {/* Row 2: Title + provider */}
         <div className="flex-1 mb-4">
-          <Link href={`/scholarships/${s.id}`} className="block mb-1">
+          <Link href={href} className="block mb-1">
             <h3 className="font-bold text-slate-900 text-base leading-snug group-hover:text-brand-600 transition-colors line-clamp-2">
               {s.name}
             </h3>
@@ -82,7 +83,7 @@ export default function ScholarshipCard({ scholarship: s, index }: ScholarshipCa
           </div>
 
           <div className="flex items-center gap-2">
-            <Link href={`/scholarships/${s.id}`}
+            <Link href={href}
               className="text-xs font-semibold px-3 py-1.5 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg transition-all flex items-center gap-1">
               Details <ArrowRight className="w-3 h-3" />
             </Link>

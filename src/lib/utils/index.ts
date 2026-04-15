@@ -26,8 +26,15 @@ export function timeAgo(dateStr: string): string {
 }
 
 // Maps country name → ISO 3166-1 alpha-2 code for flagcdn.com
+// Add new countries here as they are added to the platform
 const COUNTRY_CODES: Record<string, string> = {
   UK: 'gb', USA: 'us', Germany: 'de', Canada: 'ca',
+  Australia: 'au', France: 'fr', Netherlands: 'nl',
+  Sweden: 'se', Japan: 'jp', China: 'cn',
+  Ireland: 'ie', Switzerland: 'ch', Norway: 'no',
+  Denmark: 'dk', Finland: 'fi', Austria: 'at',
+  Italy: 'it', Spain: 'es', Portugal: 'pt',
+  'New Zealand': 'nz', Singapore: 'sg', 'South Korea': 'kr',
 };
 
 export function countryFlagUrl(country: string): string | null {
