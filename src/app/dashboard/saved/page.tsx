@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Bookmark, ExternalLink } from "lucide-react";
+import { Bookmark, ArrowRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { countryFlag, formatDeadline, fundingBadgeColor } from "@/lib/utils";
 
 export default async function SavedPage() {
@@ -32,9 +33,9 @@ export default async function SavedPage() {
           </div>
           <h3 className="font-semibold text-slate-900 mb-2">No saved scholarships yet</h3>
           <p className="text-slate-500 text-sm mb-4">Browse scholarships and click Save to bookmark them here.</p>
-          <a href="/scholarships" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors">
-            Browse Scholarships
-          </a>
+          <Link href="/scholarships" className="inline-flex items-center gap-1.5 text-brand-600 hover:text-brand-700 font-bold text-sm transition-colors">
+            Browse latest scholarships <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       ) : (
         <div className="border border-slate-200 divide-y divide-slate-100">

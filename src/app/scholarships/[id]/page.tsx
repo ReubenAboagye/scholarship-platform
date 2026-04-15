@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { countryFlag, formatDeadline, fundingBadgeColor } from "@/lib/utils";
 import { ArrowLeft, ExternalLink, CheckCircle, Calendar, DollarSign, MapPin, GraduationCap } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -29,9 +30,9 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        <a href="/scholarships" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
+        <Link href="/scholarships" className="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 mb-6 transition-colors">
           <ArrowLeft className="w-4 h-4" /> Back to scholarships
-        </a>
+        </Link>
 
         <div className="border border-slate-200 p-6 mb-6">
           <div className="flex items-start justify-between gap-4">
@@ -98,14 +99,14 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
             </div>
 
             <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors text-sm">
+              className="flex items-center justify-center gap-2 w-full py-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold transition-colors text-sm">
               Apply Now <ExternalLink className="w-4 h-4" />
             </a>
             {!user && (
-              <a href="/auth/signup"
+              <Link href="/auth/signup"
                 className="flex items-center justify-center w-full py-3 border border-slate-200 hover:border-slate-400 text-slate-700 font-medium transition-colors text-sm">
                 Save & Track This Scholarship
-              </a>
+              </Link>
             )}
           </div>
         </div>

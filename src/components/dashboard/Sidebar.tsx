@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { LayoutDashboard, Search, Bookmark, ListChecks, User, LogOut, ChevronLeft, Sparkles } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -43,10 +44,10 @@ export default function DashboardSidebar({ profile }: Props) {
     )}>
       <div className={cn("flex items-center border-b border-slate-100 h-14 px-4", collapsed ? "justify-center" : "justify-between")}>
         {!collapsed && (
-          <a href="/" className="flex items-center gap-1.5">
+          <Link href="/" className="flex items-center gap-1.5">
             <span className="font-black text-[15px] text-slate-900">Scholar</span>
-            <span className="font-black text-[15px] text-blue-600">Match</span>
-          </a>
+            <span className="font-black text-[15px] text-brand-600">Match</span>
+          </Link>
         )}
         <button onClick={() => setCollapsed(!collapsed)}
           className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
@@ -60,19 +61,19 @@ export default function DashboardSidebar({ profile }: Props) {
             || (item.href !== "/dashboard" && pathname.startsWith(item.href));
           const isAI = item.href === "/dashboard/match";
           return (
-            <a key={item.href} href={item.href} title={collapsed ? item.label : undefined}
+            <Link key={item.href} href={item.href} title={collapsed ? item.label : undefined}
               className={cn(
                 "flex items-center gap-3 px-2.5 py-2.5 text-sm font-medium transition-all",
                 active
-                  ? "bg-blue-50 text-blue-700 font-semibold"
+                  ? "bg-brand-50 text-brand-700 font-semibold"
                   : isAI
-                    ? "text-blue-600 hover:bg-blue-50"
+                    ? "text-brand-600 hover:bg-brand-50"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-800",
                 collapsed && "justify-center"
               )}>
               <item.icon className={cn("flex-shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
               {!collapsed && <span>{item.label}</span>}
-            </a>
+            </Link>
           );
         })}
       </nav>

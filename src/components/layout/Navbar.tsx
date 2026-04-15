@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { Menu, X, ChevronDown, Search, BookOpen, Cpu, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
 
 const studentsMenu = [
@@ -39,10 +40,10 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 items-center justify-between">
 
-          <a href="/" className="flex items-center gap-1">
+          <Link href="/" className="flex items-center gap-1">
             <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
-            <span className="text-xl font-black tracking-tight text-blue-600">Match</span>
-          </a>
+            <span className="text-xl font-black tracking-tight text-brand-600">Match</span>
+          </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
@@ -58,7 +59,7 @@ export default function Navbar() {
                       <a key={item.title} href={item.href} onClick={() => setStudentsOpen(false)}
                         className="flex items-start gap-3 bg-white p-4 hover:bg-slate-50 transition-colors group">
                         <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center bg-blue-50">
-                          <item.icon className="h-4 w-4 text-blue-600" />
+                          <item.icon className="h-4 w-4 text-brand-600" />
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">{item.title}</p>
@@ -70,7 +71,7 @@ export default function Navbar() {
                   <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3">
                     <p className="text-xs text-slate-500">Free for all students · No credit card needed</p>
                     <a href="/auth/signup" onClick={() => setStudentsOpen(false)}
-                      className="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 text-xs font-bold text-white transition-colors">
+                      className="bg-brand-600 hover:bg-brand-700 px-3 py-1.5 text-xs font-bold text-white transition-colors">
                       Get Started Free →
                     </a>
                   </div>
@@ -102,14 +103,14 @@ export default function Navbar() {
               )}
             </div>
 
-            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+            <Link href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               How It Works
-            </a>
+            </Link>
           </nav>
 
           <div className="hidden items-center gap-3 md:flex">
             <a href="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
-            <a href="/auth/signup" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-sm font-bold text-white transition-colors">Sign Up Free</a>
+            <a href="/auth/signup" className="bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-bold text-white transition-colors">Sign Up Free</a>
           </div>
 
           <button className={`flex flex-col items-center justify-center w-10 h-10 gap-1.5 text-slate-600 hover:bg-slate-100 transition-colors md:hidden ${mobileOpen ? "hamburger-open" : ""}`}
@@ -130,7 +131,7 @@ export default function Navbar() {
                 className="flex items-center gap-3 px-2 py-2.5 hover:bg-slate-50 transition-colors animate-stagger-in"
                 style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
                 <div className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-blue-50">
-                  <item.icon className="h-3.5 w-3.5 text-blue-600" />
+                  <item.icon className="h-3.5 w-3.5 text-brand-600" />
                 </div>
                 <span className="text-sm font-medium text-slate-700">{item.title}</span>
               </a>
@@ -153,8 +154,8 @@ export default function Navbar() {
             
             <div className="pt-3 border-t border-slate-200 space-y-2 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
-              <a href="/auth/login" className="block border border-slate-200 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
-              <a href="/auth/signup" className="block bg-blue-600 hover:bg-blue-700 py-2.5 text-center text-sm font-bold text-white transition-colors">Sign Up Free</a>
+              <Link href="/auth/login" className="block border border-slate-200 py-2.5 text-center text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">Log In</Link>
+              <Link href="/auth/signup" className="block bg-brand-600 hover:bg-brand-700 py-2.5 text-center text-sm font-bold text-white transition-colors">Sign Up Free</Link>
             </div>
           </div>
         </div>

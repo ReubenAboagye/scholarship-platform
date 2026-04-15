@@ -9,9 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['DM Serif Display', 'Georgia', 'serif'],
-        body:    ['DM Sans', 'system-ui', 'sans-serif'],
-        sans:    ['DM Sans', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         brand: {

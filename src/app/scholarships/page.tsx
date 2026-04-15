@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { countryFlagUrl, formatDeadline, fundingBadgeColor } from "@/lib/utils";
+import Link from "next/link";
 import { Search, ExternalLink } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -68,13 +69,13 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
               <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Country</label>
               <div className="space-y-px">
                 {countries.map((c) => (
-                  <a key={c} href={buildUrl({ country: c })}
+                  <Link key={c} href={buildUrl({ country: c })}
                     className={`flex items-center gap-2 px-2.5 py-1.5 text-sm transition-colors ${
-                      active.country === c ? "bg-blue-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
+                      active.country === c ? "bg-brand-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
                     }`}>
                     {c !== "All" && countryFlagUrl(c) && <img src={countryFlagUrl(c)!} alt={c} className="w-5 h-auto" />}
                     {c}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -83,10 +84,10 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
               <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Funding Type</label>
               <div className="space-y-px">
                 {fundingTypes.map((f) => (
-                  <a key={f} href={buildUrl({ funding_type: f })}
+                  <Link key={f} href={buildUrl({ funding_type: f })}
                     className={`block px-2.5 py-1.5 text-sm transition-colors ${
-                      active.funding_type === f ? "bg-blue-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
-                    }`}>{f}</a>
+                      active.funding_type === f ? "bg-brand-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
+                    }`}>{f}</Link>
                 ))}
               </div>
             </div>
@@ -95,10 +96,10 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
               <label className="block text-xs font-semibold uppercase tracking-wide text-slate-500 mb-2">Degree Level</label>
               <div className="space-y-px">
                 {degreeLevels.map((d) => (
-                  <a key={d} href={buildUrl({ degree_level: d })}
+                  <Link key={d} href={buildUrl({ degree_level: d })}
                     className={`block px-2.5 py-1.5 text-sm transition-colors ${
-                      active.degree_level === d ? "bg-blue-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
-                    }`}>{d}</a>
+                      active.degree_level === d ? "bg-brand-600 text-white font-medium" : "text-slate-600 hover:bg-slate-100"
+                    }`}>{d}</Link>
                 ))}
               </div>
             </div>
@@ -129,9 +130,9 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
                         }`}>{formatDeadline(s.application_deadline)}</p>
                       </div>
                       <div className="flex gap-2">
-                        <a href={`/scholarships/${s.id}`} className="text-xs px-3 py-1.5 border border-slate-200 text-slate-700 hover:border-slate-400 transition-colors font-medium">Details</a>
+                        <Link href={`/scholarships/${s.id}`} className="text-xs px-3 py-1.5 border border-slate-200 text-slate-700 hover:border-slate-400 transition-colors font-medium">Details</Link>
                         <a href={s.application_url} target="_blank" rel="noopener noreferrer"
-                          className="text-xs px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors flex items-center gap-1">
+                          className="text-xs px-3 py-1.5 bg-brand-600 hover:bg-brand-700 text-white font-medium transition-colors flex items-center gap-1">
                           Apply <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>
@@ -144,7 +145,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
                 <p className="text-4xl mb-4">🔍</p>
                 <h3 className="font-semibold text-slate-900 mb-2">No scholarships found</h3>
                 <p className="text-slate-500 text-sm">Try adjusting your filters or clearing your search.</p>
-                <a href="/scholarships" className="mt-4 text-sm text-blue-600 hover:underline font-medium">Clear all filters</a>
+                <Link href="/scholarships" className="mt-4 text-sm text-brand-600 hover:underline font-medium">Clear all filters</Link>
               </div>
             )}
           </div>

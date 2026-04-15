@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { countryFlag, formatDeadline, statusColor } from "@/lib/utils";
-import { ListChecks, ExternalLink, Loader2 } from "lucide-react";
+import { ListChecks, ExternalLink, Loader2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const STATUSES = ["Interested","In Progress","Submitted","Awaiting Decision","Accepted","Rejected","Withdrawn"] as const;
 
@@ -35,7 +36,7 @@ export default function TrackerPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
-      <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+      <Loader2 className="w-6 h-6 animate-spin text-brand-600" />
     </div>
   );
 
@@ -71,9 +72,9 @@ export default function TrackerPage() {
           </div>
           <h3 className="font-semibold text-slate-900 mb-2">No applications tracked yet</h3>
           <p className="text-slate-500 text-sm mb-4">Browse scholarships and add them to your tracker.</p>
-          <a href="/scholarships" className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors">
-            Browse Scholarships
-          </a>
+          <Link href="/scholarships" className="inline-flex items-center gap-1.5 text-brand-600 hover:text-brand-700 font-bold text-sm transition-colors">
+            Browse latest scholarships <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       ) : (
         <div className="border border-slate-200 divide-y divide-slate-100">
