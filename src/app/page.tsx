@@ -196,7 +196,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="bg-white py-12 border-y border-slate-100 relative z-20"
+        className="bg-white py-8 border-y border-slate-100 relative z-20"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -220,7 +220,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-16 bg-white"
+        className="py-10 bg-white"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.3 }}
@@ -243,7 +243,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-16 bg-white border-t border-slate-100"
+        className="py-10 bg-white border-t border-slate-100"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -314,7 +314,7 @@ export default function HomePage() {
 
       <motion.section
         id="countries"
-        className="py-16 bg-slate-50 border-t border-slate-200"
+        className="py-10 bg-slate-50 border-t border-slate-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -330,19 +330,19 @@ export default function HomePage() {
               <Link
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
-                className="group bg-white p-6 rounded-2xl border border-slate-100 shadow-sm transition-all h-full"
+                className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm transition-all h-full text-center hover:shadow-md"
               >
                 <motion.div
                   variants={fadeInUp}
                   transition={{ delay: i * 0.05 }}
                   whileHover={{ y: -4 }}
                 >
-                <img src={FLAG_URL(c.flag)} alt={c.name} className="w-10 h-auto mb-4" />
-                <h3 className="font-bold text-slate-900 mb-0.5">{c.name}</h3>
-                <p className="text-xs text-brand-600 font-bold mb-3">{c.count} scholarships</p>
-                <p className="text-xs text-slate-500 leading-relaxed min-h-[32px]">{c.top}</p>
-                <div className="flex items-center gap-1 mt-4 text-xs font-bold text-brand-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                  Browse <ArrowRight className="w-3.5 h-3.5" />
+                <img src={FLAG_URL(c.flag)} alt={c.name} className="w-16 h-auto mx-auto mb-6 shadow-sm rounded-sm" />
+                <h3 className="font-bold text-slate-900 mb-1">{c.name}</h3>
+                <p className="text-xs text-brand-600 font-bold mb-4">{c.count} scholarships</p>
+                <p className="text-[11px] text-slate-400 leading-relaxed mb-6 line-clamp-2">{c.top}</p>
+                <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-600 transition-all group-hover:gap-2">
+                  Browse Scholarships <ArrowRight className="w-3.5 h-3.5" />
                 </div>
                 </motion.div>
               </Link>
@@ -353,7 +353,7 @@ export default function HomePage() {
 
       <motion.section
         id="how-it-works"
-        className="py-16 bg-white border-t border-slate-200"
+        className="py-10 bg-white border-t border-slate-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -378,7 +378,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-16 bg-slate-50 border-t border-slate-200"
+        className="py-10 bg-slate-50 border-t border-slate-200"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
@@ -401,7 +401,7 @@ export default function HomePage() {
       </motion.section>
 
       <motion.section
-        className="py-20 lg:py-32 relative overflow-hidden bg-slate-900"
+        className="py-12 lg:py-16 relative overflow-hidden bg-slate-900"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.2 }}
