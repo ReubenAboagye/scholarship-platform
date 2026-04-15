@@ -101,80 +101,122 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
       {/* ── END HERO ─────────────────────────────────────────── */}
 
       {/* ── CONTENT ──────────────────────────────────────────── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          {/* Left — main content */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="font-semibold text-slate-900 mb-3 text-xs uppercase tracking-widest text-slate-400">About this scholarship</h2>
-              <p className="text-slate-600 text-sm leading-relaxed">{scholarship.description}</p>
-            </div>
+          {/* ── LEFT: editorial article column ─────────────────── */}
+          <div className="lg:col-span-2 space-y-0">
 
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-              <h2 className="font-semibold text-slate-900 mb-3 text-xs uppercase tracking-widest text-slate-400">Eligibility Criteria</h2>
-              <ul className="space-y-2.5">
-                {scholarship.eligibility_criteria?.map((c: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2.5">
-                    <CheckCircle className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-sm text-slate-600">{c}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {scholarship.fields_of_study?.length > 0 && scholarship.fields_of_study[0] !== "Any" && (
-              <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
-                <h2 className="font-semibold text-slate-900 mb-3 text-xs uppercase tracking-widest text-slate-400">Fields of Study</h2>
-                <div className="flex flex-wrap gap-2">
-                  {scholarship.fields_of_study.map((f: string) => (
-                    <span key={f} className="text-xs px-2.5 py-1 border border-slate-200 bg-slate-50 text-slate-600 font-medium rounded-md">{f}</span>
-                  ))}
-                </div>
+            {/* About */}
+            <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+              <div className="border-l-[3px] border-brand-600 px-7 py-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-600 mb-4">
+                  About this Scholarship
+                </h2>
+                <p className="text-slate-700 text-[15px] leading-[1.85] font-normal">
+                  {scholarship.description}
+                </p>
               </div>
+            </article>
+
+            {/* Eligibility */}
+            <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+              <div className="border-l-[3px] border-slate-300 px-7 py-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-5">
+                  Eligibility Criteria
+                </h2>
+                <ul className="space-y-4">
+                  {scholarship.eligibility_criteria?.map((c: string, i: number) => (
+                    <li key={i} className="flex items-start gap-3.5">
+                      <span className="mt-[3px] flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                        <CheckCircle className="w-3 h-3 text-emerald-600" />
+                      </span>
+                      <span className="text-[15px] text-slate-700 leading-relaxed">{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </article>
+
+            {/* Fields of study */}
+            {scholarship.fields_of_study?.length > 0 && scholarship.fields_of_study[0] !== "Any" && (
+              <article className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-6">
+                <div className="border-l-[3px] border-slate-300 px-7 py-6">
+                  <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-4">
+                    Fields of Study
+                  </h2>
+                  <div className="flex flex-wrap gap-2">
+                    {scholarship.fields_of_study.map((f: string) => (
+                      <span key={f} className="text-sm px-3 py-1.5 border border-slate-200 bg-slate-50 text-slate-600 font-medium rounded-lg">
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </article>
             )}
+
+            {/* How to apply */}
+            <article className="bg-slate-900 rounded-xl overflow-hidden mb-6">
+              <div className="border-l-[3px] border-brand-500 px-7 py-6">
+                <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-brand-400 mb-3">
+                  How to Apply
+                </h2>
+                <p className="text-slate-300 text-[15px] leading-[1.85] mb-5">
+                  Applications are submitted directly through the official scholarship portal. Make sure you have all required documents ready — including transcripts, references, and a personal statement — before starting your application.
+                </p>
+                <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold rounded-lg transition-colors">
+                  Go to official application <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </article>
+
           </div>
 
-          {/* Right — sticky sidebar */}
+          {/* ── RIGHT: sticky fact card ─────────────────────────── */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm space-y-4">
-              {/* Country */}
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-4 h-4 text-slate-400" />
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">Country</p>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    {countryFlagUrl(scholarship.country) && (
-                      <img src={countryFlagUrl(scholarship.country)!} alt={scholarship.country}
-                        className="w-4 h-3 object-cover rounded-sm border border-slate-100" />
-                    )}
-                    <p className="text-sm font-semibold text-slate-900">{scholarship.country}</p>
-                  </div>
-                </div>
+
+            {/* Quick facts */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-slate-100">
+                <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Quick Facts</p>
               </div>
-              {/* Other info rows */}
-              {infoCards.map((card) => (
-                <div key={card.label} className="flex items-start gap-3">
-                  <div className="w-8 h-8 bg-slate-50 border border-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <card.icon className="w-4 h-4 text-slate-400" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">{card.label}</p>
-                    <p className={`text-sm font-semibold ${card.label === "Deadline" && isPast ? "text-rose-500" : "text-slate-900"}`}>
-                      {card.value}
-                    </p>
+              <div className="divide-y divide-slate-100">
+                {/* Country */}
+                <div className="flex items-center gap-3 px-5 py-3.5">
+                  <MapPin className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-0.5">Country</p>
+                    <div className="flex items-center gap-1.5">
+                      {countryFlagUrl(scholarship.country) && (
+                        <img src={countryFlagUrl(scholarship.country)!} alt={scholarship.country}
+                          className="w-4 h-3 object-cover rounded-sm border border-slate-100" />
+                      )}
+                      <p className="text-sm font-semibold text-slate-900">{scholarship.country}</p>
+                    </div>
                   </div>
                 </div>
-              ))}
-              {/* Funding amount */}
-              <div className="pt-3 border-t border-slate-100">
-                <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Award</p>
-                <p className="text-sm font-semibold text-slate-900">{scholarship.funding_amount}</p>
+                {infoCards.map((card) => (
+                  <div key={card.label} className="flex items-center gap-3 px-5 py-3.5">
+                    <card.icon className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                    <div className="min-w-0">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-0.5">{card.label}</p>
+                      <p className={`text-sm font-semibold truncate ${card.label === "Deadline" && isPast ? "text-rose-500" : "text-slate-900"}`}>
+                        {card.value}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {/* Award */}
+                <div className="px-5 py-4 bg-slate-50">
+                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Award</p>
+                  <p className="text-sm font-bold text-slate-900 leading-snug">{scholarship.funding_amount}</p>
+                </div>
               </div>
             </div>
 
+            {/* CTA */}
             <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold transition-colors text-sm rounded-xl shadow-md active:scale-95">
               Apply Now <ExternalLink className="w-4 h-4" />
@@ -186,6 +228,7 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               </Link>
             )}
           </div>
+
         </div>
       </div>
 
