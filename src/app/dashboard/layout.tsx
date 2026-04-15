@@ -18,7 +18,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="min-h-screen bg-slate-50 flex">
       <DashboardSidebar profile={profile} />
       <main className="flex-1 min-w-0 flex flex-col">
-        <div className="flex-1 p-6 lg:p-8">
+        <div className="flex-1 p-6 lg:p-8 pt-[4.5rem] pb-24 md:pt-6 md:pb-8">
           {children}
         </div>
       </main>
