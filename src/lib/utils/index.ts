@@ -7,10 +7,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDeadline(dateStr: string | null): string {
-  if (!dateStr) return 'Rolling / Open';
+  if (!dateStr) return 'TBA';
   const date = new Date(dateStr);
-  if (isPast(date)) return 'Closed';
-  return format(date, 'dd MMM yyyy');
+  const formatted = format(date, 'dd MMM yyyy');
+  if (isPast(date)) return `${formatted} (Closed)`;
+  return formatted;
 }
 
 export function isDeadlineUrgent(dateStr: string | null): boolean {
