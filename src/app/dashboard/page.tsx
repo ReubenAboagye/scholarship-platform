@@ -62,7 +62,7 @@ export default async function DashboardPage() {
       accent: "bg-brand-50 text-brand-600 border-brand-100",
     },
     {
-      label: "Applications",
+      label: "Tracked",
       sublabel: "tracked",
       value: tracked?.length ?? 0,
       iconName: "ListChecks",
@@ -82,8 +82,7 @@ export default async function DashboardPage() {
       accent: "bg-amber-50 text-amber-600 border-amber-100",
     },
     {
-      label: "AI matches",
-      sublabel: profileComplete ? "ready" : "unlock",
+      label: "AI Match",
       value: profileComplete ? "—" : "—",
       iconName: "TrendingUp",
       href: "/dashboard/match",

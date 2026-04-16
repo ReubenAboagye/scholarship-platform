@@ -374,11 +374,11 @@ export default function MatchPage() {
       {/* ── Page header ──────────────────────────────────── */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 flex items-center gap-2">
-            <Sparkles className="w-6 h-6 text-blue-600" />
-            AI Scholarship Matching
+          <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-blue-600 flex-shrink-0" />
+            AI Matching
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-500 text-xs mt-0.5 hidden sm:block">
             Ranks all scholarships against your academic profile using semantic similarity.
           </p>
         </div>
@@ -430,8 +430,8 @@ export default function MatchPage() {
             : "border-transparent text-slate-500 hover:text-slate-700"
             }`}
         >
-          <Sparkles className="w-4 h-4" />
-          Run matching
+          <Sparkles className="w-4 h-4 flex-shrink-0" />
+          <span className="whitespace-nowrap">Run matching</span>
         </button>
         <button
           onClick={() => setTab("history")}
@@ -457,14 +457,13 @@ export default function MatchPage() {
         <>
           {/* Idle / error — show run button */}
           {status !== "done" && (
-            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-8 h-8 text-blue-600" />
+            <div className="bg-white border border-slate-200 rounded-xl px-6 py-8 text-center">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
+                <Sparkles className="w-6 h-6 text-blue-600" />
               </div>
-              <h2 className="text-lg font-black text-slate-900 mb-2">Ready to find your matches?</h2>
-              <p className="text-sm text-slate-500 mb-6 max-w-sm mx-auto">
-                We&apos;ll compare your profile against all scholarships and return a ranked list in seconds.
-                Every run is automatically saved to your history.
+              <h2 className="text-base font-bold text-slate-900 mb-1">Ready to find your matches?</h2>
+              <p className="text-sm text-slate-500 mb-5 max-w-sm mx-auto">
+                We&apos;ll rank all scholarships against your profile in seconds. Every run is saved to history.
               </p>
 
               {status === "error" && (
@@ -480,9 +479,8 @@ export default function MatchPage() {
                 className="inline-flex items-center gap-2 px-7 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors text-sm"
               >
                 {status === "loading"
-                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Matching your profile…</>
-                  : <><Sparkles className="w-4 h-4" /> Run AI Matching</>
-                }
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /><span className="whitespace-nowrap">Matching...</span></>
+                  : <><Sparkles className="w-4 h-4" /><span className="whitespace-nowrap">Run AI Matching</span></>}
               </button>
               {!profileComplete && (
                 <p className="text-xs text-slate-400 mt-3">Complete your profile to enable matching</p>
@@ -559,7 +557,7 @@ export default function MatchPage() {
           {historyLoading ? (
             <div className="flex items-center justify-center py-16 text-slate-400 gap-2">
               <Loader2 className="w-5 h-5 animate-spin" />
-              <span className="text-sm">Loading history…</span>
+              <span className="text-sm">Loading history...</span>
             </div>
           ) : history.length === 0 ? (
             <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">

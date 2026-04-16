@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { countryFlag, formatDeadline, statusColor, isDeadlineUrgent } from "@/lib/utils";
+import { countryFlagUrl, formatDeadline, statusColor, isDeadlineUrgent } from "@/lib/utils";
 import {
   ListChecks, ExternalLink, Loader2, ArrowRight, Trash2, ChevronRight,
 } from "lucide-react";
@@ -88,13 +88,13 @@ export default function TrackerPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-16">
+    <div className="max-w-4xl mx-auto space-y-4 pb-16">
 
       {/* ── Header ── */}
-      <div className="flex items-end justify-between border-b border-slate-100 pb-5">
+      <div className="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Application Tracker</h1>
-          <p className="text-sm text-slate-400 mt-0.5">Track and manage your scholarship applications</p>
+          <h1 className="text-lg font-bold text-slate-900">Application Tracker</h1>
+          <p className="text-xs text-slate-400 mt-0.5 hidden sm:block">Track and manage your scholarship applications</p>
         </div>
         <Link
           href="/scholarships"
@@ -111,16 +111,13 @@ export default function TrackerPage() {
             const count = key ? items.filter((i) => i.status === key).length : items.length;
             const pct   = Math.round((count / Math.max(items.length, 1)) * 100);
             return (
-              <div key={label} className="bg-white rounded-2xl border border-slate-100 shadow-ambient p-4 space-y-2">
-                <p className="text-3xl font-black text-slate-900 tracking-tight leading-none">{count}</p>
-                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border inline-block ${color}`}>
+              <div key={label} className="bg-white rounded-xl border border-slate-200 p-3 space-y-1.5">
+                <p className="text-2xl font-bold text-slate-900 leading-none">{count}</p>
+                <span className={`text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border inline-block ${color}`}>
                   {label}
                 </span>
                 <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-brand-500 rounded-full transition-all duration-500"
-                    style={{ width: `${pct}%` }}
-                  />
+                  <div className="h-full bg-brand-500 rounded-full transition-all duration-500" style={{ width: `${pct}%` }} />
                 </div>
               </div>
             );
@@ -131,18 +128,18 @@ export default function TrackerPage() {
       {/* ── Filters ── */}
       {items.length > 0 && (
         <div className="space-y-3">
-          {/* Status filter */}
+          {/* Status filter — scrollable on mobile */}
           <div>
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Status</p>
-            <div className="flex flex-wrap gap-2">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2">Status</p>
+            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
               {(["All", ...STATUSES] as const).map((s) => (
                 <button
                   key={s}
                   onClick={() => setActiveFilter(s as Status | "All")}
-                  className={`text-[11px] font-bold px-3 py-1.5 rounded-full border transition-all ${
+                  className={`text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-all flex-shrink-0 ${
                     activeFilter === s
                       ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700"
+                      : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                   }`}
                 >
                   {s}
@@ -166,7 +163,7 @@ export default function TrackerPage() {
                         : "bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-slate-700"
                     }`}
                   >
-                    {c === "All" ? "All Countries" : `${countryFlag(c)} ${c}`}
+                    {c === "All" ? "All Countries" : c}
                   </button>
                 ))}
               </div>
@@ -177,19 +174,16 @@ export default function TrackerPage() {
 
       {/* ── Empty state ── */}
       {items.length === 0 ? (
-        <div className="bg-white rounded-3xl border border-dashed border-slate-200 p-16 text-center">
-          <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <ListChecks className="w-6 h-6 text-slate-300" />
+        <div className="bg-white rounded-xl border border-dashed border-slate-200 p-10 text-center">
+          <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <ListChecks className="w-5 h-5 text-slate-300" />
           </div>
-          <h3 className="font-black text-slate-900 text-xl mb-2">No applications tracked yet</h3>
-          <p className="text-slate-500 text-sm mb-6 max-w-xs mx-auto">
+          <h3 className="font-bold text-slate-900 text-base mb-1">No applications tracked yet</h3>
+          <p className="text-slate-500 text-sm mb-5 max-w-xs mx-auto">
             Browse scholarships and click <strong>Track</strong> on any listing to add it here.
           </p>
-          <Link
-            href="/scholarships"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all active:scale-95"
-          >
-            Find Scholarships <ArrowRight className="w-4 h-4" />
+          <Link href="/scholarships" className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all">
+            Find Scholarships <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
@@ -209,111 +203,99 @@ export default function TrackerPage() {
             return (
               <div
                 key={item.id}
-                className="bg-white rounded-2xl border border-slate-100 shadow-ambient hover:shadow-elevated transition-all duration-200 p-5 animate-fade-up"
+                className="bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-all duration-200 p-4"
                 style={{ animationDelay: `${idx * 0.04}s` }}
               >
                 {/* ── Card top row ── */}
-                <div className="flex items-start gap-4 mb-4">
-
-                  {/* Country badge */}
-                  <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl flex-shrink-0">
-                    {countryFlag(s.country)}
+                <div className="flex items-start gap-3 mb-3">
+                  {/* Flag */}
+                  <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {countryFlagUrl(s.country) ? (
+                      <img src={countryFlagUrl(s.country)!} alt={s.country} className="w-5 h-3.5 object-cover rounded-sm" />
+                    ) : (
+                      <span className="text-xs text-slate-400">{s.country?.slice(0,2)}</span>
+                    )}
                   </div>
 
                   {/* Title + meta */}
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-black text-slate-900 text-base leading-tight tracking-tight truncate">
+                    <h3 className="font-bold text-slate-900 text-sm leading-tight truncate">
                       {s.name}
                     </h3>
-                    <div className="flex items-center gap-2 mt-1 flex-wrap">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                        {s.provider}
-                      </span>
-                      <span className="text-slate-200 text-[10px]">•</span>
-                      <span className={`text-[10px] font-bold uppercase tracking-wider ${
-                        urgent ? "text-amber-600" : "text-slate-400"
-                      }`}>
-                        {urgent && "⚠ "}Deadline: {formatDeadline(s.application_deadline)}
-                      </span>
-                    </div>
+                    <p className="text-xs text-slate-400 mt-0.5 truncate">
+                      {s.country} · {formatDeadline(s.application_deadline).replace(" (Closed)", "")}
+                    </p>
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <a
-                      href={s.application_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all active:scale-95"
-                    >
-                      Apply <ExternalLink className="w-3 h-3" />
-                    </a>
-                    <Link
-                      href={`/scholarships/${s.slug ?? s.id}`}
-                      className="flex items-center gap-1 px-3 py-2 border border-slate-200 text-slate-600 rounded-xl text-xs font-semibold hover:border-slate-300 transition-all"
-                    >
-                      Details <ChevronRight className="w-3 h-3" />
-                    </Link>
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="p-2 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-xl transition-colors"
-                      title="Remove from tracker"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                  {/* Delete only in top-right — compact */}
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="p-1.5 text-slate-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-colors flex-shrink-0"
+                    title="Remove from tracker"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
 
-                {/* ── Status stepper ── */}
-                <div className="flex items-center gap-0 overflow-x-auto pb-1">
+                {/* ── Status stepper — horizontal scroll on mobile ── */}
+                <div className="flex items-center gap-0 overflow-x-auto pb-0.5 -mx-1 px-1 scrollbar-none">
                   {STEPPER_STATUSES.map((st, i) => {
                     const isDone   = i < curIdx;
                     const isActive = i === curIdx;
                     return (
-                      <div key={st} className="flex items-center">
+                      <div key={st} className="flex items-center flex-shrink-0">
                         <button
                           onClick={() => updateStatus(item.id, st)}
-                          className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full whitespace-nowrap transition-all ${
+                          className={`text-[10px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap transition-all ${
                             isActive
-                              ? "bg-slate-900 text-white shadow-sm"
+                              ? "bg-slate-900 text-white"
                               : isDone
                               ? "bg-slate-100 text-slate-500 hover:bg-slate-200"
-                              : "text-slate-300 hover:text-slate-500 hover:bg-slate-50"
+                              : "text-slate-300 hover:text-slate-500"
                           }`}
                         >
                           {st}
                         </button>
                         {i < STEPPER_STATUSES.length - 1 && (
-                          <ChevronRight className="w-3 h-3 text-slate-200 flex-shrink-0 mx-0.5" />
+                          <ChevronRight className="w-3 h-3 text-slate-200 flex-shrink-0" />
                         )}
                       </div>
                     );
                   })}
-
-                  {/* Rejected / Withdrawn as separate pill at end */}
                   {(item.status === "Rejected" || item.status === "Withdrawn") && (
-                    <span className={`ml-3 text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full ${statusColor(item.status)}`}>
+                    <span className={`ml-2 flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${statusColor(item.status)}`}>
                       {item.status}
                     </span>
                   )}
                 </div>
 
-                {/* ── Footer: funding + match score ── */}
-                {(s.funding_type || item.match_score) && (
-                  <div className="flex items-center gap-3 mt-3 pt-3 border-t border-slate-50">
-                    {s.funding_type && (
-                      <>
-                        <span className="text-[10px] text-slate-400 font-semibold">Funding</span>
-                        <span className="text-[11px] font-bold text-slate-600">{s.funding_type}</span>
-                      </>
-                    )}
-                    {item.match_score && (
-                      <span className="ml-auto text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
-                        {item.match_score}% match
-                      </span>
-                    )}
+                {/* ── Footer: actions + funding ── */}
+                <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-50">
+                  {s.funding_type && (
+                    <span className="text-xs text-slate-400 flex-1 whitespace-nowrap">{s.funding_type} funding</span>
+                  )}
+                  {item.match_score && (
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100">
+                      {item.match_score}% match
+                    </span>
+                  )}
+                  <div className="flex items-center gap-1.5 ml-auto">
+                    <Link
+                      href={`/scholarships/${s.slug ?? s.id}`}
+                      className="flex items-center gap-1 px-2.5 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:border-slate-300 transition-all"
+                    >
+                      Details
+                    </Link>
+                    <a
+                      href={s.application_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all"
+                    >
+                      Apply <ExternalLink className="w-3 h-3" />
+                    </a>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

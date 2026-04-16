@@ -157,7 +157,7 @@ export default function DashboardSidebar({ profile }: Props) {
       </div>
 
       {/* ── Mobile bottom nav ── */}
-      <nav className="md:hidden fixed bottom-6 left-4 right-4 z-40 bg-white/90 backdrop-blur-lg border border-slate-200/50 flex items-stretch h-16 rounded-2xl shadow-elevated safe-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 flex items-stretch h-16 safe-bottom">
         {mobileNavItems.map((item) => {
           const active = isActive(item.href);
           const isAI   = item.href === "/dashboard/match";
@@ -166,7 +166,7 @@ export default function DashboardSidebar({ profile }: Props) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex-1 relative flex flex-col items-center justify-center gap-1 text-[10px] font-bold transition-all active:scale-90",
+                "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-all active:scale-90",
                 active
                   ? "text-brand-600"
                   : isAI
@@ -174,16 +174,9 @@ export default function DashboardSidebar({ profile }: Props) {
                     : "text-slate-400"
               )}
             >
-              {active && (
-                <div className="absolute inset-0 flex items-center justify-center -z-10">
-                  <div className="w-10 h-10 bg-brand-50/50 rounded-xl" />
-                </div>
-              )}
-              <item.icon className={cn("w-5 h-5 transition-transform", active && "scale-110")} />
-              <span className="tracking-wide">{item.label}</span>
-              {active && (
-                <div className="absolute -bottom-1 w-1 h-1 bg-brand-600 rounded-full" />
-              )}
+              <item.icon className={cn("w-5 h-5", active && "scale-110")} />
+              <span>{item.label}</span>
+              {active && <div className="absolute bottom-0 w-6 h-0.5 bg-brand-600 rounded-full" />}
             </Link>
           );
         })}

@@ -92,21 +92,21 @@ export default function ProfilePage() {
     <form onSubmit={handleSave} className="min-h-screen bg-slate-50">
 
       {/* ── TOP HEADER ─────────────────────────────────────── */}
-      <div className="bg-white border-b border-slate-200 px-6 py-5">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div>
-            <h1 className="text-lg font-bold text-slate-900">Profile Settings</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Manage your academic profile and personal information</p>
+      <div className="bg-white border-b border-slate-200 px-4 py-3.5">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h1 className="text-base font-bold text-slate-900">Profile Settings</h1>
+            <p className="text-xs text-slate-500 mt-0.5 hidden sm:block">Manage your academic profile and personal information</p>
           </div>
           <button
             type="submit"
             disabled={saving || !dirty}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-semibold rounded-lg transition-all"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all"
           >
-            {saving  ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> :
-             saved   ? <Check   className="w-3.5 h-3.5" />              :
+            {saving  ? <Loader2 className="w-3 h-3 animate-spin" /> :
+             saved   ? <Check   className="w-3 h-3" />              :
                        null}
-            {saving ? "Saving…" : saved ? "Saved" : "Save Changes"}
+            {saving ? "Saving..." : saved ? "Saved" : "Save"}
           </button>
         </div>
       </div>
@@ -172,17 +172,17 @@ export default function ProfilePage() {
 
         {/* ── PERSONAL INFORMATION ────────────────────────── */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="flex items-center gap-3 px-6 py-4 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
+            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
               <User className="w-3.5 h-3.5 text-blue-600" />
             </div>
-            <div>
-              <h2 className="text-sm font-bold text-slate-900">Personal Information</h2>
-              <p className="text-xs text-slate-400">Your name and where you are from</p>
+            <div className="min-w-0">
+              <h2 className="text-sm font-bold text-slate-900">Personal Info</h2>
+              <p className="text-xs text-slate-400 truncate">Your name and where you are from</p>
             </div>
           </div>
 
-          <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Full Name</label>
               <input className={inp} placeholder="e.g. Kofi Mensah" type="text"
@@ -201,17 +201,17 @@ export default function ProfilePage() {
 
         {/* ── ACADEMIC PROFILE ────────────────────────────── */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="flex items-center gap-3 px-6 py-4 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center flex-shrink-0">
               <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h2 className="text-sm font-bold text-slate-900">Academic Profile</h2>
-              <p className="text-xs text-slate-400">Used directly by the AI matching engine</p>
+              <p className="text-xs text-slate-400 truncate">Used directly by the AI matching engine</p>
             </div>
           </div>
 
-          <div className="p-6 space-y-5">
+          <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Field of Study</label>
@@ -233,24 +233,20 @@ export default function ProfilePage() {
 
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                GPA / Academic Score
-                <span className="normal-case font-normal text-slate-400 ml-1">— optional</span>
+                GPA <span className="normal-case font-normal text-slate-400">— optional</span>
               </label>
-              <div className="flex items-center gap-3">
-                <div className="relative w-32">
-                  <Star className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-                  <input type="number" step="0.01" min="0" max="4"
-                    className={inp + " pl-8"} placeholder="3.7"
-                    value={form.gpa} onChange={(e) => update("gpa", e.target.value)} />
-                </div>
-                <p className="text-xs text-slate-400">On a 4.0 scale — used to match merit-based scholarships</p>
+              <div className="relative w-32">
+                <Star className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                <input type="number" step="0.01" min="0" max="4"
+                  className={inp + " pl-8"} placeholder="3.7"
+                  value={form.gpa} onChange={(e) => update("gpa", e.target.value)} />
               </div>
+              <p className="text-xs text-slate-400 mt-1.5">On a 4.0 scale — used for merit-based matching</p>
             </div>
 
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Academic Background
-                <span className="normal-case font-normal text-slate-400 ml-1">— optional but recommended</span>
+                Background <span className="normal-case font-normal text-slate-400">— optional</span>
               </label>
               <textarea rows={4} className={inp + " resize-none"}
                 placeholder="Describe your academic background, research interests, career goals, and any achievements. The more context you provide, the better the AI can match you."
@@ -263,22 +259,22 @@ export default function ProfilePage() {
         </div>
 
         {/* ── COMPLETION CHECKLIST ────────────────────────── */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-4 h-4 text-blue-600" />
-            <h2 className="text-sm font-bold text-slate-900">Profile Completeness</h2>
-            <span className="ml-auto text-xs font-bold text-blue-600">{completionPct}% complete</span>
+        <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Sparkles className="w-4 h-4 text-blue-600 flex-shrink-0" />
+            <h2 className="text-sm font-bold text-slate-900">Completeness</h2>
+            <span className="ml-auto text-xs font-bold text-blue-600 whitespace-nowrap">{completionPct}%</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="space-y-2">
             {[
-              { label: "Full name",        done: !!form.full_name },
-              { label: "Country",          done: !!form.country_of_origin },
-              { label: "Field of study",   done: !!form.field_of_study },
-              { label: "Degree level",     done: !!form.degree_level },
+              { label: "Full name",      done: !!form.full_name },
+              { label: "Country",        done: !!form.country_of_origin },
+              { label: "Field of study", done: !!form.field_of_study },
+              { label: "Degree level",   done: !!form.degree_level },
             ].map((item) => (
               <div key={item.label} className={[
-                "flex items-center gap-2 px-3 py-2.5 rounded-lg border text-xs font-medium",
+                "flex items-center gap-2.5 px-3 py-2 rounded-lg border text-xs font-medium",
                 item.done
                   ? "bg-emerald-50 border-emerald-200 text-emerald-700"
                   : "bg-slate-50 border-slate-200 text-slate-500"
