@@ -60,21 +60,24 @@ export default function DashboardClient({
       className="max-w-5xl mx-auto space-y-5 pb-10"
     >
       {/* ── Page header ── */}
-      <motion.div variants={item} className="flex items-center justify-between gap-2 pt-1">
-        <div>
-          <h1 className="text-lg font-bold text-slate-900 leading-tight">
-            Good morning, {firstName}
-          </h1>
-          <p className="hidden sm:block text-sm text-slate-400 mt-0.5">
-            Here&apos;s your scholarship overview
-          </p>
+      <motion.div variants={item} className="pt-1">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Overview</p>
+            <h1 className="text-2xl font-bold text-slate-900 leading-tight">
+              {firstName}&apos;s Dashboard
+            </h1>
+            <p className="text-sm text-slate-400 mt-1">
+              Your scholarship activity at a glance.
+            </p>
+          </div>
+          <Link
+            href="/scholarships"
+            className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all px-3.5 py-2 rounded-lg mt-1"
+          >
+            Browse <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
-        <Link
-          href="/scholarships"
-          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all px-3 py-1.5 rounded-lg group"
-        >
-          Browse <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-        </Link>
       </motion.div>
 
       {/* ── Profile completion banner: Glassmorphic ── */}

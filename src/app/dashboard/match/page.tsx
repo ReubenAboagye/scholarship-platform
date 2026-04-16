@@ -372,15 +372,15 @@ export default function MatchPage() {
     <div className="max-w-4xl mx-auto space-y-6">
 
       {/* ── Page header ──────────────────────────────────── */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-blue-600 flex-shrink-0" />
-            AI Matching
-          </h1>
-          <p className="text-slate-500 text-xs mt-0.5 hidden sm:block">
-            Ranks all scholarships against your academic profile using semantic similarity.
-          </p>
+      <div className="pb-2">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">AI Feature</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Scholarship Matching</h1>
+            <p className="text-sm text-slate-400 mt-1">
+              Ranks every scholarship in the database against your academic profile.
+            </p>
+          </div>
         </div>
       </div>
 

@@ -89,36 +89,37 @@ export default function ProfilePage() {
   );
 
   return (
-    <form onSubmit={handleSave} className="min-h-screen bg-slate-50">
+    <form onSubmit={handleSave} className="max-w-4xl mx-auto pb-8">
 
-      {/* ── TOP HEADER ─────────────────────────────────────── */}
-      <div className="bg-white border-b border-slate-200 px-4 py-3.5">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <h1 className="text-base font-bold text-slate-900">Profile Settings</h1>
-            <p className="text-xs text-slate-500 mt-0.5 hidden sm:block">Manage your academic profile and personal information</p>
+      {/* ── Page header ── */}
+      <div className="pb-2 mb-5">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Account</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Profile Settings</h1>
+            <p className="text-sm text-slate-400 mt-1">
+              Your academic profile powers the AI matching engine.
+            </p>
           </div>
           <button
             type="submit"
             disabled={saving || !dirty}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all"
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all mt-1"
           >
-            {saving  ? <Loader2 className="w-3 h-3 animate-spin" /> :
-             saved   ? <Check   className="w-3 h-3" />              :
-                       null}
-            {saving ? "Saving..." : saved ? "Saved" : "Save"}
+            {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : saved ? <Check className="w-3 h-3" /> : null}
+            {saving ? "Saving..." : saved ? "Saved" : "Save changes"}
           </button>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <div className="space-y-5">
 
         {/* ── AVATAR CARD ─────────────────────────────────── */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           {/* Cover */}
           <div className="h-24 bg-gradient-to-r from-blue-600 to-blue-400" />
 
-          <div className="px-6 pb-6">
+          <div className="px-5 pb-5">
             <div className="flex items-end justify-between -mt-10 mb-5">
               {/* Avatar */}
               <div className="relative">
@@ -303,11 +304,11 @@ export default function ProfilePage() {
         </div>
 
         {/* Bottom save */}
-        <div className="flex justify-end pb-8">
+        <div className="flex justify-end pb-4">
           <button type="submit" disabled={saving || !dirty}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-lg transition-all shadow-sm">
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-lg transition-all">
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : null}
-            {saving ? "Saving…" : saved ? "Saved!" : "Save Changes"}
+            {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
           </button>
         </div>
 

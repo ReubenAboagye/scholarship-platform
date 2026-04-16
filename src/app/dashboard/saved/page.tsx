@@ -30,17 +30,22 @@ export default async function SavedPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div>
-          <h1 className="font-bold text-lg text-slate-900">Saved Scholarships</h1>
-          <p className="text-slate-400 text-xs mt-0.5">
-            {saved.length} scholarship{saved.length !== 1 ? "s" : ""} saved
-          </p>
+      <div className="pb-2">
+        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Your Collection</p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">Saved Scholarships</h1>
+            <p className="text-sm text-slate-400 mt-1">
+              {saved.length > 0
+                ? `${saved.length} scholarship${saved.length !== 1 ? "s" : ""} bookmarked for later.`
+                : "Scholarships you've bookmarked will appear here."}
+            </p>
+          </div>
+          <Link href="/scholarships"
+            className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all px-3.5 py-2 rounded-lg mt-1">
+            Browse <ArrowRight className="w-3 h-3" />
+          </Link>
         </div>
-        <Link href="/scholarships"
-          className="flex-shrink-0 flex items-center gap-1 text-xs font-semibold text-brand-600 hover:text-brand-700 transition-colors">
-          Browse <ArrowRight className="w-3 h-3" />
-        </Link>
       </div>
 
       {saved.length === 0 ? (
