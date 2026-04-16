@@ -52,16 +52,16 @@ interface HistorySession {
 
 function scoreColor(score: number) {
   if (score >= 80) return { bar: "bg-emerald-500", text: "text-emerald-600", bg: "bg-emerald-50 border-emerald-200" };
-  if (score >= 60) return { bar: "bg-blue-500",    text: "text-blue-600",    bg: "bg-blue-50 border-blue-200" };
-  return              { bar: "bg-amber-400",    text: "text-amber-600",   bg: "bg-amber-50 border-amber-200" };
+  if (score >= 60) return { bar: "bg-blue-500", text: "text-blue-600", bg: "bg-blue-50 border-blue-200" };
+  return { bar: "bg-amber-400", text: "text-amber-600", bg: "bg-amber-50 border-amber-200" };
 }
 
 function formatRunAt(iso: string) {
   const d = new Date(iso);
   const now = new Date();
   const diffH = (now.getTime() - d.getTime()) / 3_600_000;
-  if (diffH < 1)   return "Just now";
-  if (diffH < 24)  return `${Math.round(diffH)}h ago`;
+  if (diffH < 1) return "Just now";
+  if (diffH < 24) return `${Math.round(diffH)}h ago`;
   if (diffH < 168) return `${Math.floor(diffH / 24)}d ago`;
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
@@ -77,8 +77,8 @@ function MatchCard({
   saving: Set<string>;
   onToggleSave: (id: string) => void;
 }) {
-  const s       = result.scholarship;
-  const colors  = scoreColor(result.match_score);
+  const s = result.scholarship;
+  const colors = scoreColor(result.match_score);
   const isSaved = saved.has(s.id);
   const isSaving = saving.has(s.id);
 
@@ -141,9 +141,8 @@ function MatchCard({
         <button
           onClick={() => onToggleSave(s.id)}
           disabled={isSaving}
-          className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
-            isSaved ? "text-blue-600 hover:text-red-500" : "text-slate-500 hover:text-blue-600"
-          }`}
+          className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${isSaved ? "text-blue-600 hover:text-red-500" : "text-slate-500 hover:text-blue-600"
+            }`}
         >
           {isSaving
             ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -184,9 +183,17 @@ function HistoryRow({
   return (
     <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
       {/* Row header — always visible */}
-      <button
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setExpanded((v) => !v)}
-        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setExpanded((v) => !v);
+          }
+        }}
+        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors text-left cursor-pointer"
       >
         <div className="flex-shrink-0 w-9 h-9 bg-slate-100 rounded-xl flex items-center justify-center">
           <Clock className="w-4 h-4 text-slate-400" />
@@ -223,7 +230,7 @@ function HistoryRow({
             ? <ChevronUp className="w-4 h-4 text-slate-400" />
             : <ChevronDown className="w-4 h-4 text-slate-400" />}
         </div>
-      </button>
+      </div>
 
       {/* Expanded content */}
       {expanded && (
@@ -259,14 +266,14 @@ function HistoryRow({
 // ── Main page ─────────────────────────────────────────────────────────────────
 
 export default function MatchPage() {
-  const [tab,         setTab]         = useState<"run" | "history">("run");
-  const [status,      setStatus]      = useState<"idle" | "loading" | "done" | "error">("idle");
-  const [data,        setData]        = useState<MatchResponse | null>(null);
-  const [errorMsg,    setErrorMsg]    = useState("");
-  const [profile,     setProfile]     = useState<any>(null);
-  const [saved,       setSaved]       = useState<Set<string>>(new Set());
-  const [savingIds,   setSavingIds]   = useState<Set<string>>(new Set());
-  const [history,     setHistory]     = useState<HistorySession[]>([]);
+  const [tab, setTab] = useState<"run" | "history">("run");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [data, setData] = useState<MatchResponse | null>(null);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [profile, setProfile] = useState<any>(null);
+  const [saved, setSaved] = useState<Set<string>>(new Set());
+  const [savingIds, setSavingIds] = useState<Set<string>>(new Set());
+  const [history, setHistory] = useState<HistorySession[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
 
   // ── Load profile + saved scholarships ────────────────────
@@ -313,7 +320,7 @@ export default function MatchPage() {
     setErrorMsg("");
 
     try {
-      const res  = await fetch("/api/matching", { method: "POST" });
+      const res = await fetch("/api/matching", { method: "POST" });
       const json = await res.json();
 
       if (!res.ok) {
@@ -379,12 +386,10 @@ export default function MatchPage() {
 
       {/* ── Profile readiness banner ──────────────────────── */}
       {profile && (
-        <div className={`rounded-xl border p-4 flex items-center gap-4 ${
-          profileComplete ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
-        }`}>
-          <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${
-            profileComplete ? "bg-emerald-100" : "bg-amber-100"
+        <div className={`rounded-xl border p-4 flex items-center gap-4 ${profileComplete ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
           }`}>
+          <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${profileComplete ? "bg-emerald-100" : "bg-amber-100"
+            }`}>
             {profileComplete
               ? <CheckCircle className="w-5 h-5 text-emerald-600" />
               : <AlertCircle className="w-5 h-5 text-amber-500" />}
@@ -420,22 +425,20 @@ export default function MatchPage() {
       <div className="flex items-center gap-1 border-b border-slate-200">
         <button
           onClick={() => setTab("run")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-            tab === "run"
-              ? "border-blue-600 text-blue-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${tab === "run"
+            ? "border-blue-600 text-blue-600"
+            : "border-transparent text-slate-500 hover:text-slate-700"
+            }`}
         >
           <Sparkles className="w-4 h-4" />
           Run matching
         </button>
         <button
           onClick={() => setTab("history")}
-          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${
-            tab === "history"
-              ? "border-blue-600 text-blue-600"
-              : "border-transparent text-slate-500 hover:text-slate-700"
-          }`}
+          className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${tab === "history"
+            ? "border-blue-600 text-blue-600"
+            : "border-transparent text-slate-500 hover:text-slate-700"
+            }`}
         >
           <History className="w-4 h-4" />
           History

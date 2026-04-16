@@ -144,20 +144,20 @@ export default function DashboardSidebar({ profile }: Props) {
       </aside>
 
       {/* ── Mobile top bar ── */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white border-b border-slate-200 h-12 flex items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-1">
-          <span className="font-black text-[15px] text-slate-900">Scholar</span>
-          <span className="font-black text-[15px] text-brand-600">Match</span>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/50 h-14 flex items-center justify-between px-4">
+        <Link href="/" className="flex items-center gap-1.5 active:scale-95 transition-transform">
+          <span className="font-black text-[16px] text-slate-900 tracking-tight">Scholar</span>
+          <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
         </Link>
         {profile && (
-          <div className="w-7 h-7 bg-slate-900 flex items-center justify-center text-xs font-black text-white rounded-sm">
+          <div className="w-8 h-8 bg-slate-900 flex items-center justify-center text-xs font-black text-white rounded-lg shadow-sm">
             {initials}
           </div>
         )}
       </div>
 
       {/* ── Mobile bottom nav ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 flex items-stretch h-16 safe-bottom">
+      <nav className="md:hidden fixed bottom-6 left-4 right-4 z-40 bg-white/90 backdrop-blur-lg border border-slate-200/50 flex items-stretch h-16 rounded-2xl shadow-elevated safe-bottom">
         {mobileNavItems.map((item) => {
           const active = isActive(item.href);
           const isAI   = item.href === "/dashboard/match";
@@ -166,16 +166,24 @@ export default function DashboardSidebar({ profile }: Props) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-bold transition-colors",
+                "flex-1 relative flex flex-col items-center justify-center gap-1 text-[10px] font-bold transition-all active:scale-90",
                 active
                   ? "text-brand-600"
                   : isAI
-                    ? "text-brand-400 hover:text-brand-600"
-                    : "text-slate-400 hover:text-slate-600"
+                    ? "text-brand-400"
+                    : "text-slate-400"
               )}
             >
-              <item.icon className={cn("w-5 h-5", active && "stroke-[2.5]")} />
+              {active && (
+                <div className="absolute inset-0 flex items-center justify-center -z-10">
+                  <div className="w-10 h-10 bg-brand-50/50 rounded-xl" />
+                </div>
+              )}
+              <item.icon className={cn("w-5 h-5 transition-transform", active && "scale-110")} />
               <span className="tracking-wide">{item.label}</span>
+              {active && (
+                <div className="absolute -bottom-1 w-1 h-1 bg-brand-600 rounded-full" />
+              )}
             </Link>
           );
         })}
