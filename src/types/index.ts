@@ -18,6 +18,7 @@ export interface CountryMetadata {
 
 export interface Scholarship {
   id: string;
+  slug?: string;
   name: string;
   provider: string;
   country: Country;
@@ -30,6 +31,13 @@ export interface Scholarship {
   application_deadline: string | null;
   application_url: string;
   is_active: boolean;
+  // Structured eligibility (added in migration 011)
+  citizenship_required?: string[] | null;
+  open_to_international?: boolean;
+  min_gpa?: number | null;
+  renewable?: boolean;
+  effort_minutes?: number | null;
+  verified_at?: string | null;
   created_at: string;
   updated_at: string;
   embedding?: number[];
@@ -46,6 +54,12 @@ export interface UserProfile {
   bio: string | null;
   avatar_url: string | null;
   role: 'user' | 'admin';
+  // High-signal matching fields (added in migration 011)
+  citizenship?: string | null;
+  financial_need?: boolean | null;
+  career_goals?: string | null;
+  interests?: string[];
+  extracurriculars?: string[];
   created_at: string;
   updated_at: string;
 }

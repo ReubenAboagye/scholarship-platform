@@ -2,8 +2,8 @@
  * generate-embeddings.ts
  * ============================================================
  * Generates embeddings for all scholarships using OpenRouter.
- * Uses openai/text-embedding-3-small via OpenRouter — same
- * 1,536-dimension vectors, no separate OpenAI key needed.
+ * Uses openai/text-embedding-3-small via OpenRouter with Matryoshka
+ * truncation to 768 dimensions. Matches the vector(768) column.
  *
  * Usage:
  *   pnpm tsx scripts/generate-embeddings.ts
@@ -49,8 +49,12 @@ async function generateEmbedding(text: string): Promise<number[]> {
   const response = await client.embeddings.create({
     model: "openai/text-embedding-3-small",
     input: text,
+    // @ts-ignore — OpenRouter supports dimensions param for Matryoshka truncation
+    dimensions: 768,
   });
-  return response.data[0].embedding;
+  const embedding = response.data[0].embedding;
+  // Fallback: if OpenRouter returned 1536d anyway, truncate to 768
+  return embedding.length === 768 ? embedding : embedding.slice(0, 768);
 }
 
 async function main() {

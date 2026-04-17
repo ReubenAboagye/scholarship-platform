@@ -1,6 +1,5 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Bookmark, ListChecks, TrendingUp, Clock } from "lucide-react";
 import DashboardClient from "@/components/dashboard/DashboardClient";
 
 export default async function DashboardPage() {
@@ -12,21 +11,29 @@ export default async function DashboardPage() {
     { data: profile },
     { data: saved },
     { data: tracked },
-    { data: scholarships },
+    { data: latestMatch },
   ] = await Promise.all([
     supabase
       .from("profiles")
-      .select("*, onboarding_complete")
+      .select("*, onboarding_complete, citizenship, career_goals, interests, extracurriculars, financial_need")
       .eq("id", user.id)
       .single(),
-    supabase.from("saved_scholarships").select("id").eq("user_id", user.id),
-    supabase.from("application_tracker").select("id, status, scholarships(name)").eq("user_id", user.id).limit(5),
     supabase
-      .from("scholarships")
-      .select("id, slug, name, country, funding_type, application_deadline")
-      .eq("is_active", true)
-      .order("created_at", { ascending: false })
-      .limit(5),
+      .from("saved_scholarships")
+      .select("id")
+      .eq("user_id", user.id),
+    supabase
+      .from("application_tracker")
+      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug)")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
+    supabase
+      .from("match_history")
+      .select("id, run_at, explanation, results")
+      .eq("user_id", user.id)
+      .order("run_at", { ascending: false })
+      .limit(1)
+      .single(),
   ]);
 
   const profileComplete = !!(
@@ -34,61 +41,38 @@ export default async function DashboardPage() {
     profile?.degree_level &&
     profile?.country_of_origin
   );
-
   const onboardingComplete = !!(profile as any)?.onboarding_complete;
   const firstName = profile?.full_name?.split(" ")[0] || "there";
-
-  // ── Profile completion %
-  const profileFields = [
-    profile?.field_of_study,
-    profile?.degree_level,
-    profile?.country_of_origin,
-    profile?.full_name,
-    (profile as any)?.gpa,
-    (profile as any)?.bio,
-  ];
-  const completedCount = profileFields.filter(Boolean).length;
-  const completionPct  = Math.round((completedCount / profileFields.length) * 100);
-
   const bannerHref = !onboardingComplete ? "/onboarding" : "/dashboard/profile";
 
-  const stats = [
-    {
-      label: "Saved",
-      sublabel: "scholarships",
-      value: saved?.length ?? 0,
-      iconName: "Bookmark",
-      href: "/dashboard/saved",
-      accent: "bg-brand-50 text-brand-600 border-brand-100",
-    },
-    {
-      label: "Tracked",
-      sublabel: "tracked",
-      value: tracked?.length ?? 0,
-      iconName: "ListChecks",
-      href: "/dashboard/tracker",
-      accent: "bg-indigo-50 text-indigo-600 border-indigo-100",
-    },
-    {
-      label: "Upcoming",
-      sublabel: "deadlines",
-      value: scholarships?.filter((s) => {
-        if (!s.application_deadline) return false;
-        const diff = new Date(s.application_deadline).getTime() - Date.now();
-        return diff > 0 && diff < 30 * 24 * 60 * 60 * 1000;
-      }).length ?? 0,
-      iconName: "Clock",
-      href: "/scholarships",
-      accent: "bg-amber-50 text-amber-600 border-amber-100",
-    },
-    {
-      label: "AI Match",
-      value: profileComplete ? "—" : "—",
-      iconName: "TrendingUp",
-      href: "/dashboard/match",
-      accent: "bg-emerald-50 text-emerald-600 border-emerald-100",
-    },
+  // Profile completion % — weighted fields
+  const weightedFields = [
+    { value: profile?.full_name,           weight: 10 },
+    { value: profile?.country_of_origin,   weight: 10 },
+    { value: profile?.field_of_study,      weight: 15 },
+    { value: profile?.degree_level,        weight: 15 },
+    { value: (profile as any)?.citizenship,       weight: 15 },
+    { value: (profile as any)?.gpa,               weight: 10 },
+    { value: (profile as any)?.career_goals,      weight: 10 },
+    { value: profile?.bio,                 weight: 5  },
+    { value: (profile as any)?.financial_need !== null && (profile as any)?.financial_need !== undefined ? "set" : null, weight: 10 },
   ];
+  const totalWeight   = weightedFields.reduce((s, f) => s + f.weight, 0);
+  const earnedWeight  = weightedFields.filter((f) => Boolean(f.value)).reduce((s, f) => s + f.weight, 0);
+  const completionPct = Math.round((earnedWeight / totalWeight) * 100);
+
+  // "Due this week" — tracker items with deadline within 7 days
+  const dueThisWeek = (tracked ?? [])
+    .filter((t: any) => {
+      const d = t.scholarships?.application_deadline;
+      if (!d) return false;
+      const diff = new Date(d).getTime() - Date.now();
+      return diff > 0 && diff <= 7 * 24 * 60 * 60 * 1000;
+    })
+    .slice(0, 5);
+
+  // Top match results (up to 3) from latest session
+  const topMatches = ((latestMatch as any)?.results ?? []).slice(0, 3);
 
   return (
     <DashboardClient
@@ -97,9 +81,11 @@ export default async function DashboardPage() {
       onboardingComplete={onboardingComplete}
       completionPct={completionPct}
       bannerHref={bannerHref}
-      stats={stats}
-      scholarships={scholarships ?? []}
+      saved={saved?.length ?? 0}
       tracked={tracked ?? []}
+      dueThisWeek={dueThisWeek}
+      topMatches={topMatches}
+      hasMatchHistory={!!(latestMatch as any)?.id}
     />
   );
 }
