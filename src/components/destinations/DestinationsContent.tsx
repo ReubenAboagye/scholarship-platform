@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Globe, CheckCircle, GraduationCap, MapPin } from "lucide-react";
 import { CountryMetadata } from "@/types";
@@ -153,12 +154,9 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
             >
               Get Started for Free
             </a>
-            <a 
-              href="/scholarships" 
-              className="px-8 py-4 bg-white/10 text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all text-base"
-            >
+            <Link href="/scholarships" className="px-8 py-4 bg-white/10 text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all text-base">
               Browse Scholarships
-            </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -40,10 +40,10 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          <a href="/" className="flex items-center gap-1">
+          <Link href="/" className="flex items-center gap-1">
             <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
             <span className="text-xl font-black tracking-tight text-brand-600">Match</span>
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
@@ -103,6 +103,7 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
             <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               How It Works
             </a>

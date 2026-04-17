@@ -76,7 +76,7 @@ export default function AdminPage() {
 
   const item = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } }
+    show: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 100 } }
   };
 
   return (
@@ -90,7 +90,7 @@ export default function AdminPage() {
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-black text-slate-900 tracking-tight">Admin Overview</h1>
-          <p className="text-slate-500 text-sm mt-1 font-medium italic">Welcome back! Here's what's happening today.</p>
+          <p className="text-slate-500 text-sm mt-1 font-medium italic">Welcome back! Here&apos;s what&apos;s happening today.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl shadow-sm text-sm text-slate-600 font-medium">

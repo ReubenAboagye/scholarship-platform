@@ -6,10 +6,10 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
-            <a href="/" className="inline-flex items-center gap-1 mb-4">
+            <Link href="/" className="inline-flex items-center gap-1 mb-4">
               <span className="text-lg font-black text-white">Scholar</span>
               <span className="text-lg font-black text-brand-400">Match</span>
-            </a>
+            </Link>
             <p className="text-sm leading-relaxed max-w-xs mb-4">
               AI-powered scholarship discovery for ambitious international students. UK, USA, Germany, and Canada all in one place.
             </p>
@@ -20,7 +20,8 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wide text-slate-300 mb-4">Platform</h4>
             <ul className="space-y-2.5 text-sm">
-              <li><a href="/scholarships" className="hover:text-white transition-colors">Browse Scholarships</a></li>
+              <li><Link href="/scholarships" className="hover:text-white transition-colors">Browse Scholarships</Link></li>
+              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
               <li><a href="/#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
               <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="/faq" className="hover:text-white transition-colors">FAQ</a></li>
