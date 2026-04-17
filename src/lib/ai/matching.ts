@@ -236,7 +236,7 @@ export async function generateMatchExplanation(
 
   const client = getOpenRouterClient();
   const response = await client.chat.completions.create({
-    model: process.env.OPENROUTER_MODEL ?? 'google/gemma-4-26b-a4b-it:free',
+    model: process.env.OPENROUTER_MODEL!,
     messages: [{
       role: 'user',
       content: `You are a scholarship advisor. Be specific and concise — 2 sentences max.
