@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-const MotionLink = motion.create(Link);
+const MotionA = motion.a;
 import { CheckCircle, ArrowRight, ChevronDown } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -25,12 +25,12 @@ const countries = [
 ];
 
 const featured = [
-  { name: "Chevening Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Tuition + GBP 1,173/mo + flights", degree: "Masters" },
-  { name: "Fulbright Foreign Student", country: "USA", flag: "us", funding: "Full", amount: "Full tuition + stipend + flights", degree: "Masters / PhD" },
-  { name: "DAAD Scholarship", country: "Germany", flag: "de", funding: "Full", amount: "EUR 934–1,200/month + insurance", degree: "Masters / PhD" },
-  { name: "Vanier Canada Graduate", country: "Canada", flag: "ca", funding: "Full", amount: "CAD 50,000/year × 3 years", degree: "PhD" },
-  { name: "Gates Cambridge Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Full tuition + GBP 21,000/year", degree: "Masters / PhD" },
-  { name: "Lester B. Pearson", country: "Canada", flag: "ca", funding: "Full", amount: "Full 4-year undergraduate costs", degree: "Undergraduate" },
+  { name: "Chevening Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Tuition + GBP 1,173/mo + flights", degree: "Masters", slug: "chevening-scholarship" },
+  { name: "Fulbright Foreign Student", country: "USA", flag: "us", funding: "Full", amount: "Full tuition + stipend + flights", degree: "Masters / PhD", slug: "fulbright-foreign-student-program" },
+  { name: "DAAD Scholarship", country: "Germany", flag: "de", funding: "Full", amount: "EUR 934–1,200/month + insurance", degree: "Masters / PhD", slug: "daad-scholarship" },
+  { name: "Vanier Canada Graduate", country: "Canada", flag: "ca", funding: "Full", amount: "CAD 50,000/year × 3 years", degree: "PhD", slug: "vanier-canada-graduate-scholarship" },
+  { name: "Gates Cambridge Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Full tuition + GBP 21,000/year", degree: "Masters / PhD", slug: "gates-cambridge-scholarship" },
+  { name: "Lester B. Pearson", country: "Canada", flag: "ca", funding: "Full", amount: "Full 4-year undergraduate costs", degree: "Undergraduate", slug: "lester-b-pearson-scholarship" },
 ];
 
 const steps = [
@@ -143,7 +143,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <div className="flex flex-col sm:flex-row gap-3">
-                <MotionLink
+                <MotionA
                   href="/auth/signup"
                   className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-brand-600 text-white font-bold text-sm shadow-brand transition duration-200 ease-out hover:bg-brand-700"
                   variants={fadeInUp}
@@ -151,8 +151,8 @@ export default function HomePage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   Start matching scholarships for free
-                </MotionLink>
-                <MotionLink
+                </MotionA>
+                <MotionA
                   href="/scholarships"
                   className="inline-flex items-center justify-center gap-1.5 rounded-full px-7 py-3 bg-white border border-slate-300 text-slate-700 font-semibold text-sm shadow-sm transition duration-200 ease-out hover:border-slate-400 hover:shadow-md"
                   variants={fadeInUp}
@@ -160,7 +160,7 @@ export default function HomePage() {
                   whileTap={{ scale: 0.99 }}
                 >
                   Browse all scholarships <ArrowRight className="w-4 h-4" />
-                </MotionLink>
+                </MotionA>
               </div>
             </motion.div>
             <div className="relative">
@@ -255,15 +255,15 @@ export default function HomePage() {
               <h2 className="text-3xl font-black text-slate-900">Featured Scholarships</h2>
               <p className="text-slate-500 mt-1">Hand-picked fully-funded opportunities</p>
             </div>
-            <Link href="/scholarships" className="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
+            <a href="/scholarships" className="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
               See all <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {featured.map((s, i) => (
-              <Link
+              <a
                 key={s.name}
-                href="/scholarships"
+                href={`/scholarships/${s.slug}`}
                 className="group relative block bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-all duration-300"
                 style={{ position: 'relative' }}
               >
@@ -306,7 +306,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </motion.div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -327,7 +327,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {countries.map((c, i) => (
-              <Link
+              <a
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
                 className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm transition-all h-full text-center hover:shadow-md"
@@ -345,7 +345,7 @@ export default function HomePage() {
                     Browse Scholarships <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 </motion.div>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -421,12 +421,12 @@ export default function HomePage() {
           <motion.p className="text-slate-400 text-lg mb-8 max-w-xl mx-auto" variants={fadeInUp} transition={{ delay: 0.08 }}>
             Thousands of students miss funding they qualify for simply because they never found it.
           </motion.p>
-          <Link
+          <a
             href="/auth/signup"
             className="inline-flex items-center gap-2 rounded-full px-8 py-4 bg-brand-600 text-white font-black text-base shadow-brand transition duration-200 ease-out hover:bg-brand-700 hover:scale-105"
           >
             Find scholarships now — free to use <ArrowRight className="w-5 h-5" />
-          </Link>
+          </a>
           <motion.p className="mt-6 text-slate-500 text-xs font-semibold uppercase tracking-widest" variants={fadeInUp} transition={{ delay: 0.15 }}>
             No credit card required · Free forever
           </motion.p>

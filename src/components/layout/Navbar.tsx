@@ -10,7 +10,7 @@ const studentsMenu = [
   { icon: Cpu, title: "AI Matching", desc: "Let our AI rank opportunities for you.", href: "/dashboard/match" },
   { icon: Bookmark, title: "Saved Scholarships", desc: "Access your bookmarked opportunities.", href: "/dashboard/saved" },
   { icon: LayoutDashboard, title: "Application Tracker", desc: "Track every application in one dashboard.", href: "/dashboard/tracker" },
-  { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/#countries" },
+  { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/destinations" },
 ];
 
 const companyMenu = [
@@ -40,10 +40,10 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          <Link href="/" className="flex items-center gap-1">
+          <a href="/" className="flex items-center gap-1">
             <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
             <span className="text-xl font-black tracking-tight text-brand-600">Match</span>
-          </Link>
+          </a>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
@@ -103,9 +103,9 @@ export default function Navbar() {
               )}
             </div>
 
-            <Link href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
               How It Works
-            </Link>
+            </a>
           </nav>
 
           <div className="hidden items-center gap-4 md:flex">
@@ -156,8 +156,8 @@ export default function Navbar() {
 
             <div className="pt-4 border-t border-slate-100 space-y-3 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
-              <Link href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</Link>
-              <Link href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</Link>
+              <a href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
+              <a href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</a>
             </div>
           </div>
         </div>

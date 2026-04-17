@@ -1,6 +1,20 @@
 export type Country = 'UK' | 'USA' | 'Germany' | 'Canada';
 export type DegreeLevel = 'Undergraduate' | 'Masters' | 'PhD' | 'Any';
 export type FundingType = 'Full' | 'Partial' | 'Tuition Only' | 'Living Allowance';
+ 
+export interface CountryMetadata {
+  id: string;
+  name: string;
+  code: string;
+  flag_code: string;
+  description: string;
+  notable_scholarships: string;
+  image_url: string;
+  is_active: boolean;
+  display_order: number;
+  created_at: string;
+  updated_at: string;
+}
 
 export interface Scholarship {
   id: string;
