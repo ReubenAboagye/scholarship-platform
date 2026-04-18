@@ -6,15 +6,18 @@ import Link from "next/link";
 import { countryFlagUrl } from "@/lib/utils";
 
 interface FilterSidebarProps {
-  active: { country: string; funding_type: string; degree_level: string; search: string };
+  active: {
+    country: string; funding_type: string; degree_level: string; search: string;
+    deadline: string; renewable: string; international: string; effort: string;
+  };
   countries: string[];
   fundingTypes: string[];
   degreeLevels: string[];
 }
 
-function FilterSection({
-  label, children, defaultOpen = true,
-}: { label: string; children: React.ReactNode; defaultOpen?: boolean }) {
+function FilterSection({ label, children, defaultOpen = true }: {
+  label: string; children: React.ReactNode; defaultOpen?: boolean;
+}) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-b border-slate-100 last:border-0">
@@ -36,15 +39,23 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
   const buildUrl = (overrides: Partial<typeof active>) => {
     const merged = { ...active, ...overrides };
     const params = new URLSearchParams();
-    if (merged.country      !== "All") params.set("country",      merged.country);
-    if (merged.funding_type !== "All") params.set("funding_type", merged.funding_type);
-    if (merged.degree_level !== "All") params.set("degree_level", merged.degree_level);
-    if (merged.search)                 params.set("search",       merged.search);
+    if (merged.country       !== "All"  ) params.set("country",       merged.country);
+    if (merged.funding_type  !== "All"  ) params.set("funding_type",  merged.funding_type);
+    if (merged.degree_level  !== "All"  ) params.set("degree_level",  merged.degree_level);
+    if (merged.deadline      !== "any"  ) params.set("deadline",      merged.deadline);
+    if (merged.renewable     === "true" ) params.set("renewable",     "true");
+    if (merged.international === "true" ) params.set("international", "true");
+    if (merged.effort        !== "any"  ) params.set("effort",        merged.effort);
+    if (merged.search                   ) params.set("search",        merged.search);
     const qs = params.toString();
     return `/scholarships${qs ? "?" + qs : ""}`;
   };
 
-  const hasFilters = Object.values(active).some(v => v !== "All" && v !== "");
+  const hasFilters =
+    active.country !== "All" || active.funding_type !== "All" ||
+    active.degree_level !== "All" || active.search !== "" ||
+    active.deadline !== "any" || active.renewable === "true" ||
+    active.international === "true" || active.effort !== "any";
 
   const FilterContent = () => (
     <div className="space-y-0">
@@ -52,15 +63,41 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       {/* Search */}
       <FilterSection label="Search">
         <form method="GET" action="/scholarships">
-          {active.country      !== "All" && <input type="hidden" name="country"      value={active.country} />}
-          {active.funding_type !== "All" && <input type="hidden" name="funding_type" value={active.funding_type} />}
-          {active.degree_level !== "All" && <input type="hidden" name="degree_level" value={active.degree_level} />}
+          {active.country       !== "All"  && <input type="hidden" name="country"       value={active.country} />}
+          {active.funding_type  !== "All"  && <input type="hidden" name="funding_type"  value={active.funding_type} />}
+          {active.degree_level  !== "All"  && <input type="hidden" name="degree_level"  value={active.degree_level} />}
+          {active.deadline      !== "any"  && <input type="hidden" name="deadline"      value={active.deadline} />}
+          {active.renewable     === "true" && <input type="hidden" name="renewable"     value="true" />}
+          {active.international === "true" && <input type="hidden" name="international" value="true" />}
+          {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
             <input name="search" defaultValue={active.search} placeholder="Keyword…"
               className="w-full pl-8 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-400 transition-all placeholder:text-slate-400" />
           </div>
         </form>
+      </FilterSection>
+
+      {/* Deadline */}
+      <FilterSection label="Deadline">
+        <div className="space-y-0.5">
+          {[
+            { v: "any",  l: "Any deadline" },
+            { v: "7d",   l: "Next 7 days" },
+            { v: "30d",  l: "Next 30 days" },
+            { v: "90d",  l: "Next 90 days" },
+          ].map(({ v, l }) => (
+            <Link key={v} href={buildUrl({ deadline: v })} onClick={() => setDrawerOpen(false)}
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+                active.deadline === v
+                  ? "bg-brand-50 text-brand-700 font-semibold"
+                  : "text-slate-600 hover:bg-slate-50"
+              }`}>
+              <span>{l}</span>
+              {active.deadline === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            </Link>
+          ))}
+        </div>
       </FilterSection>
 
       {/* Country */}
@@ -84,8 +121,25 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
         </div>
       </FilterSection>
 
+      {/* Degree Level */}
+      <FilterSection label="Degree Level" defaultOpen={false}>
+        <div className="space-y-0.5">
+          {degreeLevels.map((d) => (
+            <Link key={d} href={buildUrl({ degree_level: d })} onClick={() => setDrawerOpen(false)}
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+                active.degree_level === d
+                  ? "bg-brand-50 text-brand-700 font-semibold"
+                  : "text-slate-600 hover:bg-slate-50"
+              }`}>
+              <span>{d === "All" ? "Any Level" : d}</span>
+              {active.degree_level === d && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            </Link>
+          ))}
+        </div>
+      </FilterSection>
+
       {/* Funding Type */}
-      <FilterSection label="Funding Type">
+      <FilterSection label="Funding Type" defaultOpen={false}>
         <div className="space-y-0.5">
           {fundingTypes.map((f) => (
             <Link key={f} href={buildUrl({ funding_type: f })} onClick={() => setDrawerOpen(false)}
@@ -101,20 +155,58 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
         </div>
       </FilterSection>
 
-      {/* Degree Level */}
-      <FilterSection label="Degree Level" defaultOpen={false}>
+      {/* Effort */}
+      <FilterSection label="Effort" defaultOpen={false}>
         <div className="space-y-0.5">
-          {degreeLevels.map((d) => (
-            <Link key={d} href={buildUrl({ degree_level: d })} onClick={() => setDrawerOpen(false)}
+          {[
+            { v: "any",    l: "Any effort" },
+            { v: "quick",  l: "Quick apply (≤ 60 min)" },
+            { v: "medium", l: "Full application" },
+          ].map(({ v, l }) => (
+            <Link key={v} href={buildUrl({ effort: v })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.degree_level === d
+                active.effort === v
                   ? "bg-brand-50 text-brand-700 font-semibold"
                   : "text-slate-600 hover:bg-slate-50"
               }`}>
-              <span>{d === "All" ? "Any Level" : d}</span>
-              {active.degree_level === d && <ChevronRight className="w-3 h-3 text-brand-500" />}
+              <span>{l}</span>
+              {active.effort === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
             </Link>
           ))}
+        </div>
+      </FilterSection>
+
+      {/* Toggles: Renewable + International */}
+      <FilterSection label="Other" defaultOpen={false}>
+        <div className="space-y-1.5">
+          <Link
+            href={buildUrl({ renewable: active.renewable === "true" ? "" : "true" })}
+            onClick={() => setDrawerOpen(false)}
+            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+              active.renewable === "true"
+                ? "bg-brand-50 text-brand-700 font-semibold"
+                : "text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            <span>Renewable awards</span>
+            <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.renewable === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
+              <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.renewable === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
+            </div>
+          </Link>
+          <Link
+            href={buildUrl({ international: active.international === "true" ? "" : "true" })}
+            onClick={() => setDrawerOpen(false)}
+            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
+              active.international === "true"
+                ? "bg-brand-50 text-brand-700 font-semibold"
+                : "text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            <span>Open internationally</span>
+            <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.international === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
+              <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.international === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
+            </div>
+          </Link>
         </div>
       </FilterSection>
 
@@ -152,13 +244,11 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
         </div>
       </aside>
 
-      {/* Mobile drawer backdrop */}
       {drawerOpen && (
         <div className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm lg:hidden"
           onClick={() => setDrawerOpen(false)} />
       )}
 
-      {/* Mobile drawer */}
       <div className={`fixed inset-y-0 right-0 z-[70] w-72 bg-white shadow-2xl lg:hidden transform transition-transform duration-300 ease-out ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}>
         <div className="h-full flex flex-col">
           <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
