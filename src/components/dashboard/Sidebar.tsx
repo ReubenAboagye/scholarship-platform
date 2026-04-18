@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import NotificationCenter from "@/components/dashboard/NotificationCenter";
 
 const navItems = [
   { href: "/dashboard",         icon: LayoutDashboard, label: "Dashboard" },
@@ -77,17 +78,20 @@ export default function DashboardSidebar({ profile }: Props) {
               <span className="font-black text-[15px] text-brand-600">Match</span>
             </Link>
           )}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-          >
-            <ChevronLeft
-              className={cn(
-                "w-3.5 h-3.5 transition-transform duration-200",
-                collapsed && "rotate-180"
-              )}
-            />
-          </button>
+          <div className="flex items-center gap-1">
+            {!collapsed && <NotificationCenter />}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            >
+              <ChevronLeft
+                className={cn(
+                  "w-3.5 h-3.5 transition-transform duration-200",
+                  collapsed && "rotate-180"
+                )}
+              />
+            </button>
+          </div>
         </div>
 
         <nav className="flex-1 p-2 space-y-0.5 pt-3">
@@ -150,8 +154,11 @@ export default function DashboardSidebar({ profile }: Props) {
           <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
         </Link>
         {profile && (
-          <div className="w-8 h-8 bg-slate-900 flex items-center justify-center text-xs font-black text-white rounded-lg shadow-sm">
-            {initials}
+          <div className="flex items-center gap-2">
+            <NotificationCenter />
+            <div className="w-8 h-8 bg-slate-900 flex items-center justify-center text-xs font-black text-white rounded-lg shadow-sm">
+              {initials}
+            </div>
           </div>
         )}
       </div>

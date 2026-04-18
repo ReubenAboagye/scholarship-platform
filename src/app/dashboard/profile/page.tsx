@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X } from "lucide-react";
+import { getTopNudge } from "@/lib/utils/profile-completeness";
 
 const DEGREE_LEVELS = ["Undergraduate", "Masters", "PhD", "Any"];
 const FIELDS = [
@@ -183,6 +184,18 @@ export default function ProfilePage() {
     setSaving(false); setSaved(true); setDirty(false);
   }
 
+  const topNudge = getTopNudge({
+    full_name:           form.full_name,
+    country_of_origin:   form.country_of_origin,
+    field_of_study:      form.field_of_study,
+    degree_level:        form.degree_level,
+    citizenship:         form.citizenship,
+    gpa:                 form.gpa,
+    career_goals:        form.career_goals,
+    bio:                 form.bio,
+    financial_need:      form.financial_need,
+  });
+
   // Weighted completeness — mirrors server-side formula
   const weightedFields = [
     { value: form.full_name,           weight: 10, label: "Full name" },
@@ -229,6 +242,16 @@ export default function ProfilePage() {
       </div>
 
       <div className="space-y-5">
+
+        {/* Profile nudge */}
+        {topNudge && completionPct < 90 && (
+          <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+            <span className="text-lg flex-shrink-0">💡</span>
+            <p className="text-sm text-amber-800 flex-1">
+              Adding your <strong>{topNudge.label}</strong> will unlock <strong>{topNudge.gain}</strong>.
+            </p>
+          </div>
+        )}
 
         {/* Avatar card */}
         <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { countryFlag, formatDeadline } from "@/lib/utils";
 import { logMatchEvent, logImpressions, dismissScholarship, type NotRelevantReason } from "@/lib/utils/events";
+import { getTopNudge } from "@/lib/utils/profile-completeness";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -291,6 +292,7 @@ export default function MatchesDashboardPage() {
   const [search, setSearch] = useState("");
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [scoreFilter, setScoreFilter] = useState<string[]>(["strong", "good", "possible"]);
+  const [nudge, setNudge] = useState<ReturnType<typeof getTopNudge>>(null);
   const filterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -299,7 +301,7 @@ export default function MatchesDashboardPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { setLoading(false); return; }
 
-      const [{ data: sessionData }, { data: savedRows }, { data: dismissedRows }] = await Promise.all([
+      const [{ data: sessionData }, { data: savedRows }, { data: dismissedRows }, { data: profileData }] = await Promise.all([
         supabase
           .from("match_history")
           .select("id, run_at, explanation, results")
@@ -309,12 +311,14 @@ export default function MatchesDashboardPage() {
           .single(),
         supabase.from("saved_scholarships").select("scholarship_id").eq("user_id", user.id),
         supabase.from("dismissed_scholarships").select("scholarship_id").eq("user_id", user.id),
+        supabase.from("profiles").select("field_of_study,degree_level,citizenship,gpa,bio,career_goals,country_of_origin,full_name,financial_need").eq("id", user.id).single(),
       ]);
 
       const sess = sessionData as HistorySession | null;
       setSession(sess);
       setSavedIds(new Set((savedRows ?? []).map((r: any) => r.scholarship_id)));
       setDismissedIds(new Set((dismissedRows ?? []).map((r: any) => r.scholarship_id)));
+      if (profileData) setNudge(getTopNudge(profileData as any));
       setLoading(false);
 
       // Log impressions for all shown results
@@ -417,6 +421,17 @@ export default function MatchesDashboardPage() {
           <Sparkles className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-orange-800 leading-relaxed">{session.explanation}</p>
         </div>
+      )}
+
+      {nudge && (
+        <a href={nudge.href}
+          className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 hover:bg-amber-100 transition-colors group">
+          <span className="text-lg flex-shrink-0">💡</span>
+          <p className="text-sm text-amber-800 flex-1">
+            Adding your <strong>{nudge.label}</strong> could unlock <strong>{nudge.gain}</strong>.
+          </p>
+          <span className="text-xs font-bold text-amber-600 group-hover:underline whitespace-nowrap">Complete profile →</span>
+        </a>
       )}
 
       {/* Filter bar */}
