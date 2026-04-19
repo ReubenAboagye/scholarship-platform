@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Bell, X, CheckCheck, ExternalLink } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import Link from "next/link";
 import { timeAgo } from "@/lib/utils";
 
 interface Notification {
@@ -30,7 +29,8 @@ export default function NotificationCenter() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading,       setLoading]       = useState(true);
   const ref = useRef<HTMLDivElement>(null);
-  const supabase = createClient();
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
@@ -48,11 +48,11 @@ export default function NotificationCenter() {
     setLoading(false);
   }
 
-  // Realtime subscription
+  // Realtime subscription — runs once on mount only
   useEffect(() => {
     load();
     const channel = supabase
-      .channel("notifications")
+      .channel("realtime:notifications")
       .on("postgres_changes", {
         event: "INSERT",
         schema: "public",
@@ -62,6 +62,7 @@ export default function NotificationCenter() {
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Close on outside click
@@ -142,10 +143,10 @@ export default function NotificationCenter() {
                 <span className="text-base flex-shrink-0 mt-0.5">{TYPE_ICON[n.type] ?? "🔔"}</span>
                 <div className="flex-1 min-w-0">
                   {n.href ? (
-                    <Link href={n.href} onClick={() => { markRead(n.id); setOpen(false); }}
+                    <a href={n.href} onClick={() => { markRead(n.id); setOpen(false); }}
                       className="text-xs font-semibold text-slate-800 hover:text-brand-600 transition-colors line-clamp-1">
                       {n.title}
-                    </Link>
+                    </a>
                   ) : (
                     <p className="text-xs font-semibold text-slate-800 line-clamp-1">{n.title}</p>
                   )}
@@ -163,10 +164,10 @@ export default function NotificationCenter() {
           {/* Footer */}
           {notifications.length > 0 && (
             <div className="px-4 py-2.5 border-t border-slate-100 text-center">
-              <Link href="/dashboard" onClick={() => setOpen(false)}
+              <a href="/dashboard" onClick={() => setOpen(false)}
                 className="text-[11px] font-semibold text-slate-400 hover:text-brand-600 transition-colors">
                 Go to dashboard
-              </Link>
+              </a>
             </div>
           )}
         </div>
