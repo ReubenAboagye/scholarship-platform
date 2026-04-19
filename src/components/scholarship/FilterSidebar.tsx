@@ -239,7 +239,7 @@ export default function FilterSidebar({
       </div>
 
       {/* Desktop sticky sidebar — sticks below dashboard header with a small gap */}
-      <aside className="hidden lg:block lg:sticky lg:top-0 w-52 flex-shrink-0 self-start bg-white border border-slate-200 rounded-2xl p-4 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar shadow-sm transition-all duration-300">
+      <aside className="hidden lg:block lg:sticky lg:top-0 w-52 flex-shrink-0 self-start bg-white border border-slate-200 rounded-xl p-4 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar shadow-sm transition-all duration-300">
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Filters</p>
         <FilterContent />
       </aside>
