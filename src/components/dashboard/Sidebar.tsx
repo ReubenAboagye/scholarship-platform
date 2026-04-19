@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Search, Bookmark, ListChecks,
   User, LogOut, ChevronLeft, Sparkles,
@@ -39,7 +37,7 @@ interface Props {
 
 export default function DashboardSidebar({ profile }: Props) {
   const [collapsed, setCollapsed] = useState(false);
-  const pathname = usePathname();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -73,10 +71,10 @@ export default function DashboardSidebar({ profile }: Props) {
           )}
         >
           {!collapsed && (
-            <Link href="/" className="flex items-center gap-1.5">
+            <a href="/" className="flex items-center gap-1.5">
               <span className="font-black text-[15px] text-slate-900">Scholar</span>
               <span className="font-black text-[15px] text-brand-600">Match</span>
-            </Link>
+            </a>
           )}
           <div className="flex items-center gap-1">
             {!collapsed && <NotificationCenter />}
@@ -99,7 +97,7 @@ export default function DashboardSidebar({ profile }: Props) {
             const active = isActive(item.href);
             const isAI   = item.href === "/dashboard/match";
             return (
-              <Link
+              <a
                 key={item.href}
                 href={item.href}
                 title={collapsed ? item.label : undefined}
@@ -115,7 +113,7 @@ export default function DashboardSidebar({ profile }: Props) {
               >
                 <item.icon className={cn("flex-shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
                 {!collapsed && <span>{item.label}</span>}
-              </Link>
+              </a>
             );
           })}
         </nav>
@@ -149,10 +147,10 @@ export default function DashboardSidebar({ profile }: Props) {
 
       {/* ── Mobile top bar ── */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/50 h-14 flex items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-1.5 active:scale-95 transition-transform">
+        <a href="/" className="flex items-center gap-1.5 active:scale-95 transition-transform">
           <span className="font-black text-[16px] text-slate-900 tracking-tight">Scholar</span>
           <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
-        </Link>
+        </a>
         {profile && (
           <div className="flex items-center gap-2">
             <NotificationCenter />
@@ -169,7 +167,7 @@ export default function DashboardSidebar({ profile }: Props) {
           const active = isActive(item.href);
           const isAI   = item.href === "/dashboard/match";
           return (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className={cn(
@@ -184,7 +182,7 @@ export default function DashboardSidebar({ profile }: Props) {
               <item.icon className={cn("w-5 h-5", active && "scale-110")} />
               <span>{item.label}</span>
               {active && <div className="absolute bottom-0 w-6 h-0.5 bg-brand-600 rounded-full" />}
-            </Link>
+            </a>
           );
         })}
       </nav>

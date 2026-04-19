@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Bookmark, ArrowRight, ExternalLink } from "lucide-react";
-import Link from "next/link";
 import { countryFlagUrl, formatDeadline, fundingBadgeColor } from "@/lib/utils";
 import TrackButton from "@/components/scholarship/TrackButton";
 
@@ -41,10 +40,10 @@ export default async function SavedPage() {
                 : "Scholarships you've bookmarked will appear here."}
             </p>
           </div>
-          <Link href="/scholarships"
+          <a href="/scholarships"
             className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all px-3.5 py-2 rounded-lg mt-1">
             Browse <ArrowRight className="w-3 h-3" />
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -55,10 +54,10 @@ export default async function SavedPage() {
           </div>
           <h3 className="font-semibold text-slate-900 text-sm mb-1">No saved scholarships yet</h3>
           <p className="text-slate-400 text-xs mb-4">Browse scholarships and click Save to bookmark them here.</p>
-          <Link href="/scholarships"
+          <a href="/scholarships"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 hover:text-brand-700 transition-colors">
             Browse scholarships <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          </a>
         </div>
       ) : (
         <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100 overflow-hidden">
@@ -96,10 +95,10 @@ export default async function SavedPage() {
                     userId={user.id}
                     initialStatus={trackedMap[s.id] ?? null}
                   />
-                  <Link href={`/scholarships/${s.slug ?? s.id}`}
+                  <a href={`/scholarships/${s.slug ?? s.id}`}
                     className="hidden sm:flex text-xs px-2.5 py-1.5 border border-slate-200 text-slate-600 hover:border-slate-300 transition-colors font-medium rounded-lg">
                     Details
-                  </Link>
+                  </a>
                   <a href={s.application_url} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 text-xs px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors rounded-lg">
                     Apply <ExternalLink className="w-3 h-3" />
