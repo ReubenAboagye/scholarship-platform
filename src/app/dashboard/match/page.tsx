@@ -303,9 +303,13 @@ export default function MatchPage() {
   async function loadHistory() {
     setHistoryLoading(true);
     const supabase = createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setHistoryLoading(false); return; }
+
     const { data: rows } = await supabase
       .from("match_history")
       .select("id, run_at, explanation, profile_snapshot, results")
+      .eq("user_id", user.id)
       .order("run_at", { ascending: false })
       .limit(20);
 

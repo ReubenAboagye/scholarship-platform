@@ -10,4 +10,4 @@ node_modules/
 out/
 
 # Dependencies
-pnpm-lock.yaml
+# pnpm-lock.yaml is intentionally committed so Netlify can reproduce exact installs

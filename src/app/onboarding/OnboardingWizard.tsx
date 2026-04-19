@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, ChevronLeft, GraduationCap, BookOpen, Globe, Sparkles, AlertTriangle, X } from "lucide-react";
 
@@ -84,7 +83,6 @@ function FieldChip({
 }
 // ── Main Wizard Component ────────────────────────────────────
 export default function OnboardingWizard() {
-  const router = useRouter();
   const [step,        setStep]        = useState(0);
   const [saving,      setSaving]      = useState(false);
   const [fieldSearch, setFieldSearch] = useState("");
@@ -129,7 +127,7 @@ export default function OnboardingWizard() {
       onboarding_complete: true,
     }).eq("id", user.id);
 
-    router.push("/dashboard");
+    window.location.href = "/dashboard";
   }
 
   // ── Skip — saves whatever is filled so far, marks incomplete ─
@@ -148,7 +146,7 @@ export default function OnboardingWizard() {
       onboarding_complete: false, // stays false — banner will show on dashboard
     }).eq("id", user.id);
 
-    router.push("/dashboard");
+    window.location.href = "/dashboard";
   }
 
   // ── Filtered fields for step 1 search ─────────────────────
@@ -328,6 +326,7 @@ export default function OnboardingWizard() {
                   </label>
                   <textarea
                     rows={5}
+                    maxLength={500}
                     placeholder="Tell us about your academic background, research interests, career goals, or any achievements. The AI uses this to personalise your matches."
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}

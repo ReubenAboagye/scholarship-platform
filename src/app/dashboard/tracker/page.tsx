@@ -8,7 +8,6 @@ import {
   ChevronRight, LayoutGrid, List, StickyNote, X, Check,
   CalendarPlus,
 } from "lucide-react";
-import Link from "next/link";
 import { downloadScholarshipICS } from "@/lib/utils/ics";
 
 const STATUSES = [
@@ -190,10 +189,10 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes }: {
           <StickyNote className="w-3 h-3" />
           {item.notes ? "Edit notes" : "Add notes"}
         </button>
-        <Link href={`/scholarships/${s.slug ?? s.id}`}
+        <a href={`/scholarships/${s.slug ?? s.id}`}
           className="px-2.5 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:border-slate-300 transition-all">
           Details
-        </Link>
+        </a>
         <a href={s.application_url} target="_blank" rel="noopener noreferrer"
           className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all">
           Apply <ExternalLink className="w-3 h-3" />
@@ -283,10 +282,10 @@ export default function TrackerPage() {
                 <LayoutGrid className="w-3.5 h-3.5" />
               </button>
             </div>
-            <Link href="/scholarships"
+            <a href="/scholarships"
               className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-lg transition-all">
               Browse <ArrowRight className="w-3 h-3" />
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -343,10 +342,10 @@ export default function TrackerPage() {
           <p className="text-slate-500 text-sm mb-5 max-w-xs mx-auto">
             Browse scholarships and click <strong>Track</strong> on any listing to add it here.
           </p>
-          <Link href="/scholarships"
+          <a href="/scholarships"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all">
             Find Scholarships <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+          </a>
         </div>
 
       ) : filtered.length === 0 ? (

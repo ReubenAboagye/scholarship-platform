@@ -4,8 +4,9 @@ import { Resend } from "resend";
 import { buildDigestEmail } from "@/emails/digest";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
-const FROM    = "ScholarMatch <digest@scholarbridge-ai.netlify.app>";
+const APP_URL    = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
+const APP_DOMAIN = new URL(APP_URL).hostname;
+const FROM       = `ScholarMatch <digest@${APP_DOMAIN}>`;
 
 // Called by Supabase cron or manually — protected by CRON_SECRET header
 export async function POST(req: NextRequest) {

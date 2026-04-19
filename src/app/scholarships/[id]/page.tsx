@@ -1,6 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { countryFlagUrl, formatDeadline } from "@/lib/utils";
 import { ArrowLeft, ExternalLink, CheckCircle, Calendar, DollarSign, MapPin, GraduationCap } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -58,10 +57,10 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-12">
           {/* Back link */}
-          <Link href="/scholarships"
+          <a href="/scholarships"
             className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-10 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to scholarships
-          </Link>
+          </a>
 
           {/* Flag + funding badge */}
           <div className="flex items-center gap-3 mb-4">
@@ -213,10 +212,10 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               Apply Now <ExternalLink className="w-4 h-4" />
             </a>
             {!user && (
-              <Link href="/auth/signup"
+              <a href="/auth/signup"
                 className="flex items-center justify-center w-full py-3 border border-slate-200 hover:border-slate-300 text-slate-600 font-medium transition-colors text-sm rounded-xl">
                 Sign in to Save & Track
-              </Link>
+              </a>
             )}
           </div>
 
