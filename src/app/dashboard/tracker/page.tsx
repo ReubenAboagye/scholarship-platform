@@ -6,9 +6,10 @@ import { countryFlagUrl, formatDeadline, statusColor, isDeadlineUrgent } from "@
 import {
   ListChecks, ExternalLink, Loader2, ArrowRight, Trash2,
   ChevronRight, LayoutGrid, List, StickyNote, X, Check,
-  FileText, BookOpen,
+  CalendarPlus,
 } from "lucide-react";
 import Link from "next/link";
+import { downloadScholarshipICS } from "@/lib/utils/ics";
 
 const STATUSES = [
   "Interested", "In Progress", "Submitted",
@@ -175,6 +176,14 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes }: {
       {/* Footer actions */}
       <div className="flex items-center gap-1.5 pt-1 border-t border-slate-50">
         <span className="text-xs text-slate-400 flex-1">{s.funding_type} funding</span>
+        {s.application_deadline && (
+          <button
+            onClick={() => downloadScholarshipICS(s.name, s.application_deadline)}
+            title="Add deadline to calendar"
+            className="p-1.5 border border-slate-200 text-slate-400 rounded-lg hover:border-brand-300 hover:text-brand-600 transition-all">
+            <CalendarPlus className="w-3.5 h-3.5" />
+          </button>
+        )}
         <button
           onClick={() => onOpenNotes(item)}
           className="flex items-center gap-1 px-2.5 py-1.5 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:border-brand-300 hover:text-brand-600 transition-all">

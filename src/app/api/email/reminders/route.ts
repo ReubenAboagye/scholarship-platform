@@ -53,14 +53,18 @@ export async function POST(req: NextRequest) {
 
         if (alreadySent) continue;
 
-        // Get user email
+        // Get user email + notification preferences
         const { data: profile } = await supabase
           .from("profiles")
-          .select("email, full_name")
+          .select("email, full_name, notification_preferences")
           .eq("id", row.user_id)
           .single();
 
         if (!profile?.email) continue;
+
+        // Respect user's notification preferences
+        const prefs = (profile as any).notification_preferences ?? {};
+        if (prefs.deadline_reminders === false) continue;
 
         const { subject, html } = buildReminderEmail({
           firstName:           profile.full_name?.split(" ")[0] ?? "there",

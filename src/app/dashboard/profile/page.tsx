@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X } from "lucide-react";
+import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X, Bell } from "lucide-react";
 import { getTopNudge } from "@/lib/utils/profile-completeness";
 
 const DEGREE_LEVELS = ["Undergraduate", "Masters", "PhD", "Any"];
@@ -125,6 +125,10 @@ export default function ProfilePage() {
   const [saved,   setSaved]    = useState(false);
   const [dirty,   setDirty]    = useState(false);
   const [email,   setEmail]    = useState("");
+  const [notifPrefs, setNotifPrefs] = useState({
+    digest_email:       true,
+    deadline_reminders: true,
+  });
   const [form, setForm] = useState({
     full_name: "", country_of_origin: "", field_of_study: "",
     degree_level: "", gpa: "", bio: "",
@@ -140,19 +144,26 @@ export default function ProfilePage() {
       if (!user) return;
       setEmail(user.email ?? "");
       const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      if (data) setForm({
-        full_name:         data.full_name         ?? "",
-        country_of_origin: data.country_of_origin ?? "",
-        field_of_study:    data.field_of_study    ?? "",
-        degree_level:      data.degree_level      ?? "",
-        gpa:               data.gpa?.toString()   ?? "",
-        bio:               data.bio               ?? "",
-        citizenship:       (data as any).citizenship    ?? "",
-        career_goals:      (data as any).career_goals   ?? "",
-        financial_need:    (data as any).financial_need === true ? "true"
-                         : (data as any).financial_need === false ? "false" : "",
-        interests:         (data as any).interests ?? [],
-      });
+      if (data) {
+        setForm({
+          full_name:         data.full_name         ?? "",
+          country_of_origin: data.country_of_origin ?? "",
+          field_of_study:    data.field_of_study    ?? "",
+          degree_level:      data.degree_level      ?? "",
+          gpa:               data.gpa?.toString()   ?? "",
+          bio:               data.bio               ?? "",
+          citizenship:       (data as any).citizenship    ?? "",
+          career_goals:      (data as any).career_goals   ?? "",
+          financial_need:    (data as any).financial_need === true ? "true"
+                           : (data as any).financial_need === false ? "false" : "",
+          interests:         (data as any).interests ?? [],
+        });
+        const prefs = (data as any).notification_preferences ?? {};
+        setNotifPrefs({
+          digest_email:       prefs.digest_email       !== false,
+          deadline_reminders: prefs.deadline_reminders !== false,
+        });
+      }
       setLoading(false);
     }
     load();
@@ -179,7 +190,8 @@ export default function ProfilePage() {
       career_goals:      form.career_goals      || null,
       financial_need:    form.financial_need === "true" ? true
                        : form.financial_need === "false" ? false : null,
-      interests:         form.interests.length > 0 ? form.interests : [],
+      interests:              form.interests.length > 0 ? form.interests : [],
+      notification_preferences: notifPrefs,
     }).eq("id", user!.id);
     setSaving(false); setSaved(true); setDirty(false);
   }
@@ -409,6 +421,54 @@ export default function ProfilePage() {
                 inputClass={inp}
               />
             </div>
+          </div>
+        </div>
+
+        {/* Notification preferences */}
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
+            <div className="w-7 h-7 rounded-lg bg-sky-50 flex items-center justify-center">
+              <Bell className="w-3.5 h-3.5 text-sky-600" />
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">Email Notifications</h2>
+              <p className="text-xs text-slate-400">Choose which emails you receive from ScholarMatch</p>
+            </div>
+          </div>
+          <div className="p-4 space-y-3">
+            {([
+              {
+                key:   "digest_email" as const,
+                label: "Weekly digest",
+                desc:  "Top matches, upcoming deadlines, and profile tips — every Sunday",
+              },
+              {
+                key:   "deadline_reminders" as const,
+                label: "Deadline reminders",
+                desc:  "Reminder emails 7 days and 3 days before tracked scholarship deadlines",
+              },
+            ]).map(({ key, label, desc }) => (
+              <label key={key} className="flex items-start gap-4 cursor-pointer group">
+                {/* Toggle */}
+                <button
+                  type="button"
+                  onClick={() => { setNotifPrefs((p) => ({ ...p, [key]: !p[key] })); setDirty(true); setSaved(false); }}
+                  className={`mt-0.5 w-10 h-6 rounded-full transition-colors relative flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-400 ${notifPrefs[key] ? "bg-blue-600" : "bg-slate-200"}`}
+                  aria-checked={notifPrefs[key]}
+                  role="switch"
+                  aria-label={label}
+                >
+                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${notifPrefs[key] ? "left-5" : "left-1"}`} />
+                </button>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-slate-800 leading-none">{label}</p>
+                  <p className="text-xs text-slate-400 mt-1">{desc}</p>
+                </div>
+              </label>
+            ))}
+            <p className="text-xs text-slate-400 pt-1 border-t border-slate-50">
+              Transactional emails (password reset, account security) are always sent.
+            </p>
           </div>
         </div>
 

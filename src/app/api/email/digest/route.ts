@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   // Fetch all users with email and recent match history
   const { data: users } = await supabase
     .from("profiles")
-    .select("id, email, full_name, field_of_study, degree_level, citizenship, gpa, bio, career_goals")
+    .select("id, email, full_name, field_of_study, degree_level, citizenship, gpa, bio, career_goals, notification_preferences")
     .not("email", "is", null);
 
   if (!users?.length) return NextResponse.json({ sent: 0 });
@@ -29,6 +29,10 @@ export async function POST(req: NextRequest) {
 
   for (const user of users) {
     try {
+      // Respect user's notification preferences
+      const prefs = (user as any).notification_preferences ?? {};
+      if (prefs.digest_email === false) continue;
+
       // Skip if digest already sent today
       const today = new Date().toISOString().split("T")[0];
       const { data: alreadySent } = await supabase
