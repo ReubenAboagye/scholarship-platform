@@ -40,7 +40,7 @@ export default async function SavedPage() {
                 : "Scholarships you've bookmarked will appear here."}
             </p>
           </div>
-          <a href="/scholarships"
+          <a href="/dashboard/scholarships"
             className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 transition-all px-3.5 py-2 rounded-lg mt-1">
             Browse <ArrowRight className="w-3 h-3" />
           </a>
@@ -95,7 +95,7 @@ export default async function SavedPage() {
                     userId={user.id}
                     initialStatus={trackedMap[s.id] ?? null}
                   />
-                  <a href={`/scholarships/${s.slug ?? s.id}`}
+                  <a href={`/dashboard/scholarships/${s.slug || s.id}`}
                     className="hidden sm:flex text-xs px-2.5 py-1.5 border border-slate-200 text-slate-600 hover:border-slate-300 transition-colors font-medium rounded-lg">
                     Details
                   </a>

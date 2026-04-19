@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
           firstName:           profile.full_name?.split(" ")[0] ?? "there",
           appUrl:              APP_URL,
           scholarshipName:     s.name,
-          scholarshipSlug:     s.slug ?? s.id,
+          scholarshipSlug:     s.slug || s.id,
           scholarshipCountry:  s.country,
           fundingAmount:       s.funding_amount,
           applicationDeadline: s.application_deadline,
@@ -95,7 +95,7 @@ export async function POST(req: NextRequest) {
           type:    daysAhead <= 3 ? "deadline_urgent" : "deadline_soon",
           title:   `${daysAhead} day${daysAhead === 1 ? "" : "s"} left — ${s.name}`,
           body:    `Deadline: ${new Date(s.application_deadline).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}`,
-          href:    `/scholarships/${s.slug ?? s.id}`,
+          href:    `/dashboard/scholarships/${s.slug || s.id}`,
         });
 
         sent++;

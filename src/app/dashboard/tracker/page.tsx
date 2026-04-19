@@ -189,7 +189,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes }: {
           <StickyNote className="w-3 h-3" />
           {item.notes ? "Edit notes" : "Add notes"}
         </button>
-        <a href={`/scholarships/${s.slug ?? s.id}`}
+        <a href={`/dashboard/scholarships/${s.slug || s.id}`}
           className="px-2.5 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:border-slate-300 transition-all">
           Details
         </a>
@@ -282,7 +282,7 @@ export default function TrackerPage() {
                 <LayoutGrid className="w-3.5 h-3.5" />
               </button>
             </div>
-            <a href="/scholarships"
+            <a href="/dashboard/scholarships"
               className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-lg transition-all">
               Browse <ArrowRight className="w-3 h-3" />
             </a>
@@ -342,7 +342,7 @@ export default function TrackerPage() {
           <p className="text-slate-500 text-sm mb-5 max-w-xs mx-auto">
             Browse scholarships and click <strong>Track</strong> on any listing to add it here.
           </p>
-          <a href="/scholarships"
+          <a href="/dashboard/scholarships"
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-slate-900 text-white font-bold text-sm rounded-xl hover:bg-slate-800 transition-all">
             Find Scholarships <ArrowRight className="w-3.5 h-3.5" />
           </a>

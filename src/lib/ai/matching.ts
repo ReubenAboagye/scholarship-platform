@@ -93,11 +93,11 @@ function computeFinalScore(rrfScore: number, scholarship: any, profile: RichProf
 
   // Weighted combination
   return Math.min(1,
-    0.50 * rrfScore  +
-    0.18 * recency   +
-    0.12 * funding   +
-    0.12 * fieldMatch +
-    0.08 * quality
+    0.45 * rrfScore  +
+    0.15 * recency   +
+    0.10 * funding   +
+    0.20 * fieldMatch +
+    0.10 * quality
   );
 }
 

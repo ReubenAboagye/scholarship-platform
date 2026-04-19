@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function ScholarshipRow({ scholarship: s, index, baseUrl = "/scholarships" }: Props) {
-  const href = `${baseUrl}/${s.slug ?? s.id}`;
+  const href = `${baseUrl}/${s.slug || s.id}`;
   const isPast = s.application_deadline && new Date(s.application_deadline) < new Date();
 
   return (

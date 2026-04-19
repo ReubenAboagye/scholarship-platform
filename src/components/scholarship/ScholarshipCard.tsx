@@ -18,7 +18,7 @@ const FUNDING_STYLES: Record<string, { label: string; className: string }> = {
 };
 
 export default function ScholarshipCard({ scholarship: s, index, baseUrl = "/scholarships" }: ScholarshipCardProps) {
-  const href = `${baseUrl}/${s.slug ?? s.id}`;
+  const href = `${baseUrl}/${s.slug || s.id}`;
   const funding = FUNDING_STYLES[s.funding_type] ?? { label: s.funding_type, className: "bg-slate-50 text-slate-600 border border-slate-100" };
   const isPast  = s.application_deadline && new Date(s.application_deadline) < new Date();
 

@@ -85,8 +85,8 @@ function MatchRow({
   const s = result.scholarship;
 
   const REASONS: { code: NotRelevantReason; label: string }[] = [
-    { code: "wrong_country",  label: "Wrong country" },
-    { code: "wrong_degree",   label: "Wrong degree level" },
+    { code: "wrong_country", label: "Wrong country" },
+    { code: "wrong_degree", label: "Wrong degree level" },
     { code: "not_interested", label: "Not interested" },
   ];
 
@@ -119,7 +119,7 @@ function MatchRow({
         {/* Name + subtitle */}
         <div className="flex-1 min-w-0">
           <a
-            href={`/scholarships/${s.slug ?? s.id}`}
+            href={`/dashboard/scholarships/${s.slug || s.id}`}
             onClick={handleClick}
             className="text-[15px] font-semibold text-slate-800 hover:text-orange-600 transition-colors leading-snug"
           >
@@ -211,7 +211,7 @@ function MatchRow({
       <div className="flex flex-wrap items-center gap-1.5 mt-2.5 ml-9">
         <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${scoreColor(result.match_score)}`}>
           <span className={`w-1.5 h-1.5 rounded-full ${scoreDot(result.match_score)}`} />
-          {result.match_score >= 80 ? "Strong match" : result.match_score >= 60 ? "Good match" : "Possible match"}
+          {result.match_score >= 70 ? "Strong match" : result.match_score >= 50 ? "Good match" : "Possible match"}
         </span>
         {s.renewable && (
           <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-slate-500 border border-stone-200">
@@ -246,9 +246,9 @@ function ScoreFilterDropdown({ selected, onToggle, onClear }: {
   onClear: () => void;
 }) {
   const opts = [
-    { v: "possible", label: "Possible (< 60%)",  desc: "May match some of your profile criteria." },
-    { v: "good",     label: "Good (60% – 79%)",  desc: "Matches several key profile criteria." },
-    { v: "strong",   label: "Strong (80%+)",     desc: "Highly aligned with your academic profile." },
+    { v: "possible", label: "Possible (30% – 49%)", desc: "Matches some of your profile criteria." },
+    { v: "good", label: "Good (50% – 69%)", desc: "Matches several key profile criteria." },
+    { v: "strong", label: "Strong (70%+)", desc: "Highly aligned with your academic profile." },
   ];
   return (
     <div className="absolute top-full left-0 mt-1 w-68 bg-white rounded-xl shadow-xl border border-stone-200 z-50 p-4">
@@ -258,13 +258,12 @@ function ScoreFilterDropdown({ selected, onToggle, onClear }: {
           <label key={o.v} className="flex items-start gap-3 cursor-pointer">
             <button
               onClick={() => onToggle(o.v)}
-              className={`mt-0.5 w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                selected.includes(o.v) ? "bg-orange-500 border-orange-500" : "border-stone-300 hover:border-orange-400"
-              }`}
+              className={`mt-0.5 w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${selected.includes(o.v) ? "bg-orange-500 border-orange-500" : "border-stone-300 hover:border-orange-400"
+                }`}
             >
               {selected.includes(o.v) && (
                 <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 10" fill="none">
-                  <path d="M2 5l2.5 2.5L8 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+                  <path d="M2 5l2.5 2.5L8 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
               )}
             </button>
@@ -367,19 +366,19 @@ export default function MatchesDashboardPage() {
     const nameMatch = r.scholarship.name.toLowerCase().includes(search.toLowerCase()) ||
       r.scholarship.provider?.toLowerCase().includes(search.toLowerCase());
     const scoreMatch = scoreFilter.length === 0 || (
-      (scoreFilter.includes("strong")   && r.match_score >= 80) ||
-      (scoreFilter.includes("good")     && r.match_score >= 60 && r.match_score < 80) ||
+      (scoreFilter.includes("strong") && r.match_score >= 80) ||
+      (scoreFilter.includes("good") && r.match_score >= 60 && r.match_score < 80) ||
       (scoreFilter.includes("possible") && r.match_score < 60)
     );
     return nameMatch && scoreMatch;
   });
 
   const filterButtons = [
-    { key: "deadline",    icon: Clock,       label: "Time until deadline" },
-    { key: "amount",      icon: DollarSign,  label: "Amount" },
+    { key: "deadline", icon: Clock, label: "Time until deadline" },
+    { key: "amount", icon: DollarSign, label: "Amount" },
     { key: "requirement", icon: CheckSquare, label: "Effort" },
-    { key: "applicants",  icon: Users,       label: "Applicants" },
-    { key: "credibility", icon: Shield,      label: "Match score" },
+    { key: "applicants", icon: Users, label: "Applicants" },
+    { key: "credibility", icon: Shield, label: "Match score" },
   ];
 
   if (loading) return (
@@ -440,11 +439,10 @@ export default function MatchesDashboardPage() {
           <div key={btn.key} className="relative flex-shrink-0">
             <button
               onClick={() => setOpenFilter((p) => p === btn.key ? null : btn.key)}
-              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border transition-all whitespace-nowrap ${
-                openFilter === btn.key
+              className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border transition-all whitespace-nowrap ${openFilter === btn.key
                   ? "bg-slate-800 text-white border-slate-800"
                   : "bg-white text-slate-600 border-stone-200 hover:border-slate-400"
-              }`}
+                }`}
             >
               <btn.icon className="w-3.5 h-3.5" />
               {btn.label}
@@ -497,7 +495,7 @@ export default function MatchesDashboardPage() {
         <div className="bg-white rounded-xl border border-stone-200 py-16 text-center shadow-sm">
           <Search className="w-8 h-8 mx-auto mb-3 text-stone-300" />
           <p className="text-sm font-medium text-slate-500">No matches found</p>
-          <button onClick={() => { setSearch(""); setScoreFilter(["strong","good","possible"]); }} className="text-xs text-orange-500 hover:underline mt-1">
+          <button onClick={() => { setSearch(""); setScoreFilter(["strong", "good", "possible"]); }} className="text-xs text-orange-500 hover:underline mt-1">
             Clear filters
           </button>
         </div>

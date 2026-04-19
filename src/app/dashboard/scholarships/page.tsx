@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import FilterSidebar from "@/components/scholarship/FilterSidebar";
 import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
 import ScholarshipRow from "@/components/scholarship/ScholarshipRow";
+import ScholarshipTable from "@/components/scholarship/ScholarshipTable";
 import ViewToggle from "@/components/scholarship/ViewToggle";
 import { Search, Info, LayoutGrid, List } from "lucide-react";
 
@@ -145,16 +146,10 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
                 ))}
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
-                {scholarships.map((s: any, idx: number) => (
-                  <ScholarshipRow 
-                    key={s.id} 
-                    scholarship={s} 
-                    index={idx} 
-                    baseUrl="/dashboard/scholarships"
-                  />
-                ))}
-              </div>
+              <ScholarshipTable 
+                scholarships={scholarships} 
+                baseUrl="/dashboard/scholarships"
+              />
             )
           ) : (
             <div className="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-slate-200 border-dashed">

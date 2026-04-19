@@ -150,7 +150,7 @@ function MatchCard({
           {isSaved ? "Saved" : "Save"}
         </button>
         <div className="flex items-center gap-3">
-          <a href={`/scholarships/${s.slug ?? s.id}`}
+          <a href={`/dashboard/scholarships/${s.slug || s.id}`}
             className="text-xs font-medium text-slate-500 hover:text-slate-800 flex items-center gap-1 transition-colors">
             Details <ChevronRight className="w-3 h-3" />
           </a>
@@ -528,9 +528,9 @@ export default function MatchPage() {
 
               {data.results.length === 0 ? (
                 <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
-                  <p className="text-slate-500 text-sm">No strong matches found above 50% threshold.</p>
+                  <p className="text-slate-500 text-sm">No matches found above 30% threshold.</p>
                   <p className="text-slate-400 text-xs mt-1">
-                    Try adding more detail to your academic background in your profile.
+                    Try broadening your profile or adding more detail to your academic background.
                   </p>
                   <a href="/dashboard/profile" className="inline-block mt-3 text-sm font-bold text-blue-600 hover:underline">
                     Update Profile →
