@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard, Search, Bookmark, ListChecks,
   User, LogOut, ChevronLeft, Sparkles,
@@ -37,7 +37,9 @@ interface Props {
 
 export default function DashboardSidebar({ profile }: Props) {
   const [collapsed, setCollapsed] = useState(false);
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const [pathname, setPathname] = useState("");
+
+  useEffect(() => { setPathname(window.location.pathname); }, []);
 
   async function handleSignOut() {
     const supabase = createClient();

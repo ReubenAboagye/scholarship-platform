@@ -56,7 +56,7 @@ export default function NotificationCenter() {
   useEffect(() => {
     load();
     const channel = supabase
-      .channel("realtime:notifications")
+      .channel("notif-center")
       .on("postgres_changes", {
         event: "INSERT",
         schema: "public",

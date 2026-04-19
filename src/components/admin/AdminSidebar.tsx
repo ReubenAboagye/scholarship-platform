@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { GraduationCap, LayoutDashboard, BookOpen, Users, BarChart3, LogOut, Shield, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -17,7 +18,8 @@ interface Props {
 }
 
 export default function AdminSidebar({ profile }: Props) {
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const [pathname, setPathname] = useState("");
+  useEffect(() => { setPathname(window.location.pathname); }, []);
 
   async function handleSignOut() {
     const supabase = createClient();
