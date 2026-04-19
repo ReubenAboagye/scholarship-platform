@@ -62,7 +62,7 @@ export default function DashboardSidebar({ profile }: Props) {
       {/* ── Desktop sidebar ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 flex-shrink-0",
+          "hidden md:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 flex-shrink-0 sticky top-0 h-screen",
           collapsed ? "w-[60px]" : "w-[220px]"
         )}
       >
@@ -94,7 +94,7 @@ export default function DashboardSidebar({ profile }: Props) {
           </div>
         </div>
 
-        <nav className="flex-1 p-2 space-y-0.5 pt-3">
+        <nav className="flex-1 p-2 space-y-0.5 pt-3 overflow-y-auto custom-scrollbar">
           {navItems.map((item) => {
             const active = isActive(item.href);
             const isAI   = item.href === "/dashboard/match";

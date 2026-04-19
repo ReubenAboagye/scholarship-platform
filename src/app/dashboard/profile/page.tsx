@@ -306,7 +306,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Personal info */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
             <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center"><User className="w-3.5 h-3.5 text-blue-600" /></div>
             <div><h2 className="text-sm font-bold text-slate-900">Personal Info</h2><p className="text-xs text-slate-400">Name, origin, and citizenship</p></div>
@@ -335,7 +335,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Academic profile */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
             <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center"><BookOpen className="w-3.5 h-3.5 text-emerald-600" /></div>
             <div><h2 className="text-sm font-bold text-slate-900">Academic Profile</h2><p className="text-xs text-slate-400">Degree, field, and GPA</p></div>
@@ -379,7 +379,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Goals & interests */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
             <div className="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center"><Target className="w-3.5 h-3.5 text-purple-600" /></div>
             <div><h2 className="text-sm font-bold text-slate-900">Goals & Interests</h2><p className="text-xs text-slate-400">Improves semantic matching</p></div>
@@ -393,39 +393,41 @@ export default function ProfilePage() {
                 placeholder="e.g. Become a public health researcher focusing on infectious diseases in West Africa"
                 value={form.career_goals} onChange={(e) => update("career_goals", e.target.value)} />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Financial Need <span className="normal-case font-normal text-slate-400">— optional</span>
-              </label>
-              <select
-                className={inp + " cursor-pointer"}
-                value={form.financial_need}
-                onChange={(e) => { setForm((p) => ({ ...p, financial_need: e.target.value as "" | "true" | "false" })); setDirty(true); setSaved(false); }}
-              >
-                <option value="">Prefer not to say</option>
-                <option value="true">Yes, I have financial need</option>
-                <option value="false">No financial need</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Interests <span className="normal-case font-normal text-slate-400">— select all that apply</span>
-              </label>
-              <InterestsDropdown
-                options={INTEREST_OPTIONS}
-                selected={form.interests}
-                onChange={(selected) => {
-                  setForm((p) => ({ ...p, interests: selected }));
-                  setDirty(true); setSaved(false);
-                }}
-                inputClass={inp}
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                  Financial Need <span className="normal-case font-normal text-slate-400">— optional</span>
+                </label>
+                <select
+                  className={inp + " cursor-pointer"}
+                  value={form.financial_need}
+                  onChange={(e) => { setForm((p) => ({ ...p, financial_need: e.target.value as "" | "true" | "false" })); setDirty(true); setSaved(false); }}
+                >
+                  <option value="">Prefer not to say</option>
+                  <option value="true">Yes, I have financial need</option>
+                  <option value="false">No financial need</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                  Interests <span className="normal-case font-normal text-slate-400">— select all that apply</span>
+                </label>
+                <InterestsDropdown
+                  options={INTEREST_OPTIONS}
+                  selected={form.interests}
+                  onChange={(selected) => {
+                    setForm((p) => ({ ...p, interests: selected }));
+                    setDirty(true); setSaved(false);
+                  }}
+                  inputClass={inp}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         {/* Notification preferences */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
             <div className="w-7 h-7 rounded-lg bg-sky-50 flex items-center justify-center">
               <Bell className="w-3.5 h-3.5 text-sky-600" />
