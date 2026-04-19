@@ -68,30 +68,27 @@ export default function DashboardSidebar({ profile }: Props) {
       >
         <div
           className={cn(
-            "flex items-center border-b border-slate-100 h-14 px-4",
+            "flex items-center border-b border-slate-100 h-16 px-4",
             collapsed ? "justify-center" : "justify-between"
           )}
         >
           {!collapsed && (
-            <a href="/" className="flex items-center gap-1.5">
-              <span className="font-black text-[15px] text-slate-900">Scholar</span>
-              <span className="font-black text-[15px] text-brand-600">Match</span>
+            <a href="/" className="flex items-center gap-1.5 h-10">
+              <span className="font-black text-[16px] text-slate-900 tracking-tight">Scholar</span>
+              <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
             </a>
           )}
-          <div className="flex items-center gap-1">
-            {!collapsed && <NotificationCenter />}
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-            >
-              <ChevronLeft
-                className={cn(
-                  "w-3.5 h-3.5 transition-transform duration-200",
-                  collapsed && "rotate-180"
-                )}
-              />
-            </button>
-          </div>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+          >
+            <ChevronLeft
+              className={cn(
+                "w-4 h-4 transition-transform duration-200",
+                collapsed && "rotate-180"
+              )}
+            />
+          </button>
         </div>
 
         <nav className="flex-1 p-2 space-y-0.5 pt-3 overflow-y-auto custom-scrollbar">
@@ -147,21 +144,7 @@ export default function DashboardSidebar({ profile }: Props) {
         </div>
       </aside>
 
-      {/* ── Mobile top bar ── */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/50 h-14 flex items-center justify-between px-4">
-        <a href="/" className="flex items-center gap-1.5 active:scale-95 transition-transform">
-          <span className="font-black text-[16px] text-slate-900 tracking-tight">Scholar</span>
-          <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
-        </a>
-        {profile && (
-          <div className="flex items-center gap-2">
-            <NotificationCenter />
-            <div className="w-8 h-8 bg-slate-900 flex items-center justify-center text-xs font-black text-white rounded-lg shadow-sm">
-              {initials}
-            </div>
-          </div>
-        )}
-      </div>
+
 
       {/* ── Mobile bottom nav ── */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 flex items-stretch h-16 safe-bottom">
