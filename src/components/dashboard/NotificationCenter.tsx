@@ -32,9 +32,12 @@ export default function NotificationCenter() {
   const [open,          setOpen]          = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading,       setLoading]       = useState(true);
-  const ref        = useRef<HTMLDivElement>(null);
+  const ref         = useRef<HTMLDivElement>(null);
   const supabaseRef = useRef(createClient());
   const channelRef  = useRef<ReturnType<typeof supabaseRef.current.channel> | null>(null);
+  // Unique per-instance channel name — prevents collision when component
+  // renders twice (desktop sidebar + mobile top bar in same layout)
+  const channelName = useRef(`notif-center-${Math.random().toString(36).slice(2)}`);
 
   const supabase    = supabaseRef.current;
   const unreadCount = notifications.filter(n => !n.is_read).length;
@@ -52,14 +55,15 @@ export default function NotificationCenter() {
     setLoading(false);
   }
 
-  // Realtime subscription — strict single-subscribe via channelRef guard
+  // Realtime subscription — unique channel name per instance avoids
+  // collision when desktop + mobile both render this component
   useEffect(() => {
-    if (channelRef.current) return; // already subscribed — skip (StrictMode double-invoke)
+    if (channelRef.current) return;
 
     load();
 
     channelRef.current = supabase
-      .channel("notif-center")
+      .channel(channelName.current)
       .on("postgres_changes", {
         event: "INSERT",
         schema: "public",
