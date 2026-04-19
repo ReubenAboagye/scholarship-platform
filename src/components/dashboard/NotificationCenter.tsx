@@ -32,16 +32,16 @@ export default function NotificationCenter() {
   const [open,          setOpen]          = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading,       setLoading]       = useState(true);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref        = useRef<HTMLDivElement>(null);
   const supabaseRef = useRef(createClient());
-  const supabase = supabaseRef.current;
+  const channelRef  = useRef<ReturnType<typeof supabaseRef.current.channel> | null>(null);
 
+  const supabase    = supabaseRef.current;
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
-  // Load notifications
   async function load() {
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) { setLoading(false); return; }
     const { data } = await supabase
       .from("notifications")
       .select("*")
@@ -52,10 +52,13 @@ export default function NotificationCenter() {
     setLoading(false);
   }
 
-  // Realtime subscription — runs once on mount only
+  // Realtime subscription — strict single-subscribe via channelRef guard
   useEffect(() => {
+    if (channelRef.current) return; // already subscribed — skip (StrictMode double-invoke)
+
     load();
-    const channel = supabase
+
+    channelRef.current = supabase
       .channel("notif-center")
       .on("postgres_changes", {
         event: "INSERT",
@@ -65,7 +68,13 @@ export default function NotificationCenter() {
         setNotifications(prev => [payload.new as Notification, ...prev]);
       })
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+    };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
