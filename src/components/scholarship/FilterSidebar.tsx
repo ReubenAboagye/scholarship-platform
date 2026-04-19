@@ -12,6 +12,7 @@ interface FilterSidebarProps {
   countries: string[];
   fundingTypes: string[];
   degreeLevels: string[];
+  baseUrl?: string;
 }
 
 function FilterSection({ label, children, defaultOpen = true }: {
@@ -32,7 +33,9 @@ function FilterSection({ label, children, defaultOpen = true }: {
   );
 }
 
-export default function FilterSidebar({ active, countries, fundingTypes, degreeLevels }: FilterSidebarProps) {
+export default function FilterSidebar({ 
+  active, countries, fundingTypes, degreeLevels, baseUrl = "/scholarships" 
+}: FilterSidebarProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const buildUrl = (overrides: Partial<typeof active>) => {
@@ -47,7 +50,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
     if (merged.effort        !== "any"  ) params.set("effort",        merged.effort);
     if (merged.search                   ) params.set("search",        merged.search);
     const qs = params.toString();
-    return `/scholarships${qs ? "?" + qs : ""}`;
+    return `${baseUrl}${qs ? "?" + qs : ""}`;
   };
 
   const hasFilters =
@@ -61,7 +64,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
 
       {/* Search */}
       <FilterSection label="Search">
-        <form method="GET" action="/scholarships">
+        <form method="GET" action={baseUrl}>
           {active.country       !== "All"  && <input type="hidden" name="country"       value={active.country} />}
           {active.funding_type  !== "All"  && <input type="hidden" name="funding_type"  value={active.funding_type} />}
           {active.degree_level  !== "All"  && <input type="hidden" name="degree_level"  value={active.degree_level} />}
@@ -212,7 +215,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       {/* Clear all */}
       {hasFilters && (
         <div className="pt-3">
-          <a href="/scholarships" onClick={() => setDrawerOpen(false)}
+          <a href={baseUrl} onClick={() => setDrawerOpen(false)}
             className="block w-full text-center py-2 text-xs font-semibold text-slate-400 hover:text-rose-500 border border-dashed border-slate-200 hover:border-rose-200 rounded-lg transition-colors">
             Clear all filters
           </a>

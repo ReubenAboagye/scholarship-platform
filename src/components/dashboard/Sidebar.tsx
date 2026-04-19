@@ -12,7 +12,7 @@ import NotificationCenter from "@/components/dashboard/NotificationCenter";
 const navItems = [
   { href: "/dashboard",         icon: LayoutDashboard, label: "Dashboard" },
   { href: "/dashboard/match",   icon: Sparkles,        label: "AI Match"  },
-  { href: "/scholarships",      icon: Search,          label: "Browse"    },
+  { href: "/dashboard/scholarships", icon: Search,     label: "Browse"    },
   { href: "/dashboard/saved",   icon: Bookmark,        label: "Saved"     },
   { href: "/dashboard/tracker", icon: ListChecks,      label: "Tracker"   },
   { href: "/dashboard/profile", icon: User,            label: "Profile"   },
@@ -21,7 +21,7 @@ const navItems = [
 const mobileNavItems = [
   { href: "/dashboard",         icon: LayoutDashboard, label: "Home"    },
   { href: "/dashboard/match",   icon: Sparkles,        label: "Match"   },
-  { href: "/scholarships",      icon: Search,          label: "Browse"  },
+  { href: "/dashboard/scholarships", icon: Search,      label: "Browse"  },
   { href: "/dashboard/tracker", icon: ListChecks,      label: "Tracker" },
   { href: "/dashboard/profile", icon: User,            label: "Profile" },
 ];
