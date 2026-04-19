@@ -1,7 +1,9 @@
 import { createClient } from "@/lib/supabase/server";
 import FilterSidebar from "@/components/scholarship/FilterSidebar";
 import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
-import { Search, Info } from "lucide-react";
+import ScholarshipRow from "@/components/scholarship/ScholarshipRow";
+import ViewToggle from "@/components/scholarship/ViewToggle";
+import { Search, Info, LayoutGrid, List } from "lucide-react";
 
 interface SearchParams {
   country?: string;
@@ -12,6 +14,7 @@ interface SearchParams {
   renewable?: string;
   international?: string;
   effort?: string;
+  view?: string;
 }
 
 export default async function DashboardScholarshipsPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
@@ -66,6 +69,7 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
     renewable:     p.renewable     || "",
     international: p.international || "",
     effort:        p.effort        || "any",
+    view:          p.view          || "grid",
   };
 
   const isFiltered =
@@ -85,15 +89,20 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
           </p>
         </div>
         
-        {/* Quick status summary */}
-        <div className="hidden sm:flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
-          <div className="flex items-center gap-2 pr-3 border-r border-slate-100">
-            <span className="text-lg font-bold text-slate-900">{scholarships?.length ?? 0}</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-brand-600">{countries.length - 1}</span>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Countries</span>
+        {/* Right side Actions */}
+        <div className="flex items-center gap-4">
+          <ViewToggle />
+          
+          {/* Quick status summary */}
+          <div className="hidden sm:flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
+            <div className="flex items-center gap-2 pr-3 border-r border-slate-100">
+              <span className="text-lg font-bold text-slate-900">{scholarships?.length ?? 0}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-lg font-bold text-brand-600">{countries.length - 1}</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Countries</span>
+            </div>
           </div>
         </div>
       </div>
@@ -124,16 +133,29 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
         {/* Results */}
         <div className="flex-1 min-w-0">
           {scholarships && scholarships.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {scholarships.map((s: any, idx: number) => (
-                <ScholarshipCard 
-                  key={s.id} 
-                  scholarship={s} 
-                  index={idx} 
-                  baseUrl="/dashboard/scholarships"
-                />
-              ))}
-            </div>
+            active.view === "grid" ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {scholarships.map((s: any, idx: number) => (
+                  <ScholarshipCard 
+                    key={s.id} 
+                    scholarship={s} 
+                    index={idx} 
+                    baseUrl="/dashboard/scholarships"
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {scholarships.map((s: any, idx: number) => (
+                  <ScholarshipRow 
+                    key={s.id} 
+                    scholarship={s} 
+                    index={idx} 
+                    baseUrl="/dashboard/scholarships"
+                  />
+                ))}
+              </div>
+            )
           ) : (
             <div className="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-slate-200 border-dashed">
               <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6">
