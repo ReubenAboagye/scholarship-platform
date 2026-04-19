@@ -2,10 +2,25 @@
 -- 014_fix_rpc_slugs.sql
 -- Ensures AI matching functions return the 'slug' column
 -- so frontend URLs can use readable identifiers instead of UUIDs.
+--
+-- v3 fixes applied:
+--   1. match_scholarships: added citizenship_required to return type
+--      for consistency with hybrid_match_scholarships
+--   2. hybrid_match_scholarships: citizenship filter now wired up
+--      (was accepted as param but silently ignored)
+--   3. hybrid_match_scholarships: keyword CTE now uses pre-built fts
+--      column + GIN index instead of computing to_tsvector on the fly
+--   4. hybrid_match_scholarships: NULL-safe — fts column handles NULLs
+--      via COALESCE in its generated expression; removed risky
+--      s.name || ' ' || s.description concatenation
 -- ============================================================
 
--- 1. Update standard match_scholarships (Vector Only)
-CREATE OR REPLACE FUNCTION match_scholarships(
+-- Drop existing functions to allow return type changes
+DROP FUNCTION IF EXISTS match_scholarships(vector, float, int);
+DROP FUNCTION IF EXISTS hybrid_match_scholarships(text, vector, text, text, int);
+
+-- 1. match_scholarships (Vector Only)
+CREATE FUNCTION match_scholarships(
   query_embedding  vector(768),
   match_threshold  FLOAT DEFAULT 0.3,
   match_count      INT   DEFAULT 10
@@ -29,6 +44,7 @@ RETURNS TABLE (
   renewable            BOOLEAN,
   min_gpa              NUMERIC,
   effort_minutes       INT,
+  citizenship_required TEXT[],
   created_at           TIMESTAMPTZ,
   updated_at           TIMESTAMPTZ,
   similarity           FLOAT
@@ -43,6 +59,7 @@ BEGIN
     s.eligibility_criteria, s.application_deadline,
     s.application_url, s.is_active,
     s.open_to_international, s.renewable, s.min_gpa, s.effort_minutes,
+    s.citizenship_required,
     s.created_at, s.updated_at,
     (s.embedding <#> query_embedding) * -1 AS similarity
   FROM scholarships s
@@ -56,10 +73,8 @@ BEGIN
 END;
 $$;
 
--- 2. Define/Update hybrid_match_scholarships (Keyword + Vector)
--- This matches the parameters expected by src/lib/ai/matching.ts:
--- query_text, query_embedding, user_degree, user_citizenship, match_count
-CREATE OR REPLACE FUNCTION hybrid_match_scholarships(
+-- 2. hybrid_match_scholarships (Keyword + Vector with RRF)
+CREATE FUNCTION hybrid_match_scholarships(
   query_text       TEXT,
   query_embedding  vector(768),
   user_degree      TEXT DEFAULT NULL,
@@ -94,7 +109,7 @@ LANGUAGE plpgsql AS $$
 BEGIN
   RETURN QUERY
   WITH vector_matches AS (
-    SELECT 
+    SELECT
       s.id,
       (s.embedding <#> query_embedding) * -1 AS similarity,
       ROW_NUMBER() OVER (ORDER BY s.embedding <#> query_embedding) AS rank
@@ -103,16 +118,31 @@ BEGIN
       AND s.embedding IS NOT NULL
       AND (s.application_deadline IS NULL OR s.application_deadline > CURRENT_DATE)
       AND (user_degree IS NULL OR s.degree_levels @> ARRAY[user_degree])
+      AND (
+        user_citizenship IS NULL
+        OR s.citizenship_required IS NULL
+        OR s.citizenship_required = '{}'
+        OR s.citizenship_required @> ARRAY[user_citizenship]
+      )
   ),
   keyword_matches AS (
-    SELECT 
+    SELECT
       s.id,
-      ts_rank_cd(to_tsvector('english', s.name || ' ' || s.description), plainto_tsquery('english', query_text)) AS rank_score,
-      ROW_NUMBER() OVER (ORDER BY ts_rank_cd(to_tsvector('english', s.name || ' ' || s.description), plainto_tsquery('english', query_text)) DESC) AS rank
+      ts_rank_cd(s.fts, plainto_tsquery('english', query_text)) AS rank_score,
+      ROW_NUMBER() OVER (
+        ORDER BY ts_rank_cd(s.fts, plainto_tsquery('english', query_text)) DESC
+      ) AS rank
     FROM scholarships s
     WHERE s.is_active = TRUE
+      AND s.fts @@ plainto_tsquery('english', query_text)
       AND (s.application_deadline IS NULL OR s.application_deadline > CURRENT_DATE)
       AND (user_degree IS NULL OR s.degree_levels @> ARRAY[user_degree])
+      AND (
+        user_citizenship IS NULL
+        OR s.citizenship_required IS NULL
+        OR s.citizenship_required = '{}'
+        OR s.citizenship_required @> ARRAY[user_citizenship]
+      )
   )
   SELECT
     s.id, s.name, s.slug, s.provider, s.country,
