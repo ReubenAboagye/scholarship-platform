@@ -110,7 +110,7 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
       )}
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Filters */}
+        {/* Filters — Sidebar handles stickiness internally */}
         <div className="lg:w-60 flex-shrink-0">
           <FilterSidebar
             active={active}

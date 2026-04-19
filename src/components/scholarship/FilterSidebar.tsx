@@ -226,8 +226,8 @@ export default function FilterSidebar({
 
   return (
     <>
-      {/* Mobile sticky bar */}
-      <div className="lg:hidden sticky top-[65px] z-40 -mx-4 px-4 py-3 bg-white/90 backdrop-blur-sm border-b border-slate-200 mb-6 flex items-center justify-between">
+      {/* Mobile sticky bar — sticks right below the dashboard header */}
+      <div className="lg:hidden sticky top-[-16px] z-40 -mx-4 lg:-mx-8 px-4 py-3 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 flex items-center justify-between shadow-sm">
         <button onClick={() => setDrawerOpen(true)}
           className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-semibold">
           <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -238,12 +238,10 @@ export default function FilterSidebar({
         </p>
       </div>
 
-      {/* Desktop sticky sidebar */}
-      <aside className="hidden lg:block w-52 flex-shrink-0">
-        <div className="sticky top-24 bg-white border border-slate-200 rounded-xl p-4">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3">Filters</p>
-          <FilterContent />
-        </div>
+      {/* Desktop sticky sidebar — sticks below dashboard header with a small gap */}
+      <aside className="hidden lg:block lg:sticky lg:top-0 w-52 flex-shrink-0 self-start bg-white border border-slate-200 rounded-2xl p-4 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar shadow-sm transition-all duration-300">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Filters</p>
+        <FilterContent />
       </aside>
 
       {drawerOpen && (
