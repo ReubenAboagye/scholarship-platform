@@ -1,6 +1,8 @@
 .env.local
 .env
+# Ignore all .env variants EXCEPT the example file
 .env.*
+!.env.local.example
 
 # Node modules
 node_modules/
