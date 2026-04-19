@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 const MotionA = motion.a;
 import { CheckCircle, ArrowRight, ChevronDown } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
@@ -255,9 +254,9 @@ export default function HomePage() {
               <h2 className="text-3xl font-black text-slate-900">Featured Scholarships</h2>
               <p className="text-slate-500 mt-1">Hand-picked fully-funded opportunities</p>
             </div>
-            <Link href="/scholarships" className="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
+            <a href="/scholarships" className="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
               See all <ArrowRight className="w-4 h-4" />
-            </Link>
+            </a>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {featured.map((s, i) => (

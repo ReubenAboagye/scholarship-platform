@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ExternalLink, Calendar, Building2, ArrowRight } from "lucide-react";
 import { countryFlagUrl, formatDeadline } from "@/lib/utils";
 
@@ -49,11 +48,11 @@ export default function ScholarshipCard({ scholarship: s, index }: ScholarshipCa
 
         {/* Row 2: Title + provider */}
         <div className="flex-1 mb-4">
-          <Link href={href} className="block mb-1">
+          <a href={href} className="block mb-1">
             <h3 className="font-bold text-slate-900 text-base leading-snug group-hover:text-brand-600 transition-colors line-clamp-2">
               {s.name}
             </h3>
-          </Link>
+            </a>
           <div className="flex items-center gap-1.5 text-slate-400 mb-3">
             <Building2 className="w-3 h-3 flex-shrink-0" />
             <p className="text-xs text-slate-400 truncate">{s.provider}</p>
@@ -83,10 +82,10 @@ export default function ScholarshipCard({ scholarship: s, index }: ScholarshipCa
           </div>
 
           <div className="flex items-center gap-2">
-            <Link href={href}
+            <a href={href}
               className="text-xs font-semibold px-3 py-1.5 text-slate-600 hover:text-slate-900 border border-slate-200 hover:border-slate-300 rounded-lg transition-all flex items-center gap-1">
               Details <ArrowRight className="w-3 h-3" />
-            </Link>
+            </a>
             <a href={s.application_url} target="_blank" rel="noopener noreferrer"
               className="text-xs font-semibold px-3 py-1.5 bg-brand-600 text-white hover:bg-brand-700 rounded-lg transition-all flex items-center gap-1 active:scale-95">
               Apply <ExternalLink className="w-3 h-3" />

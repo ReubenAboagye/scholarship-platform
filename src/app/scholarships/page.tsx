@@ -3,7 +3,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FilterSidebar from "@/components/scholarship/FilterSidebar";
 import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
-import Link from "next/link";
 import { Search } from "lucide-react";
 
 interface SearchParams {
@@ -151,9 +150,9 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
               {active.effort       !== "any"  && <> · <span className="font-semibold">{active.effort === "quick" ? "Quick apply" : "Full application"}</span></>}
               {active.search && <> matching &ldquo;<span className="font-semibold">{active.search}</span>&rdquo;</>}
             </p>
-            <Link href="/scholarships" className="text-xs font-semibold text-slate-400 hover:text-brand-600 transition-colors">
+            <a href="/scholarships" className="text-xs font-semibold text-slate-400 hover:text-brand-600 transition-colors">
               Clear filters
-            </Link>
+            </a>
           </div>
         )}
 
@@ -185,10 +184,10 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
                 <p className="text-slate-500 text-sm max-w-xs mx-auto mb-7">
                   No scholarships match your current filters. Try adjusting your criteria.
                 </p>
-                <Link href="/scholarships"
+                <a href="/scholarships"
                   className="px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all">
                   Clear all filters
-                </Link>
+                </a>
               </div>
             )}
           </div>

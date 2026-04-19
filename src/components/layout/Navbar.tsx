@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
 import { Menu, X, ChevronDown, Search, BookOpen, Cpu, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
 
 const studentsMenu = [
@@ -40,10 +39,10 @@ export default function Navbar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          <Link href="/" className="flex items-center gap-1">
+          <a href="/" className="flex items-center gap-1">
             <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
             <span className="text-xl font-black tracking-tight text-brand-600">Match</span>
-          </Link>
+          </a>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">

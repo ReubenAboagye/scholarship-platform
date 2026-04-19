@@ -1,7 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { GraduationCap, LayoutDashboard, BookOpen, Users, BarChart3, LogOut, Shield, ChevronRight } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -19,7 +17,7 @@ interface Props {
 }
 
 export default function AdminSidebar({ profile }: Props) {
-  const pathname = usePathname();
+  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
 
   async function handleSignOut() {
     const supabase = createClient();
@@ -34,7 +32,7 @@ export default function AdminSidebar({ profile }: Props) {
       
       {/* Logo Section */}
       <div className="relative px-6 py-8">
-        <Link href="/" className="flex items-center gap-3 group">
+        <a href="/" className="flex items-center gap-3 group">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
             <GraduationCap className="w-6 h-6 text-white" />
           </div>
@@ -47,7 +45,7 @@ export default function AdminSidebar({ profile }: Props) {
               <span className="text-[10px] text-amber-400/80 font-bold uppercase tracking-widest">Admin Panel</span>
             </div>
           </div>
-        </Link>
+        </a>
       </div>
 
       {/* Navigation */}
@@ -59,7 +57,7 @@ export default function AdminSidebar({ profile }: Props) {
             : pathname.startsWith(item.href);
           
           return (
-            <Link
+            <a
               key={item.href}
               href={item.href}
               className={cn(
@@ -97,7 +95,7 @@ export default function AdminSidebar({ profile }: Props) {
               {!active && (
                 <ChevronRight className="w-4 h-4 text-slate-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
               )}
-            </Link>
+            </a>
           );
         })}
       </nav>

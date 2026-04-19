@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Search, SlidersHorizontal, X, ChevronDown, ChevronRight } from "lucide-react";
-import Link from "next/link";
 import { countryFlagUrl } from "@/lib/utils";
 
 interface FilterSidebarProps {
@@ -87,7 +86,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
             { v: "30d",  l: "Next 30 days" },
             { v: "90d",  l: "Next 90 days" },
           ].map(({ v, l }) => (
-            <Link key={v} href={buildUrl({ deadline: v })} onClick={() => setDrawerOpen(false)}
+            <a key={v} href={buildUrl({ deadline: v })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
                 active.deadline === v
                   ? "bg-brand-50 text-brand-700 font-semibold"
@@ -95,7 +94,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
               }`}>
               <span>{l}</span>
               {active.deadline === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
-            </Link>
+            </a>
           ))}
         </div>
       </FilterSection>
@@ -104,7 +103,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       <FilterSection label="Country">
         <div className="space-y-0.5">
           {countries.map((c) => (
-            <Link key={c} href={buildUrl({ country: c })} onClick={() => setDrawerOpen(false)}
+            <a key={c} href={buildUrl({ country: c })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
                 active.country === c
                   ? "bg-brand-50 text-brand-700 font-semibold"
@@ -116,7 +115,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
               {c === "All" && <span className="w-4 h-3 flex items-center justify-center text-[10px]">🌍</span>}
               <span>{c === "All" ? "All Countries" : c}</span>
               {active.country === c && <ChevronRight className="w-3 h-3 ml-auto text-brand-500" />}
-            </Link>
+            </a>
           ))}
         </div>
       </FilterSection>
@@ -125,7 +124,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       <FilterSection label="Degree Level" defaultOpen={false}>
         <div className="space-y-0.5">
           {degreeLevels.map((d) => (
-            <Link key={d} href={buildUrl({ degree_level: d })} onClick={() => setDrawerOpen(false)}
+            <a key={d} href={buildUrl({ degree_level: d })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
                 active.degree_level === d
                   ? "bg-brand-50 text-brand-700 font-semibold"
@@ -133,7 +132,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
               }`}>
               <span>{d === "All" ? "Any Level" : d}</span>
               {active.degree_level === d && <ChevronRight className="w-3 h-3 text-brand-500" />}
-            </Link>
+            </a>
           ))}
         </div>
       </FilterSection>
@@ -142,7 +141,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       <FilterSection label="Funding Type" defaultOpen={false}>
         <div className="space-y-0.5">
           {fundingTypes.map((f) => (
-            <Link key={f} href={buildUrl({ funding_type: f })} onClick={() => setDrawerOpen(false)}
+            <a key={f} href={buildUrl({ funding_type: f })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
                 active.funding_type === f
                   ? "bg-brand-50 text-brand-700 font-semibold"
@@ -150,7 +149,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
               }`}>
               <span>{f === "All" ? "Any Funding" : f}</span>
               {active.funding_type === f && <ChevronRight className="w-3 h-3 text-brand-500" />}
-            </Link>
+            </a>
           ))}
         </div>
       </FilterSection>
@@ -163,7 +162,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
             { v: "quick",  l: "Quick apply (≤ 60 min)" },
             { v: "medium", l: "Full application" },
           ].map(({ v, l }) => (
-            <Link key={v} href={buildUrl({ effort: v })} onClick={() => setDrawerOpen(false)}
+            <a key={v} href={buildUrl({ effort: v })} onClick={() => setDrawerOpen(false)}
               className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
                 active.effort === v
                   ? "bg-brand-50 text-brand-700 font-semibold"
@@ -171,7 +170,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
               }`}>
               <span>{l}</span>
               {active.effort === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
-            </Link>
+            </a>
           ))}
         </div>
       </FilterSection>
@@ -179,7 +178,7 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
       {/* Toggles: Renewable + International */}
       <FilterSection label="Other" defaultOpen={false}>
         <div className="space-y-1.5">
-          <Link
+          <a
             href={buildUrl({ renewable: active.renewable === "true" ? "" : "true" })}
             onClick={() => setDrawerOpen(false)}
             className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
@@ -192,8 +191,8 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
             <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.renewable === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
               <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.renewable === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
             </div>
-          </Link>
-          <Link
+          </a>
+          <a
             href={buildUrl({ international: active.international === "true" ? "" : "true" })}
             onClick={() => setDrawerOpen(false)}
             className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
@@ -206,17 +205,17 @@ export default function FilterSidebar({ active, countries, fundingTypes, degreeL
             <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.international === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
               <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.international === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
             </div>
-          </Link>
+          </a>
         </div>
       </FilterSection>
 
       {/* Clear all */}
       {hasFilters && (
         <div className="pt-3">
-          <Link href="/scholarships" onClick={() => setDrawerOpen(false)}
+          <a href="/scholarships" onClick={() => setDrawerOpen(false)}
             className="block w-full text-center py-2 text-xs font-semibold text-slate-400 hover:text-rose-500 border border-dashed border-slate-200 hover:border-rose-200 rounded-lg transition-colors">
             Clear all filters
-          </Link>
+          </a>
         </div>
       )}
     </div>

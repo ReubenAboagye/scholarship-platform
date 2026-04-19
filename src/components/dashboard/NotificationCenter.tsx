@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Bell, X, CheckCheck, ExternalLink } from "lucide-react";
+import { Bell, X, CheckCheck, Sparkles, Calendar, AlertTriangle, CheckCircle2, UserCircle, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { timeAgo } from "@/lib/utils";
 
@@ -15,14 +15,18 @@ interface Notification {
   created_at: string;
 }
 
-const TYPE_ICON: Record<string, string> = {
-  new_match:       "🎯",
-  deadline_soon:   "📅",
-  deadline_urgent: "⚠️",
-  status_update:   "✅",
-  profile_nudge:   "💡",
-  digest:          "📬",
-};
+function NotifIcon({ type }: { type: string }) {
+  const base = "w-4 h-4 flex-shrink-0 mt-0.5";
+  switch (type) {
+    case "new_match":       return <Sparkles    className={`${base} text-brand-500`} />;
+    case "deadline_soon":   return <Calendar    className={`${base} text-amber-500`} />;
+    case "deadline_urgent": return <AlertTriangle className={`${base} text-red-500`} />;
+    case "status_update":   return <CheckCircle2 className={`${base} text-emerald-500`} />;
+    case "profile_nudge":   return <UserCircle  className={`${base} text-slate-400`} />;
+    case "digest":          return <Mail        className={`${base} text-blue-500`} />;
+    default:                return <Bell        className={`${base} text-slate-400`} />;
+  }
+}
 
 export default function NotificationCenter() {
   const [open,          setOpen]          = useState(false);
@@ -134,13 +138,15 @@ export default function NotificationCenter() {
               <div className="py-8 text-center text-xs text-slate-400">Loading…</div>
             ) : notifications.length === 0 ? (
               <div className="py-10 text-center">
-                <p className="text-2xl mb-2">🔔</p>
+                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                  <Bell className="w-5 h-5 text-slate-300" />
+                </div>
                 <p className="text-xs text-slate-400 font-medium">No notifications yet</p>
               </div>
             ) : notifications.map(n => (
               <div key={n.id}
                 className={`flex gap-3 px-4 py-3 transition-colors hover:bg-slate-50 ${!n.is_read ? "bg-blue-50/40" : ""}`}>
-                <span className="text-base flex-shrink-0 mt-0.5">{TYPE_ICON[n.type] ?? "🔔"}</span>
+                <NotifIcon type={n.type} />
                 <div className="flex-1 min-w-0">
                   {n.href ? (
                     <a href={n.href} onClick={() => { markRead(n.id); setOpen(false); }}

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
@@ -92,9 +91,9 @@ export default function ForgotPasswordPage() {
         </form>
       )}
 
-      <Link href="/auth/login" className="mt-6 inline-flex text-sm font-semibold text-emerald-900 transition hover:text-emerald-950">
+      <a href="/auth/login" className="mt-6 inline-flex text-sm font-semibold text-emerald-900 transition hover:text-emerald-950">
         Back to sign in
-      </Link>
+      </a>
     </div>
   );
 }

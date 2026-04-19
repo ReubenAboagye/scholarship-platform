@@ -3,7 +3,6 @@ import { createClient } from "@/lib/supabase/server";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { getAuthenticatedUser, isAdminUser } from "@/lib/auth/admin";
 import { ExternalLink, Search, Bell } from "lucide-react";
-import Link from "next/link";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -59,14 +58,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
               </button>
               
-              <Link 
+              <a 
                 href="/" 
                 target="_blank"
                 className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-slate-50 rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors shadow-sm"
               >
                 <span>Live Site</span>
                 <ExternalLink className="w-3.5 h-3.5" />
-              </Link>
+              </a>
             </div>
           </div>
         </header>
