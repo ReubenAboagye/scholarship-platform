@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Loader2, Save, ArrowLeft, Info } from "lucide-react";
+import CountrySelect from "@/components/ui/CountrySelect";
 
-const COUNTRIES   = ["UK", "USA", "Germany", "Canada"];
 const FUNDING     = ["Full", "Partial", "Tuition Only", "Living Allowance"];
 const DEGREES     = ["Undergraduate", "Masters", "PhD", "Any"];
 
@@ -134,9 +134,10 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Country *</label>
-                <select className={inp} value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })}>
-                  {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-                </select>
+                <CountrySelect 
+                  value={form.country} 
+                  onChange={(v) => setForm({ ...form, country: v })}
+                />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Funding Type *</label>

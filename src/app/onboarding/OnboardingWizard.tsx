@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, ChevronLeft, GraduationCap, BookOpen, Globe, Sparkles, AlertTriangle, X } from "lucide-react";
+import CountrySelect from "@/components/ui/CountrySelect";
 
 // ── Data ────────────────────────────────────────────────────
 const DEGREE_LEVELS = [
@@ -275,13 +276,11 @@ export default function OnboardingWizard() {
                 Many scholarships are open only to applicants from specific
                 countries. This helps us filter out ones you&apos;re not eligible for.
               </p>
-              <input
-                type="text"
-                placeholder="e.g. Ghana, Nigeria, Kenya…"
-                value={countryOfOrigin}
-                onChange={(e) => setCountryOfOrigin(e.target.value)}
-                autoFocus
-                className="w-full px-4 py-3.5 border-2 border-slate-200 rounded-xl text-base outline-none focus:ring-0 focus:border-brand-500 transition-colors placeholder:text-slate-400"
+              <CountrySelect 
+                value={countryOfOrigin} 
+                onChange={(v) => setCountryOfOrigin(v)}
+                placeholder="Find your country..."
+                className="w-full"
               />
             </div>
           )}

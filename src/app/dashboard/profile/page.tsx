@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X, Bell } from "lucide-react";
 import { getTopNudge } from "@/lib/utils/profile-completeness";
+import CountrySelect from "@/components/ui/CountrySelect";
 
 const DEGREE_LEVELS = ["Undergraduate", "Masters", "PhD", "Any"];
 const FIELDS = [
@@ -318,17 +319,21 @@ export default function ProfilePage() {
             </div>
             <div>
               <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Country of Origin</label>
-              <div className="relative">
-                <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-                <input className={inp + " pl-8"} placeholder="e.g. Ghana" type="text" value={form.country_of_origin} onChange={(e) => update("country_of_origin", e.target.value)} />
-              </div>
+              <CountrySelect 
+                value={form.country_of_origin} 
+                onChange={(v) => update("country_of_origin", v)}
+                placeholder="e.g. Ghana"
+              />
             </div>
             <div className="sm:col-span-2">
               <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
                 Citizenship / Nationality <span className="normal-case font-normal text-slate-400">— used for eligibility filtering</span>
               </label>
-              <input className={inp} placeholder="e.g. Ghanaian, British, International" type="text"
-                value={form.citizenship} onChange={(e) => update("citizenship", e.target.value)} />
+              <CountrySelect 
+                value={form.citizenship} 
+                onChange={(v) => update("citizenship", v)}
+                placeholder="e.g. Ghana"
+              />
               <p className="text-xs text-slate-400 mt-1.5">This is the single most important field for filtering scholarships correctly.</p>
             </div>
           </div>
