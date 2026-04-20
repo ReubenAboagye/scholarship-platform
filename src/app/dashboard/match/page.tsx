@@ -528,7 +528,7 @@ export default function MatchPage() {
 
               {data.results.length === 0 ? (
                 <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
-                  <p className="text-slate-500 text-sm">No matches found above 30% threshold.</p>
+                  <p className="text-slate-500 text-sm">No eligible scholarships matched your profile.</p>
                   <p className="text-slate-400 text-xs mt-1">
                     Try broadening your profile or adding more detail to your academic background.
                   </p>
