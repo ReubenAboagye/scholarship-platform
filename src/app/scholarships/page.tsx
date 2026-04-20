@@ -83,55 +83,114 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ minHeight: "380px" }}>
+      <section className="relative overflow-hidden" style={{ minHeight: "360px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop"
           alt="" aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/50" />
-        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 flex flex-col items-center text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70 mb-3">Scholarship Directory</p>
-          <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-bold text-white leading-tight tracking-tight mb-4">
-            Find the right scholarship<br className="hidden sm:block" /> for your ambitions.
-          </h1>
-          <p className="text-white/80 text-base max-w-lg leading-relaxed mb-8">
-            {scholarships?.length ?? 0} curated opportunities across {countries.length - 1} countries —
-            matched to your profile, level, and field of study.
-          </p>
-          <form method="GET" action="/scholarships"
-            className="flex items-center w-full max-w-xl bg-white/15 backdrop-blur-sm border border-white/30 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-white/50 transition-all">
-            <div className="flex items-center px-4 text-white/60">
-              <Search className="w-4 h-4" />
+        {/* Deeper scrim — ensures text and white form remain legible */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/60 to-slate-950/80" />
+
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="text-center mb-8">
+            <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/70 mb-3">
+              Scholarship Directory
+            </p>
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-bold text-white leading-tight tracking-tight mb-3">
+              Find the right scholarship for your ambitions
+            </h1>
+            <p className="text-white/75 text-sm sm:text-base leading-relaxed">
+              {scholarships?.length ?? 0} curated opportunities across {countries.length - 1} countries.
+              Search by keyword or filter below.
+            </p>
+          </div>
+
+          {/* Solid search form — government-portal feel */}
+          <form
+            method="GET"
+            action="/scholarships"
+            className="bg-white rounded-lg shadow-xl border border-white/10 overflow-hidden"
+          >
+            {/* Keyword search row */}
+            <div className="flex items-center border-b border-slate-200">
+              <div className="flex items-center pl-4 text-slate-400">
+                <Search className="w-4 h-4" />
+              </div>
+              <input
+                name="search"
+                defaultValue={active.search}
+                placeholder="Search by name, provider, or keyword"
+                className="flex-1 py-3.5 px-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+              />
             </div>
-            {active.country       !== "All"  && <input type="hidden" name="country"       value={active.country} />}
-            {active.funding_type  !== "All"  && <input type="hidden" name="funding_type"  value={active.funding_type} />}
-            {active.degree_level  !== "All"  && <input type="hidden" name="degree_level"  value={active.degree_level} />}
+
+            {/* Inline filter row */}
+            <div className="grid grid-cols-1 sm:grid-cols-4">
+              {/* Country */}
+              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
+                <span className="text-[11px] font-medium text-slate-500 mb-1">Country</span>
+                <select
+                  name="country"
+                  defaultValue={active.country}
+                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+                >
+                  {countries.map((c) => (
+                    <option key={c} value={c}>{c === "All" ? "All countries" : c}</option>
+                  ))}
+                </select>
+              </label>
+
+              {/* Degree level */}
+              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
+                <span className="text-[11px] font-medium text-slate-500 mb-1">Degree level</span>
+                <select
+                  name="degree_level"
+                  defaultValue={active.degree_level}
+                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+                >
+                  {degreeLevels.map((d) => (
+                    <option key={d} value={d}>{d === "All" ? "Any level" : d}</option>
+                  ))}
+                </select>
+              </label>
+
+              {/* Funding type */}
+              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
+                <span className="text-[11px] font-medium text-slate-500 mb-1">Funding</span>
+                <select
+                  name="funding_type"
+                  defaultValue={active.funding_type}
+                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+                >
+                  {fundingTypes.map((f) => (
+                    <option key={f} value={f}>{f === "All" ? "Any funding" : f}</option>
+                  ))}
+                </select>
+              </label>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-6 py-3 transition-colors flex items-center justify-center gap-2"
+              >
+                <Search className="w-4 h-4" />
+                Search
+              </button>
+            </div>
+
+            {/* Preserve hidden filters not shown in the hero */}
             {active.deadline      !== "any"  && <input type="hidden" name="deadline"      value={active.deadline} />}
             {active.renewable     === "true" && <input type="hidden" name="renewable"     value="true" />}
             {active.international === "true" && <input type="hidden" name="international" value="true" />}
             {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
-            <input name="search" defaultValue={active.search}
-              placeholder="Search by scholarship name or keyword…"
-              className="flex-1 bg-transparent py-3.5 pr-3 text-sm text-white placeholder:text-white/50 outline-none" />
-            <button type="submit"
-              className="m-1.5 px-5 py-2.5 bg-white text-brand-700 hover:bg-white/90 text-sm font-semibold rounded-lg transition-colors shrink-0">
-              Search
-            </button>
           </form>
-          <div className="flex flex-wrap justify-center gap-3 mt-7">
-            {[
-              { label: "Countries",     value: `${countries.length - 1}` },
-              { label: "Scholarships",  value: `${scholarships?.length ?? 0}` },
-              { label: "Funding Types", value: "4" },
-            ].map((stat) => (
-              <div key={stat.label} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-3.5 py-2">
-                <span className="text-white font-bold text-sm">{stat.value}</span>
-                <span className="text-white/60 text-xs">{stat.label}</span>
-              </div>
-            ))}
-          </div>
+
+          {/* Quiet subtitle line replaces the glass pills */}
+          <p className="text-center text-xs text-white/60 mt-5">
+            Filter more specifically on the results page · Always free for students
+          </p>
         </div>
       </section>
 
