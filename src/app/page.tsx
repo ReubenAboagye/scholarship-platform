@@ -89,16 +89,15 @@ export default function HomePage() {
               </p>
 
               <h1
-                className="text-[44px] sm:text-5xl lg:text-[64px] text-slate-900 mb-6"
+                className="text-[40px] sm:text-[46px] lg:text-[56px] text-slate-900 mb-6"
                 style={SERIF}
               >
-                Scholarships for the UK,<br className="hidden sm:block" />
-                USA, Germany, and Canada<span className="text-brand-600">.</span>
+                Scholarships that fit<br className="hidden sm:block" />
+                your academic profile.
               </h1>
 
               <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
-                Twenty fully-funded opportunities, every one verified against its official source.
-                Tell us about your studies and we'll surface the ones you actually qualify for — in about two minutes.
+                Twenty fully-funded opportunities across the UK, USA, Germany, and Canada — every one verified against its official source. Tell us about your studies and we'll surface the ones you actually qualify for, in about two minutes.
               </p>
 
               <ul className="space-y-2.5 mb-10 max-w-md">
