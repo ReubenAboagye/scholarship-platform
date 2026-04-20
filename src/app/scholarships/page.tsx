@@ -3,6 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FilterSidebar from "@/components/scholarship/FilterSidebar";
 import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
+import HeroSearch from "@/components/scholarship/HeroSearch";
 import { Search } from "lucide-react";
 
 interface SearchParams {
@@ -107,85 +108,17 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
             </p>
           </div>
 
-          {/* Solid search form — government-portal feel */}
-          <form
-            method="GET"
-            action="/scholarships"
-            className="bg-white rounded-lg shadow-xl border border-white/10 overflow-hidden"
-          >
-            {/* Keyword search row */}
-            <div className="flex items-center border-b border-slate-200">
-              <div className="flex items-center pl-4 text-slate-400">
-                <Search className="w-4 h-4" />
-              </div>
-              <input
-                name="search"
-                defaultValue={active.search}
-                placeholder="Search by name, provider, or keyword"
-                className="flex-1 py-3.5 px-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
-              />
-            </div>
-
-            {/* Inline filter row */}
-            <div className="grid grid-cols-1 sm:grid-cols-4">
-              {/* Country */}
-              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
-                <span className="text-[11px] font-medium text-slate-500 mb-1">Country</span>
-                <select
-                  name="country"
-                  defaultValue={active.country}
-                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
-                >
-                  {countries.map((c) => (
-                    <option key={c} value={c}>{c === "All" ? "All countries" : c}</option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Degree level */}
-              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
-                <span className="text-[11px] font-medium text-slate-500 mb-1">Degree level</span>
-                <select
-                  name="degree_level"
-                  defaultValue={active.degree_level}
-                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
-                >
-                  {degreeLevels.map((d) => (
-                    <option key={d} value={d}>{d === "All" ? "Any level" : d}</option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Funding type */}
-              <label className="flex flex-col px-4 py-3 border-b sm:border-b-0 sm:border-r border-slate-200">
-                <span className="text-[11px] font-medium text-slate-500 mb-1">Funding</span>
-                <select
-                  name="funding_type"
-                  defaultValue={active.funding_type}
-                  className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
-                >
-                  {fundingTypes.map((f) => (
-                    <option key={f} value={f}>{f === "All" ? "Any funding" : f}</option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-6 py-3 transition-colors flex items-center justify-center gap-2"
-              >
-                <Search className="w-4 h-4" />
-                Search
-              </button>
-            </div>
-
-            {/* Preserve hidden filters not shown in the hero */}
-            {active.deadline      !== "any"  && <input type="hidden" name="deadline"      value={active.deadline} />}
-            {active.renewable     === "true" && <input type="hidden" name="renewable"     value="true" />}
-            {active.international === "true" && <input type="hidden" name="international" value="true" />}
-            {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
-          </form>
+          {/* Hero search.
+              Desktop: keyword + Country / Degree / Funding filters, debounced
+              URL updates re-render the server results below.
+              Mobile: just the search input, live typeahead dropdown — tap a
+              result to go straight to that scholarship. No filter UI on mobile. */}
+          <HeroSearch
+            countries={countries}
+            fundingTypes={fundingTypes}
+            degreeLevels={degreeLevels}
+            active={active}
+          />
 
           {/* Quiet subtitle line replaces the glass pills */}
           <p className="text-center text-xs text-white/60 mt-5">

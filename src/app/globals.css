@@ -2,14 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
 @layer base {
   :root {
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 16px 48px rgba(15, 23, 42, 0.12);
-    --brand-gradient: linear-gradient(135deg, #0f7fe4 0%, #0362c2 100%);
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.08);
     --glass-bg: rgba(255, 255, 255, 0.75);
     --glass-border: rgba(255, 255, 255, 0.4);
   }
@@ -30,17 +27,26 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
+  /* Default UI headings stay in Inter. Opt into the editorial serif with
+     the `.font-serif` utility (Tailwind) or the `.display` class. */
+  h1, h2, h3, h4 {
     font-family: 'Inter', system-ui, sans-serif;
     line-height: 1.15;
     letter-spacing: -0.02em;
   }
 
+  .display {
+    font-family: 'Fraunces', Georgia, ui-serif, serif;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+    /* Fraunces responds to optical-size + soft; give it a deliberately
+       newspaper-feel setting rather than the default techy one. */
+    font-variation-settings: "opsz" 72, "SOFT" 30;
+  }
+
   :focus-visible {
-    outline: 2px solid #2563eb;
+    outline: 2px solid #1e3a8a;
     outline-offset: 2px;
   }
 
@@ -89,27 +95,40 @@
     animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
+  /* Hairline rule for editorial sections */
+  .rule {
+    border-top: 1px solid #e5e7eb;
+  }
+
+  /* Subtle paper texture for section backgrounds (pure CSS, no asset) */
+  .bg-paper {
+    background-color: #FAFAF7;
+  }
+
   /* Premium Hamburger Morph Animation */
   .hamburger-line {
-    width: 20px;
-    height: 2px;
+    display: block;
+    width: 18px;
+    height: 1.75px;
     background-color: currentColor;
     border-radius: 99px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.35s cubic-bezier(0.65, 0, 0.35, 1),
+      opacity 0.2s cubic-bezier(0.65, 0, 0.35, 1);
     transform-origin: center;
   }
 
   .hamburger-open .line-1 {
-    transform: translateY(6px) rotate(45deg);
+    transform: translateY(6.75px) rotate(45deg);
   }
 
   .hamburger-open .line-2 {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: scaleX(0);
   }
 
   .hamburger-open .line-3 {
-    transform: translateY(-6px) rotate(-45deg);
+    transform: translateY(-6.75px) rotate(-45deg);
   }
 
   /* Staggered Item Entrance (Top-Down) */
@@ -126,24 +145,6 @@
 
   .animate-stagger-in {
     animation: slideInDown 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  /* Mobile Menu Reveal */
-  .mobile-menu-container {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
-    opacity: 0;
-    overflow: hidden;
-  }
-
-  .mobile-menu-container.is-open {
-    grid-template-rows: 1fr;
-    opacity: 1;
-  }
-
-  .mobile-menu-inner {
-    min-height: 0;
   }
 
   .custom-scrollbar::-webkit-scrollbar {

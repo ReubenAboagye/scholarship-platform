@@ -1,23 +1,27 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Menu, X, ChevronDown, Search, BookOpen, Cpu, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
+import { Menu, X, ChevronDown, Search, BookOpen, Target, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 const studentsMenu = [
   { icon: Search, title: "Scholarship Search", desc: "Find scholarships matched to your profile.", href: "/auth/signup" },
   { icon: BookOpen, title: "Scholarship Directory", desc: "Browse all scholarships by country or field.", href: "/scholarships" },
-  { icon: Cpu, title: "AI Matching", desc: "Let our AI rank opportunities for you.", href: "/dashboard/match" },
+  { icon: Target, title: "Smart Match", desc: "See your best-fit scholarships ranked by eligibility.", href: "/dashboard/match" },
   { icon: Bookmark, title: "Saved Scholarships", desc: "Access your bookmarked opportunities.", href: "/dashboard/saved" },
   { icon: LayoutDashboard, title: "Application Tracker", desc: "Track every application in one dashboard.", href: "/dashboard/tracker" },
   { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/destinations" },
 ];
 
 const companyMenu = [
-  { icon: Info, title: "About Us", desc: "Who we are and why we built ScholarBridge AI.", href: "/about" },
+  { icon: Info, title: "About Us", desc: "Who we are and why we built ScholarBridge.", href: "/about" },
   { icon: HelpCircle, title: "FAQ", desc: "Answers to common questions.", href: "/faq" },
   { icon: Mail, title: "Contact", desc: "Get in touch with our team.", href: "/contact" },
 ];
+
+// Inline font family for the logo — avoids a CSS class dependency if the
+// stylesheet hasn't loaded the Fraunces face yet.
+const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -29,7 +33,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const supabase = createClient();
-    
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -52,14 +56,33 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  // Lock body scroll while the mobile overlay is open; close on Escape.
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMobileOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [mobileOpen]);
+
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/50 bg-white/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          <a href="/" className="flex items-center gap-1">
-            <span className="text-xl font-black tracking-tight text-slate-900">Scholar</span>
-            <span className="text-xl font-black tracking-tight text-brand-600">Match</span>
+          <a href="/" className="flex items-baseline">
+            <span className="text-2xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
+            </span>
           </a>
 
           <nav className="hidden items-center gap-1 md:flex">
@@ -141,21 +164,30 @@ export default function Navbar() {
 
           <div className="hidden items-center gap-4 md:flex">
             {user ? (
-              <a href="/dashboard" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
-                <span className="relative z-10">Go to Dashboard</span>
+              <a href="/dashboard" className="inline-flex items-center rounded-md bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-colors">
+                Go to dashboard
               </a>
             ) : (
               <>
-                <a href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
-                <a href="/auth/signup" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
-                  <span className="relative z-10">Sign Up Free</span>
+                <a href="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Log in</a>
+                <a href="/auth/signup" className="inline-flex items-center rounded-md bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-colors">
+                  Get started
                 </a>
               </>
             )}
           </div>
 
-          <button className={`flex flex-col items-center justify-center w-10 h-10 gap-1.5 text-slate-600 hover:bg-slate-100 transition-colors md:hidden ${mobileOpen ? "hamburger-open" : ""}`}
-            onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+          {/* Mobile hamburger */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            className={`md:hidden inline-flex flex-col items-center justify-center gap-[5px]
+                        w-10 h-10 rounded-md border transition-all duration-200
+                        ${mobileOpen
+                          ? "border-slate-300 bg-slate-100 text-slate-900 hamburger-open"
+                          : "border-slate-200 bg-white/60 text-slate-700 hover:bg-slate-100 hover:border-slate-300 active:scale-[0.97]"}`}
+          >
             <span className="hamburger-line line-1" />
             <span className="hamburger-line line-2" />
             <span className="hamburger-line line-3" />
@@ -163,49 +195,155 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className={`mobile-menu-container border-t border-slate-200 bg-white md:hidden ${mobileOpen ? "is-open" : ""}`}>
-        <div className="mobile-menu-inner">
-          <div className="px-4 py-3 space-y-1">
-            <p className="px-2 py-1 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in" style={{ animationDelay: '0.05s' }}>Students</p>
-            {studentsMenu.map((item, idx) => (
-              <a key={item.title} href={item.href}
-                className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
-                style={{ animationDelay: `${(idx + 2) * 0.05}s` }}>
-                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-brand-50">
-                  <item.icon className="h-4 w-4 text-brand-600" />
-                </div>
-                <span className="text-sm font-medium text-slate-700">{item.title}</span>
-              </a>
-            ))}
+      {/* Mobile menu */}
+      <div className="md:hidden" aria-hidden={!mobileOpen}>
+        {/* Scrim */}
+        <div
+          onClick={() => setMobileOpen(false)}
+          className={`fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] transition-opacity duration-300
+                      ${mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        />
 
-            <p className="px-2 py-1 pt-3 text-xs font-semibold uppercase tracking-wide text-slate-400 animate-stagger-in"
-              style={{ animationDelay: `${(studentsMenu.length + 2) * 0.05}s` }}>
-              Company
-            </p>
-            {companyMenu.map((item, idx) => (
-              <a key={item.title} href={item.href}
-                className="flex items-center gap-3 px-3 py-3 hover:bg-slate-50 rounded-xl transition-colors animate-stagger-in"
-                style={{ animationDelay: `${(studentsMenu.length + idx + 3) * 0.05}s` }}>
-                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100">
-                  <item.icon className="h-4 w-4 text-slate-500" />
-                </div>
-                <span className="text-sm font-medium text-slate-700">{item.title}</span>
-              </a>
-            ))}
-
-            <div className="pt-4 border-t border-slate-100 space-y-3 animate-stagger-in"
-              style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
-              {user ? (
-                <a href="/dashboard" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Go to Dashboard</a>
-              ) : (
-                <>
-                  <a href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
-                  <a href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</a>
-                </>
-              )}
-            </div>
+        {/* Panel */}
+        <aside
+          role="dialog"
+          aria-modal="true"
+          aria-label="Main menu"
+          className={`fixed top-0 right-0 bottom-0 z-50 w-[85vw] max-w-[360px]
+                      bg-white shadow-2xl flex flex-col
+                      transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
+                      ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
+          {/* Header: brand + close */}
+          <div className="flex items-center justify-between px-5 h-16 border-b border-slate-100 shrink-0">
+            <a href="/" onClick={() => setMobileOpen(false)} className="flex items-baseline">
+              <span className="text-xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+                Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
+              </span>
+            </a>
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close menu"
+              className="w-9 h-9 inline-flex items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 active:scale-[0.96] transition"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
-        </div>
+
+          {/* User strip */}
+          {user ? (
+            <a
+              href="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors shrink-0"
+            >
+              <div className="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+                {(user.email?.[0] || "U").toUpperCase()}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-slate-900 truncate">
+                  {user.user_metadata?.full_name || user.email?.split("@")[0] || "Account"}
+                </p>
+                <p className="text-xs text-slate-500 truncate">{user.email}</p>
+              </div>
+              <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 shrink-0" />
+            </a>
+          ) : (
+            <div className="px-5 py-3 border-b border-slate-100 shrink-0 bg-slate-50/60">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                Not signed in
+              </p>
+            </div>
+          )}
+
+          {/* Scrollable link body */}
+          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar">
+            <nav className="py-2">
+              <p className="px-5 pt-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                For Students
+              </p>
+              <ul>
+                {studentsMenu.map((item) => (
+                  <li key={item.title}>
+                    <a
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                    >
+                      <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
+                      <span className="flex-1 min-w-0 truncate">{item.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="px-5 pt-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Company
+              </p>
+              <ul>
+                {companyMenu.map((item) => (
+                  <li key={item.title}>
+                    <a
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                    >
+                      <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
+                      <span className="flex-1 min-w-0 truncate">{item.title}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+
+              <p className="px-5 pt-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Resources
+              </p>
+              <ul>
+                <li>
+                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                  <a
+                    href="/#how-it-works"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                  >
+                    <span className="flex-1 min-w-0 truncate">How it works</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
+          {/* Footer band: primary CTAs */}
+          <div className="shrink-0 border-t border-slate-100 px-5 py-4 bg-white">
+            {user ? (
+              <a
+                href="/dashboard"
+                onClick={() => setMobileOpen(false)}
+                className="block w-full rounded-md bg-brand-600 hover:bg-brand-700 py-2.5 text-center text-sm font-semibold text-white transition-colors"
+              >
+                Go to dashboard
+              </a>
+            ) : (
+              <div className="flex gap-2">
+                <a
+                  href="/auth/login"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 rounded-md border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                >
+                  Log in
+                </a>
+                <a
+                  href="/auth/signup"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 rounded-md bg-brand-600 hover:bg-brand-700 py-2.5 text-center text-sm font-semibold text-white transition-colors"
+                >
+                  Get started
+                </a>
+              </div>
+            )}
+          </div>
+        </aside>
       </div>
     </header>
   );

@@ -1,436 +1,429 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
-const MotionA = motion.a;
-import { CheckCircle, ArrowRight, ChevronDown } from "lucide-react";
+import { Check, ArrowRight, ChevronDown, Shield, Lock, Globe, Compass } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
-const benefits = [
-  { icon: CheckCircle, title: "Verified Data", desc: "Direct links to official sources only." },
-  { icon: ArrowRight, title: "Always Free", desc: "No hidden fees or credit cards." },
-  { icon: ChevronDown, title: "4 Tier-1 Countries", desc: "UK, USA, Germany, and Canada." },
-  { icon: ArrowRight, title: "AI Matching", desc: "Instant ranking for your profile." },
+/* -------------------------------------------------------------------------- */
+/*  Data                                                                       */
+/* -------------------------------------------------------------------------- */
+
+const trustStrip = [
+  { icon: Shield,  title: "Verified sources",      desc: "Every scholarship links directly to the official application page — no middlemen." },
+  { icon: Lock,    title: "No email spam",         desc: "We don't sell, rent, or share your email. Not to partners, not to advertisers." },
+  { icon: Globe,   title: "Four countries, curated", desc: "Hand-picked opportunities across the UK, USA, Germany, and Canada." },
+  { icon: Compass, title: "Matched to your profile", desc: "Ranked by fit — your best-match scholarships surface first." },
 ];
 
 const FLAG_URL = (code: string) => `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
 
 const countries = [
-  { flag: "gb", name: "United Kingdom", code: "UK", count: 5, top: "Chevening, Gates Cambridge, Rhodes" },
-  { flag: "us", name: "United States", code: "USA", count: 5, top: "Fulbright, Mastercard Foundation" },
-  { flag: "de", name: "Germany", code: "Germany", count: 5, top: "DAAD, Heinrich Boll, Konrad-Adenauer" },
-  { flag: "ca", name: "Canada", code: "Canada", count: 5, top: "Vanier, Lester B. Pearson, Trudeau" },
+  { flag: "gb", name: "United Kingdom", code: "UK",      count: 5, top: "Chevening · Gates Cambridge · Rhodes" },
+  { flag: "us", name: "United States",  code: "USA",     count: 5, top: "Fulbright · Mastercard Foundation" },
+  { flag: "de", name: "Germany",        code: "Germany", count: 5, top: "DAAD · Heinrich Böll · Konrad-Adenauer" },
+  { flag: "ca", name: "Canada",         code: "Canada",  count: 5, top: "Vanier · Lester B. Pearson · Trudeau" },
 ];
 
-const featured = [
-  { name: "Chevening Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Tuition + GBP 1,173/mo + flights", degree: "Masters", slug: "chevening-scholarship" },
-  { name: "Fulbright Foreign Student", country: "USA", flag: "us", funding: "Full", amount: "Full tuition + stipend + flights", degree: "Masters / PhD", slug: "fulbright-foreign-student-program" },
-  { name: "DAAD Scholarship", country: "Germany", flag: "de", funding: "Full", amount: "EUR 934–1,200/month + insurance", degree: "Masters / PhD", slug: "daad-scholarship" },
-  { name: "Vanier Canada Graduate", country: "Canada", flag: "ca", funding: "Full", amount: "CAD 50,000/year × 3 years", degree: "PhD", slug: "vanier-canada-graduate-scholarship" },
-  { name: "Gates Cambridge Scholarship", country: "UK", flag: "gb", funding: "Full", amount: "Full tuition + GBP 21,000/year", degree: "Masters / PhD", slug: "gates-cambridge-scholarship" },
-  { name: "Lester B. Pearson", country: "Canada", flag: "ca", funding: "Full", amount: "Full 4-year undergraduate costs", degree: "Undergraduate", slug: "lester-b-pearson-scholarship" },
+type Featured = {
+  name: string; country: string; flag: string; funding: string;
+  amount: string; degree: string; slug: string;
+  deadline: string; effort: string;
+};
+
+const featured: Featured[] = [
+  { name: "Chevening Scholarship",         country: "United Kingdom", flag: "gb", funding: "Full Funding", amount: "Tuition + £1,173/month + flights",       degree: "Masters",          slug: "chevening-scholarship",            deadline: "Nov 2026",   effort: "Essays · 2 referees" },
+  { name: "Fulbright Foreign Student",     country: "United States",  flag: "us", funding: "Full Funding", amount: "Full tuition + stipend + flights",      degree: "Masters / PhD",    slug: "fulbright-foreign-student-program",deadline: "Country-specific", effort: "Essays · 3 referees" },
+  { name: "DAAD Scholarship",              country: "Germany",        flag: "de", funding: "Full Funding", amount: "€934–1,200/month + health insurance",    degree: "Masters / PhD",    slug: "daad-scholarship",                 deadline: "Oct 2026",   effort: "Proposal · 2 referees" },
+  { name: "Vanier Canada Graduate",        country: "Canada",         flag: "ca", funding: "Full Funding", amount: "CAD 50,000/year × 3 years",              degree: "PhD",              slug: "vanier-canada-graduate-scholarship", deadline: "Nov 2026", effort: "Research proposal"     },
+  { name: "Gates Cambridge Scholarship",   country: "United Kingdom", flag: "gb", funding: "Full Funding", amount: "Full tuition + £21,000/year",            degree: "Masters / PhD",    slug: "gates-cambridge-scholarship",      deadline: "Dec 2026",   effort: "Essays · 2 referees"   },
+  { name: "Lester B. Pearson",             country: "Canada",         flag: "ca", funding: "Full Funding", amount: "Full 4-year undergraduate costs",        degree: "Undergraduate",    slug: "lester-b-pearson-scholarship",     deadline: "Nov 2026",   effort: "Nomination required"   },
 ];
 
 const steps = [
-  { n: "01", title: "Create your free profile", body: "Add your field of study, degree level, country, and academic background. Takes under 2 minutes." },
-  { n: "02", title: "Get personalized matches", body: "We compare your profile to scholarship criteria, not just keywords." },
-  { n: "03", title: "Review ranked results", body: "See match scores, funding details, eligibility criteria, and deadlines in one place." },
-  { n: "04", title: "Apply and track progress", body: "Click straight through to apply and track every application from Interested to Accepted." },
+  { n: "01", title: "Create a free profile",      body: "Tell us your field of study, degree level, and destination country. Takes about two minutes." },
+  { n: "02", title: "See your matches",           body: "We compare your profile against real eligibility criteria, not keywords — no false positives." },
+  { n: "03", title: "Review the details",         body: "Match fit, funding, requirements, and deadlines in one place. Every listing links to the source." },
+  { n: "04", title: "Apply and track",            body: "Save, apply, and monitor every application from interested through to an offer." },
 ];
 
 const faqs = [
-  { q: "What is ScholarBridge AI?", a: "ScholarBridge AI is a free platform that helps international students find scholarships for the UK, USA, Germany, and Canada." },
-  { q: "Is ScholarBridge AI completely free?", a: "Yes. There is no subscription, no hidden fee, and no credit card requirement for students." },
-  { q: "How does the matching work?", a: "We compare your academic profile to scholarship criteria and highlight the strongest fits." },
-  { q: "Are the scholarships legitimate?", a: "Every scholarship in the database is manually curated, verified, and linked to an official application page." },
-  { q: "Do I need an account to browse?", a: "No. You can browse scholarships without an account, but you need one to run matches, save favorites, and track applications." },
-  { q: "Which countries are covered?", a: "We currently cover the United Kingdom, United States, Germany, and Canada." },
+  { q: "What is ScholarBridge?",                 a: "ScholarBridge is a free platform that helps students find scholarships for study in the UK, USA, Germany, and Canada. Every listing is verified and links to the official application page." },
+  { q: "Is it really free?",                     a: "Yes — there's no subscription, no trial, no credit card. The platform is free for students, and we make no money by selling your data." },
+  { q: "How does the matching work?",            a: "We compare your academic profile — degree level, country of study, field, GPA, and more — against each scholarship's actual eligibility rules. You see the strongest fits first, with the reasoning shown." },
+  { q: "Are the scholarships legitimate?",       a: "Every scholarship in the database is manually curated, verified, and linked directly to the official application page. We never list pay-to-apply awards or anything we can't trace to a real funder." },
+  { q: "Do I need an account to browse?",        a: "No. You can browse the full directory without signing up. An account is only required to run personalised matches, save favourites, and track your applications." },
+  { q: "Which countries are covered?",           a: "The United Kingdom, United States, Germany, and Canada. We deliberately focus on these four so we can keep coverage deep and verified." },
 ];
 
-const stagger = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
-    },
-  },
-};
+/* -------------------------------------------------------------------------- */
+/*  Shared inline font families — use inline style to guarantee Fraunces loads */
+/*  even on first paint before the stylesheet has been parsed.                */
+/* -------------------------------------------------------------------------- */
 
-const fadeInUp = {
-  hidden: { opacity: 0, y: 28 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
+const SERIF = { fontFamily: "Fraunces, Georgia, ui-serif, serif" } as const;
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 0.6 } },
-};
-
-const floatAnimation = {
-  initial: { y: 0 },
-  animate: {
-    y: [0, -20, 0],
-    transition: {
-      duration: 6,
-      repeat: Infinity,
-      ease: "easeInOut",
-    },
-  },
-};
-
-const blobAnimation = {
-  animate: {
-    scale: [1, 1.1, 1],
-    rotate: [0, 90, 0],
-    transition: {
-      duration: 20,
-      repeat: Infinity,
-      ease: "linear",
-    },
-  },
-};
+/* -------------------------------------------------------------------------- */
+/*  Page                                                                       */
+/* -------------------------------------------------------------------------- */
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <motion.section
-        className="relative py-8 lg:py-10 overflow-hidden bg-white"
-        initial="hidden"
-        animate="visible"
-        variants={stagger}
-      >
-        {/* Animated Background Depth Elements */}
-        <motion.div
-          className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-brand-50 rounded-full blur-3xl opacity-30 select-none pointer-events-none"
-          animate={{
-            x: [0, 30, 0],
-            y: [0, 50, 0],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute top-[20%] -left-[10%] w-[600px] h-[600px] bg-slate-50 rounded-full blur-3xl opacity-40 select-none pointer-events-none"
-          animate={{
-            x: [0, -40, 0],
-            y: [0, 60, 0],
-          }}
-          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        />
+      {/* ──────────────────────────────────────────────────────────────────
+          HERO
+          Flat off-white background, editorial serif headline, single-color
+          emphasis, two clear CTAs, credibility photo on the right with one
+          quiet overlay card. No animated gradient blobs.
+          ────────────────────────────────────────────────────────────────── */}
+      <section className="relative bg-paper border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div variants={fadeInUp}>
-              <div className="inline-flex items-center gap-2 bg-white border border-slate-200 px-4 py-1.5 text-sm font-semibold text-slate-700 mb-6">
-                <span className="w-2 h-2 bg-green-500 inline-block"></span>
-                Personalized matches · Free for students
-              </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-5xl font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
-                Find <span className="text-brand-600">Scholarships</span><br /> Matched to You
-              </h1>
-              <p className="text-lg text-slate-600 mb-4 max-w-lg leading-relaxed">
-                Stop scrolling through hundreds of listings. Tell us about your study goals and get scholarship matches that fit your profile.
+            {/* Left: headline + copy */}
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-6">
+                For students · Free, always
               </p>
-              <ul className="space-y-1.5 mb-8">
-                {["Scholarships for every type of student", "Fully verified opportunities", "Personalized matches for your profile", "100% free, always"].map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm font-medium text-slate-700">
-                    <CheckCircle className="w-4 h-4 text-brand-600 flex-shrink-0" />{p}
+
+              <h1
+                className="text-[44px] sm:text-5xl lg:text-[64px] text-slate-900 mb-6"
+                style={SERIF}
+              >
+                Scholarships for the UK,<br className="hidden sm:block" />
+                USA, Germany, and Canada<span className="text-brand-600">.</span>
+              </h1>
+
+              <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
+                Twenty fully-funded opportunities, every one verified against its official source.
+                Tell us about your studies and we'll surface the ones you actually qualify for — in about two minutes.
+              </p>
+
+              <ul className="space-y-2.5 mb-10 max-w-md">
+                {[
+                  "Verified scholarships with direct application links",
+                  "Matched on eligibility rules, not keyword guesswork",
+                  "No email spam — ever. We don't sell your data.",
+                  "Free for students, no credit card required",
+                ].map((p) => (
+                  <li key={p} className="flex items-start gap-3 text-[15px] text-slate-700">
+                    <span className="mt-1 inline-flex w-4 h-4 items-center justify-center rounded-full bg-brand-600/10 flex-shrink-0">
+                      <Check className="w-3 h-3 text-brand-600" strokeWidth={3} />
+                    </span>
+                    {p}
                   </li>
                 ))}
               </ul>
+
               <div className="flex flex-col sm:flex-row gap-3">
-                <MotionA
+                <a
                   href="/auth/signup"
-                  className="inline-flex items-center justify-center rounded-full px-7 py-3.5 bg-brand-600 text-white font-bold text-sm shadow-brand transition duration-200 ease-out hover:bg-brand-700"
-                  variants={fadeInUp}
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center justify-center rounded-md px-6 py-3 bg-brand-600 text-white font-semibold text-sm hover:bg-brand-700 transition-colors shadow-card-hover"
                 >
-                  Start matching scholarships for free
-                </MotionA>
-                <MotionA
+                  Find my scholarships
+                </a>
+                <a
                   href="/scholarships"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full px-7 py-3 bg-white border border-slate-300 text-slate-700 font-semibold text-sm shadow-sm transition duration-200 ease-out hover:border-slate-400 hover:shadow-md"
-                  variants={fadeInUp}
-                  whileHover={{ y: -2, scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-6 py-3 bg-white border border-slate-300 text-slate-800 font-semibold text-sm hover:border-slate-400 transition-colors"
                 >
-                  Browse all scholarships <ArrowRight className="w-4 h-4" />
-                </MotionA>
-              </div>
-            </motion.div>
-            <div className="relative">
-              <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 shadow-xl">
-                <Image src="/images/marketing/students-collab.jpg" alt="Students studying together" width={1600} height={1067} className="h-80 lg:h-96 w-full object-cover" priority />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent" />
-              </div>
-              <div className="absolute -bottom-8 left-4 right-4 sm:left-auto sm:-right-8 sm:bottom-12 sm:w-64 bg-white/90 backdrop-blur-md border border-white/50 p-5 rounded-2xl shadow-2xl">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-brand-600 mb-3">Global Destination Coverage</p>
-                <div className="flex -space-x-3 mb-4">
-                  {['gb', 'us', 'de', 'ca'].map((code) => (
-                    <motion.div
-                      key={code}
-                      className="w-10 h-10 rounded-full border-2 border-white overflow-hidden shadow-sm bg-slate-100"
-                      whileHover={{ scale: 1.1, zIndex: 10, y: -5 }}
-                    >
-                      <img src={FLAG_URL(code)} alt={code} className="w-full h-full object-cover" />
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800">4 Prime Countries</span>
-                  <span className="text-[10px] font-medium text-slate-500">Verified Access</span>
-                </div>
-              </div>
-              <div className="hidden sm:block absolute top-5 right-5 bg-slate-900/90 backdrop-blur px-4 py-3 text-white">
-                <p className="text-xs uppercase tracking-[0.2em] text-slate-300">Coverage</p>
-                <p className="text-2xl font-black">4 countries</p>
+                  Browse the directory
+                  <ArrowRight className="w-4 h-4" />
+                </a>
               </div>
             </div>
+
+            {/* Right: photography + one overlay */}
+            <div className="relative">
+              <div className="relative overflow-hidden rounded-lg border border-slate-200 shadow-card-hover">
+                <Image
+                  src="/images/marketing/students-collab.jpg"
+                  alt="Students studying together"
+                  width={1600}
+                  height={1067}
+                  className="h-[420px] lg:h-[520px] w-full object-cover"
+                  priority
+                />
+              </div>
+
+              {/* Single, calm overlay — not two stacked badges */}
+              <div className="hidden sm:block absolute -bottom-6 -left-6 w-72 bg-white border border-slate-200 shadow-lg rounded-lg p-5">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-3">
+                  Coverage
+                </p>
+                <div className="flex -space-x-2 mb-3">
+                  {["gb", "us", "de", "ca"].map((code) => (
+                    <div
+                      key={code}
+                      className="w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm bg-slate-100"
+                      aria-hidden
+                    >
+                      <img src={FLAG_URL(code)} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <p className="text-sm text-slate-800">
+                  <span className="font-semibold text-slate-900" style={SERIF}>20 scholarships</span>{" "}
+                  across four destinations, each one linked to its official source.
+                </p>
+              </div>
+            </div>
+
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        className="bg-slate-50 py-8 border-y border-slate-100 relative z-20"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-            {benefits.map((b, i) => (
-              <motion.div key={b.title} className="flex gap-4 items-start" variants={fadeInUp} transition={{ delay: i * 0.08 }}>
-                <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
-                  <b.icon className="w-5 h-5 text-brand-600" />
-                </div>
+      {/* ──────────────────────────────────────────────────────────────────
+          TRUST STRIP
+          Four consistent icon pairs with plainspoken copy. No purple tiles —
+          just aligned start, hairline separator above.
+          ────────────────────────────────────────────────────────────────── */}
+      <section className="bg-white border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+            {trustStrip.map((b) => (
+              <div key={b.title} className="flex gap-3 items-start">
+                <b.icon className="w-5 h-5 text-brand-600 mt-0.5 flex-shrink-0" strokeWidth={1.75} />
                 <div>
-                  <p className="text-sm font-bold text-slate-900">{b.title}</p>
-                  <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">{b.desc}</p>
+                  <p className="text-sm font-semibold text-slate-900 mb-1">{b.title}</p>
+                  <p className="text-[13px] text-slate-500 leading-relaxed">{b.desc}</p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        className="py-10 bg-white"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.3 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
+      {/* ──────────────────────────────────────────────────────────────────
+          FEATURED SCHOLARSHIPS
+          Tighter cards: 1px border, 8px radius, amount + deadline pre-
+          attentive. Each card now has deadline and effort chips — the two
+          fields students most want at a glance.
+          ────────────────────────────────────────────────────────────────── */}
+      <section className="bg-paper border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-brand-600 mb-3">Why Students Use It</p>
-              <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-4 leading-tight">A focused platform, not a noisy directory</h2>
-              <p className="text-slate-600 leading-relaxed max-w-2xl">
-                ScholarBridge AI keeps the process simple: verified opportunities, a fast match check, and a clean workflow for saving and tracking applications.
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
+                Featured
+              </p>
+              <h2 className="text-3xl lg:text-4xl text-slate-900" style={SERIF}>
+                Fully-funded opportunities
+              </h2>
+              <p className="text-slate-500 mt-2">
+                Hand-picked flagship scholarships across all four destinations.
               </p>
             </div>
-            <div className="relative overflow-hidden rounded-2xl border border-slate-200 shadow-sm">
-              <Image src="/images/marketing/campus-building.jpg" alt="University campus" width={1600} height={1067} className="h-64 w-full object-cover" />
-            </div>
-          </div>
-        </div>
-      </motion.section>
-
-      <motion.section
-        className="py-10 bg-slate-50 border-t border-slate-100"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-3xl font-black text-slate-900">Featured Scholarships</h2>
-              <p className="text-slate-500 mt-1">Hand-picked fully-funded opportunities</p>
-            </div>
-            <a href="/scholarships" className="text-sm font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1 transition-colors">
-              See all <ArrowRight className="w-4 h-4" />
+            <a
+              href="/scholarships"
+              className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors whitespace-nowrap"
+            >
+              See the full directory
+              <ArrowRight className="w-4 h-4" />
             </a>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featured.map((s, i) => (
-              <a
-                key={s.name}
-                href={`/scholarships/${s.slug}`}
-                className="group relative block bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm transition-all duration-300"
-                style={{ position: 'relative' }}
-              >
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInUp}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ y: -12 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="h-full"
-                >
-                  {/* Glass Shine Effect */}
-                  <div className="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none">
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
-                    />
-                  </div>
 
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="w-12 h-12 flex items-center justify-center bg-slate-50 rounded-2xl border border-slate-100">
-                      <img src={FLAG_URL(s.flag)} alt={s.country} className="w-7 h-auto shadow-sm" />
-                    </div>
-                    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-100">
-                      {s.funding} Funding
-                    </span>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {featured.map((s) => (
+              <a
+                key={s.slug}
+                href={`/scholarships/${s.slug}`}
+                className="group block bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-card-hover transition-all"
+              >
+                {/* Header: flag + funding pill */}
+                <div className="flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-2.5">
+                    <img src={FLAG_URL(s.flag)} alt="" className="w-6 h-auto rounded-sm shadow-sm" aria-hidden />
+                    <span className="text-xs font-medium text-slate-500">{s.country}</span>
                   </div>
-                  <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-brand-600 transition-all leading-snug">{s.name}</h3>
-                  <p className="text-xs font-medium text-slate-400 mb-6 flex items-center gap-1.5">
-                    <span className="w-1 h-1 rounded-full bg-slate-300" /> {s.country} · {s.degree}
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-emerald-700 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
+                    {s.funding}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h3
+                  className="text-xl text-slate-900 mb-2 group-hover:text-brand-700 transition-colors leading-tight"
+                  style={SERIF}
+                >
+                  {s.name}
+                </h3>
+                <p className="text-xs text-slate-500 mb-5">{s.degree}</p>
+
+                {/* Amount — primary attention anchor */}
+                <div className="mb-4">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 mb-1">
+                    Funding
                   </p>
-                  <div className="pt-6 border-t border-slate-50 flex items-center justify-between">
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-0.5">Estimated Value</p>
-                      <p className="text-sm font-black text-slate-800 tracking-tight">{s.amount}</p>
-                    </div>
-                    <div className="w-8 h-8 rounded-full bg-brand-50 flex items-center justify-center -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all">
-                      <ArrowRight className="w-4 h-4 text-brand-600" />
-                    </div>
-                  </div>
-                </motion.div>
+                  <p className="text-sm font-semibold text-slate-900 leading-snug">
+                    {s.amount}
+                  </p>
+                </div>
+
+                {/* Chips: deadline + effort */}
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-600 bg-slate-50 px-2.5 py-1 rounded">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" aria-hidden />
+                    Deadline: {s.deadline}
+                  </span>
+                  <span className="inline-flex items-center text-[11px] font-medium text-slate-600 bg-slate-50 px-2.5 py-1 rounded">
+                    {s.effort}
+                  </span>
+                </div>
               </a>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        id="countries"
-        className="py-10 bg-slate-50 border-t border-slate-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-xl mb-10">
-            <h2 className="text-3xl font-black text-slate-900 mb-2">Study in 4 Countries</h2>
-            <p className="text-slate-500">All scholarships verified, with direct links to official application pages.</p>
+      {/* ──────────────────────────────────────────────────────────────────
+          COUNTRIES — flagship names up front, count tertiary.
+          ────────────────────────────────────────────────────────────────── */}
+      <section id="countries" className="bg-white border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="max-w-2xl mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
+              Destinations
+            </p>
+            <h2 className="text-3xl lg:text-4xl text-slate-900 mb-3" style={SERIF}>
+              Four destinations, curated
+            </h2>
+            <p className="text-slate-500 leading-relaxed">
+              Rather than list 10,000 scholarships we can't verify, we cover four destinations deeply. Every listing is traceable to an official source.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {countries.map((c, i) => (
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {countries.map((c) => (
               <a
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
-                className="group bg-white p-8 rounded-2xl border border-slate-100 shadow-sm transition-all h-full text-center hover:shadow-md"
+                className="group block bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-card-hover transition-all"
               >
-                <motion.div
-                  variants={fadeInUp}
-                  transition={{ delay: i * 0.05 }}
-                  whileHover={{ y: -4 }}
-                >
-                  <img src={FLAG_URL(c.flag)} alt={c.name} className="w-16 h-auto mx-auto mb-6 shadow-sm rounded-sm" />
-                  <h3 className="font-bold text-slate-900 mb-1">{c.name}</h3>
-                  <p className="text-xs text-brand-600 font-bold mb-4">{c.count} scholarships</p>
-                  <p className="text-[11px] text-slate-400 leading-relaxed mb-6 line-clamp-2">{c.top}</p>
-                  <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-brand-600 transition-all group-hover:gap-2">
-                    Browse Scholarships <ArrowRight className="w-3.5 h-3.5" />
+                <div className="flex items-center gap-3 mb-4">
+                  <img src={FLAG_URL(c.flag)} alt="" className="w-10 h-auto rounded-sm shadow-sm" aria-hidden />
+                  <div>
+                    <h3 className="text-base font-semibold text-slate-900 leading-tight">{c.name}</h3>
+                    <p className="text-xs text-slate-500">{c.count} scholarships</p>
                   </div>
-                </motion.div>
+                </div>
+                <p className="text-[13px] text-slate-600 leading-relaxed mb-5 line-clamp-2">
+                  {c.top}
+                </p>
+                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:gap-2.5 transition-all">
+                  Browse
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
               </a>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        id="how-it-works"
-        className="py-10 bg-slate-50 border-t border-slate-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-xl mb-12">
-            <h2 className="text-3xl font-black text-slate-900 mb-2">How ScholarBridge AI Works</h2>
-            <p className="text-slate-500">From sign-up to matched scholarships in under 2 minutes.</p>
+      {/* ──────────────────────────────────────────────────────────────────
+          HOW IT WORKS
+          Plain grid, no scroll-in animations (fixes the phantom-empty
+          section on first scroll). Numbered with the serif, body in sans.
+          ────────────────────────────────────────────────────────────────── */}
+      <section id="how-it-works" className="bg-paper border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="max-w-2xl mb-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
+              How it works
+            </p>
+            <h2 className="text-3xl lg:text-4xl text-slate-900 mb-3" style={SERIF}>
+              From sign-up to ranked matches in two minutes
+            </h2>
+            <p className="text-slate-500 leading-relaxed">
+              A straightforward four-step flow — no quizzes, no upsells, no surveys to unlock your results.
+            </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
             {steps.map((s, i) => (
-              <motion.div key={s.n} className="relative" variants={fadeInUp} transition={{ delay: i * 0.05 }}>
-                {i < steps.length - 1 && <div className="hidden lg:block absolute top-5 left-[calc(100%-8px)] w-[calc(100%-16px)] h-px bg-slate-200" />}
-                <div className="relative z-10 w-10 h-10 bg-blue-600 text-white text-sm font-black flex items-center justify-center mb-4">{s.n}</div>
-                <h3 className="font-bold text-slate-900 mb-2 text-sm">{s.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{s.body}</p>
-              </motion.div>
+              <div key={s.n} className="relative">
+                {/* Subtle dividing line on desktop between steps */}
+                {i < steps.length - 1 && (
+                  <div className="hidden lg:block absolute top-4 left-[calc(100%-12px)] w-[calc(100%-24px)] h-px bg-slate-200" aria-hidden />
+                )}
+                <p
+                  className="text-brand-600 text-2xl leading-none mb-4"
+                  style={{ ...SERIF, fontStyle: "italic", fontWeight: 500 }}
+                >
+                  {s.n}
+                </p>
+                <h3 className="font-semibold text-slate-900 mb-2 text-[15px]">{s.title}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed">{s.body}</p>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        className="py-10 bg-slate-50 border-t border-slate-200"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-black text-slate-900 mb-10">Frequently Asked Questions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12">
+      {/* ──────────────────────────────────────────────────────────────────
+          FAQ
+          Two-column details/summary. No animation, clean hairline dividers.
+          ────────────────────────────────────────────────────────────────── */}
+      <section className="bg-white border-b border-slate-200/70">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
+          <div className="max-w-2xl mb-10">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
+              Questions
+            </p>
+            <h2 className="text-3xl lg:text-4xl text-slate-900" style={SERIF}>
+              Frequently asked
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16">
             {faqs.map((f, i) => (
-              <details key={i} className="group border-b border-slate-300 py-5 cursor-pointer">
-                <summary className="flex items-center justify-between text-slate-800 font-bold text-sm list-none">
+              <details
+                key={i}
+                className="group border-b border-slate-200 py-5 cursor-pointer"
+              >
+                <summary className="flex items-center justify-between text-slate-900 font-semibold text-[15px] list-none">
                   {f.q}
-                  <ChevronDown className="w-4 h-4 text-brand-400 group-open:rotate-180 transition-transform flex-shrink-0 ml-3" />
+                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform flex-shrink-0 ml-4" />
                 </summary>
-                <p className="mt-3 text-sm text-slate-600 leading-relaxed pr-6">{f.a}</p>
+                <p className="mt-3 text-sm text-slate-600 leading-relaxed pr-8">{f.a}</p>
               </details>
             ))}
           </div>
         </div>
-      </motion.section>
+      </section>
 
-      <motion.section
-        className="py-12 lg:py-16 relative overflow-hidden bg-slate-900"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-        variants={stagger}
-      >
-        <div className="absolute inset-0 opacity-20">
-          <motion.div
-            className="absolute top-0 right-0 w-96 h-96 bg-brand-600 rounded-full blur-[100px]"
-            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-            transition={{ duration: 10, repeat: Infinity }}
-          />
-        </div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <motion.h2 className="text-4xl lg:text-5xl font-black text-white mb-4 leading-tight" variants={fadeInUp}>
-            Your Scholarship<br className="hidden sm:block" /> Is Out There
-          </motion.h2>
-          <motion.p className="text-slate-400 text-lg mb-8 max-w-xl mx-auto" variants={fadeInUp} transition={{ delay: 0.08 }}>
-            Thousands of students miss funding they qualify for simply because they never found it.
-          </motion.p>
+      {/* ──────────────────────────────────────────────────────────────────
+          CLOSING CTA
+          Dark navy band, serif headline, quieter copy than before (no
+          "thousands of students miss…" melodrama).
+          ────────────────────────────────────────────────────────────────── */}
+      <section className="bg-slate-950 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
+          <h2
+            className="text-4xl lg:text-5xl text-white mb-5 leading-tight"
+            style={SERIF}
+          >
+            Most students apply to three scholarships.<br className="hidden sm:block" />
+            <span className="text-brand-300" style={{ fontStyle: "italic", fontWeight: 400 }}>
+              You can find ten you qualify for.
+            </span>
+          </h2>
+          <p className="text-slate-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+            Free for students. No credit card. No email spam. Just the scholarships you actually qualify for.
+          </p>
           <a
             href="/auth/signup"
-            className="inline-flex items-center gap-2 rounded-full px-8 py-4 bg-brand-600 text-white font-black text-base shadow-brand transition duration-200 ease-out hover:bg-brand-700 hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-slate-950 font-semibold text-sm hover:bg-slate-100 transition-colors"
           >
-            Find scholarships now — free to use <ArrowRight className="w-5 h-5" />
+            Find my scholarships
+            <ArrowRight className="w-4 h-4" />
           </a>
-          <motion.p className="mt-6 text-slate-500 text-xs font-semibold uppercase tracking-widest" variants={fadeInUp} transition={{ delay: 0.15 }}>
-            No credit card required · Free forever
-          </motion.p>
+          <p className="mt-6 text-slate-500 text-xs font-medium uppercase tracking-[0.18em]">
+            Takes about two minutes
+          </p>
         </div>
-      </motion.section>
+      </section>
 
       <Footer />
     </div>
