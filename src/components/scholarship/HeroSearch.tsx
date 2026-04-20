@@ -188,7 +188,7 @@ export default function HeroSearch({
 
   // Close the mobile dropdown on outside tap.
   useEffect(() => {
-    function onDocClick(e: MouseEvent) {
+    function onDocClick(e: MouseEvent | TouchEvent) {
       if (!mobileWrapperRef.current) return;
       if (!mobileWrapperRef.current.contains(e.target as Node)) {
         setSuggestionsOpen(false);
@@ -300,6 +300,7 @@ export default function HeroSearch({
                     key={s.id}
                     href={href}
                     role="option"
+                    aria-selected={false}
                     className="flex items-start gap-3 px-4 py-3 border-b border-white/40 last:border-0 hover:bg-white/60 active:bg-white/80 transition-colors"
                   >
                     {countryFlagUrl(s.country) ? (

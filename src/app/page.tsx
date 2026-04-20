@@ -97,7 +97,7 @@ export default function HomePage() {
               </h1>
 
               <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
-                Twenty fully-funded opportunities across the UK, USA, Germany, and Canada — every one verified against its official source. Tell us about your studies and we'll surface the ones you actually qualify for, in about two minutes.
+                Twenty fully-funded opportunities across the UK, USA, Germany, and Canada — every one verified against its official source. Tell us about your studies and we&apos;ll surface the ones you actually qualify for, in about two minutes.
               </p>
 
               <ul className="space-y-2.5 mb-10 max-w-md">
@@ -289,7 +289,7 @@ export default function HomePage() {
               Four destinations, curated
             </h2>
             <p className="text-slate-500 leading-relaxed">
-              Rather than list 10,000 scholarships we can't verify, we cover four destinations deeply. Every listing is traceable to an official source.
+              Rather than list 10,000 scholarships we can&apos;t verify, we cover four destinations deeply. Every listing is traceable to an official source.
             </p>
           </div>
 
