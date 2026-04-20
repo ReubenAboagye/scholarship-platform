@@ -1,28 +1,28 @@
-const matchCooldowns = new Map<string, number>();
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-export function consumeCooldown(key: string, windowMs: number) {
-  const now = Date.now();
-  const lastSeen = matchCooldowns.get(key) ?? 0;
-  const retryAfterMs = Math.max(0, lastSeen + windowMs - now);
+type RateLimitRow = {
+  allowed: boolean;
+  retry_after_ms: number;
+};
 
-  if (retryAfterMs > 0) {
-    return {
-      allowed: false as const,
-      retryAfterMs,
-    };
+export async function consumeUserCooldown(
+  supabase: SupabaseClient,
+  bucket: string,
+  windowMs: number
+) {
+  const windowSeconds = Math.max(1, Math.ceil(windowMs / 1000));
+  const { data, error } = await supabase.rpc("consume_user_rate_limit", {
+    bucket_name: bucket,
+    window_seconds: windowSeconds,
+  });
+
+  if (error) {
+    throw error;
   }
 
-  matchCooldowns.set(key, now);
-
-  // Keep the in-memory map bounded for long-lived processes.
-  if (matchCooldowns.size > 5000) {
-    for (const [entryKey, timestamp] of matchCooldowns.entries()) {
-      if (now - timestamp > windowMs * 2) matchCooldowns.delete(entryKey);
-    }
-  }
-
+  const row = Array.isArray(data) ? (data[0] as RateLimitRow | undefined) : undefined;
   return {
-    allowed: true as const,
-    retryAfterMs: 0,
+    allowed: row?.allowed ?? false,
+    retryAfterMs: row?.retry_after_ms ?? windowMs,
   };
 }

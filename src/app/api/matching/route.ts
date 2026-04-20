@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { matchScholarships, generateMatchExplanation, buildProfileText } from "@/lib/ai/matching";
-import { consumeCooldown } from "@/lib/security/rate-limit";
+import { consumeUserCooldown } from "@/lib/security/rate-limit";
 
 export async function POST(_request: NextRequest) {
   const supabase = await createClient();
@@ -22,7 +22,7 @@ export async function POST(_request: NextRequest) {
       { status: 400 }
     );
 
-  const cooldown = consumeCooldown(`matching:${user.id}`, 30_000);
+  const cooldown = await consumeUserCooldown(supabase, "ai_matching", 30_000);
   if (!cooldown.allowed) {
     return NextResponse.json(
       {

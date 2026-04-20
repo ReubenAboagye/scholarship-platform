@@ -10,6 +10,16 @@ const fundingTypes = [
 const degreeLevels = ["Undergraduate", "Masters", "PhD", "Any"] as const;
 
 const trimmedString = z.string().trim();
+const safeHttpUrl = trimmedString
+  .max(2048)
+  .refine((value) => {
+    try {
+      const url = new URL(value);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }, "Application URL must be a valid http(s) URL");
 
 const scholarshipBaseSchema = z.object({
   name:                 trimmedString.min(1).max(200),
@@ -18,7 +28,7 @@ const scholarshipBaseSchema = z.object({
   funding_type:         z.enum(fundingTypes),
   funding_amount:       trimmedString.min(1).max(250),
   description:          trimmedString.min(1).max(3000),
-  application_url:      z.url().max(2048),
+  application_url:      safeHttpUrl,
   application_deadline: z
     .union([z.string().date(), z.null()])
     .optional()

@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const country      = searchParams.get("country");
   const degreeLevel  = searchParams.get("degree_level");
   const fundingType  = searchParams.get("funding_type");
-  const search       = searchParams.get("search");
+  const search       = searchParams.get("search")?.trim().toLowerCase();
 
   let query = supabase
     .from("scholarships")
@@ -21,14 +21,18 @@ export async function GET(request: NextRequest) {
   if (country      && country      !== "All") query = query.eq("country",      country);
   if (fundingType  && fundingType  !== "All") query = query.eq("funding_type", fundingType);
   if (degreeLevel  && degreeLevel  !== "All") query = query.contains("degree_levels", [degreeLevel]);
-  if (search) query = query.or(
-    `name.ilike.%${search}%,description.ilike.%${search}%,provider.ilike.%${search}%`
-  );
-
   const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ data });
+
+  const filtered = search
+    ? (data ?? []).filter((scholarship) =>
+        [scholarship.name, scholarship.description, scholarship.provider]
+          .some((value) => value?.toLowerCase().includes(search))
+      )
+    : data;
+
+  return NextResponse.json({ data: filtered });
 }
 
 export async function POST(request: NextRequest) {
