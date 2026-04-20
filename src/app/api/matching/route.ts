@@ -39,7 +39,7 @@ export async function POST(_request: NextRequest) {
   }
 
   try {
-    const results = await matchScholarships(profile, 10);
+    const results = await matchScholarships(profile, 10, user.id);
     let explanation: string | null = null;
 
     if (results.length > 0) {

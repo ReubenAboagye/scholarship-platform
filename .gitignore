@@ -1,8 +1,6 @@
 .env.local
 .env
-# Ignore all .env variants EXCEPT the example file
 .env.*
-!.env.local.example
 
 # Node modules
 node_modules/
@@ -12,4 +10,4 @@ node_modules/
 out/
 
 # Dependencies
-# pnpm-lock.yaml is intentionally committed so Netlify can reproduce exact installs
+pnpm-lock.yaml
