@@ -1,6 +1,10 @@
-import Link from "next/link";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { countryFlagUrl } from "@/lib/utils";
+
+// ─────────────────────────────────────────────────────────────
+// SimilarScholarships — quiet sidebar list of related awards.
+// Renders inside the right column of the detail page.
+// ─────────────────────────────────────────────────────────────
 
 interface ScholarshipSummary {
   id: string;
@@ -10,62 +14,53 @@ interface ScholarshipSummary {
   funding_type: string;
 }
 
-interface SimilarScholarshipsProps {
+export default function SimilarScholarships({
+  scholarships,
+}: {
   scholarships: ScholarshipSummary[];
-}
-
-export default function SimilarScholarships({ scholarships }: SimilarScholarshipsProps) {
+}) {
   if (!scholarships || scholarships.length === 0) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="pb-3 border-b border-slate-100 flex items-center justify-between">
-        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-2">
-          <Sparkles className="w-3 h-3 text-brand-500" /> Similar Scholarships
-        </h3>
-      </div>
-      
-      <div className="space-y-1">
+    <section aria-labelledby="similar-heading">
+      <h3
+        id="similar-heading"
+        className="text-sm font-semibold text-slate-900 mb-3"
+      >
+        Similar scholarships
+      </h3>
+
+      <ul className="divide-y divide-slate-100 border border-slate-200 rounded-lg overflow-hidden bg-white">
         {scholarships.map((s) => (
-          <Link 
-            key={s.id} 
-            href={`/dashboard/scholarships/${s.slug || s.id}`}
-            className="group flex items-center gap-3 p-1.5 rounded-xl hover:bg-slate-50 transition-all"
-          >
-            <div className="relative w-8 h-6.5 shrink-0">
+          <li key={s.id}>
+            <a
+              href={`/dashboard/scholarships/${s.slug || s.id}`}
+              className="group flex items-center gap-3 px-3 py-3 hover:bg-slate-50 transition-colors"
+            >
               {countryFlagUrl(s.country) ? (
-                <img 
-                  src={countryFlagUrl(s.country)!} 
-                  alt={s.country}
-                  className="w-full h-full object-cover rounded shadow-xs border border-slate-100"
+                <img
+                  src={countryFlagUrl(s.country)!}
+                  alt=""
+                  className="w-6 h-4 object-cover rounded-sm border border-slate-200 shrink-0"
                 />
               ) : (
-                <div className="w-full h-full bg-slate-100 rounded border border-slate-100" />
+                <div className="w-6 h-4 bg-slate-100 rounded-sm shrink-0" />
               )}
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-semibold text-slate-900 truncate group-hover:text-brand-600 transition-colors leading-tight">
-                {s.name}
-              </p>
-              <p className="text-[10px] font-normal text-slate-400 capitalize">
-                {s.funding_type} • {s.country}
-              </p>
-            </div>
 
-            <ArrowRight className="w-3 h-3 text-slate-300 group-hover:text-brand-600 group-hover:translate-x-0.5 transition-all" />
-          </Link>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-slate-900 truncate group-hover:text-brand-700 transition-colors">
+                  {s.name}
+                </p>
+                <p className="text-xs text-slate-500">
+                  {s.country} · {s.funding_type}
+                </p>
+              </div>
+
+              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-brand-600 group-hover:translate-x-0.5 transition-all shrink-0" />
+            </a>
+          </li>
         ))}
-      </div>
-
-      <div className="pt-3 border-t border-slate-50 text-center">
-        <Link 
-          href="/dashboard/scholarships"
-          className="text-[9px] font-bold uppercase tracking-widest text-slate-400 hover:text-brand-600 transition-colors border-b border-transparent hover:border-brand-600 inline-flex"
-        >
-          View all scholarships
-        </Link>
-      </div>
-    </div>
+      </ul>
+    </section>
   );
 }
