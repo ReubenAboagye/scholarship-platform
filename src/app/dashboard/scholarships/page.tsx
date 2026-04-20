@@ -106,16 +106,14 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
       )}
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Filters — Sidebar handles stickiness internally */}
-        <div className="lg:w-60 flex-shrink-0">
-          <FilterSidebar
-            active={active}
-            countries={countries}
-            fundingTypes={fundingTypes}
-            degreeLevels={degreeLevels}
-            baseUrl="/dashboard/scholarships"
-          />
-        </div>
+        {/* Filters — component manages its own width + stickiness */}
+        <FilterSidebar
+          active={active}
+          countries={countries}
+          fundingTypes={fundingTypes}
+          degreeLevels={degreeLevels}
+          baseUrl="/dashboard/scholarships"
+        />
 
         {/* Results */}
         <div className="flex-1 min-w-0">

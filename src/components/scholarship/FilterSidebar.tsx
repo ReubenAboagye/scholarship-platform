@@ -1,8 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Search, SlidersHorizontal, X, ChevronDown, ChevronRight } from "lucide-react";
+import { Search, SlidersHorizontal, X, ChevronDown } from "lucide-react";
 import { countryFlagUrl } from "@/lib/utils";
+
+// ─────────────────────────────────────────────────────────────
+// FilterSidebar — browse/search filters for the scholarships
+// listing. Redesigned for the government-portal aesthetic:
+// sentence-case section headers, understated active-state
+// (background tint + left border, not bold + brand text),
+// hairline dividers, no outer card shell.
+// ─────────────────────────────────────────────────────────────
 
 interface FilterSidebarProps {
   active: {
@@ -15,40 +23,61 @@ interface FilterSidebarProps {
   baseUrl?: string;
 }
 
-function FilterSection({ label, children, defaultOpen = true }: {
+function FilterSection({
+  label, children, defaultOpen = true,
+}: {
   label: string; children: React.ReactNode; defaultOpen?: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-slate-100 last:border-0">
-      <button onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-3 text-left group">
-        <span className="text-xs font-semibold uppercase tracking-widest text-slate-500 group-hover:text-slate-700 transition-colors">
-          {label}
-        </span>
-        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${open ? "rotate-0" : "-rotate-90"}`} />
+    <div className="border-b border-slate-200 last:border-0 py-3">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full text-left"
+      >
+        <span className="text-sm font-semibold text-slate-900">{label}</span>
+        <ChevronDown
+          className={`w-4 h-4 text-slate-400 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
+        />
       </button>
-      {open && <div className="pb-3">{children}</div>}
+      {open && <div className="pt-2.5">{children}</div>}
     </div>
   );
 }
 
-export default function FilterSidebar({ 
-  active, countries, fundingTypes, degreeLevels, baseUrl = "/scholarships" 
+// Shared row style for every option inside a filter section.
+// Active state: subtle slate tint + brand left accent + text darkens.
+// Default:       muted slate with hairline hover tint.
+function optionClasses(isActive: boolean) {
+  return [
+    "flex items-center gap-2.5 w-full text-left",
+    "px-2.5 py-1.5 rounded-md text-sm transition-colors",
+    "border-l-2",
+    isActive
+      ? "bg-slate-100 text-slate-900 border-brand-600 font-medium"
+      : "text-slate-600 hover:bg-slate-50 border-transparent",
+  ].join(" ");
+}
+
+export default function FilterSidebar({
+  active, countries, fundingTypes, degreeLevels, baseUrl = "/scholarships",
 }: FilterSidebarProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Build a canonical URL with overrides applied. This keeps the
+  // filter state encoded in the query string so it survives page
+  // refreshes and is shareable.
   const buildUrl = (overrides: Partial<typeof active>) => {
     const merged = { ...active, ...overrides };
     const params = new URLSearchParams();
-    if (merged.country       !== "All"  ) params.set("country",       merged.country);
-    if (merged.funding_type  !== "All"  ) params.set("funding_type",  merged.funding_type);
-    if (merged.degree_level  !== "All"  ) params.set("degree_level",  merged.degree_level);
-    if (merged.deadline      !== "any"  ) params.set("deadline",      merged.deadline);
-    if (merged.renewable     === "true" ) params.set("renewable",     "true");
-    if (merged.international === "true" ) params.set("international", "true");
-    if (merged.effort        !== "any"  ) params.set("effort",        merged.effort);
-    if (merged.search                   ) params.set("search",        merged.search);
+    if (merged.country       !== "All" ) params.set("country",       merged.country);
+    if (merged.funding_type  !== "All" ) params.set("funding_type",  merged.funding_type);
+    if (merged.degree_level  !== "All" ) params.set("degree_level",  merged.degree_level);
+    if (merged.deadline      !== "any" ) params.set("deadline",      merged.deadline);
+    if (merged.renewable     === "true") params.set("renewable",     "true");
+    if (merged.international === "true") params.set("international", "true");
+    if (merged.effort        !== "any" ) params.set("effort",        merged.effort);
+    if (merged.search                  ) params.set("search",        merged.search);
     const qs = params.toString();
     return `${baseUrl}${qs ? "?" + qs : ""}`;
   };
@@ -60,11 +89,11 @@ export default function FilterSidebar({
     active.international === "true" || active.effort !== "any";
 
   const FilterContent = () => (
-    <div className="space-y-0">
-
-      {/* Search */}
+    <div>
+      {/* ── Search ─────────────────────────────────────── */}
       <FilterSection label="Search">
         <form method="GET" action={baseUrl}>
+          {/* Preserve other active filters across a search submit */}
           {active.country       !== "All"  && <input type="hidden" name="country"       value={active.country} />}
           {active.funding_type  !== "All"  && <input type="hidden" name="funding_type"  value={active.funding_type} />}
           {active.degree_level  !== "All"  && <input type="hidden" name="degree_level"  value={active.degree_level} />}
@@ -74,149 +103,157 @@ export default function FilterSidebar({
           {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
           <div className="relative">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
-            <input name="search" defaultValue={active.search} placeholder="Keyword…"
-              className="w-full pl-8 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-400 transition-all placeholder:text-slate-400" />
+            <input
+              name="search" defaultValue={active.search} placeholder="Keyword…"
+              className="w-full pl-8 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-md
+                         outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500
+                         placeholder:text-slate-400 transition-shadow"
+            />
           </div>
         </form>
       </FilterSection>
 
-      {/* Deadline */}
+      {/* ── Deadline ───────────────────────────────────── */}
       <FilterSection label="Deadline">
         <div className="space-y-0.5">
           {[
-            { v: "any",  l: "Any deadline" },
-            { v: "7d",   l: "Next 7 days" },
-            { v: "30d",  l: "Next 30 days" },
-            { v: "90d",  l: "Next 90 days" },
+            { v: "any", l: "Any deadline" },
+            { v: "7d",  l: "Next 7 days" },
+            { v: "30d", l: "Next 30 days" },
+            { v: "90d", l: "Next 90 days" },
           ].map(({ v, l }) => (
-            <a key={v} href={buildUrl({ deadline: v })} onClick={() => setDrawerOpen(false)}
-              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.deadline === v
-                  ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}>
-              <span>{l}</span>
-              {active.deadline === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            <a
+              key={v}
+              href={buildUrl({ deadline: v })}
+              onClick={() => setDrawerOpen(false)}
+              className={optionClasses(active.deadline === v)}
+            >
+              {l}
             </a>
           ))}
         </div>
       </FilterSection>
 
-      {/* Country */}
+      {/* ── Country ────────────────────────────────────── */}
       <FilterSection label="Country">
         <div className="space-y-0.5">
           {countries.map((c) => (
-            <a key={c} href={buildUrl({ country: c })} onClick={() => setDrawerOpen(false)}
-              className={`flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.country === c
-                  ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}>
-              {c !== "All" && countryFlagUrl(c) && (
-                <img src={countryFlagUrl(c)!} alt={c} className="w-4 h-3 object-cover rounded-sm border border-slate-100" />
+            <a
+              key={c}
+              href={buildUrl({ country: c })}
+              onClick={() => setDrawerOpen(false)}
+              className={optionClasses(active.country === c)}
+            >
+              {c !== "All" && countryFlagUrl(c) ? (
+                <img
+                  src={countryFlagUrl(c)!}
+                  alt=""
+                  className="w-4 h-3 object-cover rounded-sm border border-slate-200 shrink-0"
+                />
+              ) : (
+                <div className="w-4 h-3 bg-slate-100 rounded-sm shrink-0" />
               )}
-              {c === "All" && <span className="w-4 h-3 flex items-center justify-center text-[10px]">🌍</span>}
-              <span>{c === "All" ? "All Countries" : c}</span>
-              {active.country === c && <ChevronRight className="w-3 h-3 ml-auto text-brand-500" />}
+              <span className="truncate">{c === "All" ? "All countries" : c}</span>
             </a>
           ))}
         </div>
       </FilterSection>
 
-      {/* Degree Level */}
-      <FilterSection label="Degree Level" defaultOpen={false}>
+      {/* ── Degree level ────────────────────────────────── */}
+      <FilterSection label="Degree level" defaultOpen={false}>
         <div className="space-y-0.5">
           {degreeLevels.map((d) => (
-            <a key={d} href={buildUrl({ degree_level: d })} onClick={() => setDrawerOpen(false)}
-              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.degree_level === d
-                  ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}>
-              <span>{d === "All" ? "Any Level" : d}</span>
-              {active.degree_level === d && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            <a
+              key={d}
+              href={buildUrl({ degree_level: d })}
+              onClick={() => setDrawerOpen(false)}
+              className={optionClasses(active.degree_level === d)}
+            >
+              {d === "All" ? "Any level" : d}
             </a>
           ))}
         </div>
       </FilterSection>
 
-      {/* Funding Type */}
-      <FilterSection label="Funding Type" defaultOpen={false}>
+      {/* ── Funding type ───────────────────────────────── */}
+      <FilterSection label="Funding type" defaultOpen={false}>
         <div className="space-y-0.5">
           {fundingTypes.map((f) => (
-            <a key={f} href={buildUrl({ funding_type: f })} onClick={() => setDrawerOpen(false)}
-              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.funding_type === f
-                  ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}>
-              <span>{f === "All" ? "Any Funding" : f}</span>
-              {active.funding_type === f && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            <a
+              key={f}
+              href={buildUrl({ funding_type: f })}
+              onClick={() => setDrawerOpen(false)}
+              className={optionClasses(active.funding_type === f)}
+            >
+              {f === "All" ? "Any funding" : f}
             </a>
           ))}
         </div>
       </FilterSection>
 
-      {/* Effort */}
+      {/* ── Effort ─────────────────────────────────────── */}
       <FilterSection label="Effort" defaultOpen={false}>
         <div className="space-y-0.5">
           {[
             { v: "any",    l: "Any effort" },
-            { v: "quick",  l: "Quick apply (≤ 60 min)" },
+            { v: "quick",  l: "Quick apply (≤60 min)" },
             { v: "medium", l: "Full application" },
           ].map(({ v, l }) => (
-            <a key={v} href={buildUrl({ effort: v })} onClick={() => setDrawerOpen(false)}
-              className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-                active.effort === v
-                  ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}>
-              <span>{l}</span>
-              {active.effort === v && <ChevronRight className="w-3 h-3 text-brand-500" />}
+            <a
+              key={v}
+              href={buildUrl({ effort: v })}
+              onClick={() => setDrawerOpen(false)}
+              className={optionClasses(active.effort === v)}
+            >
+              {l}
             </a>
           ))}
         </div>
       </FilterSection>
 
-      {/* Toggles: Renewable + International */}
+      {/* ── Toggles ────────────────────────────────────── */}
       <FilterSection label="Other" defaultOpen={false}>
-        <div className="space-y-1.5">
-          <a
-            href={buildUrl({ renewable: active.renewable === "true" ? "" : "true" })}
-            onClick={() => setDrawerOpen(false)}
-            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-              active.renewable === "true"
-                ? "bg-brand-50 text-brand-700 font-semibold"
-                : "text-slate-600 hover:bg-slate-50"
-            }`}
-          >
-            <span>Renewable awards</span>
-            <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.renewable === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
-              <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.renewable === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
-            </div>
-          </a>
-          <a
-            href={buildUrl({ international: active.international === "true" ? "" : "true" })}
-            onClick={() => setDrawerOpen(false)}
-            className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-sm transition-colors ${
-              active.international === "true"
-                ? "bg-brand-50 text-brand-700 font-semibold"
-                : "text-slate-600 hover:bg-slate-50"
-            }`}
-          >
-            <span>Open internationally</span>
-            <div className={`w-8 h-4 rounded-full transition-colors flex-shrink-0 ${active.international === "true" ? "bg-brand-500" : "bg-slate-200"}`}>
-              <div className={`w-3.5 h-3.5 bg-white rounded-full shadow transition-transform mt-0.5 ${active.international === "true" ? "translate-x-4" : "translate-x-0.5"}`} />
-            </div>
-          </a>
+        <div className="space-y-1">
+          {[
+            { key: "renewable",     label: "Renewable awards",       value: active.renewable },
+            { key: "international", label: "Open internationally",   value: active.international },
+          ].map(({ key, label, value }) => {
+            const on = value === "true";
+            return (
+              <a
+                key={key}
+                href={buildUrl({ [key]: on ? "" : "true" } as any)}
+                onClick={() => setDrawerOpen(false)}
+                className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-colors
+                  ${on ? "bg-slate-100 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-50"}`}
+              >
+                <span>{label}</span>
+                <span
+                  aria-hidden
+                  className={`relative w-8 h-4 rounded-full transition-colors shrink-0
+                    ${on ? "bg-brand-600" : "bg-slate-300"}`}
+                >
+                  <span
+                    className={`absolute top-0.5 w-3 h-3 bg-white rounded-full shadow-sm transition-transform
+                      ${on ? "translate-x-4" : "translate-x-0.5"}`}
+                  />
+                </span>
+              </a>
+            );
+          })}
         </div>
       </FilterSection>
 
-      {/* Clear all */}
+      {/* ── Clear all ──────────────────────────────────── */}
       {hasFilters && (
         <div className="pt-3">
-          <a href={baseUrl} onClick={() => setDrawerOpen(false)}
-            className="block w-full text-center py-2 text-xs font-semibold text-slate-400 hover:text-rose-500 border border-dashed border-slate-200 hover:border-rose-200 rounded-lg transition-colors">
+          <a
+            href={baseUrl}
+            onClick={() => setDrawerOpen(false)}
+            className="block w-full text-center py-2 text-sm font-medium text-slate-600
+                       border border-slate-200 hover:border-slate-300 hover:text-slate-900
+                       rounded-md transition-colors"
+          >
             Clear all filters
           </a>
         </div>
@@ -224,46 +261,98 @@ export default function FilterSidebar({
     </div>
   );
 
+  // Count active filters for the mobile trigger badge
+  const activeCount = [
+    active.country !== "All",
+    active.funding_type !== "All",
+    active.degree_level !== "All",
+    active.deadline !== "any",
+    active.renewable === "true",
+    active.international === "true",
+    active.effort !== "any",
+    active.search !== "",
+  ].filter(Boolean).length;
+
   return (
     <>
-      {/* Mobile sticky bar — sticks right below the dashboard header */}
-      <div className="lg:hidden sticky top-[-16px] z-40 -mx-4 lg:-mx-8 px-4 py-3 bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6 flex items-center justify-between shadow-sm">
-        <button onClick={() => setDrawerOpen(true)}
-          className="flex items-center gap-2 bg-slate-900 text-white px-4 py-2 rounded-lg text-xs font-semibold">
+      {/* Mobile trigger: quiet bar with filter button + active-count */}
+      <div
+        className="lg:hidden sticky top-[-16px] z-40 -mx-4 px-4 py-3
+                   bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6
+                   flex items-center justify-between"
+      >
+        <button
+          onClick={() => setDrawerOpen(true)}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-md
+                     border border-slate-300 text-sm font-medium text-slate-700
+                     hover:bg-slate-50 transition-colors"
+        >
           <SlidersHorizontal className="w-3.5 h-3.5" />
-          Filters {hasFilters && <span className="bg-brand-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[9px] font-black">!</span>}
+          Filters
+          {activeCount > 0 && (
+            <span className="inline-flex items-center justify-center
+                             min-w-[1.125rem] h-[1.125rem] px-1 rounded-full
+                             bg-brand-600 text-white text-[11px] font-semibold">
+              {activeCount}
+            </span>
+          )}
         </button>
-        <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-          {active.country === "All" ? "Global" : active.country} · {active.funding_type === "All" ? "Any Funding" : active.funding_type}
+        <p className="text-xs text-slate-500 truncate ml-3">
+          {active.country === "All" ? "All countries" : active.country}
+          <span className="text-slate-300"> · </span>
+          {active.funding_type === "All" ? "Any funding" : active.funding_type}
         </p>
       </div>
 
-      {/* Desktop sticky sidebar — sticks below dashboard header with a small gap */}
-      <aside className="hidden lg:block lg:sticky lg:top-0 w-52 flex-shrink-0 self-start bg-white border border-slate-200 rounded-xl p-4 max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar shadow-sm transition-all duration-300">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-4 px-2">Filters</p>
+      {/* Desktop sidebar — no outer card, hairline dividers between sections */}
+      <aside
+        className="hidden lg:block lg:sticky lg:top-4 w-56 flex-shrink-0 self-start
+                   max-h-[calc(100vh-2rem)] overflow-y-auto pr-1 custom-scrollbar"
+      >
+        <h2 className="text-sm font-semibold text-slate-900 mb-1 px-0.5">Filters</h2>
+        {hasFilters && (
+          <p className="text-xs text-slate-500 mb-2 px-0.5">
+            {activeCount} active
+          </p>
+        )}
         <FilterContent />
       </aside>
 
+      {/* Mobile drawer overlay */}
       {drawerOpen && (
-        <div className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm lg:hidden"
-          onClick={() => setDrawerOpen(false)} />
+        <div
+          className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm lg:hidden"
+          onClick={() => setDrawerOpen(false)}
+        />
       )}
 
-      <div className={`fixed inset-y-0 right-0 z-[70] w-72 bg-white shadow-2xl lg:hidden transform transition-transform duration-300 ease-out ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}>
+      {/* Mobile drawer panel */}
+      <div
+        className={`fixed inset-y-0 right-0 z-[70] w-80 bg-white shadow-xl lg:hidden
+                    transform transition-transform duration-200 ease-out
+                    ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-            <h2 className="font-bold text-slate-900 text-base">Filters</h2>
-            <button onClick={() => setDrawerOpen(false)} className="p-1.5 hover:bg-slate-100 rounded-lg">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+            <h2 className="text-base font-semibold text-slate-900">Filters</h2>
+            <button
+              onClick={() => setDrawerOpen(false)}
+              aria-label="Close filters"
+              className="p-1.5 hover:bg-slate-100 rounded-md transition-colors"
+            >
               <X className="w-4 h-4 text-slate-500" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-5 py-4">
+          <div className="flex-1 overflow-y-auto px-5 py-3">
             <FilterContent />
           </div>
-          <div className="p-4 border-t border-slate-100">
-            <button onClick={() => setDrawerOpen(false)}
-              className="w-full bg-brand-600 text-white py-2.5 rounded-lg font-semibold text-sm">
-              Apply Filters
+          <div className="p-4 border-t border-slate-200">
+            <button
+              onClick={() => setDrawerOpen(false)}
+              className="w-full bg-brand-600 text-white py-2.5 rounded-md
+                         font-semibold text-sm hover:bg-brand-700 transition-colors"
+            >
+              Apply filters
             </button>
           </div>
         </div>

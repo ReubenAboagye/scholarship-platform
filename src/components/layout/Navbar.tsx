@@ -70,26 +70,33 @@ export default function Navbar() {
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${studentsOpen ? "rotate-180" : ""}`} />
               </button>
               {studentsOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-[540px] -translate-x-1/2 rounded-2xl border border-slate-200 bg-white shadow-elevated animate-scale-in">
-                  <div className="grid grid-cols-2 gap-px bg-slate-100 p-px overflow-hidden rounded-t-2xl">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-[520px] -translate-x-1/2 rounded-lg border border-slate-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                  <div className="grid grid-cols-2 p-2">
                     {studentsMenu.map((item) => (
-                      <a key={item.title} href={item.href} onClick={() => setStudentsOpen(false)}
-                        className="flex items-start gap-3 bg-white p-4 hover:bg-slate-50 transition-colors group">
-                        <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl bg-brand-50 transition-colors">
-                          <item.icon className="h-4.5 w-4.5 text-brand-600" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">{item.title}</p>
-                          <p className="mt-0.5 text-xs text-slate-500">{item.desc}</p>
+                      <a
+                        key={item.title}
+                        href={item.href}
+                        onClick={() => setStudentsOpen(false)}
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
+                      >
+                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-brand-600 transition-colors" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-slate-900 group-hover:text-brand-700 transition-colors">
+                            {item.title}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500 line-clamp-1">{item.desc}</p>
                         </div>
                       </a>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4 bg-slate-50/50 rounded-b-2xl">
-                    <p className="text-xs text-slate-500 font-medium">Free for all students · No credit card needed</p>
-                    <a href={user ? "/dashboard" : "/auth/signup"} onClick={() => setStudentsOpen(false)}
-                      className="bg-brand-600 hover:bg-brand-700 px-4 py-2 text-xs font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
-                      {user ? "Go to Dashboard" : "Get Started Free"}
+                  <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 bg-slate-50">
+                    <p className="text-xs text-slate-500">Free for students. No credit card required.</p>
+                    <a
+                      href={user ? "/dashboard" : "/auth/signup"}
+                      onClick={() => setStudentsOpen(false)}
+                      className="px-3.5 py-1.5 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-md transition-colors"
+                    >
+                      {user ? "Go to dashboard" : "Get started"}
                     </a>
                   </div>
                 </div>
@@ -103,19 +110,25 @@ export default function Navbar() {
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${companyOpen ? "rotate-180" : ""}`} />
               </button>
               {companyOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-2xl border border-slate-200 bg-white shadow-elevated animate-scale-in overflow-hidden">
-                  {companyMenu.map((item) => (
-                    <a key={item.title} href={item.href} onClick={() => setCompanyOpen(false)}
-                      className="flex items-start gap-3 p-4 hover:bg-slate-50 transition-colors group border-b border-slate-100 last:border-0">
-                      <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-slate-100 group-hover:bg-brand-50 transition-colors">
-                        <item.icon className="h-4 w-4 text-slate-500 group-hover:text-brand-600 transition-colors" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900 group-hover:text-brand-600 transition-colors">{item.title}</p>
-                        <p className="mt-0.5 text-xs text-slate-500">{item.desc}</p>
-                      </div>
-                    </a>
-                  ))}
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-lg border border-slate-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                  <div className="p-2">
+                    {companyMenu.map((item) => (
+                      <a
+                        key={item.title}
+                        href={item.href}
+                        onClick={() => setCompanyOpen(false)}
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
+                      >
+                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-brand-600 transition-colors" />
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-slate-900 group-hover:text-brand-700 transition-colors">
+                            {item.title}
+                          </p>
+                          <p className="mt-0.5 text-xs text-slate-500 line-clamp-1">{item.desc}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
