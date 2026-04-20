@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, BookOpen, Cpu, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 const studentsMenu = [
   { icon: Search, title: "Scholarship Search", desc: "Find scholarships matched to your profile.", href: "/auth/signup" },
@@ -22,8 +23,25 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [studentsOpen, setStudentsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const studentsRef = useRef<HTMLDivElement>(null);
   const companyRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -69,9 +87,9 @@ export default function Navbar() {
                   </div>
                   <div className="flex items-center justify-between border-t border-slate-100 px-5 py-4 bg-slate-50/50 rounded-b-2xl">
                     <p className="text-xs text-slate-500 font-medium">Free for all students · No credit card needed</p>
-                    <a href="/auth/signup" onClick={() => setStudentsOpen(false)}
+                    <a href={user ? "/dashboard" : "/auth/signup"} onClick={() => setStudentsOpen(false)}
                       className="bg-brand-600 hover:bg-brand-700 px-4 py-2 text-xs font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
-                      Get Started Free
+                      {user ? "Go to Dashboard" : "Get Started Free"}
                     </a>
                   </div>
                 </div>
@@ -109,10 +127,18 @@ export default function Navbar() {
           </nav>
 
           <div className="hidden items-center gap-4 md:flex">
-            <a href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
-            <a href="/auth/signup" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
-              <span className="relative z-10">Sign Up Free</span>
-            </a>
+            {user ? (
+              <a href="/dashboard" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
+                <span className="relative z-10">Go to Dashboard</span>
+              </a>
+            ) : (
+              <>
+                <a href="/auth/login" className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors">Log In</a>
+                <a href="/auth/signup" className="group relative overflow-hidden bg-brand-600 hover:bg-brand-700 px-5 py-2.5 text-sm font-bold text-white transition-all hover:shadow-brand-glow rounded-xl">
+                  <span className="relative z-10">Sign Up Free</span>
+                </a>
+              </>
+            )}
           </div>
 
           <button className={`flex flex-col items-center justify-center w-10 h-10 gap-1.5 text-slate-600 hover:bg-slate-100 transition-colors md:hidden ${mobileOpen ? "hamburger-open" : ""}`}
@@ -156,8 +182,14 @@ export default function Navbar() {
 
             <div className="pt-4 border-t border-slate-100 space-y-3 animate-stagger-in"
               style={{ animationDelay: `${(studentsMenu.length + companyMenu.length + 3) * 0.05}s` }}>
-              <a href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
-              <a href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</a>
+              {user ? (
+                <a href="/dashboard" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Go to Dashboard</a>
+              ) : (
+                <>
+                  <a href="/auth/login" className="block w-full rounded-xl border border-slate-200 py-3 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">Log In</a>
+                  <a href="/auth/signup" className="block w-full rounded-xl bg-brand-600 hover:bg-brand-700 py-3 text-center text-sm font-bold text-white transition-all shadow-sm">Sign Up Free</a>
+                </>
+              )}
             </div>
           </div>
         </div>
