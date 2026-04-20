@@ -4,7 +4,7 @@ import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
 import ScholarshipRow from "@/components/scholarship/ScholarshipRow";
 import ScholarshipTable from "@/components/scholarship/ScholarshipTable";
 import ViewToggle from "@/components/scholarship/ViewToggle";
-import { Search, Info, LayoutGrid, List } from "lucide-react";
+import { Search } from "lucide-react";
 
 interface SearchParams {
   country?: string;
@@ -81,39 +81,25 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
 
   return (
     <div className="space-y-6">
-      {/* Header section — matches dashboard feel */}
+      {/* Header — quiet, informational */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Browse Scholarships</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Browse scholarships</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Explore {scholarships?.length ?? 0} curated opportunities across the globe.
+            {scholarships?.length ?? 0} scholarship{scholarships?.length === 1 ? "" : "s"} across {countries.length - 1} countries
           </p>
         </div>
-        
-        {/* Right side Actions */}
-        <div className="flex items-center gap-4">
-          <ViewToggle />
-          
-          {/* Quick status summary */}
-          <div className="hidden sm:flex items-center gap-3 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-sm">
-            <div className="flex items-center gap-2 pr-3 border-r border-slate-100">
-              <span className="text-lg font-bold text-slate-900">{scholarships?.length ?? 0}</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-bold text-brand-600">{countries.length - 1}</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Countries</span>
-            </div>
-          </div>
-        </div>
+
+        <ViewToggle />
       </div>
 
       {isFiltered && (
-        <div className="flex items-center justify-between py-2.5 px-4 bg-brand-50/50 border border-brand-100 rounded-xl text-xs md:text-sm">
-          <p className="text-brand-900 font-medium">
-            Active filters applied
+        <div className="flex items-center justify-between py-2 px-3.5 bg-slate-50 border border-slate-200 rounded-md text-sm">
+          <p className="text-slate-700">
+            Filters applied
           </p>
-          <a href="/dashboard/scholarships" className="font-bold text-brand-600 hover:text-brand-700 underline underline-offset-4">
+          <a href="/dashboard/scholarships"
+            className="font-medium text-brand-700 hover:text-brand-800 hover:underline underline-offset-4">
             Clear all
           </a>
         </div>
@@ -152,17 +138,16 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
               />
             )
           ) : (
-            <div className="flex flex-col items-center justify-center py-24 text-center bg-white rounded-2xl border border-slate-200 border-dashed">
-              <div className="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-6">
-                <Search className="w-8 h-8 text-slate-300" />
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-lg border border-slate-200 border-dashed">
+              <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                <Search className="w-5 h-5 text-slate-400" />
               </div>
-              <h3 className="font-bold text-slate-900 text-xl mb-2">No scholarships found</h3>
-              <p className="text-slate-500 text-sm max-w-xs mx-auto mb-8 leading-relaxed">
-                We couldn&apos;t find any scholarships matching your current filters. 
-                Try broadening your criteria or search term.
+              <h3 className="font-semibold text-slate-900 text-base mb-1.5">No scholarships match your filters</h3>
+              <p className="text-slate-500 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
+                Try broadening your search criteria or removing some filters.
               </p>
               <a href="/dashboard/scholarships"
-                className="px-6 py-2.5 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-all active:scale-95">
+                className="px-4 py-2 bg-brand-600 text-white text-sm font-semibold rounded-md hover:bg-brand-700 transition-colors">
                 Clear all filters
               </a>
             </div>
