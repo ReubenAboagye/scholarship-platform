@@ -3,7 +3,7 @@ import { ArrowRight, ChevronDown, MessageCircle } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FadeIn from "@/components/ui/FadeIn";
-import FAQAccordionItem from "@/components/faq/FAQAccordionItem";
+import FAQInteractive from "@/components/faq/FAQInteractive";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { 
@@ -57,97 +57,8 @@ export default function FAQPage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* ──────────────────────────────────────────────────────────────────
-          HERO (Minimalist, High Contrast)
-          ────────────────────────────────────────────────────────────────── */}
-      <section className="bg-paper border-b border-slate-200/70 pt-24 pb-16 lg:pt-32 lg:pb-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl">
-            <FadeIn>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-600 mb-6">
-                Help & Documentation
-              </p>
-              <h1 className="text-[40px] sm:text-[46px] lg:text-[56px] text-slate-900 mb-6 leading-tight tracking-tight" style={SERIF}>
-                Frequently Asked Questions
-              </h1>
-              <p className="text-lg text-slate-600 leading-relaxed max-w-2xl font-light">
-                Documentation on how ScholarBridge AI works, our verification procedures, and how to get the most accurate matches from the platform.
-              </p>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* ──────────────────────────────────────────────────────────────────
-          FAQ LIST (Editorial Detail/Summary structure)
-          ────────────────────────────────────────────────────────────────── */}
-      <section className="py-16 lg:py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-12 lg:gap-24">
-            
-            {/* Left Rail Navigation / Info */}
-            <div className="hidden lg:block relative">
-              <div className="sticky top-32">
-                <FadeIn direction="right">
-                  <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400 mb-6">
-                    Categories
-                  </p>
-                  <ul className="space-y-4">
-                    {faqs.map((section) => (
-                      <li key={section.category}>
-                        <a 
-                          href={`#${section.category.toLowerCase().replace(/\s+/g, "-")}`}
-                          className="text-sm font-medium text-slate-500 hover:text-brand-600 transition-colors"
-                        >
-                          {section.category}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <div className="mt-12 pt-8 border-t border-slate-200">
-                    <MessageCircle className="w-5 h-5 text-slate-400 mb-4" />
-                    <p className="text-sm text-slate-800 font-semibold mb-2">Still need help?</p>
-                    <p className="text-xs text-slate-500 leading-relaxed mb-4">
-                      Our support team monitors inquiries during UK business hours.
-                    </p>
-                    <a href="/contact" className="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-1">
-                      Contact us <ArrowRight className="w-3 h-3" />
-                    </a>
-                  </div>
-                </FadeIn>
-              </div>
-            </div>
-
-            {/* Right Main FAQ Content */}
-            <div className="space-y-16 lg:space-y-24">
-              {faqs.map((section, secIdx) => (
-                <FadeIn key={section.category} delay={secIdx * 0.1}>
-                  <div 
-                    id={section.category.toLowerCase().replace(/\s+/g, "-")}
-                    className="scroll-mt-32"
-                  >
-                    <h2 className="text-2xl text-slate-900 mb-6 border-b border-slate-200 pb-4" style={SERIF}>
-                      {section.category}
-                    </h2>
-                    
-                    <div className="space-y-1">
-                      {section.items.map((item) => (
-                        <FAQAccordionItem 
-                          key={item.q} 
-                          question={item.q} 
-                          answer={item.a} 
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-
-          </div>
-        </div>
-      </section>
+      {/* Interactive Hero and FAQ List */}
+      <FAQInteractive faqs={faqs} />
 
       {/* ──────────────────────────────────────────────────────────────────
           CLOSING CTA (Consistent Dark Band)
