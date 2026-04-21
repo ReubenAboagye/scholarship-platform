@@ -120,41 +120,52 @@ export default function AboutPage() {
       </section>
 
       {/* ──────────────────────────────────────────────────────────────────
-          VALUES / PRINCIPLES (Premium Card Grid)
+          VALUES / PRINCIPLES (Editorial Split List Layout)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="bg-slate-50 py-24 lg:py-32 relative">
+      <section className="bg-white py-24 lg:py-32 relative border-t border-slate-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16 lg:mb-24">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 lg:mb-24 gap-8">
             <FadeIn>
-              <h2 className="text-3xl lg:text-5xl text-slate-900 mb-6" style={SERIF}>
+              <h2 className="text-3xl lg:text-5xl text-slate-900 mb-4" style={SERIF}>
                 Core Principles
               </h2>
-              <p className="text-lg text-slate-500 leading-relaxed font-light">
-                The core rules that shape our platform and the student experience. We believe in quality over quantity, and radical transparency over marketing.
+              <p className="text-lg text-slate-500 max-w-xl font-light">
+                The core rules that shape our platform. We believe in quality over quantity, and radical transparency over marketing.
               </p>
+            </FadeIn>
+            <FadeIn delay={0.2} direction="left">
+              <div className="hidden md:flex items-center gap-2 text-brand-600 text-sm font-semibold uppercase tracking-widest">
+                <span className="w-8 h-px bg-brand-600" /> Our standards
+              </div>
             </FadeIn>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+          <div className="border-b border-slate-200">
             {values.map((v, i) => (
-              <FadeIn key={v.title} delay={i * 0.1} direction="up">
-                <div className="group relative bg-white rounded-2xl p-8 lg:p-10 border border-slate-200/60 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden h-full">
-                  {/* Huge background number */}
-                  <div 
-                    className="absolute -right-6 -bottom-10 text-[180px] font-bold text-slate-50/80 pointer-events-none transition-transform duration-500 group-hover:scale-110 group-hover:text-slate-100/60" 
-                    style={{ ...SERIF, lineHeight: 1 }}
-                    aria-hidden
-                  >
-                    {i + 1}
+              <FadeIn key={v.title} delay={i * 0.1}>
+                <div className="group flex flex-col lg:flex-row lg:items-start lg:items-center py-10 lg:py-14 border-t border-slate-200 hover:bg-slate-50/50 transition-colors duration-300">
+                  
+                  <div className="flex-shrink-0 w-full lg:w-1/3 mb-6 lg:mb-0 pr-8 flex items-center gap-6">
+                    <span 
+                      className="text-4xl lg:text-5xl text-slate-300 group-hover:text-brand-600 transition-colors duration-500 font-light" 
+                      style={SERIF}
+                    >
+                      0{i + 1}.
+                    </span>
+                    <h3 className="text-xl lg:text-2xl font-semibold text-slate-900 group-hover:text-brand-900 transition-colors" style={SERIF}>
+                      {v.title}
+                    </h3>
                   </div>
                   
-                  <div className="relative z-10">
-                    <div className="w-12 h-12 bg-slate-100 text-slate-700 rounded-xl flex items-center justify-center mb-8 border border-slate-200 group-hover:bg-brand-600 group-hover:text-white group-hover:border-brand-600 transition-colors duration-300">
+                  <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-slate-200/50 flex flex-col md:flex-row gap-6 md:items-center">
+                    <div className="hidden md:flex flex-shrink-0 w-14 h-14 bg-white text-slate-400 group-hover:text-brand-600 rounded-full border border-slate-200 items-center justify-center shadow-sm group-hover:border-brand-200 group-hover:shadow-md transition-all duration-300">
                       <v.icon className="w-6 h-6" strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-4" style={SERIF}>{v.title}</h3>
-                    <p className="text-base text-slate-600 leading-relaxed font-light">{v.body}</p>
+                    <p className="text-lg text-slate-600 leading-relaxed font-light">
+                      {v.body}
+                    </p>
                   </div>
+                  
                 </div>
               </FadeIn>
             ))}
