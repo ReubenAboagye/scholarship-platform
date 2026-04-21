@@ -3,14 +3,15 @@
 import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown, Search, BookOpen, Target, Bookmark, LayoutDashboard, Globe, Info, HelpCircle, Mail } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import AuthModal from "@/components/auth/AuthModal";
 
 const studentsMenu = [
-  { icon: Search, title: "Scholarship Search", desc: "Find scholarships matched to your profile.", href: "/auth/signup" },
-  { icon: BookOpen, title: "Scholarship Directory", desc: "Browse all scholarships by country or field.", href: "/scholarships" },
-  { icon: Target, title: "Smart Match", desc: "See your best-fit scholarships ranked by eligibility.", href: "/dashboard/match" },
-  { icon: Bookmark, title: "Saved Scholarships", desc: "Access your bookmarked opportunities.", href: "/dashboard/saved" },
-  { icon: LayoutDashboard, title: "Application Tracker", desc: "Track every application in one dashboard.", href: "/dashboard/tracker" },
-  { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/destinations" },
+  { icon: Search, title: "Scholarship Search", desc: "Find scholarships matched to your profile.", href: "/scholarships", requiresAuth: false },
+  { icon: BookOpen, title: "Scholarship Directory", desc: "Browse all scholarships by country or field.", href: "/scholarships", requiresAuth: false },
+  { icon: Target, title: "Smart Match", desc: "See your best-fit scholarships ranked by eligibility.", href: "/dashboard/match", requiresAuth: true, featureName: "Smart Match" },
+  { icon: Bookmark, title: "Saved Scholarships", desc: "Access your bookmarked opportunities.", href: "/dashboard/saved", requiresAuth: true, featureName: "Saved Scholarships" },
+  { icon: LayoutDashboard, title: "Application Tracker", desc: "Track every application in one dashboard.", href: "/dashboard/tracker", requiresAuth: true, featureName: "Application Tracker" },
+  { icon: Globe, title: "Destinations", desc: "UK, USA, Germany, and Canada covered.", href: "/destinations", requiresAuth: false },
 ];
 
 const companyMenu = [
@@ -28,6 +29,9 @@ export default function Navbar() {
   const [studentsOpen, setStudentsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  
+  // Auth Modal State
+  const [authModal, setAuthModal] = useState({ isOpen: false, featureName: "", redirectUrl: "" });
   const studentsRef = useRef<HTMLDivElement>(null);
   const companyRef = useRef<HTMLDivElement>(null);
 
@@ -55,6 +59,22 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  const handleMenuClick = (e: React.MouseEvent<HTMLAnchorElement>, item: any) => {
+    if (item.requiresAuth && !user) {
+      e.preventDefault();
+      setMobileOpen(false);
+      setStudentsOpen(false);
+      setAuthModal({
+        isOpen: true,
+        featureName: item.featureName || item.title,
+        redirectUrl: item.href
+      });
+    } else {
+      setMobileOpen(false);
+      setStudentsOpen(false);
+    }
+  };
 
   // Lock body scroll while the mobile overlay is open; close on Escape.
   useEffect(() => {
@@ -100,7 +120,7 @@ export default function Navbar() {
                       <a
                         key={item.title}
                         href={item.href}
-                        onClick={() => setStudentsOpen(false)}
+                        onClick={(e) => handleMenuClick(e, item)}
                         className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
                       >
                         <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-brand-600 transition-colors" />
@@ -274,7 +294,7 @@ export default function Navbar() {
                     <a
                       key={item.title}
                       href={item.href}
-                      onClick={() => setMobileOpen(false)}
+                      onClick={(e) => handleMenuClick(e, item)}
                       className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                     >
                       <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
@@ -351,6 +371,13 @@ export default function Navbar() {
           </div>
         </aside>
       </div>
+
+      <AuthModal 
+        isOpen={authModal.isOpen} 
+        onClose={() => setAuthModal(prev => ({ ...prev, isOpen: false }))}
+        featureName={authModal.featureName}
+        redirectUrl={authModal.redirectUrl}
+      />
     </>
   );
 }
