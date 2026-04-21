@@ -75,8 +75,9 @@ export default function Navbar() {
   }, [mobileOpen]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <>
+      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-md">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           <a href="/" className="flex items-baseline">
@@ -194,6 +195,7 @@ export default function Navbar() {
           </button>
         </div>
       </div>
+      </header>
 
       {/* Mobile menu */}
       <div className="md:hidden" aria-hidden={!mobileOpen}>
@@ -209,7 +211,7 @@ export default function Navbar() {
           role="dialog"
           aria-modal="true"
           aria-label="Main menu"
-          className={`fixed top-0 right-0 bottom-0 z-50 w-[85vw] max-w-[360px]
+          className={`fixed top-0 right-0 z-50 w-[85vw] max-w-[360px] h-[100dvh]
                       bg-white shadow-2xl flex flex-col
                       transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
                       ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
@@ -258,59 +260,63 @@ export default function Navbar() {
           )}
 
           {/* Scrollable link body */}
-          <div className="flex-1 overflow-y-auto overscroll-contain custom-scrollbar">
-            <nav className="py-2">
-              <p className="px-5 pt-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                For Students
-              </p>
-              <ul>
-                {studentsMenu.map((item) => (
-                  <li key={item.title}>
+          <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain pb-6">
+            <nav className="py-2 px-3">
+              
+              {/* Students Accordion */}
+              <details className="group" open>
+                <summary className="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 list-none cursor-pointer hover:bg-slate-50 transition-colors outline-none">
+                  Students
+                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="pl-4 pr-2 pb-2 space-y-1">
+                  {studentsMenu.map((item) => (
                     <a
+                      key={item.title}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                     >
                       <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
                       <span className="flex-1 min-w-0 truncate">{item.title}</span>
                     </a>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </details>
 
-              <p className="px-5 pt-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Company
-              </p>
-              <ul>
-                {companyMenu.map((item) => (
-                  <li key={item.title}>
+              {/* Company Accordion */}
+              <details className="group">
+                <summary className="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 list-none cursor-pointer hover:bg-slate-50 transition-colors outline-none mt-1">
+                  Company
+                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+                </summary>
+                <div className="pl-4 pr-2 pb-2 space-y-1">
+                  {companyMenu.map((item) => (
                     <a
+                      key={item.title}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                     >
                       <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
                       <span className="flex-1 min-w-0 truncate">{item.title}</span>
                     </a>
-                  </li>
-                ))}
-              </ul>
+                  ))}
+                </div>
+              </details>
 
-              <p className="px-5 pt-5 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                Resources
-              </p>
-              <ul>
-                <li>
-                  {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-                  <a
-                    href="/#how-it-works"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-5 py-2.5 text-sm text-slate-700 hover:bg-slate-50 active:bg-slate-100 transition-colors"
-                  >
-                    <span className="flex-1 min-w-0 truncate">How it works</span>
-                  </a>
-                </li>
-              </ul>
+              {/* Resources / Links */}
+              <div className="mt-1">
+                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+                <a
+                  href="/#how-it-works"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 hover:bg-slate-50 transition-colors"
+                >
+                  How it works
+                </a>
+              </div>
+
             </nav>
           </div>
 
@@ -345,6 +351,6 @@ export default function Navbar() {
           </div>
         </aside>
       </div>
-    </header>
+    </>
   );
 }
