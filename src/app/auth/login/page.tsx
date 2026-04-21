@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
+const SERIF_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
+
 export default function LoginPage() {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
@@ -30,22 +32,22 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="w-full max-w-[400px]">
-      <div className="mb-5">
-        <h1 className="text-xl font-bold text-slate-900 tracking-tight">Sign in</h1>
-        <p className="mt-0.5 text-sm text-slate-500">Access your scholarship matches.</p>
+    <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-10 relative z-20">
+      <div className="mb-8 text-center">
+        <h1 className="text-3xl font-medium text-slate-900 tracking-tight" style={SERIF_FONT}>Sign in</h1>
+        <p className="mt-2 text-sm text-slate-500 font-medium">to continue to ScholarBridge</p>
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 px-3 py-2.5 mb-4 bg-red-50 border border-red-200 text-sm text-red-700">
+        <div className="flex items-start gap-2 px-4 py-3 mb-6 bg-red-50/50 border border-red-100 rounded-xl text-sm text-red-600">
           <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
           <span>{error}</span>
         </div>
       )}
 
       <button type="button" onClick={handleGoogle}
-        className="w-full flex items-center justify-center gap-3 px-4 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors mb-4">
-        <svg viewBox="0 0 24 24" className="w-4 h-4 flex-shrink-0">
+        className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 hover:border-slate-300 text-sm font-semibold text-slate-700 transition-all duration-200 mb-6 group">
+        <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0 group-hover:scale-105 transition-transform">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -54,51 +56,53 @@ export default function LoginPage() {
         Continue with Google
       </button>
 
-      <div className="flex items-center gap-3 mb-4">
-        <div className="flex-1 h-px bg-slate-200" />
-        <span className="text-xs text-slate-400">or</span>
-        <div className="flex-1 h-px bg-slate-200" />
+      <div className="flex items-center gap-3 mb-6">
+        <div className="flex-1 h-px bg-slate-100" />
+        <span className="text-xs font-medium text-slate-400 uppercase tracking-wider">or sign in with email</span>
+        <div className="flex-1 h-px bg-slate-100" />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-          <label htmlFor="email" className="block text-xs font-semibold text-slate-600 uppercase tracking-wide">Email</label>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="block text-xs font-semibold text-slate-700">Email address</label>
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input id="email" type="email" required autoComplete="email" autoFocus value={email}
               onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
-              className="w-full pl-9 pr-3 py-2.5 border border-slate-300 bg-white text-slate-900 text-sm placeholder:text-slate-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm placeholder:text-slate-400 font-medium outline-none transition-all focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
           </div>
         </div>
 
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <div className="flex items-center justify-between">
-            <label htmlFor="password" className="block text-xs font-semibold text-slate-600 uppercase tracking-wide">Password</label>
-            <a href="/auth/forgot-password" className="text-xs text-blue-600 hover:text-blue-700 transition-colors">Forgot?</a>
+            <label htmlFor="password" className="block text-xs font-semibold text-slate-700">Password</label>
+            <a href="/auth/forgot-password" className="text-xs font-medium text-slate-500 hover:text-slate-900 transition-colors">Forgot?</a>
           </div>
           <div className="relative">
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input id="password" type={showPass ? "text" : "password"} required autoComplete="current-password"
               value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••"
-              className="w-full pl-9 pr-10 py-2.5 border border-slate-300 bg-white text-slate-900 text-sm placeholder:text-slate-400 outline-none transition-colors focus:border-blue-500 focus:ring-1 focus:ring-blue-500" />
+              className="w-full pl-10 pr-12 py-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-900 text-sm placeholder:text-slate-400 font-medium outline-none transition-all focus:bg-white focus:border-slate-400 focus:ring-4 focus:ring-slate-100" />
             <button type="button" tabIndex={-1} onClick={() => setShowPass((v) => !v)}
               aria-label={showPass ? "Hide password" : "Show password"}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 hover:text-slate-700 transition-colors">
               {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2">
+          className="w-full mt-2 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 active:bg-slate-950 disabled:opacity-70 disabled:cursor-not-allowed text-white text-sm font-semibold transition-all hover:shadow-lg hover:-translate-y-0.5 flex items-center justify-center gap-2">
           {loading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : "Sign In"}
         </button>
       </form>
 
-      <p className="mt-5 text-sm text-slate-500">
-        No account?{" "}
-        <a href="/auth/signup" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">Create one free</a>
-      </p>
+      <div className="mt-8 text-center">
+        <p className="text-sm font-medium text-slate-500">
+          No account?{" "}
+          <a href="/auth/signup" className="text-slate-900 hover:underline underline-offset-4 font-semibold transition-all">Create one for free</a>
+        </p>
+      </div>
     </div>
   );
 }
