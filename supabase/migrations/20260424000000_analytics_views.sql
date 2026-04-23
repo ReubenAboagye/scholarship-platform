@@ -298,7 +298,7 @@ SELECT
   b.device_type,
   b.sessions,
   ROUND((b.sessions::numeric / total.t) * 100, 1) AS pct
-FROM base, total
+FROM base b, total
 ORDER BY b.sessions DESC;
 
 
