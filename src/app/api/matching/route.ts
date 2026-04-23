@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { matchScholarships, generateMatchExplanation, buildProfileText } from "@/lib/ai/matching";
 import { consumeUserCooldown } from "@/lib/security/rate-limit";
+import { logMatchImpressions } from "@/lib/tracking/match-events";
 
 export async function POST(_request: NextRequest) {
   const supabase = await createClient();
@@ -72,6 +73,12 @@ export async function POST(_request: NextRequest) {
       explanation:      explanation,
     });
     // Non-fatal — if this insert fails we still return results to the user
+
+    // ── Log impressions for every returned scholarship ────
+    // Fire-and-forget: one row per result in match_events, with
+    // rank_position and match_score preserved for later LTR work.
+    // Awaited with `void` so we don't block the response on it.
+    void logMatchImpressions(user.id, results);
 
     return NextResponse.json({ data: { results, explanation } });
   } catch (err: any) {

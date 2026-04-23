@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
+import PageViewTracker from "@/components/tracking/PageViewTracker";
 
 export const metadata: Metadata = {
   title: { default: "ScholarBridge — Find Your Scholarship", template: "%s | ScholarBridge" },
@@ -20,7 +22,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {/*
+          PageViewTracker logs navigation to Supabase via a
+          SECURITY DEFINER RPC. It respects Do Not Track and
+          skips bot UAs. Wrapped in Suspense because it uses
+          useSearchParams() which requires a boundary in Next 15.
+          See /PRIVACY.md for the privacy posture.
+        */}
+        <Suspense fallback={null}>
+          <PageViewTracker />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }
