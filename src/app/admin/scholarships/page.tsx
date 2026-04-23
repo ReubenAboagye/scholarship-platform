@@ -12,8 +12,6 @@ export default function AdminScholarshipsPage() {
   const [scholarships, setScholarships] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
-  const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState<any | null>(null);
 
   const load = useCallback(async () => {
     const { data } = await supabase
@@ -60,13 +58,7 @@ export default function AdminScholarshipsPage() {
     show: { opacity: 1, y: 0 }
   };
 
-  if (showForm || editing) return (
-    <ScholarshipForm
-      initial={editing}
-      onSaved={() => { setShowForm(false); setEditing(null); load(); }}
-      onCancel={() => { setShowForm(false); setEditing(null); }}
-    />
-  );
+
 
   return (
     <motion.div 
@@ -77,42 +69,40 @@ export default function AdminScholarshipsPage() {
     >
       {/* Header Section */}
       <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Scholarships Catalog</h1>
-          <p className="text-slate-500 text-sm max-w-xl font-medium">
-            Overview and management of all scholarship listings on the platform.
-          </p>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-medium text-slate-900 display">Scholarships Catalog</h1>
+          <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">Liaison & Record Management</p>
         </div>
 
-        <button
-          onClick={() => setShowForm(true)}
-          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl text-sm transition-all shadow-lg shadow-blue-500/20 active:scale-95"
+        <a
+          href="/admin/scholarships/new"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded text-xs uppercase tracking-widest transition-all shadow-sm active:scale-95"
         >
-          <Plus className="w-5 h-5" /> 
-          <span>Add New Scholarship</span>
-        </button>
+          <Plus className="w-3.5 h-3.5" /> 
+          <span>New Entry</span>
+        </a>
       </motion.div>
 
       {/* Control Bar */}
-      <motion.div variants={item} className="bg-white/70 backdrop-blur-xl border border-slate-200 rounded-[2rem] p-4 shadow-sm">
-        <div className="flex flex-col lg:flex-row gap-4 items-center">
+      <motion.div variants={item} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+        <div className="flex flex-col lg:flex-row gap-3 items-center">
           <div className="flex-1 w-full relative">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search by name, country, or provider..."
-              className="w-full rounded-2xl border border-transparent bg-slate-100/80 py-3.5 pl-12 pr-4 text-sm text-slate-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500/30"
+              placeholder="Search registries..."
+              className="w-full rounded border border-slate-100 bg-slate-50 py-2 pl-10 pr-4 text-xs text-slate-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500/30"
             />
           </div>
 
-          <div className="flex items-center gap-3 w-full lg:w-auto">
-            <div className="flex bg-slate-100/80 p-1 rounded-xl">
-              <button className="p-2 rounded-lg bg-white shadow-sm text-blue-600"><LayoutList className="h-4 w-4" /></button>
-              <button className="p-2 rounded-lg text-slate-400 hover:text-slate-600"><LayoutGrid className="h-4 w-4" /></button>
+          <div className="flex items-center gap-2 w-full lg:w-auto">
+            <div className="flex bg-slate-100 p-0.5 rounded">
+              <button className="p-1.5 rounded bg-white shadow-sm text-slate-900"><LayoutList className="h-3.5 w-3.5" /></button>
+              <button className="p-1.5 rounded text-slate-400 hover:text-slate-600"><LayoutGrid className="h-3.5 w-3.5" /></button>
             </div>
-            <button className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50">
-              <Filter className="h-4 w-4" /> 
+            <button className="flex-1 lg:flex-none inline-flex items-center justify-center gap-2 rounded border border-slate-200 bg-white px-3 py-2 text-[11px] font-medium uppercase tracking-wider text-slate-600 transition hover:bg-slate-50">
+              <Filter className="h-3.5 w-3.5" /> 
               <span>Filters</span>
             </button>
           </div>
@@ -121,22 +111,22 @@ export default function AdminScholarshipsPage() {
 
       {/* Content Section */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center h-80 rounded-[2.5rem] bg-white border border-slate-200/60 shadow-sm">
-          <Loader2 className="w-10 h-10 animate-spin text-blue-500 mb-4" />
+        <div className="flex flex-col items-center justify-center h-80 rounded-2xl bg-white border border-slate-200 shadow-sm">
+          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Loading Catalog...</p>
         </div>
       ) : (
-        <motion.div variants={item} className="bg-white border border-slate-200/60 rounded-[2.5rem] overflow-hidden shadow-sm">
+        <motion.div variants={item} className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="bg-slate-50/50 text-left">
-                  <th className="px-6 py-5 text-xs font-black uppercase tracking-widest text-slate-400">Scholarship</th>
-                  <th className="px-6 py-5 text-xs font-black uppercase tracking-widest text-slate-400">Country</th>
-                  <th className="px-6 py-5 text-xs font-black uppercase tracking-widest text-slate-400">Funding</th>
-                  <th className="px-6 py-5 text-xs font-black uppercase tracking-widest text-slate-400">Deadline</th>
-                  <th className="px-6 py-5 text-xs font-black uppercase tracking-widest text-slate-400">Status</th>
-                  <th className="px-6 py-5 text-right text-xs font-black uppercase tracking-widest text-slate-400">Actions</th>
+                <tr className="bg-slate-50 border-b border-slate-200 text-left">
+                  <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Scholarship</th>
+                  <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Jurisdiction</th>
+                  <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Funding</th>
+                  <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Deadline</th>
+                  <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Status</th>
+                  <th className="px-4 py-3 text-right text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Operations</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -150,64 +140,60 @@ export default function AdminScholarshipsPage() {
                       exit={{ opacity: 0 }}
                       className={`group hover:bg-blue-50/30 transition-colors ${!s.is_active ? "opacity-60 grayscale-[0.5]" : ""}`}
                     >
-                      <td className="px-6 py-5 min-w-[300px]">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center text-xl shadow-inner group-hover:bg-white transition-colors">
+                      <td className="px-4 py-3.5 min-w-[280px]">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
                             {countryFlag(s.country)}
                           </div>
                           <div className="min-w-0">
-                            <p className="font-bold text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
-                            <p className="text-xs font-medium text-slate-400 truncate">{s.provider}</p>
+                            <p className="text-xs font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
+                            <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-5">
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-xs font-bold text-slate-600">
+                      <td className="px-4 py-3.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-slate-200 bg-slate-50 text-[10px] font-medium uppercase tracking-tight text-slate-600">
                            {s.country}
                         </span>
                       </td>
-                      <td className="px-6 py-5 px-6">
-                        <span className={`inline-flex items-center rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest ${fundingBadgeColor(s.funding_type)}`}>
+                      <td className="px-4 py-3.5">
+                        <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type).replace('bg-', 'bg-').replace('text-', 'text-').replace('100', '50').replace('700', '600')} border-current/20`}>
                           {s.funding_type}
                         </span>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-4 py-3.5">
                          <div className="flex flex-col">
-                           <span className="text-sm font-bold text-slate-700">{formatDeadline(s.application_deadline)}</span>
-                           <span className="text-[10px] font-bold text-slate-400 uppercase">Closes</span>
+                           <span className="text-xs font-medium text-slate-700">{formatDeadline(s.application_deadline)}</span>
+                           <span className="text-[9px] font-medium text-slate-400 uppercase tracking-tighter mt-0.5">Closes</span>
                          </div>
                       </td>
-                      <td className="px-6 py-5">
+                      <td className="px-4 py-3.5">
                         <button
                           onClick={() => toggleActive(s.id, s.is_active)}
-                          className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 text-[11px] font-black uppercase tracking-wide transition-all ${
-                            s.is_active ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100/80" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                          className={`inline-flex items-center gap-2 rounded px-3 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
+                            s.is_active ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80" : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
                           }`}
                         >
-                          {s.is_active ? <ToggleRight className="w-4 h-4" /> : <ToggleLeft className="w-4 h-4" />}
-                          {s.is_active ? "Live" : "Inactive"}
+                          {s.is_active ? "Live" : "Hold"}
                         </button>
                       </td>
-                      <td className="px-6 py-5 text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <button
-                            onClick={() => setEditing(s)}
-                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 transition-all hover:border-blue-400 hover:text-blue-600 hover:shadow-md active:scale-95"
+                      <td className="px-4 py-3.5 text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <a
+                            href={`/admin/scholarships/${s.id}/edit`}
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
                             aria-label="Edit"
                           >
-                            <Pencil className="w-4 h-4" />
-                          </button>
+                            <Pencil className="w-3.5 h-3.5" />
+                          </a>
                           <a
                             href={s.application_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-400 hover:text-slate-800 hover:shadow-md active:scale-95"
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
                           >
-                            <ExternalLink className="w-4 h-4" />
+                            <ExternalLink className="w-3.5 h-3.5" />
                           </a>
-                          <button className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-slate-600">
-                             <MoreHorizontal className="w-5 h-5" />
-                          </button>
                         </div>
                       </td>
                     </motion.tr>
@@ -229,7 +215,7 @@ export default function AdminScholarshipsPage() {
 
           {/* Pagination Area */}
           <div className="flex flex-col sm:flex-row items-center justify-between px-8 py-5 bg-slate-50/50 border-t border-slate-100 gap-4">
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-tight">
+            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-tight">
               Showing <span className="text-slate-900">{filtered.length > 0 ? 1 : 0}</span> to <span className="text-slate-900">{filtered.length}</span> of <span className="text-slate-900">{filtered.length}</span> total
             </p>
             <div className="flex items-center gap-2">

@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { createHash } from 'node:crypto';
 import { createAdminClient } from '@/lib/supabase/server';
 import type { MatchResult, UserProfile, Scholarship } from '@/types';
 
@@ -20,6 +21,16 @@ import type { MatchResult, UserProfile, Scholarship } from '@/types';
 //   candidates. BM25 on tiny documents is noise, reranking is
 //   latency with no lift. We re-introduce hybrid + rerank once
 //   the catalogue crosses ~200 listings.
+//
+// Caching (migration 018):
+//   - Profile embeddings cached by SHA-256(profile_text) in
+//     public.embedding_cache. Cuts OpenRouter embedding calls
+//     to effectively zero for repeat users whose profile hasn't
+//     changed.
+//   - Explanations cached for 24h keyed on
+//     (profile_hash, sorted top-scholarship-ids hash) in
+//     public.match_explanation_cache. Typical user gets the
+//     same top-N across consecutive runs so this hits often.
 // ─────────────────────────────────────────────────────────────
 
 type RichProfile = Partial<UserProfile & {
@@ -29,6 +40,10 @@ type RichProfile = Partial<UserProfile & {
   extracurriculars?: string[] | null;
   financial_need?: boolean | null;
 }>;
+
+const EMBEDDING_MODEL    = 'openai/text-embedding-3-small';
+const EMBEDDING_DIMS     = 768;
+const EXPLANATION_TTL_MS = 24 * 60 * 60 * 1000; // 24h
 
 // ── OpenRouter client ────────────────────────────────────────
 
@@ -44,21 +59,99 @@ function getOpenRouterClient() {
   });
 }
 
-// ── Embeddings ───────────────────────────────────────────────
+// ── Hashing helpers ──────────────────────────────────────────
+// SHA-256 keeps cache keys fixed-size (64 hex chars) and avoids
+// collisions on long profile strings. We hash the exact text
+// sent to OpenRouter, not the profile object, so any change to
+// buildProfileText() automatically invalidates the cache.
+
+function sha256Hex(input: string): string {
+  return createHash('sha256').update(input, 'utf8').digest('hex');
+}
+
+function hashScholarshipIds(ids: string[]): string {
+  // Sort so that the same set in any order produces the same key.
+  return sha256Hex([...ids].sort().join('|'));
+}
+
+// ── Embeddings (cache-aware) ─────────────────────────────────
 // text-embedding-3-small at 768d (Matryoshka-truncated from 1536)
 // is the sweet spot: strong MTEB retrieval, cheap, fast, and
 // HNSW-friendly at half the RAM of 1536d.
+//
+// Cache lookup is best-effort — any DB error falls through to a
+// live OpenRouter call, so the matching path never breaks just
+// because the cache is unavailable.
 
 export async function generateEmbedding(text: string): Promise<number[]> {
+  const supabase    = createAdminClient();
+  const contentHash = sha256Hex(`${EMBEDDING_MODEL}:${EMBEDDING_DIMS}:${text}`);
+
+  // Cache hit?
+  try {
+    const { data: cached } = await supabase
+      .from('embedding_cache')
+      .select('embedding')
+      .eq('content_hash', contentHash)
+      .maybeSingle();
+
+    if (cached?.embedding) {
+      // Bump usage async; don't block on it.
+      void supabase
+        .from('embedding_cache')
+        .update({
+          hit_count:    (cached as any).hit_count != null
+                          ? (cached as any).hit_count + 1
+                          : undefined,
+          last_used_at: new Date().toISOString(),
+        })
+        .eq('content_hash', contentHash)
+        .then(() => undefined, () => undefined);
+
+      // pgvector returns vector as a string like "[0.1,0.2,...]" over PostgREST.
+      const vec = parsePgVector(cached.embedding as unknown as string | number[]);
+      if (vec.length === EMBEDDING_DIMS) return vec;
+    }
+  } catch (err) {
+    console.warn('embedding_cache lookup failed, falling back to live call', err);
+  }
+
+  // Miss → live OpenRouter call.
   const client = getOpenRouterClient();
   const response = await client.embeddings.create({
-    model: 'openai/text-embedding-3-small',
+    model: EMBEDDING_MODEL,
     input: text,
     // @ts-ignore — OpenRouter supports `dimensions` for Matryoshka truncation
-    dimensions: 768,
+    dimensions: EMBEDDING_DIMS,
   });
-  const vec = response.data[0].embedding;
-  return vec.length === 768 ? vec : vec.slice(0, 768);
+  const raw = response.data[0].embedding;
+  const vec = raw.length === EMBEDDING_DIMS ? raw : raw.slice(0, EMBEDDING_DIMS);
+
+  // Fire-and-forget cache write. Upsert in case of a race between two
+  // concurrent requests on the same profile.
+  void supabase
+    .from('embedding_cache')
+    .upsert({
+      content_hash: contentHash,
+      model:        EMBEDDING_MODEL,
+      dimensions:   EMBEDDING_DIMS,
+      embedding:    vec as unknown as string, // supabase-js accepts number[] for vector cols
+      hit_count:    0,
+      last_used_at: new Date().toISOString(),
+    }, { onConflict: 'content_hash' })
+    .then(() => undefined, err => console.warn('embedding_cache upsert failed', err));
+
+  return vec;
+}
+
+// pgvector over PostgREST comes back as a JSON string "[v1,v2,...]".
+// Handle both the raw-array shape (Node pg) and the string shape.
+function parsePgVector(v: string | number[]): number[] {
+  if (Array.isArray(v)) return v;
+  if (typeof v !== 'string') return [];
+  const trimmed = v.trim().replace(/^\[|\]$/g, '');
+  if (!trimmed) return [];
+  return trimmed.split(',').map(Number);
 }
 
 // ── Profile text builder ─────────────────────────────────────
@@ -232,13 +325,46 @@ export async function matchScholarships(
   }));
 }
 
-// ── AI explanation (grounded, 2 sentences) ───────────────────
+// ── AI explanation (grounded, 2 sentences, cached 24h) ───────
+// Cache is keyed on (profile text hash, sorted top-scholarship
+// IDs hash). A user running matching twice in a row with the
+// same profile and the same top-N will hit this cache — which
+// is the common case, because the underlying catalogue changes
+// slowly. Profile edits invalidate naturally since the hash
+// changes. Any cache failure falls through to a live LLM call.
 
 export async function generateMatchExplanation(
   scholarships: Scholarship[],
   profile: RichProfile,
+  opts?: { userId?: string },
 ): Promise<string> {
-  const profileText = buildProfileText(profile);
+  const profileText      = buildProfileText(profile);
+  const model            = process.env.OPENROUTER_MODEL!;
+  const profileHash      = sha256Hex(`${model}:${profileText}`);
+  const topIds           = scholarships.slice(0, 5).map(s => s.id);
+  const scholarshipsHash = hashScholarshipIds(topIds);
+
+  const supabase = createAdminClient();
+
+  // Cache hit?
+  try {
+    const { data: cached } = await supabase
+      .from('match_explanation_cache')
+      .select('explanation, expires_at')
+      .eq('profile_hash', profileHash)
+      .eq('scholarships_hash', scholarshipsHash)
+      .maybeSingle();
+
+    if (cached?.explanation) {
+      const notExpired = !cached.expires_at
+        || new Date(cached.expires_at).getTime() > Date.now();
+      if (notExpired) return cached.explanation;
+    }
+  } catch (err) {
+    console.warn('match_explanation_cache lookup failed, falling back to live call', err);
+  }
+
+  // Miss → live OpenRouter call.
   const list = scholarships
     .slice(0, 5)
     .map(s => `- ${s.name} (${s.country}, ${s.funding_type} funding)`)
@@ -246,7 +372,7 @@ export async function generateMatchExplanation(
 
   const client = getOpenRouterClient();
   const response = await client.chat.completions.create({
-    model: process.env.OPENROUTER_MODEL!,
+    model,
     messages: [{
       role: 'user',
       content:
@@ -265,5 +391,23 @@ Reference their field of study and degree level specifically.`,
     temperature: 0.4,
   });
 
-  return response.choices[0]?.message?.content?.trim() ?? '';
+  const explanation = response.choices[0]?.message?.content?.trim() ?? '';
+
+  // Fire-and-forget cache write. Only persist non-empty explanations.
+  if (explanation) {
+    const expiresAt = new Date(Date.now() + EXPLANATION_TTL_MS).toISOString();
+    void supabase
+      .from('match_explanation_cache')
+      .upsert({
+        profile_hash:      profileHash,
+        scholarships_hash: scholarshipsHash,
+        user_id:           opts?.userId ?? null,
+        explanation,
+        model,
+        expires_at:        expiresAt,
+      }, { onConflict: 'profile_hash,scholarships_hash' })
+      .then(() => undefined, err => console.warn('match_explanation_cache upsert failed', err));
+  }
+
+  return explanation;
 }

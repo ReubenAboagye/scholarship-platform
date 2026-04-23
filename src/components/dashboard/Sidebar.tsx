@@ -9,6 +9,8 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import NotificationCenter from "@/components/dashboard/NotificationCenter";
 
+const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
+
 const navItems = [
   { href: "/dashboard",         icon: LayoutDashboard, label: "Dashboard" },
   { href: "/dashboard/match",   icon: Sparkles,        label: "AI Match"  },
@@ -73,9 +75,10 @@ export default function DashboardSidebar({ profile }: Props) {
           )}
         >
           {!collapsed && (
-            <a href="/" className="flex items-center gap-1.5 h-10">
-              <span className="font-black text-[16px] text-slate-900 tracking-tight">Scholar</span>
-              <span className="font-black text-[16px] text-brand-600 tracking-tight">Match</span>
+            <a href="/" className="flex items-baseline">
+              <span className="text-xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+                Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
+              </span>
             </a>
           )}
           <button
@@ -117,30 +120,41 @@ export default function DashboardSidebar({ profile }: Props) {
           })}
         </nav>
 
-        <div className="border-t border-slate-100 p-2">
-          {!collapsed && profile && (
-            <div className="flex items-center gap-2.5 px-2 py-2.5 mb-1">
-              <div className="w-7 h-7 bg-slate-900 flex items-center justify-center flex-shrink-0 text-xs font-black text-white">
+        <div className="border-t border-slate-100 shrink-0">
+          {profile ? (
+            <button
+              onClick={handleSignOut}
+              title="Sign out"
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-4 hover:bg-slate-50 transition-colors text-left",
+                collapsed && "justify-center px-2"
+              )}
+            >
+              <div className="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
                 {initials}
               </div>
-              <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-800 truncate">
-                  {profile.full_name || "User"}
-                </p>
-                <p className="text-[11px] text-slate-400 truncate">{profile.email}</p>
-              </div>
+              {!collapsed && (
+                <>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-slate-900 truncate">
+                      {profile.full_name || "Account"}
+                    </p>
+                    <p className="text-xs text-slate-500 truncate">{profile.email}</p>
+                  </div>
+                  <LogOut className="w-4 h-4 text-slate-400 shrink-0" />
+                </>
+              )}
+            </button>
+          ) : (
+            <div className="p-4 text-center">
+              <button
+                onClick={handleSignOut}
+                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded transition-colors"
+              >
+                <LogOut className="w-4 h-4 mx-auto" />
+              </button>
             </div>
           )}
-          <button
-            onClick={handleSignOut}
-            className={cn(
-              "flex items-center gap-2 w-full px-2.5 py-2 text-xs font-medium text-slate-400 hover:bg-red-50 hover:text-red-500 transition-colors",
-              collapsed && "justify-center"
-            )}
-          >
-            <LogOut className="w-3.5 h-3.5 flex-shrink-0" />
-            {!collapsed && "Sign out"}
-          </button>
         </div>
       </aside>
 

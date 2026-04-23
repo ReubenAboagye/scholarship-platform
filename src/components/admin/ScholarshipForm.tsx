@@ -13,13 +13,13 @@ interface Props {
   onCancel: () => void;
 }
 
-const inp = "w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-sm transition-all bg-white";
+const inp = "w-full px-3 py-2.5 rounded border border-slate-300 focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none text-sm transition-all bg-white";
 
 function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }) {
   return (
-    <div className="pb-3 border-b border-slate-100 mb-4">
-      <h2 className="text-sm font-bold text-slate-900">{title}</h2>
-      {subtitle && <p className="text-xs text-slate-400 mt-0.5">{subtitle}</p>}
+    <div className="pb-3 border-b border-slate-200 mb-5">
+      <h2 className="text-[13px] font-medium text-slate-900 uppercase tracking-widest">{title}</h2>
+      {subtitle && <p className="text-[11px] font-normal text-slate-500 mt-0.5">{subtitle}</p>}
     </div>
   );
 }
@@ -110,8 +110,8 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div>
-          <h1 className="font-black text-2xl text-slate-900">{initial ? "Edit Scholarship" : "Add Scholarship"}</h1>
-          <p className="text-slate-500 text-sm mt-0.5">{initial ? "Update scholarship details." : "Add a new scholarship to the platform."}</p>
+          <h1 className="font-medium text-3xl display text-slate-900">{initial ? "Edit Scholarship" : "Add Scholarship"}</h1>
+          <p className="text-slate-500 text-[11px] font-medium uppercase tracking-widest mt-1">{initial ? "Update scholarship details" : "Add a new scholarship to the platform"}</p>
         </div>
       </div>
 
@@ -120,47 +120,47 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
       <form onSubmit={handleSave} className="space-y-6">
 
         {/* ── Core details ── */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6">
+        <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-6">
           <SectionHeader title="Core Details" subtitle="Basic scholarship information" />
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Scholarship Name *</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Scholarship Name *</label>
                 <input className={inp} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Chevening Scholarship" required />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Provider / Organisation *</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Provider / Organisation *</label>
                 <input className={inp} value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} placeholder="e.g. UK FCDO" required />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Country *</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Country *</label>
                 <CountrySelect 
                   value={form.country} 
                   onChange={(v) => setForm({ ...form, country: v })}
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Funding Type *</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Funding Type *</label>
                 <select className={inp} value={form.funding_type} onChange={(e) => setForm({ ...form, funding_type: e.target.value })}>
                   {FUNDING.map((f) => <option key={f}>{f}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Funding Amount</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Funding Amount</label>
                 <input className={inp} value={form.funding_amount} onChange={(e) => setForm({ ...form, funding_amount: e.target.value })} placeholder="e.g. Full tuition + £1,200/month" />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Description *</label>
+              <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Description *</label>
               <textarea rows={3} className={inp + " resize-none"} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} required />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Application URL *</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Application URL *</label>
                 <input type="url" className={inp} value={form.application_url} onChange={(e) => setForm({ ...form, application_url: e.target.value })} placeholder="https://…" required />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Application Deadline</label>
+                <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Application Deadline</label>
                 <input type="date" className={inp} value={form.application_deadline} onChange={(e) => setForm({ ...form, application_deadline: e.target.value })} />
               </div>
             </div>
@@ -168,11 +168,11 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
         </div>
 
         {/* ── Eligibility & degrees ── */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6">
+        <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-6">
           <SectionHeader title="Eligibility & Degrees" subtitle="Who can apply — used for hard-gate matching" />
           <div className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-2 uppercase tracking-wide">Degree Levels</label>
+              <label className="block text-[10px] font-medium text-slate-500 mb-2 uppercase tracking-widest">Degree Levels</label>
               <div className="flex flex-wrap gap-2">
                 {DEGREES.map((d) => (
                   <button type="button" key={d} onClick={() => toggleDegree(d)}
@@ -187,11 +187,11 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Fields of Study <span className="normal-case font-normal text-slate-400">(comma-separated)</span></label>
+              <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Fields of Study <span className="normal-case font-normal text-slate-400">(comma-separated)</span></label>
               <input className={inp} value={form.fields_of_study} onChange={(e) => setForm({ ...form, fields_of_study: e.target.value })} placeholder="e.g. Engineering, Medicine, Any" />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Eligibility Criteria <span className="normal-case font-normal text-slate-400">(one per line)</span></label>
+              <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Eligibility Criteria <span className="normal-case font-normal text-slate-400">(one per line)</span></label>
               <textarea rows={4} className={inp + " resize-none"} value={form.eligibility_criteria}
                 onChange={(e) => setForm({ ...form, eligibility_criteria: e.target.value })}
                 placeholder={"Must be a citizen of a Commonwealth country\nHold a Bachelor's degree\nAge under 35"} />
@@ -200,7 +200,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
         </div>
 
         {/* ── Structured eligibility (matching engine) ── */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6">
+        <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-6">
           <SectionHeader
             title="Matching Engine Settings"
             subtitle="Structured fields used for AI hard-gate filtering — keep accurate for best match quality"
@@ -208,7 +208,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                <label className="flex items-center gap-1.5 text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">
                   Citizenship Restriction
                   <span title="Leave empty if open to all. Comma-separated list of nationalities required, e.g. &quot;African, non-Canadian&quot;.">
                     <Info className="w-3 h-3 text-slate-400 cursor-help" />
@@ -219,14 +219,14 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   placeholder="e.g. African, Commonwealth — leave blank if open to all" />
               </div>
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                <label className="flex items-center gap-1.5 text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">
                   Minimum GPA <span className="normal-case font-normal text-slate-400">(0–4 scale)</span>
                 </label>
                 <input type="number" step="0.1" min="0" max="4" className={inp}
                   value={form.min_gpa} onChange={(e) => setForm({ ...form, min_gpa: e.target.value })} placeholder="e.g. 3.5 — leave blank if no requirement" />
               </div>
               <div>
-                <label className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
+                <label className="flex items-center gap-1.5 text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">
                   Effort Estimate <span className="normal-case font-normal text-slate-400">(minutes)</span>
                 </label>
                 <input type="number" min="1" max="600" className={inp}
@@ -241,7 +241,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.open_to_international ? "left-5" : "left-1"}`} />
                 </button>
                 <div>
-                  <p className="text-xs font-semibold text-slate-700">Open to international students</p>
+                  <p className="text-[11px] font-medium uppercase tracking-widest text-slate-700">Open to international</p>
                   <p className="text-[11px] text-slate-400">Students studying abroad can apply</p>
                 </div>
               </label>
@@ -251,7 +251,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.renewable ? "left-5" : "left-1"}`} />
                 </button>
                 <div>
-                  <p className="text-xs font-semibold text-slate-700">Renewable scholarship</p>
+                  <p className="text-[11px] font-medium uppercase tracking-widest text-slate-700">Renewable</p>
                   <p className="text-[11px] text-slate-400">Can be renewed for subsequent years</p>
                 </div>
               </label>
@@ -262,13 +262,13 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
         {/* ── Submit ── */}
         <div className="flex justify-end gap-3">
           <button type="button" onClick={onCancel}
-            className="px-4 py-2.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">
+            className="px-6 py-2.5 text-xs font-medium uppercase tracking-widest text-slate-600 border border-slate-200 rounded hover:bg-slate-50 transition-colors">
             Cancel
           </button>
           <button type="submit" disabled={saving}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-semibold rounded-xl text-sm transition-colors">
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-            {saving ? "Saving…" : initial ? "Update Scholarship" : "Add Scholarship"}
+            className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-black disabled:opacity-60 text-white font-medium uppercase tracking-widest rounded text-xs transition-colors">
+            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            {saving ? "Saving…" : initial ? "Update Entry" : "Save Entry"}
           </button>
         </div>
 

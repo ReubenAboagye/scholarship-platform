@@ -16,18 +16,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!admin) redirect("/dashboard");
 
   return (
-    <div className="min-h-screen bg-slate-50 flex overflow-hidden">
+    <div className="h-screen bg-slate-50 flex overflow-hidden">
       <AdminSidebar profile={profile} />
       
       <div className="flex-1 flex flex-col min-w-0 relative">
-        {/* Professional Mesh Gradient Background */}
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <div className="absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-blue-100/40 rounded-full blur-[120px]" />
-          <div className="absolute top-[20%] -left-[5%] w-[30%] h-[30%] bg-indigo-100/30 rounded-full blur-[100px]" />
-        </div>
-
         {/* Top Navigation Bar */}
-        <header className="sticky top-0 z-30 h-16 bg-white/70 backdrop-blur-xl border-b border-slate-200 flex items-center justify-between px-6 lg:px-8">
+        <header className="sticky top-0 z-30 h-14 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6">
           <div className="flex items-center gap-4">
             {/* Mobile Menu Trigger (Visual Only for now as mobile sidebar isn't implemented) */}
             <div className="md:hidden w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
@@ -38,7 +32,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               </div>
             </div>
             
-            <div className="flex items-center gap-2 text-sm font-medium">
+            <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider">
               <span className="text-slate-400">Admin</span>
               <span className="text-slate-300">/</span>
               <span className="text-slate-900">Dashboard</span>
@@ -47,9 +41,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
           <div className="flex items-center gap-3 lg:gap-5">
             {/* Functional-looking Search */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-lg text-slate-400 focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-              <Search className="w-4 h-4" />
-              <input type="text" placeholder="Search..." className="bg-transparent border-none outline-none text-sm text-slate-900 w-32 lg:w-48 placeholder:text-slate-400" />
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-slate-400 focus-within:ring-2 focus-within:ring-blue-500/10 focus-within:border-blue-500/50 transition-all">
+              <Search className="w-3.5 h-3.5" />
+              <input type="text" placeholder="Search Console..." className="bg-transparent border-none outline-none text-xs text-slate-900 w-32 lg:w-40 placeholder:text-slate-400" />
             </div>
 
             <div className="flex items-center gap-2">
@@ -61,18 +55,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
               <a 
                 href="/" 
                 target="_blank"
-                className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-slate-50 rounded-lg text-sm font-semibold hover:bg-slate-800 transition-colors shadow-sm"
+                className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-slate-50 rounded text-[11px] font-normal uppercase tracking-wider hover:bg-slate-800 transition-colors shadow-sm"
               >
                 <span>Live Site</span>
-                <ExternalLink className="w-3.5 h-3.5" />
+                <ExternalLink className="w-3 h-3" />
               </a>
             </div>
           </div>
         </header>
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto relative z-10 p-6 lg:p-8 scroll-smooth">
-          <div className="max-w-[1400px] mx-auto">
+        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 md:pb-8 custom-scrollbar relative z-10">
+          <div className="max-w-[1600px] mx-auto">
             {children}
           </div>
         </main>

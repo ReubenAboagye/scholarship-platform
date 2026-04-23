@@ -46,7 +46,8 @@ export async function POST(_request: NextRequest) {
       try {
         explanation = await generateMatchExplanation(
           results.map((r) => r.scholarship),
-          profile
+          profile,
+          { userId: user.id }
         );
       } catch (error) {
         console.error("Match explanation error:", error);

@@ -30,11 +30,11 @@ export default async function AdminAnalyticsPage() {
 
   const statusColors: Record<string, string> = {
     "Interested": "bg-slate-400",
-    "In Progress": "bg-blue-500",
-    "Submitted": "bg-violet-500",
-    "Awaiting Decision": "bg-amber-500",
-    "Accepted": "bg-emerald-500",
-    "Rejected": "bg-red-400",
+    "In Progress": "bg-slate-600",
+    "Submitted": "bg-slate-800",
+    "Awaiting Decision": "bg-amber-600",
+    "Accepted": "bg-emerald-700",
+    "Rejected": "bg-red-800",
     "Withdrawn": "bg-slate-300",
   };
 
@@ -43,52 +43,52 @@ export default async function AdminAnalyticsPage() {
   const maxCountry = Math.max(...Object.values(countryCounts), 1);
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="font-black text-3xl text-slate-900">Analytics</h1>
-        <p className="text-slate-500 text-sm mt-1">Platform usage overview.</p>
+        <h1 className="font-medium text-3xl display text-slate-900 tracking-tight">Official Analytics Report</h1>
+        <p className="text-[11px] font-medium uppercase tracking-widest text-slate-500 mt-2">Platform Data & Engagement Overview</p>
       </div>
 
       {/* Top stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: "Total Users",         value: totalUsers        ?? 0, icon: Users,      color: "bg-blue-50 text-blue-600" },
-          { label: "Active Scholarships", value: totalScholarships ?? 0, icon: BookOpen,   color: "bg-emerald-50 text-emerald-600" },
-          { label: "Applications",        value: totalTracked      ?? 0, icon: ListChecks, color: "bg-violet-50 text-violet-600" },
-          { label: "Saves",               value: totalSaved        ?? 0, icon: Bookmark,   color: "bg-amber-50 text-amber-600" },
+          { label: "Total Users",         value: totalUsers        ?? 0, icon: Users },
+          { label: "Active Scholarships", value: totalScholarships ?? 0, icon: BookOpen },
+          { label: "Applications",        value: totalTracked      ?? 0, icon: ListChecks },
+          { label: "Saved Entries",       value: totalSaved        ?? 0, icon: Bookmark },
         ].map((s) => (
-          <div key={s.label} className="bg-white border border-slate-100 rounded-2xl p-5">
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${s.color}`}>
-              <s.icon className="w-5 h-5" />
+          <div key={s.label} className="bg-slate-50/50 border border-slate-200 rounded-lg p-5 flex flex-col justify-between">
+            <div className="flex items-start justify-between mb-4">
+              <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 w-2/3 leading-relaxed">{s.label}</p>
+              <s.icon className="w-4 h-4 text-slate-400" />
             </div>
-            <p className="text-3xl font-bold text-slate-900">{s.value}</p>
-            <p className="text-sm text-slate-500 mt-1">{s.label}</p>
+            <p className="text-4xl font-medium display text-slate-900">{s.value}</p>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Application status breakdown */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <BarChart3 className="w-4 h-4 text-blue-600" />
-            <h2 className="font-semibold text-slate-900">Application Status Breakdown</h2>
+        <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-6">
+          <div className="flex items-center gap-2 mb-6 pb-3 border-b border-slate-200">
+            <BarChart3 className="w-4 h-4 text-slate-500" />
+            <h2 className="text-[11px] font-medium uppercase tracking-widest text-slate-900">Application Status Distribution</h2>
           </div>
           {Object.keys(statusCounts).length === 0 ? (
-            <p className="text-slate-400 text-sm text-center py-8">No application data yet.</p>
+            <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-8">No application data logged.</p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {Object.entries(statusCounts)
                 .sort((a, b) => b[1] - a[1])
                 .map(([status, count]) => (
-                  <div key={status}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-sm text-slate-700">{status}</span>
-                      <span className="text-sm font-semibold text-slate-900">{count}</span>
+                  <div key={status} className="group">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-xs font-medium text-slate-700">{status}</span>
+                      <span className="text-xs font-medium text-slate-900 tabular-nums">{count}</span>
                     </div>
-                    <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-slate-200 rounded-sm overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all ${statusColors[status] || "bg-slate-400"}`}
+                        className={`h-full rounded-sm transition-all duration-500 ${statusColors[status] || "bg-slate-400"}`}
                         style={{ width: `${(count / maxStatus) * 100}%` }}
                       />
                     </div>
@@ -99,29 +99,36 @@ export default async function AdminAnalyticsPage() {
         </div>
 
         {/* Scholarships by country */}
-        <div className="bg-white border border-slate-100 rounded-2xl p-6">
-          <div className="flex items-center gap-2 mb-5">
-            <BookOpen className="w-4 h-4 text-blue-600" />
-            <h2 className="font-semibold text-slate-900">Scholarships by Country</h2>
+        <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-6">
+          <div className="flex items-center gap-2 mb-6 pb-3 border-b border-slate-200">
+            <BookOpen className="w-4 h-4 text-slate-500" />
+            <h2 className="text-[11px] font-medium uppercase tracking-widest text-slate-900">Scholarship Geographic Spread</h2>
           </div>
-          <div className="space-y-3">
-            {Object.entries(countryCounts)
-              .sort((a, b) => b[1] - a[1])
-              .map(([country, count]) => (
-                <div key={country}>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-slate-700">{countryFlags[country] || "🌍"} {country}</span>
-                    <span className="text-sm font-semibold text-slate-900">{count}</span>
+          {Object.keys(countryCounts).length === 0 ? (
+            <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-8">No active scholarships.</p>
+          ) : (
+            <div className="space-y-4">
+              {Object.entries(countryCounts)
+                .sort((a, b) => b[1] - a[1])
+                .map(([country, count]) => (
+                  <div key={country} className="group">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs">{countryFlags[country] || "🌍"}</span>
+                        <span className="text-xs font-medium text-slate-700">{country}</span>
+                      </div>
+                      <span className="text-xs font-medium text-slate-900 tabular-nums">{count}</span>
+                    </div>
+                    <div className="h-1.5 bg-slate-200 rounded-sm overflow-hidden">
+                      <div
+                        className="h-full rounded-sm bg-slate-800 transition-all duration-500"
+                        style={{ width: `${(count / maxCountry) * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-blue-500 transition-all"
-                      style={{ width: `${(count / maxCountry) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-          </div>
+                ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -59,19 +59,19 @@ export default function DashboardClient({
       {/* ── Header ── */}
       <motion.div variants={fade} className="flex items-start justify-between gap-3 pt-1">
         <div>
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Overview</p>
-          <h1 className="text-2xl font-bold text-slate-900">Hey, {firstName} 👋</h1>
-          <p className="text-sm text-slate-400 mt-1">Here&apos;s what&apos;s happening with your scholarships.</p>
+          <p className="text-xs font-semibold text-brand-600 uppercase tracking-widest mb-1">Overview</p>
+          <h1 className="text-3xl text-slate-900" style={{ fontFamily: "Fraunces, Georgia, ui-serif, serif", fontWeight: 600 }}>Welcome, {firstName}</h1>
+          <p className="text-sm text-slate-500 mt-1">Here&apos;s what&apos;s happening with your scholarships.</p>
         </div>
         <a href="/dashboard/scholarships"
-          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-lg mt-1 transition-all">
-          Browse <ArrowRight className="w-3 h-3" />
+          className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-slate-800 bg-white border border-slate-300 hover:bg-slate-50 px-3.5 py-2 rounded-md mt-1 transition-all">
+          Browse Directory <ArrowRight className="w-3 h-3" />
         </a>
       </motion.div>
 
       {/* ── Profile banner (only when incomplete) ── */}
       {!profileComplete && (
-        <motion.div variants={fade} className="relative overflow-hidden rounded-2xl border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <motion.div variants={fade} className="relative overflow-hidden rounded-lg border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
             <AlertCircle className="w-5 h-5 text-amber-500" />
           </div>
@@ -107,7 +107,7 @@ export default function DashboardClient({
           { label: "Accepted",  value: acceptedCount,  icon: CheckCircle, href: "/dashboard/tracker", color: "bg-emerald-50 text-emerald-600" },
         ].map((s) => (
           <motion.div variants={fade} key={s.label}>
-            <a href={s.href} className="flex items-center gap-3 bg-white border border-slate-200 hover:border-slate-300 px-3 py-3 rounded-xl transition-all group">
+            <a href={s.href} className="flex items-center gap-3 bg-white border border-slate-200 hover:border-slate-300 px-3 py-3 rounded-lg flex-1 min-w-0 transition-all group">
               <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0", s.color)}>
                 <s.icon className="w-3.5 h-3.5" />
               </div>
@@ -137,7 +137,7 @@ export default function DashboardClient({
                 <a
                   key={t.id}
                   href="/dashboard/tracker"
-                  className="flex-shrink-0 w-56 bg-white border border-slate-200 hover:border-slate-300 rounded-xl p-4 transition-all"
+                  className="flex-shrink-0 w-56 bg-white border border-slate-200 hover:border-slate-300 rounded-lg p-4 transition-all"
                 >
                   <p className="text-xs font-bold text-slate-800 leading-snug truncate mb-2">
                     {t.scholarships?.name ?? "Scholarship"}
@@ -172,7 +172,7 @@ export default function DashboardClient({
         </div>
 
         {topMatches.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-xl p-6 text-center">
+          <div className="bg-white border border-slate-200 rounded-lg p-6 text-center">
             <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-2">
               <Sparkles className="w-5 h-5 text-slate-300" />
             </div>
@@ -184,7 +184,7 @@ export default function DashboardClient({
             </a>
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-50">
+          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-50">
             {topMatches.map((r: any, i: number) => {
               const s = r.scholarship;
               return (
@@ -224,14 +224,14 @@ export default function DashboardClient({
         </div>
 
         {tracked.length === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-xl p-5 text-center">
+          <div className="bg-white border border-slate-200 rounded-lg p-5 text-center">
             <p className="text-sm font-semibold text-slate-500">No applications tracked</p>
             <a href="/scholarships" className="text-xs text-brand-600 hover:underline mt-1 inline-block">
               Browse scholarships to start tracking →
             </a>
           </div>
         ) : (
-          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden divide-y divide-slate-50">
+          <div className="bg-white border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-50">
             {tracked.slice(0, 5).map((t: any) => (
               <div key={t.id} className="flex items-center gap-3 px-4 py-3">
                 <div className={cn("w-2 h-2 rounded-full flex-shrink-0",
@@ -258,7 +258,7 @@ export default function DashboardClient({
       </motion.div>
 
       {/* ── Profile completeness meter ── */}
-      <motion.div variants={fade} className="bg-white border border-slate-200 rounded-xl p-4">
+      <motion.div variants={fade} className="bg-white border border-slate-200 rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-brand-600" />

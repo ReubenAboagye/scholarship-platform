@@ -1,16 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GraduationCap, LayoutDashboard, BookOpen, Users, BarChart3, LogOut, Shield, ChevronRight } from "lucide-react";
+import { GraduationCap, LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+
+const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
 const navItems = [
   { href: "/admin",               icon: LayoutDashboard, label: "Overview",     exact: true },
-  { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships" },
-  { href: "/admin/users",         icon: Users,           label: "Users" },
-  { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics" },
+  { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships", exact: false },
+  { href: "/admin/users",         icon: Users,           label: "Users",        exact: false },
+  { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics",    exact: false },
 ];
 
 interface Props {
@@ -18,7 +19,9 @@ interface Props {
 }
 
 export default function AdminSidebar({ profile }: Props) {
+  const [collapsed, setCollapsed] = useState(false);
   const [pathname, setPathname] = useState("");
+
   useEffect(() => { setPathname(window.location.pathname); }, []);
 
   async function handleSignOut() {
@@ -27,32 +30,45 @@ export default function AdminSidebar({ profile }: Props) {
     window.location.href = "/";
   }
 
+  const initials = profile
+    ? (profile.full_name || profile.email)[0].toUpperCase()
+    : "?";
+
   return (
-    <aside className="hidden md:flex flex-col w-64 bg-slate-950 border-r border-white/5 flex-shrink-0 relative overflow-hidden">
-      {/* Visual Depth Decorative Element */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-blue-600/10 to-transparent pointer-events-none" />
-      
-      {/* Logo Section */}
-      <div className="relative px-6 py-8">
-        <a href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-black text-lg text-white leading-none tracking-tight">
-              Scholar<span className="text-blue-400">Match</span>
+    <aside
+      className={cn(
+        "hidden md:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 flex-shrink-0 sticky top-0 h-screen",
+        collapsed ? "w-[60px]" : "w-[220px]"
+      )}
+    >
+      <div
+        className={cn(
+          "flex items-center border-b border-slate-100 h-14 px-4",
+          collapsed ? "justify-center" : "justify-between"
+        )}
+      >
+        {!collapsed && (
+          <a href="/admin" className="flex items-baseline">
+            <span className="text-xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
             </span>
-            <div className="flex items-center gap-1 mt-1">
-              <Shield className="w-3 h-3 text-amber-400/80" />
-              <span className="text-[10px] text-amber-400/80 font-bold uppercase tracking-widest">Admin Panel</span>
-            </div>
-          </div>
-        </a>
+          </a>
+        )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+        >
+          <ChevronLeft
+            className={cn(
+              "w-4 h-4 transition-transform duration-200",
+              collapsed && "rotate-180"
+            )}
+          />
+        </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-4 space-y-2 relative">
-        <p className="px-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Main Menu</p>
+      <nav className="flex-1 p-2 space-y-0.5 pt-4 overflow-y-auto custom-scrollbar">
+        {!collapsed && <p className="px-3 text-[10px] font-medium text-slate-400 uppercase tracking-[0.15em] mb-3 opacity-70">Governance</p>}
         {navItems.map((item) => {
           const active = item.exact
             ? pathname === item.href
@@ -62,67 +78,57 @@ export default function AdminSidebar({ profile }: Props) {
             <a
               key={item.href}
               href={item.href}
+              title={collapsed ? item.label : undefined}
               className={cn(
-                "group relative flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                "flex items-center gap-3 px-3 py-2 text-xs font-medium transition-all rounded-md",
                 active
-                  ? "text-white"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-white/5"
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-800",
+                collapsed && "justify-center"
               )}
             >
-              <div className="flex items-center gap-3 z-10">
-                <item.icon className={cn(
-                  "w-5 h-5 transition-colors",
-                  active ? "text-blue-400" : "text-slate-500 group-hover:text-slate-300"
-                )} />
-                <span>{item.label}</span>
-              </div>
-
-              {active && (
-                <>
-                  <motion.div 
-                    layoutId="active-nav"
-                    className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-600/5 border border-blue-500/20 rounded-xl"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <motion.div 
-                    layoutId="active-nav-indicator"
-                    className="absolute left-0 w-1 h-5 bg-blue-500 rounded-r-full"
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  />
-                </>
-              )}
-
-              {!active && (
-                <ChevronRight className="w-4 h-4 text-slate-600 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-              )}
+              <item.icon className={cn("flex-shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
+              {!collapsed && <span>{item.label}</span>}
             </a>
           );
         })}
       </nav>
 
-      {/* User Section / Bottom Navigation */}
-      <div className="relative mt-auto p-4 border-t border-white/5 bg-slate-950/50 backdrop-blur-xl">
-        {profile && (
-          <div className="flex items-center gap-3 px-3 py-3 mb-4 rounded-2xl bg-white/5 border border-white/5">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center flex-shrink-0 text-sm font-bold text-white shadow-inner">
-              {(profile.full_name || profile.email)[0].toUpperCase()}
+      <div className="border-t border-slate-100 shrink-0">
+        {profile ? (
+          <button
+            onClick={handleSignOut}
+            title="Sign out"
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-4 hover:bg-slate-50 transition-colors text-left",
+              collapsed && "justify-center px-2"
+            )}
+          >
+            <div className="w-8 h-8 rounded bg-slate-900 text-white flex items-center justify-center text-[10px] font-medium shrink-0">
+              {initials}
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-bold text-slate-100 truncate">{profile.full_name || "Admin"}</p>
-              <p className="text-[11px] text-slate-500 truncate font-medium">{profile.email}</p>
-            </div>
+            {!collapsed && (
+              <>
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {profile.full_name || "Admin"}
+                  </p>
+                  <p className="text-xs text-slate-500 truncate">{profile.email}</p>
+                </div>
+                <LogOut className="w-4 h-4 text-slate-400 shrink-0" />
+              </>
+            )}
+          </button>
+        ) : (
+          <div className="p-4 text-center">
+            <button
+              onClick={handleSignOut}
+              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded transition-colors"
+            >
+              <LogOut className="w-4 h-4 mx-auto" />
+            </button>
           </div>
         )}
-        
-        <button
-          onClick={handleSignOut}
-          className="group flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-200"
-        >
-          <LogOut className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
-          <span>Sign Out</span>
-        </button>
       </div>
     </aside>
   );
