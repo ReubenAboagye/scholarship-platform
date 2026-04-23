@@ -13,7 +13,7 @@ import {
   weekOverWeekDelta,
   formatDelta,
   type AdminOverviewBundle,
-} from "@/lib/admin/analytics";
+} from "@/lib/admin/analytics-shared";
 
 type RecentScholarship = {
   id:                   string;
