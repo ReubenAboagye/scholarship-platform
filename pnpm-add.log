@@ -1,0 +1,15 @@
+Progress: resolved 0, reused 1, downloaded 0, added 0
+ WARN  deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+Progress: resolved 35, reused 35, downloaded 0, added 0
+Progress: resolved 38, reused 38, downloaded 0, added 0
+Progress: resolved 38, reused 39, downloaded 0, added 0
+Progress: resolved 216, reused 182, downloaded 0, added 0
+Progress: resolved 308, reused 256, downloaded 0, added 0
+ WARN  5 deprecated subdependencies found: @humanwhocodes/config-array@0.13.0, @humanwhocodes/object-schema@2.0.3, glob@7.2.3, inflight@1.0.6, rimraf@3.0.2
+Already up to date
+Progress: resolved 560, reused 486, downloaded 0, added 0
+Progress: resolved 560, reused 486, downloaded 0, added 0, done
+ EBUSY  EBUSY: resource busy or locked, rename 'D:\web\scholarship-platform\pnpm-lock.yaml.2638389114' -> 'D:\web\scholarship-platform\pnpm-lock.yaml'
+
+
+
