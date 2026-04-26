@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
 
 // ─────────────────────────────────────────────────────────────
@@ -58,8 +58,11 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 
-  const adminSupabase = createAdminClient();
-  const { data, error } = await adminSupabase
+  // Deliberately use the session-bound client for the write so
+  // profiles RLS remains the data-layer guard. The route-level
+  // admin check is still useful for clearer API behaviour, but
+  // this mutation should also fail closed at the table policy.
+  const { data, error } = await supabase
     .from("profiles")
     .update({ role })
     .eq("id", id)
