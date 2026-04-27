@@ -120,10 +120,24 @@ export default function ApplyButton({
             aria-labelledby="apply-modal-title"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 16 }}
-              animate={{ opacity: 1, scale: 1,    y: 0  }}
-              exit={{    opacity: 0, scale: 0.95, y: 16 }}
-              transition={{ duration: 0.2 }}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              variants={{
+                hidden: { opacity: 0, scale: 0.96, y: 16 },
+                visible: { 
+                  opacity: 1, 
+                  scale: 1, 
+                  y: 0,
+                  transition: { 
+                    duration: 0.4, 
+                    ease: [0.16, 1, 0.3, 1],
+                    staggerChildren: 0.06,
+                    delayChildren: 0.1
+                  }
+                },
+                exit: { opacity: 0, scale: 0.96, y: 16, transition: { duration: 0.2 } }
+              }}
               className="bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] max-w-[480px] w-full relative rounded-sm overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
@@ -139,7 +153,10 @@ export default function ApplyButton({
                   <X className="w-5 h-5" />
                 </button>
 
-                <div className="mb-6 pr-8">
+                <motion.div 
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+                  className="mb-6 pr-8"
+                >
                   <h2 id="apply-modal-title" className="text-2xl text-slate-900 tracking-tight font-semibold" style={SERIF_FONT}>
                     Authentication Required
                   </h2>
@@ -147,21 +164,31 @@ export default function ApplyButton({
                   <p className="text-sm text-slate-600 font-medium leading-relaxed">
                     Access to the official application portal is restricted. Please authenticate your identity to proceed securely with your application.
                   </p>
-                </div>
+                </motion.div>
 
-                <div className="bg-slate-50/80 border border-slate-200/60 p-5 mb-8 rounded-sm shadow-inner">
+                <motion.div 
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+                  className="bg-slate-50/80 border border-slate-200/60 p-5 mb-8 rounded-sm shadow-inner"
+                >
                   <p className="text-sm font-semibold text-slate-800 mb-4">Authentication provides access to:</p>
                   <ul className="space-y-3.5">
-                    {SIGNUP_PITCH.map((line) => (
-                      <li key={line} className="flex items-start gap-3.5 text-sm text-slate-700 font-medium">
+                    {SIGNUP_PITCH.map((line, i) => (
+                      <motion.li 
+                        key={line} 
+                        variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0, transition: { duration: 0.3, delay: i * 0.05 } } }}
+                        className="flex items-start gap-3.5 text-sm text-slate-700 font-medium"
+                      >
                         <div className="mt-1.5 w-1.5 h-1.5 bg-blue-600 rounded-sm shadow-sm flex-shrink-0" />
                         <span className="leading-tight">{line}</span>
-                      </li>
+                      </motion.li>
                     ))}
                   </ul>
-                </div>
+                </motion.div>
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <motion.div 
+                  variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
+                  className="flex flex-col sm:flex-row gap-3"
+                >
                   <a
                     href={`/auth/login?${loginQs}`}
                     className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-medium text-sm transition-all shadow-md hover:shadow-lg rounded-sm"
@@ -176,15 +203,18 @@ export default function ApplyButton({
                     <UserPlus className="w-4 h-4" />
                     Create Account
                   </a>
-                </div>
+                </motion.div>
               </div>
               
-              <div className="px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-50 border-t border-slate-200 flex items-center gap-2.5 text-slate-500">
+              <motion.div 
+                variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, delay: 0.2 } } }}
+                className="px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-50 border-t border-slate-200 flex items-center gap-2.5 text-slate-500"
+              >
                 <Shield className="w-4 h-4 text-slate-400" />
                 <p className="text-[13px] font-medium">
                   Official portal. All data is protected and strictly confidential.
                 </p>
-              </div>
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
