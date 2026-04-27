@@ -1,17 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, Loader2, AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { sanitizeRedirectPath } from "@/lib/auth/redirect";
 
 const SERIF_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
-export default function LoginPage() {
+function LoginContent() {
   const [email, setEmail]       = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState<string | null>(null);
+
+  // Honour ?redirectTo=/some/internal/path. Sanitised against
+  // protocol-relative and external URLs by sanitizeRedirectPath.
+  const searchParams = useSearchParams();
+  const redirectTo   = sanitizeRedirectPath(searchParams.get("redirectTo"));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,14 +27,14 @@ export default function LoginPage() {
     const supabase = createClient();
     const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
     if (authError) { setError(authError.message); setLoading(false); return; }
-    window.location.href = "/dashboard";
+    window.location.href = redirectTo;
   }
 
   async function handleGoogle() {
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/dashboard` },
+      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}` },
     });
   }
 
@@ -104,5 +111,17 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-full max-w-[420px] bg-white rounded-2xl shadow-xl border border-slate-100 p-8 sm:p-10 flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

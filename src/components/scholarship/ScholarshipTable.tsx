@@ -1,16 +1,30 @@
 "use client";
 
-import { ExternalLink, Building2 } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { countryFlagUrl } from "@/lib/utils";
 import DeadlineCountdown from "./DeadlineCountdown";
 import ScholarshipRow from "./ScholarshipRow";
 
 // ─────────────────────────────────────────────────────────────
-// ScholarshipTable — list view for the Browse page.
-// Redesigned: single clean table, sentence-case headers, no
-// uppercase micro-labels, DeadlineCountdown replaces raw date,
-// Details as secondary link and Apply as primary button.
-// Mobile (<lg) falls back to ScholarshipRow stack.
+// ScholarshipTable — list view for the Browse pages.
+//
+// The Actions column is gone:
+//   - The outbound "Apply" button bypassed the auth gate, and
+//     belongs on the detail page anyway (where the user has
+//     read the eligibility before committing to the click).
+//   - "Details" is redundant when the scholarship name in the
+//     first column is already a link.
+//
+// The whole-row-clickable pattern that works on cards doesn't
+// translate cleanly to <tr>: stretched-link tricks fight with
+// table layout, and onClick-on-row breaks middle-click and
+// right-click. Tables across the modern web (Stripe, Linear,
+// GitHub) keep navigation on the title and let the rest of the
+// row be data — same approach here.
+//
+// Mobile (<lg) uses the ScholarshipRow stack which IS fully
+// card-clickable, so the affordance differs but only in a
+// context where it makes sense.
 // ─────────────────────────────────────────────────────────────
 
 interface Props {
@@ -23,7 +37,7 @@ export default function ScholarshipTable({ scholarships, baseUrl = "/scholarship
 
   return (
     <div className="w-full">
-      {/* Mobile-tablet: simplified stack */}
+      {/* Mobile-tablet: card stack */}
       <div className="lg:hidden space-y-3">
         {scholarships.map((s, idx) => (
           <ScholarshipRow key={s.id} scholarship={s} index={idx} baseUrl={baseUrl} />
@@ -39,22 +53,21 @@ export default function ScholarshipTable({ scholarships, baseUrl = "/scholarship
               <th className="px-5 py-3 text-sm font-medium text-slate-600">Country</th>
               <th className="px-5 py-3 text-sm font-medium text-slate-600">Award</th>
               <th className="px-5 py-3 text-sm font-medium text-slate-600">Deadline</th>
-              <th className="px-5 py-3 text-sm font-medium text-slate-600 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {scholarships.map((s) => {
               const href = `${baseUrl}/${s.slug || s.id}`;
-              const isPast = s.application_deadline
-                && new Date(s.application_deadline) < new Date();
 
               return (
-                <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
+                <tr key={s.id} className="hover:bg-slate-50/70 transition-colors">
                   {/* Scholarship name + provider */}
                   <td className="px-5 py-4 align-top">
                     <a
                       href={href}
-                      className="font-medium text-slate-900 hover:text-brand-700 hover:underline underline-offset-4"
+                      className="font-medium text-slate-900 hover:text-brand-700
+                                 hover:underline underline-offset-4
+                                 focus:outline-none focus-visible:underline"
                     >
                       {s.name}
                     </a>
@@ -93,32 +106,6 @@ export default function ScholarshipTable({ scholarships, baseUrl = "/scholarship
                   {/* Deadline */}
                   <td className="px-5 py-4 align-top whitespace-nowrap">
                     <DeadlineCountdown deadline={s.application_deadline} />
-                  </td>
-
-                  {/* Actions */}
-                  <td className="px-5 py-4 align-top text-right whitespace-nowrap">
-                    <div className="inline-flex items-center gap-3">
-                      <a
-                        href={href}
-                        className="text-xs font-medium text-slate-600 hover:text-slate-900
-                                   hover:underline underline-offset-4 transition-colors"
-                      >
-                        Details
-                      </a>
-                      <a
-                        href={isPast ? undefined : s.application_url}
-                        target={isPast ? undefined : "_blank"}
-                        rel={isPast ? undefined : "noopener noreferrer"}
-                        aria-disabled={isPast}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold transition-colors
-                          ${isPast
-                            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                            : "bg-brand-600 text-white hover:bg-brand-700"}`}
-                      >
-                        {isPast ? "Closed" : "Apply"}
-                        {!isPast && <ExternalLink className="w-3 h-3" />}
-                      </a>
-                    </div>
                   </td>
                 </tr>
               );

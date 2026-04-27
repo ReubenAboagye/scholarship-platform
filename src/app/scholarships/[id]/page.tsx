@@ -6,6 +6,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SaveButton from "@/components/scholarship/SaveButton";
 import TrackButton from "@/components/scholarship/TrackButton";
+import ApplyButton from "@/components/scholarship/ApplyButton";
 
 // One distinct Unsplash image per destination — university / city landmark feel
 const COUNTRY_IMAGES: Record<string, string> = {
@@ -162,10 +163,12 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               <p className="text-slate-600 text-[15px] leading-[1.85] mb-5">
                 Applications are submitted directly through the official scholarship portal. Make sure you have all required documents ready — including transcripts, references, and a personal statement — before starting your application.
               </p>
-              <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-lg transition-colors">
-                Go to official application <ExternalLink className="w-3.5 h-3.5" />
-              </a>
+              <ApplyButton
+                scholarshipId={scholarship.id}
+                loggedIn={!!user}
+                variant="hero"
+                label="Go to official application"
+              />
             </section>
 
           </div>
@@ -207,10 +210,12 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
                 </div>
               </div>
             </div>
-            <a href={scholarship.application_url} target="_blank" rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full py-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold transition-colors text-sm rounded-xl shadow-md active:scale-95">
-              Apply Now <ExternalLink className="w-4 h-4" />
-            </a>
+            <ApplyButton
+              scholarshipId={scholarship.id}
+              loggedIn={!!user}
+              variant="card"
+              label="Apply Now"
+            />
             {!user && (
               <a href="/auth/signup"
                 className="flex items-center justify-center w-full py-3 border border-slate-200 hover:border-slate-300 text-slate-600 font-medium transition-colors text-sm rounded-xl">
