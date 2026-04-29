@@ -4,6 +4,12 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2, ChevronLeft, GraduationCap, BookOpen, Globe, Sparkles, AlertTriangle, X } from "lucide-react";
 import CountrySelect from "@/components/ui/CountrySelect";
+import {
+  getStudyFieldName,
+  POPULAR_STUDY_FIELD_SLUGS,
+  resolveStudyFieldSlug,
+  STUDY_FIELD_OPTIONS,
+} from "@/lib/constants/study-fields";
 
 // ── Data ────────────────────────────────────────────────────
 const DEGREE_LEVELS = [
@@ -13,17 +19,11 @@ const DEGREE_LEVELS = [
   { value: "Any",           label: "Not sure yet",    desc: "Show me all opportunities" },
 ];
 
-const POPULAR_FIELDS = [
-  "Business & Management", "Computer Science", "Engineering",
-  "Medicine", "Law", "Economics", "Education", "Natural Sciences",
-  "Social Sciences", "Public Policy", "Arts & Humanities", "Public Health",
-  "Mathematics", "Agriculture", "Architecture", "Psychology",
-];
+const POPULAR_FIELDS = POPULAR_STUDY_FIELD_SLUGS
+  .map((slug) => getStudyFieldName(slug))
+  .filter((name): name is string => Boolean(name));
 
-const ALL_FIELDS = [
-  ...POPULAR_FIELDS,
-  "Environmental Studies", "Political Science", "Other",
-].sort();
+const ALL_FIELDS = STUDY_FIELD_OPTIONS.map((field) => field.name).sort();
 
 // ── Step progress bar ────────────────────────────────────────
 function ProgressBar({ step, total }: { step: number; total: number }) {
@@ -122,6 +122,7 @@ export default function OnboardingWizard() {
     await supabase.from("profiles").update({
       degree_level:       degreeLevel,
       field_of_study:     fieldsOfStudy[0] ?? null,
+      primary_field_slug: resolveStudyFieldSlug(fieldsOfStudy[0] ?? null),
       country_of_origin:  countryOfOrigin.trim(),
       gpa:                gpa ? parseFloat(gpa) : null,
       bio:                bio.trim() || null,
@@ -141,6 +142,7 @@ export default function OnboardingWizard() {
     await supabase.from("profiles").update({
       degree_level:      degreeLevel      || null,
       field_of_study:    fieldsOfStudy[0] || null,
+      primary_field_slug: resolveStudyFieldSlug(fieldsOfStudy[0] ?? null),
       country_of_origin: countryOfOrigin.trim() || null,
       gpa:               gpa ? parseFloat(gpa) : null,
       bio:               bio.trim() || null,

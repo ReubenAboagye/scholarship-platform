@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { Loader2, Save, ArrowLeft, Info } from "lucide-react";
 import CountrySelect from "@/components/ui/CountrySelect";
+import { STUDY_FIELD_OPTIONS } from "@/lib/constants/study-fields";
 
 const FUNDING     = ["Full", "Partial", "Tuition Only", "Living Allowance"];
 const DEGREES     = ["Undergraduate", "Masters", "PhD", "Any"];
+const FIELD_SUGGESTIONS = STUDY_FIELD_OPTIONS.map((field) => field.name);
 
 interface Props {
   initial?: any;
@@ -22,6 +24,10 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
       {subtitle && <p className="text-[11px] font-normal text-slate-500 mt-0.5">{subtitle}</p>}
     </div>
   );
+}
+
+function parseFieldList(value: string) {
+  return value.split(",").map((item) => item.trim()).filter(Boolean);
 }
 
 export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
@@ -58,6 +64,17 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
     }));
   }
 
+  function toggleField(fieldName: string) {
+    setForm((prev) => {
+      const current = parseFieldList(prev.fields_of_study);
+      const next = current.includes(fieldName)
+        ? current.filter((item) => item !== fieldName)
+        : [...current, fieldName];
+
+      return { ...prev, fields_of_study: next.join(", ") };
+    });
+  }
+
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.provider || !form.description || !form.application_url) {
@@ -75,7 +92,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
       application_url:       form.application_url,
       application_deadline:  form.application_deadline || null,
       degree_levels:         form.degree_levels,
-      fields_of_study:       form.fields_of_study.split(",").map((s) => s.trim()).filter(Boolean),
+      fields_of_study:       parseFieldList(form.fields_of_study),
       eligibility_criteria:  form.eligibility_criteria.split("\n").map((s) => s.trim()).filter(Boolean),
       // Structured eligibility
       citizenship_required:  form.citizenship_required.split(",").map((s) => s.trim()).filter(Boolean),
@@ -187,8 +204,30 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
               </div>
             </div>
             <div>
-              <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Fields of Study <span className="normal-case font-normal text-slate-400">(comma-separated)</span></label>
+              <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Fields of Study <span className="normal-case font-normal text-slate-400">(comma-separated canonical names)</span></label>
               <input className={inp} value={form.fields_of_study} onChange={(e) => setForm({ ...form, fields_of_study: e.target.value })} placeholder="e.g. Engineering, Medicine, Any" />
+              <div className="flex flex-wrap gap-2 mt-2">
+                {FIELD_SUGGESTIONS.slice(0, 10).map((fieldName) => {
+                  const selected = parseFieldList(form.fields_of_study).includes(fieldName);
+                  return (
+                    <button
+                      key={fieldName}
+                      type="button"
+                      onClick={() => toggleField(fieldName)}
+                      className={`px-2.5 py-1 rounded-full text-xs border transition-colors ${
+                        selected
+                          ? "bg-blue-600 text-white border-blue-600"
+                          : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
+                      }`}
+                    >
+                      {fieldName}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-[11px] text-slate-400 mt-2">
+                Recognized canonical fields improve taxonomy-based match quality. Unrecognized labels are kept, but they will not score as accurately.
+              </p>
             </div>
             <div>
               <label className="block text-[10px] font-medium text-slate-500 mb-1.5 uppercase tracking-widest">Eligibility Criteria <span className="normal-case font-normal text-slate-400">(one per line)</span></label>

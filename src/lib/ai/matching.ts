@@ -1,37 +1,13 @@
 import OpenAI from 'openai';
 import { createHash } from 'node:crypto';
 import { createAdminClient } from '@/lib/supabase/server';
+import {
+  computeStudyFieldAlignment,
+  getStudyFieldName,
+  resolveStudyFieldSlug,
+  resolveStudyFieldSlugs,
+} from '@/lib/constants/study-fields';
 import type { MatchResult, UserProfile, Scholarship } from '@/types';
-
-// ─────────────────────────────────────────────────────────────
-// ScholarMatch AI matching (v2 — right-sized for ~20 listings)
-//
-// Pipeline:
-//   1. Build profile text → 768-dim embedding via OpenRouter
-//   2. RPC: match_scholarships_gated
-//        - Hard SQL gates (active, future deadline, degree,
-//          country of study, citizenship, min GPA)
-//        - Vector rank by HNSW inner product
-//   3. Filter out dismissed scholarships
-//   4. Three-factor score: similarity + recency + field match
-//   5. Attach grounded reasons and return top-N
-//
-// Why not hybrid (RRF) or a reranker at this scale:
-//   With ~20 scholarships the hard gate usually leaves 3–10
-//   candidates. BM25 on tiny documents is noise, reranking is
-//   latency with no lift. We re-introduce hybrid + rerank once
-//   the catalogue crosses ~200 listings.
-//
-// Caching (migration 018):
-//   - Profile embeddings cached by SHA-256(profile_text) in
-//     public.embedding_cache. Cuts OpenRouter embedding calls
-//     to effectively zero for repeat users whose profile hasn't
-//     changed.
-//   - Explanations cached for 24h keyed on
-//     (profile_hash, sorted top-scholarship-ids hash) in
-//     public.match_explanation_cache. Typical user gets the
-//     same top-N across consecutive runs so this hits often.
-// ─────────────────────────────────────────────────────────────
 
 type RichProfile = Partial<UserProfile & {
   citizenship?: string | null;
@@ -39,13 +15,12 @@ type RichProfile = Partial<UserProfile & {
   interests?: string[] | null;
   extracurriculars?: string[] | null;
   financial_need?: boolean | null;
+  primary_field_slug?: string | null;
 }>;
 
-const EMBEDDING_MODEL    = 'openai/text-embedding-3-small';
-const EMBEDDING_DIMS     = 768;
-const EXPLANATION_TTL_MS = 24 * 60 * 60 * 1000; // 24h
-
-// ── OpenRouter client ────────────────────────────────────────
+const EMBEDDING_MODEL = 'openai/text-embedding-3-small';
+const EMBEDDING_DIMS = 768;
+const EXPLANATION_TTL_MS = 24 * 60 * 60 * 1000;
 
 function getOpenRouterClient() {
   return new OpenAI({
@@ -59,35 +34,18 @@ function getOpenRouterClient() {
   });
 }
 
-// ── Hashing helpers ──────────────────────────────────────────
-// SHA-256 keeps cache keys fixed-size (64 hex chars) and avoids
-// collisions on long profile strings. We hash the exact text
-// sent to OpenRouter, not the profile object, so any change to
-// buildProfileText() automatically invalidates the cache.
-
 function sha256Hex(input: string): string {
   return createHash('sha256').update(input, 'utf8').digest('hex');
 }
 
 function hashScholarshipIds(ids: string[]): string {
-  // Sort so that the same set in any order produces the same key.
   return sha256Hex([...ids].sort().join('|'));
 }
 
-// ── Embeddings (cache-aware) ─────────────────────────────────
-// text-embedding-3-small at 768d (Matryoshka-truncated from 1536)
-// is the sweet spot: strong MTEB retrieval, cheap, fast, and
-// HNSW-friendly at half the RAM of 1536d.
-//
-// Cache lookup is best-effort — any DB error falls through to a
-// live OpenRouter call, so the matching path never breaks just
-// because the cache is unavailable.
-
 export async function generateEmbedding(text: string): Promise<number[]> {
-  const supabase    = createAdminClient();
+  const supabase = createAdminClient();
   const contentHash = sha256Hex(`${EMBEDDING_MODEL}:${EMBEDDING_DIMS}:${text}`);
 
-  // Cache hit?
   try {
     const { data: cached } = await supabase
       .from('embedding_cache')
@@ -96,19 +54,17 @@ export async function generateEmbedding(text: string): Promise<number[]> {
       .maybeSingle();
 
     if (cached?.embedding) {
-      // Bump usage async; don't block on it.
       void supabase
         .from('embedding_cache')
         .update({
-          hit_count:    (cached as any).hit_count != null
-                          ? (cached as any).hit_count + 1
-                          : undefined,
+          hit_count: (cached as any).hit_count != null
+            ? (cached as any).hit_count + 1
+            : undefined,
           last_used_at: new Date().toISOString(),
         })
         .eq('content_hash', contentHash)
         .then(() => undefined, () => undefined);
 
-      // pgvector returns vector as a string like "[0.1,0.2,...]" over PostgREST.
       const vec = parsePgVector(cached.embedding as unknown as string | number[]);
       if (vec.length === EMBEDDING_DIMS) return vec;
     }
@@ -116,27 +72,25 @@ export async function generateEmbedding(text: string): Promise<number[]> {
     console.warn('embedding_cache lookup failed, falling back to live call', err);
   }
 
-  // Miss → live OpenRouter call.
   const client = getOpenRouterClient();
   const response = await client.embeddings.create({
     model: EMBEDDING_MODEL,
     input: text,
-    // @ts-ignore — OpenRouter supports `dimensions` for Matryoshka truncation
+    // @ts-ignore OpenRouter supports dimensions for Matryoshka truncation.
     dimensions: EMBEDDING_DIMS,
   });
+
   const raw = response.data[0].embedding;
   const vec = raw.length === EMBEDDING_DIMS ? raw : raw.slice(0, EMBEDDING_DIMS);
 
-  // Fire-and-forget cache write. Upsert in case of a race between two
-  // concurrent requests on the same profile.
   void supabase
     .from('embedding_cache')
     .upsert({
       content_hash: contentHash,
-      model:        EMBEDDING_MODEL,
-      dimensions:   EMBEDDING_DIMS,
-      embedding:    vec as unknown as string, // supabase-js accepts number[] for vector cols
-      hit_count:    0,
+      model: EMBEDDING_MODEL,
+      dimensions: EMBEDDING_DIMS,
+      embedding: vec as unknown as string,
+      hit_count: 0,
       last_used_at: new Date().toISOString(),
     }, { onConflict: 'content_hash' })
     .then(() => undefined, err => console.warn('embedding_cache upsert failed', err));
@@ -144,118 +98,119 @@ export async function generateEmbedding(text: string): Promise<number[]> {
   return vec;
 }
 
-// pgvector over PostgREST comes back as a JSON string "[v1,v2,...]".
-// Handle both the raw-array shape (Node pg) and the string shape.
 function parsePgVector(v: string | number[]): number[] {
   if (Array.isArray(v)) return v;
   if (typeof v !== 'string') return [];
+
   const trimmed = v.trim().replace(/^\[|\]$/g, '');
   if (!trimmed) return [];
   return trimmed.split(',').map(Number);
 }
 
-// ── Profile text builder ─────────────────────────────────────
-// Keep this deterministic: embedding stability depends on it.
-// The order matters less than the fact that we always serialise
-// the same fields in the same way.
-
 export function buildProfileText(profile: RichProfile): string {
   const parts = [
-    profile.degree_level      && `Degree level: ${profile.degree_level}`,
-    profile.field_of_study    && `Field of study: ${profile.field_of_study}`,
+    profile.degree_level && `Degree level: ${profile.degree_level}`,
+    profile.field_of_study && `Field of study: ${profile.field_of_study}`,
     profile.country_of_origin && `Country of origin: ${profile.country_of_origin}`,
-    profile.citizenship       && `Citizenship: ${profile.citizenship}`,
-    profile.gpa               && `GPA: ${profile.gpa}`,
-    profile.career_goals      && `Career goals: ${profile.career_goals}`,
-    profile.interests?.length && `Interests: ${profile.interests!.join(', ')}`,
+    profile.citizenship && `Citizenship: ${profile.citizenship}`,
+    profile.gpa && `GPA: ${profile.gpa}`,
+    profile.career_goals && `Career goals: ${profile.career_goals}`,
+    profile.interests?.length && `Interests: ${profile.interests.join(', ')}`,
     profile.extracurriculars?.length
-      && `Extracurriculars: ${profile.extracurriculars!.join(', ')}`,
+      && `Extracurriculars: ${profile.extracurriculars.join(', ')}`,
     profile.financial_need != null
       && `Financial need: ${profile.financial_need ? 'yes' : 'no'}`,
-    profile.bio               && `Background: ${profile.bio}`,
+    profile.bio && `Background: ${profile.bio}`,
   ].filter(Boolean);
-  return parts.join('. ')
-    || 'General student seeking international scholarships';
+
+  return parts.join('. ') || 'General student seeking international scholarships';
 }
 
-// ── Helpers ──────────────────────────────────────────────────
+function getProfileFieldSlug(profile: RichProfile): string | null {
+  return profile.primary_field_slug ?? resolveStudyFieldSlug(profile.field_of_study);
+}
 
-function fieldMatches(scholarshipFields: string[] | null | undefined,
-                      userField: string | null | undefined): boolean {
-  if (!userField || !scholarshipFields?.length) return false;
-  const u = userField.toLowerCase();
-  return scholarshipFields.some(f => {
-    const s = f.toLowerCase();
-    // Substring either way handles "Computer Science" vs "Computing",
-    // "Engineering" vs "Mechanical Engineering", etc.
-    return s.includes(u) || u.includes(s) || s === 'any';
-  });
+function getScholarshipFieldSlugs(
+  scholarship: Pick<Scholarship, 'fields_of_study'> & { study_field_slugs?: string[] | null }
+): string[] {
+  if (Array.isArray(scholarship.study_field_slugs) && scholarship.study_field_slugs.length > 0) {
+    return scholarship.study_field_slugs;
+  }
+
+  return resolveStudyFieldSlugs(scholarship.fields_of_study ?? []);
+}
+
+function fieldAlignmentScore(
+  scholarship: Pick<Scholarship, 'fields_of_study'> & { study_field_slugs?: string[] | null },
+  profile: RichProfile,
+): number {
+  const scholarshipFieldSlugs = getScholarshipFieldSlugs(scholarship);
+  if (!scholarshipFieldSlugs.length) return 0.5;
+
+  const profileFieldSlug = getProfileFieldSlug(profile);
+  if (!profileFieldSlug) {
+    return profile.field_of_study ? 0.3 : 0.6;
+  }
+
+  return computeStudyFieldAlignment(profileFieldSlug, scholarshipFieldSlugs);
 }
 
 function recencyScore(deadline: string | null): number {
-  // Peak value for deadlines 2–6 weeks out. Penalise both
-  // "deadline already passed" (handled by SQL gate but keep
-  // defensive) and "too close to realistically apply well".
   if (!deadline) return 0.5;
+
   const daysLeft = (new Date(deadline).getTime() - Date.now()) / 86_400_000;
-  if (daysLeft < 0)  return 0.0;
-  if (daysLeft < 3)  return 0.1;          // too rushed
-  if (daysLeft < 14) return 0.9;          // sweet spot high
-  if (daysLeft < 45) return 1.0;          // sweet spot
+  if (daysLeft < 0) return 0.0;
+  if (daysLeft < 3) return 0.1;
+  if (daysLeft < 14) return 0.9;
+  if (daysLeft < 45) return 1.0;
   return Math.max(0.3, Math.exp(-daysLeft / 120));
 }
 
-// ── Scoring ──────────────────────────────────────────────────
-// Three factors only — kept deliberately simple because:
-//   (a) we have no interaction data yet to tune weights against
-//   (b) at 20-listing scale, scoring mostly just tiebreaks
-// Weights are priors; revisit once match_events has signal.
-
 function computeFinalScore(
-  similarity: number,     // raw inner-product similarity from RPC
-  scholarship: any,
+  similarity: number,
+  scholarship: Scholarship & { study_field_slugs?: string[] | null },
   profile: RichProfile,
 ): number {
-  // Similarity from inner product on normalised vectors is roughly
-  // [-1, 1]; clamp and rescale to [0, 1] to mix with other factors.
   const semScore = Math.max(0, Math.min(1, (similarity + 1) / 2));
-
   const recency = recencyScore(scholarship.application_deadline);
+  const fieldBoost = fieldAlignmentScore(scholarship, profile);
 
-  const fieldBoost = fieldMatches(scholarship.fields_of_study,
-                                  profile.field_of_study)
-    ? 1.0
-    : profile.field_of_study ? 0.3 : 0.6;  // unknown field → neutral
-
-  //   0.60 semantic + 0.15 recency + 0.25 field match
-  // Field match gets real weight because it's the single signal
-  // most likely to be wrong from a vector alone (vectors drift
-  // topical: "engineering" ≈ "agriculture" more than it should).
   return 0.60 * semScore
        + 0.15 * recency
        + 0.25 * fieldBoost;
 }
 
-// ── Grounded match reasons ───────────────────────────────────
-// Only emit reasons backed by actual profile + scholarship data.
-// Never fabricate — if there's nothing honest to say, say less.
-
-function buildMatchReasons(scholarship: any, profile: RichProfile): string[] {
+function buildMatchReasons(
+  scholarship: Scholarship & { study_field_slugs?: string[] | null },
+  profile: RichProfile,
+): string[] {
   const reasons: string[] = [];
+  const fieldScore = fieldAlignmentScore(scholarship, profile);
+  const scholarshipFieldSlugs = getScholarshipFieldSlugs(scholarship);
+  const profileFieldSlug = getProfileFieldSlug(profile);
+  const profileFieldName = getStudyFieldName(profileFieldSlug) ?? profile.field_of_study;
 
-  if (profile.degree_level
-      && (scholarship.degree_levels?.includes(profile.degree_level)
-          || scholarship.degree_levels?.includes('Any'))) {
+  if (
+    profile.degree_level
+    && (
+      scholarship.degree_levels?.includes(profile.degree_level)
+      || scholarship.degree_levels?.includes('Any')
+    )
+  ) {
     reasons.push(`Open to ${profile.degree_level} students`);
   }
 
-  if (fieldMatches(scholarship.fields_of_study, profile.field_of_study)) {
-    reasons.push(`Relevant to ${profile.field_of_study}`);
+  if (fieldScore >= 1.0 && profileFieldName) {
+    reasons.push(`Direct match for ${profileFieldName}`);
+  } else if (fieldScore >= 0.75 && profileFieldName) {
+    reasons.push(`Closely related to ${profileFieldName}`);
+  } else if (fieldScore >= 0.45 && scholarshipFieldSlugs.length > 0) {
+    reasons.push('Broadly aligned with your academic area');
   }
 
   if (scholarship.funding_type === 'Full') reasons.push('Fully funded');
-  if (scholarship.open_to_international)   reasons.push('Open to international students');
-  if (scholarship.renewable)               reasons.push('Renewable award');
+  if (scholarship.open_to_international) reasons.push('Open to international students');
+  if (scholarship.renewable) reasons.push('Renewable award');
 
   if (scholarship.effort_minutes && scholarship.effort_minutes <= 90) {
     reasons.push(`Quick to apply (~${scholarship.effort_minutes} min)`);
@@ -264,20 +219,15 @@ function buildMatchReasons(scholarship: any, profile: RichProfile): string[] {
   return reasons.slice(0, 3);
 }
 
-// ── Main matching function ───────────────────────────────────
-// Preserves the existing signature so api/matching/route.ts and
-// the UI don't need to change.
-
 export async function matchScholarships(
   profile: RichProfile,
   limit = 10,
   userId?: string,
 ): Promise<MatchResult[]> {
-  const supabase    = createAdminClient();
+  const supabase = createAdminClient();
   const profileText = buildProfileText(profile);
-  const embedding   = await generateEmbedding(profileText);
+  const embedding = await generateEmbedding(profileText);
 
-  // Fetch dismissed IDs so we can exclude them after ranking.
   let dismissedIds: string[] = [];
   if (userId) {
     const { data } = await supabase
@@ -287,17 +237,15 @@ export async function matchScholarships(
     dismissedIds = (data ?? []).map((d: any) => d.scholarship_id);
   }
 
-  // Oversample 3x so the post-dismissed pool still hits `limit`.
-  // At 20 scholarships this caps at 20 anyway.
   const fetchCount = Math.min(limit * 3, 30);
 
   const { data, error } = await supabase.rpc('match_scholarships_gated', {
-    query_embedding:  embedding,
-    user_degree:      profile.degree_level      ?? null,
-    user_country:     null,   // country filter is a UI concern; keep gate open
-    user_citizenship: profile.citizenship       ?? null,
-    user_gpa:         profile.gpa               ?? null,
-    match_count:      fetchCount,
+    query_embedding: embedding,
+    user_degree: profile.degree_level ?? null,
+    user_country: null,
+    user_citizenship: profile.citizenship ?? null,
+    user_gpa: profile.gpa ?? null,
+    match_count: fetchCount,
   });
 
   if (error) {
@@ -308,8 +256,8 @@ export async function matchScholarships(
   const rows = (data as any[]) ?? [];
 
   const scored = rows
-    .filter(item => !dismissedIds.includes(item.id))
-    .map(item => ({
+    .filter((item) => !dismissedIds.includes(item.id))
+    .map((item) => ({
       item,
       finalScore: computeFinalScore(item.similarity ?? 0, item, profile),
     }))
@@ -317,36 +265,25 @@ export async function matchScholarships(
     .slice(0, limit);
 
   return scored.map(({ item, finalScore }) => ({
-    scholarship:   item as Scholarship,
-    // Cap at 99 so we never show "100% match" — no matching system
-    // is that certain, and over-confidence erodes trust fast.
-    match_score:   Math.min(99, Math.round(finalScore * 100)),
+    scholarship: item as Scholarship,
+    match_score: Math.min(99, Math.round(finalScore * 100)),
     match_reasons: buildMatchReasons(item, profile),
   }));
 }
-
-// ── AI explanation (grounded, 2 sentences, cached 24h) ───────
-// Cache is keyed on (profile text hash, sorted top-scholarship
-// IDs hash). A user running matching twice in a row with the
-// same profile and the same top-N will hit this cache — which
-// is the common case, because the underlying catalogue changes
-// slowly. Profile edits invalidate naturally since the hash
-// changes. Any cache failure falls through to a live LLM call.
 
 export async function generateMatchExplanation(
   scholarships: Scholarship[],
   profile: RichProfile,
   opts?: { userId?: string },
 ): Promise<string> {
-  const profileText      = buildProfileText(profile);
-  const model            = process.env.OPENROUTER_MODEL!;
-  const profileHash      = sha256Hex(`${model}:${profileText}`);
-  const topIds           = scholarships.slice(0, 5).map(s => s.id);
+  const profileText = buildProfileText(profile);
+  const model = process.env.OPENROUTER_MODEL!;
+  const profileHash = sha256Hex(`${model}:${profileText}`);
+  const topIds = scholarships.slice(0, 5).map((s) => s.id);
   const scholarshipsHash = hashScholarshipIds(topIds);
 
   const supabase = createAdminClient();
 
-  // Cache hit?
   try {
     const { data: cached } = await supabase
       .from('match_explanation_cache')
@@ -364,10 +301,9 @@ export async function generateMatchExplanation(
     console.warn('match_explanation_cache lookup failed, falling back to live call', err);
   }
 
-  // Miss → live OpenRouter call.
   const list = scholarships
     .slice(0, 5)
-    .map(s => `- ${s.name} (${s.country}, ${s.funding_type} funding)`)
+    .map((s) => `- ${s.name} (${s.country}, ${s.funding_type} funding)`)
     .join('\n');
 
   const client = getOpenRouterClient();
@@ -376,7 +312,7 @@ export async function generateMatchExplanation(
     messages: [{
       role: 'user',
       content:
-`You are a scholarship advisor. Be specific and concise — 2 sentences maximum.
+`You are a scholarship advisor. Be specific and concise - 2 sentences maximum.
 Do not mention any scholarships that are not in the list.
 
 Student profile: ${profileText}
@@ -387,26 +323,25 @@ ${list}
 Explain in 2 sentences why these scholarships match this student.
 Reference their field of study and degree level specifically.`,
     }],
-    max_tokens:  150,
+    max_tokens: 150,
     temperature: 0.4,
   });
 
   const explanation = response.choices[0]?.message?.content?.trim() ?? '';
 
-  // Fire-and-forget cache write. Only persist non-empty explanations.
   if (explanation) {
     const expiresAt = new Date(Date.now() + EXPLANATION_TTL_MS).toISOString();
     void supabase
       .from('match_explanation_cache')
       .upsert({
-        profile_hash:      profileHash,
+        profile_hash: profileHash,
         scholarships_hash: scholarshipsHash,
-        user_id:           opts?.userId ?? null,
+        user_id: opts?.userId ?? null,
         explanation,
         model,
-        expires_at:        expiresAt,
+        expires_at: expiresAt,
       }, { onConflict: 'profile_hash,scholarships_hash' })
-      .then(() => undefined, err => console.warn('match_explanation_cache upsert failed', err));
+      .then(() => undefined, (err) => console.warn('match_explanation_cache upsert failed', err));
   }
 
   return explanation;

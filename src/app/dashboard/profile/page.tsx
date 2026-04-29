@@ -5,14 +5,13 @@ import { createClient } from "@/lib/supabase/client";
 import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X, Bell } from "lucide-react";
 import { getTopNudge } from "@/lib/utils/profile-completeness";
 import CountrySelect from "@/components/ui/CountrySelect";
+import {
+  getStudyFieldName,
+  resolveStudyFieldSlug,
+  STUDY_FIELD_OPTIONS,
+} from "@/lib/constants/study-fields";
 
 const DEGREE_LEVELS = ["Undergraduate", "Masters", "PhD", "Any"];
-const FIELDS = [
-  "Architecture","Agriculture","Arts & Humanities","Business & Management",
-  "Computer Science","Economics","Education","Engineering","Environmental Studies",
-  "Law","Mathematics","Medicine","Political Science","Psychology",
-  "Public Health","Public Policy","Social Sciences","Natural Sciences","Other",
-];
 const INTEREST_OPTIONS = [
   "Research","Community service","Entrepreneurship","Leadership","Sports",
   "Arts","Technology","Environment","Healthcare","International development",
@@ -149,7 +148,9 @@ export default function ProfilePage() {
         setForm({
           full_name:         data.full_name         ?? "",
           country_of_origin: data.country_of_origin ?? "",
-          field_of_study:    data.field_of_study    ?? "",
+          field_of_study:    data.field_of_study
+                           ?? getStudyFieldName((data as any).primary_field_slug)
+                           ?? "",
           degree_level:      data.degree_level      ?? "",
           gpa:               data.gpa?.toString()   ?? "",
           bio:               data.bio               ?? "",
@@ -184,6 +185,7 @@ export default function ProfilePage() {
       full_name:         form.full_name         || null,
       country_of_origin: form.country_of_origin || null,
       field_of_study:    form.field_of_study    || null,
+      primary_field_slug: resolveStudyFieldSlug(form.field_of_study),
       degree_level:      form.degree_level      || null,
       gpa:               form.gpa               ? parseFloat(form.gpa) : null,
       bio:               form.bio               || null,
@@ -351,7 +353,9 @@ export default function ProfilePage() {
                 <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Field of Study</label>
                 <select className={inp + " cursor-pointer"} value={form.field_of_study} onChange={(e) => update("field_of_study", e.target.value)}>
                   <option value="">Select your field…</option>
-                  {FIELDS.map((f) => <option key={f} value={f}>{f}</option>)}
+                  {STUDY_FIELD_OPTIONS.map((field) => (
+                    <option key={field.slug} value={field.name}>{field.name}</option>
+                  ))}
                 </select>
               </div>
               <div>

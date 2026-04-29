@@ -24,6 +24,7 @@ export interface Scholarship {
   country: Country;
   degree_levels: DegreeLevel[];
   fields_of_study: string[];
+  study_field_slugs?: string[];
   funding_type: FundingType;
   funding_amount: string;
   description: string;
@@ -49,6 +50,7 @@ export interface UserProfile {
   full_name: string | null;
   country_of_origin: string | null;
   field_of_study: string | null;
+  primary_field_slug?: string | null;
   degree_level: DegreeLevel | null;
   gpa: number | null;
   bio: string | null;

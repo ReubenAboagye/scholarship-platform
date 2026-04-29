@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
+import { resolveStudyFieldSlugs } from "@/lib/constants/study-fields";
 import { scholarshipUpdateSchema } from "@/lib/validation/scholarship";
 
 type RouteContext = { params: Promise<{ id: string }> };
@@ -30,9 +31,16 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 
+  const payload = {
+    ...parsed.data,
+    ...(parsed.data.fields_of_study
+      ? { study_field_slugs: resolveStudyFieldSlugs(parsed.data.fields_of_study) }
+      : {}),
+  };
+
   const { data, error } = await supabase
     .from("scholarships")
-    .update(parsed.data)
+    .update(payload)
     .eq("id", id)
     .select()
     .single();

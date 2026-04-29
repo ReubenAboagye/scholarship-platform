@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
+import { resolveStudyFieldSlugs } from "@/lib/constants/study-fields";
 import { scholarshipCreateSchema } from "@/lib/validation/scholarship";
 
 export async function GET(request: NextRequest) {
@@ -50,9 +51,14 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const payload = {
+    ...parsed.data,
+    study_field_slugs: resolveStudyFieldSlugs(parsed.data.fields_of_study),
+  };
+
   const { data, error } = await supabase
     .from("scholarships")
-    .insert(parsed.data)
+    .insert(payload)
     .select()
     .single();
 
