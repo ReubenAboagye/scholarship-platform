@@ -72,6 +72,10 @@ export async function signUpAction(formData: FormData) {
   const fullName = String(formData.get("fullName") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+
+  if (fullName.length > 100) return { error: "Full name is too long." };
+  if (email.length > 254) return { error: "Email is too long." };
+  if (password.length > 128) return { error: "Password is too long." };
   const redirectTo = sanitizeRedirectPath(String(formData.get("redirectTo") ?? "/dashboard"));
 
   if (!fullName || !email || !password) {
@@ -95,7 +99,10 @@ export async function signUpAction(formData: FormData) {
   });
 
   if (error) {
-    return { error: error.message };
+    if (error.message.toLowerCase().includes("already registered") || error.message.toLowerCase().includes("already exists")) {
+      return { error: "If this email is not registered, a confirmation link has been sent." };
+    }
+    return { error: "Unable to create account. Please try again." };
   }
 
   return { success: true };
