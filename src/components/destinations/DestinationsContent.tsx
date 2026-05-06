@@ -28,28 +28,33 @@ interface DestinationsContentProps {
 export default function DestinationsContent({ countries }: DestinationsContentProps) {
   return (
     <>
-      {/* Hero Section - Using Scholarship Page Hero Image */}
-      <section className="relative overflow-hidden" style={{ minHeight: "380px" }}>
+      {/* Hero Section */}
+      <section className="relative overflow-hidden" style={{ minHeight: "420px" }}>
         <img
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop"
           alt="University Campus"
           className="absolute inset-0 w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-t from-brand-950 via-brand-900/80 to-brand-900/60" />
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center">
           <motion.div 
             initial="hidden"
             animate="visible"
             variants={stagger}
           >
-            <motion.p variants={fadeInUp} className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90 mb-3">
-              Global Study Destinations
-            </motion.p>
-            <motion.h1 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-tight tracking-tight mb-6">
-              Explore Your <span className="text-brand-400">Future</span> Destinations
+            <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 bg-brand-600/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-8">
+              <Globe className="w-4 h-4 text-amber-400" />
+              <span className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">
+                Study Abroad Destinations
+              </span>
+            </motion.div>
+            <motion.h1 variants={fadeInUp} className="text-[40px] sm:text-[46px] lg:text-[56px] text-white mb-6 leading-tight">
+              Explore Your
+              <br className="hidden sm:block" />
+              <span className="text-amber-400"> Future</span> Destinations
             </motion.h1>
-            <motion.p variants={fadeInUp} className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
+            <motion.p variants={fadeInUp} className="text-lg lg:text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed">
               We focus on 4 major destinations where international students find the greatest success. 
               Each offers unique academic cultures and world-class funding opportunities.
             </motion.p>
@@ -58,29 +63,29 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Destinations Grid */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-16 lg:py-24 bg-paper">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {countries.map((c, i) => (
               <motion.a 
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
-                className="group relative flex flex-col items-center justify-center bg-white rounded-none border border-slate-200 shadow-sm aspect-square p-8 hover:shadow-xl hover:border-brand-200 transition-all duration-300"
+                className="group relative flex flex-col items-center justify-center bg-white rounded-xl border border-slate-200 shadow-sm p-6 hover:shadow-xl hover:border-brand-200 transition-all duration-300"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
                 whileHover={{ y: -8 }}
               >
-                <div className="w-full aspect-[3/2] border border-slate-100 overflow-hidden shadow-sm mb-6 transition-transform duration-500 group-hover:scale-105">
+                <div className="w-full aspect-[4/3] border border-slate-100 overflow-hidden shadow-sm mb-6 transition-transform duration-500 group-hover:scale-105">
                   <img src={c.image_url} alt={c.name} className="w-full h-full object-cover" />
                 </div>
                 
-                <h2 className="text-xl font-black text-slate-900 mb-2 group-hover:text-brand-600 transition-colors text-center tracking-tight">
+                <h2 className="text-xl font-semibold text-slate-900 mb-2 group-hover:text-brand-600 transition-colors text-center">
                   {c.name}
                 </h2>
                 
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-brand-600 uppercase tracking-[0.1em] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-brand-600 uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                   Explore <ArrowRight className="w-3 h-3" />
                 </div>
 
@@ -93,7 +98,7 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Focus Section - Value Driven */}
-      <section className="py-20 bg-white border-y border-slate-200">
+      <section className="py-20 bg-white border-y border-slate-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
             <div>
@@ -137,26 +142,31 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 bg-slate-900 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-600 rounded-full blur-[100px]" />
-        </div>
+      <section className="py-24 bg-paper border-t border-slate-200/70 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
         <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl lg:text-5xl font-black text-white mb-6">Ready to find your match?</h2>
-          <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
-            Take the first step toward your international education. Create a free profile and get personalized matches.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/auth/signup" 
-              className="px-8 py-4 bg-brand-600 text-white font-black rounded-2xl hover:bg-brand-700 transition-all shadow-brand text-base"
-            >
-              Get Started for Free
-            </a>
-            <a href="/scholarships" className="px-8 py-4 bg-white/10 text-white font-bold rounded-2xl border border-white/20 hover:bg-white/20 transition-all text-base">
-              Browse Scholarships
-            </a>
-          </div>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInUp}
+          >
+            <h2 className="text-4xl lg:text-5xl font-black text-slate-900 mb-6">Ready to find your match?</h2>
+            <p className="text-slate-600 text-lg mb-10 max-w-xl mx-auto">
+              Take the first step toward your international education. Create a free profile and get personalized matches.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <a 
+                href="/auth/signup" 
+                className="px-8 py-4 bg-brand-600 text-white font-black rounded-2xl hover:bg-brand-700 transition-all shadow-lg text-base"
+              >
+                Get Started for Free
+              </a>
+              <a href="/scholarships" className="px-8 py-4 bg-white text-brand-600 font-bold rounded-2xl border-2 border-brand-600 hover:bg-brand-50 transition-all text-base">
+                Browse Scholarships
+              </a>
+            </div>
+          </motion.div>
         </div>
       </section>
     </>
