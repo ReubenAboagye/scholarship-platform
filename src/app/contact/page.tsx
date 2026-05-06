@@ -19,13 +19,33 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1200));
-    setSent(true);
-    setLoading(false);
+    setError("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Failed to send message. Please try again.");
+        return;
+      }
+
+      setSent(true);
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   const inp = "w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/5 outline-none text-sm transition-all bg-white font-light";
@@ -128,6 +148,11 @@ export default function ContactPage() {
                 ) : (
                   <div className="bg-white border border-slate-200 rounded-2xl p-8 lg:p-12 shadow-sm">
                     <h2 className="text-2xl text-slate-900 mb-10" style={SERIF}>Send a message</h2>
+                    {error && (
+                      <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-sm text-red-700">{error}</p>
+                      </div>
+                    )}
                     <form onSubmit={handleSubmit} className="space-y-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-2">
