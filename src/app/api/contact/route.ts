@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     // Validate form data
     const validationResult = contactSchema.safeParse(body);
     if (!validationResult.success) {
-      const errors = validationResult.error.errors.map(e => e.message).join(", ");
+      const errors = validationResult.error.issues.map((e) => e.message).join(", ");
       return NextResponse.json({ error: errors }, { status: 400 });
     }
 
@@ -33,13 +33,18 @@ export async function POST(req: NextRequest) {
     // Build and send email
     const { subject: emailSubject, html } = buildContactEmail({ name, email, subject, message });
 
-    await resend.emails.send({
+    const emailResult = await resend.emails.send({
       from: FROM,
       to: TO,
       subject: emailSubject,
       html,
       replyTo: email,
     });
+
+    if (emailResult.error) {
+      console.error("Resend API error:", emailResult.error);
+      return NextResponse.json({ error: "Failed to send email. Please try again later." }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true, message: "Message sent successfully" });
   } catch (error: any) {
