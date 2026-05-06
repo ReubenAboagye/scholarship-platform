@@ -5,6 +5,7 @@ import { rateLimitByIp } from "@/lib/rate-limit/server";
 import { getClientIp } from "@/lib/auth/ip";
 import { validatePassword } from "@/lib/auth/password";
 import { sanitizeRedirectPath } from "@/lib/auth/redirect";
+import { getSiteUrl } from "@/lib/auth/site-url";
 
 /* ------------------------------------------------------------------ */
 // Helpers
@@ -82,13 +83,14 @@ export async function signUpAction(formData: FormData) {
     return { error: passwordError };
   }
 
+  const origin = await getSiteUrl();
   const supabase = await createClient();
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: { full_name: fullName },
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? ""}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
+      emailRedirectTo: `${origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
     },
   });
 
@@ -109,7 +111,7 @@ export async function signInWithGoogleAction(formData: FormData) {
   if (rateLimitError) return { error: rateLimitError };
 
   const redirectTo = sanitizeRedirectPath(String(formData.get("redirectTo") ?? "/dashboard"));
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const origin = await getSiteUrl();
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -144,7 +146,7 @@ export async function resetPasswordAction(formData: FormData) {
     return { error: "Email is required." };
   }
 
-  const origin = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const origin = await getSiteUrl();
   const supabase = await createClient();
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${origin}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`,
