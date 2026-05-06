@@ -4,7 +4,8 @@ import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock, User, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { sanitizeRedirectPath } from "@/lib/auth/redirect";
-import { createClient } from "@/lib/supabase/client";
+import { getPasswordStrength, validatePassword } from "@/lib/auth/password";
+import { signUpAction, signInWithGoogleAction } from "@/app/auth/actions";
 
 const SERIF_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
@@ -13,36 +14,40 @@ function SignupPageContent() {
   const redirectTo = sanitizeRedirectPath(searchParams.get("redirectTo"));
 
   const [fullName, setFullName] = useState("");
-  const [email, setEmail]       = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading]   = useState(false);
-  const [error, setError]       = useState<string | null>(null);
-  const [success, setSuccess]   = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   async function handleGoogle() {
-    const supabase = createClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}` },
-    });
+    const formData = new FormData();
+    formData.append("redirectTo", redirectTo);
+    formData.append("origin", window.location.origin);
+    const result = await signInWithGoogleAction(formData);
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    if (result.url) {
+      window.location.href = result.url;
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
     setLoading(true);
     setError(null);
-    const supabase = createClient();
-    const { error: authError } = await supabase.auth.signUp({
-      email: email.trim().toLowerCase(),
-      password,
-      options: {
-        data: { full_name: fullName.trim() },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
-      },
-    });
-    if (authError) { setError(authError.message); setLoading(false); return; }
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    formData.append("redirectTo", redirectTo);
+    const result = await signUpAction(formData);
+    if (result.error) {
+      setError(result.error);
+      setLoading(false);
+      return;
+    }
     setSuccess(true);
     setLoading(false);
   }
@@ -100,6 +105,17 @@ function SignupPageContent() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Honeypot field — bots fill this; humans never see it */}
+        <div className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0" aria-hidden="true">
+          <input
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={honeypot}
+            onChange={(e) => setHoneypot(e.target.value)}
+          />
+        </div>
         <div className="space-y-1.5">
           <label htmlFor="fullName" className="block text-xs font-semibold text-slate-700">Full name</label>
           <div className="relative">
@@ -134,6 +150,24 @@ function SignupPageContent() {
               {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
+          {password && (
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex gap-1 flex-1">
+                {[1, 2, 3, 4, 5].map((level) => {
+                  const { score, color } = getPasswordStrength(password);
+                  return (
+                    <div
+                      key={level}
+                      className={`h-1.5 flex-1 rounded-full transition-colors ${level <= score ? color : "bg-slate-200"}`}
+                    />
+                  );
+                })}
+              </div>
+              <span className="text-[11px] font-semibold text-slate-500">
+                {getPasswordStrength(password).label}
+              </span>
+            </div>
+          )}
         </div>
 
         <button type="submit" disabled={loading}

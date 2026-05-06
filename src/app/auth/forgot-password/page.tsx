@@ -2,33 +2,26 @@
 
 import { useState, type FormEvent } from "react";
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2, Mail } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { resetPasswordAction } from "@/app/auth/actions";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [honeypot, setHoneypot] = useState("");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError(null);
-
-    const supabase = createClient();
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(
-      email.trim().toLowerCase(),
-      {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent("/auth/reset-password")}`,
-      }
-    );
-
-    if (resetError) {
-      setError(resetError.message);
+    const formData = new FormData(event.currentTarget as HTMLFormElement);
+    const result = await resetPasswordAction(formData);
+    if (result.error) {
+      setError(result.error);
       setLoading(false);
       return;
     }
-
     setSuccess(true);
     setLoading(false);
   }
@@ -64,6 +57,17 @@ export default function ForgotPasswordPage() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Honeypot field — bots fill this; humans never see it */}
+          <div className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0" aria-hidden="true">
+            <input
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-800">Email address</label>
             <div className="relative rounded-[1.25rem] border border-slate-200 bg-[#faf7f2] transition focus-within:border-emerald-700 focus-within:ring-4 focus-within:ring-emerald-100">
