@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowRight, Check, ChevronDown, Compass, Globe, Lock, Shield } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Compass, Globe, Lock, Shield, Award, BookOpen, Users, Sparkles } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { createClient } from "@/lib/supabase/server";
@@ -8,23 +8,23 @@ import { countryFlagUrl, formatDeadline } from "@/lib/utils";
 const trustStrip = [
   {
     icon: Shield,
-    title: "Verified sources",
-    desc: "Every scholarship links directly to the official application page with no middlemen.",
+    title: "Government-verified sources",
+    desc: "Every scholarship links directly to official embassy and university portals.",
   },
   {
     icon: Lock,
-    title: "No email spam",
-    desc: "We do not sell, rent, or share your email with partners or advertisers.",
+    title: "Privacy guaranteed",
+    desc: "Your data is never sold, shared, or used for marketing purposes.",
   },
   {
     icon: Globe,
-    title: "Four countries, curated",
-    desc: "Hand-picked opportunities across the UK, USA, Germany, and Canada.",
+    title: "Four nations, full coverage",
+    desc: "Comprehensive funding opportunities across the UK, USA, Germany, and Canada.",
   },
   {
-    icon: Compass,
-    title: "Matched to your profile",
-    desc: "Ranked by fit so your best-match scholarships surface first.",
+    icon: Award,
+    title: "Eligibility-matched",
+    desc: "AI-powered ranking based on actual eligibility criteria, not keywords.",
   },
 ] as const;
 
@@ -158,93 +158,115 @@ export default async function HomePage() {
     <div className="min-h-screen bg-white">
       <Navbar />
 
-      <section className="relative bg-paper border-b border-slate-200/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-6">
-                For students · Free, always
-              </p>
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-500 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-400 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+        </div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-28">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-20 items-center">
+            <div className="animate-fade-up">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-6 sm:mb-8">
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-200">
+                  Official Scholarship Portal
+                </span>
+              </div>
 
               <h1
-                className="text-[40px] sm:text-[46px] lg:text-[56px] text-slate-900 mb-6"
+                className="text-[32px] sm:text-[40px] lg:text-[52px] xl:text-[64px] text-white mb-5 sm:mb-6 leading-tight lg:leading-tight"
                 style={SERIF}
               >
-                Scholarships that fit
+                Scholarships matched
                 <br className="hidden sm:block" />
-                your academic profile.
+                to your academic
+                <br className="hidden sm:block" />
+                <span className="text-amber-400"> profile.</span>
               </h1>
 
-              <p className="text-lg text-slate-600 leading-relaxed mb-8 max-w-xl">
-                Live scholarship listings across the UK, USA, Germany, and Canada, each one linked to its official source. Tell us about your studies and we&apos;ll surface the ones you actually qualify for, in about two minutes.
+              <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed mb-8 sm:mb-10 max-w-xl">
+                Access verified funding opportunities from government agencies and accredited universities. Our eligibility engine matches you with scholarships you actually qualify for.
               </p>
 
-              <ul className="space-y-2.5 mb-10 max-w-md">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-lg">
                 {[
-                  "Verified scholarships with direct application links",
-                  "Matched on eligibility rules, not keyword guesswork",
-                  "No email spam, ever. We do not sell your data.",
-                  "Free for students, no credit card required",
-                ].map((point) => (
-                  <li key={point} className="flex items-start gap-3 text-[15px] text-slate-700">
-                    <span className="mt-1 inline-flex w-4 h-4 items-center justify-center rounded-full bg-brand-600/10 flex-shrink-0">
-                      <Check className="w-3 h-3 text-brand-600" strokeWidth={3} />
-                    </span>
-                    {point}
-                  </li>
+                  { icon: Shield, text: "Official sources" },
+                  { icon: Globe, text: "4 countries" },
+                  { icon: BookOpen, text: "Full & partial" },
+                  { icon: Lock, text: "Data stays private" },
+                ].map((item) => (
+                  <div key={item.text} className="flex items-center gap-2 sm:gap-3 text-slate-200">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-700/50 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" strokeWidth={2} />
+                    </div>
+                    <span className="text-xs sm:text-sm font-medium">{item.text}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <a
                   href="/auth/signup"
-                  className="inline-flex items-center justify-center rounded-md px-6 py-3 bg-brand-600 text-white font-semibold text-sm hover:bg-brand-700 transition-colors shadow-card-hover"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-amber-500 text-brand-900 font-bold text-sm sm:text-base hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 transform hover:-translate-y-0.5"
                 >
-                  Find my scholarships
+                  <span>Find my scholarships</span>
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="/scholarships"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-md px-6 py-3 bg-white border border-slate-300 text-slate-800 font-semibold text-sm hover:border-slate-400 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-sm sm:text-base hover:bg-white/20 transition-all"
                 >
-                  Browse the directory
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Browse directory</span>
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </a>
               </div>
+              
+              <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-slate-400">
+                Free for students • No credit card required • Takes 2 minutes
+              </p>
             </div>
 
-            <div className="relative">
-              <div className="relative overflow-hidden rounded-lg border border-slate-200 shadow-card-hover">
-                <Image
-                  src="/images/marketing/students-collab.jpg"
-                  alt="Students studying together"
-                  width={1600}
-                  height={1067}
-                  className="h-[420px] lg:h-[520px] w-full object-cover"
-                  priority
-                />
-              </div>
-
-              <div className="hidden sm:block absolute -bottom-6 -left-6 w-72 bg-white border border-slate-200 shadow-lg rounded-lg p-5">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-3">
-                  Coverage
-                </p>
-                <div className="flex -space-x-2 mb-3">
-                  {COUNTRY_META.map((country) => (
-                    <div
-                      key={country.code}
-                      className="w-8 h-8 rounded-full border-2 border-white overflow-hidden shadow-sm bg-slate-100"
-                      aria-hidden
-                    >
-                      <img src={flagUrl(country.flag)} alt="" className="w-full h-full object-cover" />
+            <div className="relative animate-scale-in order-first lg:order-last" style={{ animationDelay: '0.2s' }}>
+              <div className="relative">
+                <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-amber-500/20 to-brand-500/20 rounded-2xl blur-2xl" />
+                <div className="relative overflow-hidden rounded-2xl border border-brand-500/30 shadow-2xl">
+                  <Image
+                    src="/images/marketing/students-collab.jpg"
+                    alt="Students studying together"
+                    width={1600}
+                    height={1067}
+                    className="h-[280px] sm:h-[350px] lg:h-[450px] xl:h-[550px] w-full object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-900/80 via-transparent to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                      {COUNTRY_META.map((country, idx) => (
+                        <div
+                          key={country.code}
+                          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg bg-brand-800 ${idx > 0 ? '-ml-2 sm:-ml-3' : ''}`}
+                          aria-hidden
+                        >
+                          <img src={flagUrl(country.flag)} alt="" className="w-full h-full object-cover" />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                    <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 border border-white/20">
+                      <p className="text-amber-200 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-1">
+                        Verified Opportunities
+                      </p>
+                      <p className="text-white text-xl sm:text-2xl font-bold" style={SERIF}>
+                        {totalScholarships} Scholarships
+                      </p>
+                      <p className="text-slate-300 text-xs sm:text-sm mt-1">
+                        Across UK, USA, Germany & Canada
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <p className="text-sm text-slate-800">
-                  <span className="font-semibold text-slate-900" style={SERIF}>
-                    {totalScholarships} scholarships
-                  </span>{" "}
-                  across four destinations, each one linked to its official source.
-                </p>
               </div>
             </div>
           </div>
@@ -252,11 +274,13 @@ export default async function HomePage() {
       </section>
 
       <section className="bg-white border-b border-slate-200/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {trustStrip.map((block) => (
-              <div key={block.title} className="flex gap-3 items-start">
-                <block.icon className="w-5 h-5 text-brand-600 mt-0.5 flex-shrink-0" strokeWidth={1.75} />
+              <div key={block.title} className="flex gap-3 items-start p-4 rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
+                  <block.icon className="w-5 h-5 text-brand-600" strokeWidth={1.75} />
+                </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-900 mb-1">{block.title}</p>
                   <p className="text-[13px] text-slate-500 leading-relaxed">{block.desc}</p>
