@@ -139,7 +139,10 @@ export default function ContactPage() {
                       Thanks for reaching out. A specialist from our team will get back to you at <span className="font-medium text-slate-900">{form.email}</span> within 24-48 hours.
                     </p>
                     <button 
-                      onClick={() => setSent(false)}
+                      onClick={() => {
+                        setSent(false);
+                        setForm({ name: "", email: "", subject: "", message: "" });
+                      }}
                       className="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-2 mx-auto"
                     >
                       Send another message <ArrowRight className="w-4 h-4" />
