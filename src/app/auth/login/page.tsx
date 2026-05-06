@@ -2,15 +2,34 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { sanitizeRedirectPath } from "@/lib/auth/redirect";
 import { signInAction, signInWithGoogleAction } from "@/app/auth/actions";
 
 const SERIF_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.06, delayChildren: 0.1 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
+};
+
 function BrandPanel() {
   return (
-    <div className="relative hidden lg:flex lg:w-1/2 flex-col justify-center overflow-hidden bg-[#0B1120] text-white">
+    <motion.div
+      initial={{ opacity: 0, scale: 1.02 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
+      className="relative hidden lg:flex lg:w-1/2 flex-col justify-center overflow-hidden bg-[#0B1120] text-white"
+    >
       {/* Large decorative background text */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none select-none">
         <span
@@ -23,7 +42,7 @@ function BrandPanel() {
       
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/30 via-transparent to-brand-800/10" />
-    </div>
+    </motion.div>
   );
 }
 
@@ -71,10 +90,15 @@ function LoginContent() {
     <div className="flex w-full min-h-screen">
       <BrandPanel />
 
-      <div className="flex w-full lg:w-1/2 flex-col justify-center items-center px-6 py-12 bg-white">
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="flex w-full lg:w-1/2 flex-col justify-center items-center px-6 py-12 bg-white"
+      >
         <div className="w-full max-w-[360px]">
           {/* Logo */}
-          <div className="flex justify-center mb-6">
+          <motion.div variants={item} className="flex justify-center mb-6">
             <a href="/" className="flex items-baseline">
               <span
                 className="text-2xl tracking-tight text-slate-900"
@@ -89,24 +113,30 @@ function LoginContent() {
                 </span>
               </span>
             </a>
-          </div>
+          </motion.div>
 
           {/* Heading */}
-          <h1
+          <motion.h1
+            variants={item}
             className="text-center text-lg font-medium text-slate-900 mb-8"
             style={SERIF_FONT}
           >
             Log in to ScholarBridge
-          </h1>
+          </motion.h1>
 
           {error && (
-            <div className="flex items-start gap-2.5 px-4 py-3 mb-5 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700 animate-fade-in">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="flex items-start gap-2.5 px-4 py-3 mb-5 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700"
+            >
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
-            </div>
+            </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <motion.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
             {/* Honeypot field */}
             <div
               className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0"
@@ -178,9 +208,9 @@ function LoginContent() {
                 "Log In"
               )}
             </button>
-          </form>
+          </motion.form>
 
-          <div className="flex items-center justify-between mt-4">
+          <motion.div variants={item} className="flex items-center justify-between mt-4">
             <a
               href="/auth/forgot-password"
               className="text-xs text-slate-500 hover:text-brand-700 transition-colors"
@@ -193,15 +223,16 @@ function LoginContent() {
             >
               Create an account
             </a>
-          </div>
+          </motion.div>
 
-          <div className="flex items-center gap-3 my-6">
+          <motion.div variants={item} className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-slate-100" />
             <span className="text-[11px] text-slate-400">or</span>
             <div className="flex-1 h-px bg-slate-100" />
-          </div>
+          </motion.div>
 
-          <button
+          <motion.button
+            variants={item}
             type="button"
             onClick={handleGoogle}
             className="w-full flex items-center justify-center gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors"
@@ -228,9 +259,9 @@ function LoginContent() {
               />
             </svg>
             Continue with Google
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
