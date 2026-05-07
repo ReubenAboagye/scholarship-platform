@@ -36,7 +36,7 @@ const STAT_CARDS = [
 function NotesDrawer({ item, onClose, onSave }: {
   item: any;
   onClose: () => void;
-  onSave: (id: string, notes: string) => void;
+  onSave: (id: string, notes: string) => Promise<boolean>;
 }) {
   const [notes, setNotes] = useState(item.notes ?? "");
   const [saving, setSaving] = useState(false);
@@ -44,8 +44,9 @@ function NotesDrawer({ item, onClose, onSave }: {
 
   async function handleSave() {
     setSaving(true);
-    await onSave(item.id, notes);
+    const ok = await onSave(item.id, notes);
     setSaving(false);
+    if (!ok) return;
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }
@@ -207,6 +208,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes }: {
 export default function TrackerPage() {
   const [items,        setItems]        = useState<any[]>([]);
   const [loading,      setLoading]      = useState(true);
+  const [error,        setError]        = useState<string | null>(null);
   const [view,         setView]         = useState<"list" | "kanban">("list");
   const [activeFilter, setActiveFilter] = useState<Status | "All">("All");
   const [notesItem,    setNotesItem]    = useState<any | null>(null);
@@ -214,34 +216,63 @@ export default function TrackerPage() {
   useEffect(() => {
     const supabase = createClient();
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { window.location.href = "/auth/login"; return; }
-      const { data } = await supabase
-        .from("application_tracker")
-        .select("*, scholarship:scholarships(*)")
-        .eq("user_id", user.id)
-        .order("updated_at", { ascending: false });
-      setItems(data ?? []);
-      setLoading(false);
+      try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+          window.location.href = "/auth/login?redirectTo=/dashboard/tracker";
+          return;
+        }
+        const { data, error: trackerError } = await supabase
+          .from("application_tracker")
+          .select("*, scholarship:scholarships(*)")
+          .eq("user_id", user.id)
+          .order("updated_at", { ascending: false });
+        if (trackerError) throw trackerError;
+        setItems(data ?? []);
+      } catch (err) {
+        console.error("Failed to load application tracker", err);
+        setError("Unable to load your application tracker. Please refresh and try again.");
+      } finally {
+        setLoading(false);
+      }
     }
     load();
   }, []);
 
   async function updateStatus(id: string, status: Status) {
     const supabase = createClient();
-    await supabase.from("application_tracker").update({ status }).eq("id", id);
+    const { error: updateError } = await supabase.from("application_tracker").update({ status }).eq("id", id);
+    if (updateError) {
+      console.error("Failed to update tracker status", updateError);
+      setError("Unable to update application status. Please try again.");
+      return;
+    }
+    setError(null);
     setItems(prev => prev.map(i => i.id === id ? { ...i, status } : i));
   }
 
-  async function saveNotes(id: string, notes: string) {
+  async function saveNotes(id: string, notes: string): Promise<boolean> {
     const supabase = createClient();
-    await supabase.from("application_tracker").update({ notes }).eq("id", id);
+    const { error: notesError } = await supabase.from("application_tracker").update({ notes }).eq("id", id);
+    if (notesError) {
+      console.error("Failed to save tracker notes", notesError);
+      setError("Unable to save notes. Please try again.");
+      return false;
+    }
+    setError(null);
     setItems(prev => prev.map(i => i.id === id ? { ...i, notes } : i));
+    return true;
   }
 
   async function removeItem(id: string) {
     const supabase = createClient();
-    await supabase.from("application_tracker").delete().eq("id", id);
+    const { error: deleteError } = await supabase.from("application_tracker").delete().eq("id", id);
+    if (deleteError) {
+      console.error("Failed to remove tracker item", deleteError);
+      setError("Unable to remove this application. Please try again.");
+      return;
+    }
+    setError(null);
     setItems(prev => prev.filter(i => i.id !== id));
   }
 
@@ -289,6 +320,13 @@ export default function TrackerPage() {
           </div>
         </div>
       </div>
+
+      {error && (
+        <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <X className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Stats row */}
       {items.length > 0 && (
@@ -406,8 +444,9 @@ export default function TrackerPage() {
           item={notesItem}
           onClose={() => setNotesItem(null)}
           onSave={async (id, notes) => {
-            await saveNotes(id, notes);
-            setNotesItem(null);
+            const ok = await saveNotes(id, notes);
+            if (ok) setNotesItem(null);
+            return ok;
           }}
         />
       )}

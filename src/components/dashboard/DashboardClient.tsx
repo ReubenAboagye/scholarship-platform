@@ -52,6 +52,7 @@ export default function DashboardClient({
   const activeCount    = tracked.filter((t) => ["Interested","In Progress"].includes(t.status)).length;
   const submittedCount = tracked.filter((t) => t.status === "Submitted").length;
   const acceptedCount  = tracked.filter((t) => t.status === "Accepted").length;
+  const validTopMatches = topMatches.filter((r) => r?.scholarship?.id && r?.scholarship?.name);
 
   return (
     <motion.div variants={stagger} initial="hidden" animate="show" className="max-w-5xl mx-auto space-y-5 pb-10">
@@ -171,7 +172,7 @@ export default function DashboardClient({
           </a>
         </div>
 
-        {topMatches.length === 0 ? (
+        {validTopMatches.length === 0 ? (
           <div className="bg-white border border-slate-200 rounded-lg p-6 text-center">
             <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-2">
               <Sparkles className="w-5 h-5 text-slate-300" />
@@ -185,7 +186,7 @@ export default function DashboardClient({
           </div>
         ) : (
           <div className="bg-white border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-50">
-            {topMatches.map((r: any, i: number) => {
+            {validTopMatches.map((r: any, i: number) => {
               const s = r.scholarship;
               return (
                 <a

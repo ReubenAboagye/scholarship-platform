@@ -17,7 +17,7 @@ export default async function DashboardPage() {
       .from("profiles")
       .select("*, onboarding_complete, citizenship, career_goals, interests, extracurriculars, financial_need")
       .eq("id", user.id)
-      .single(),
+      .maybeSingle(),
     supabase
       .from("saved_scholarships")
       .select("id")
@@ -33,7 +33,7 @@ export default async function DashboardPage() {
       .eq("user_id", user.id)
       .order("run_at", { ascending: false })
       .limit(1)
-      .single(),
+      .maybeSingle(),
   ]);
 
   const profileComplete = !!(

@@ -48,6 +48,29 @@ interface HistorySession {
   results: MatchResult[];
 }
 
+function isMatchResult(value: unknown): value is MatchResult {
+  const result = value as MatchResult;
+  return Boolean(
+    result?.scholarship?.id &&
+    result.scholarship.name &&
+    typeof result.match_score === "number" &&
+    Array.isArray(result.match_reasons)
+  );
+}
+
+function sanitizeHistorySession(value: unknown): HistorySession | null {
+  const session = value as HistorySession | null;
+  if (!session?.id) return null;
+
+  return {
+    ...session,
+    profile_snapshot: session.profile_snapshot ?? {},
+    results: Array.isArray(session.results)
+      ? session.results.filter(isMatchResult)
+      : [],
+  };
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function scoreColor(score: number) {
@@ -270,6 +293,8 @@ export default function MatchPage() {
   const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
   const [data, setData] = useState<MatchResponse | null>(null);
   const [errorMsg, setErrorMsg] = useState("");
+  const [loadError, setLoadError] = useState("");
+  const [profileLoading, setProfileLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
   const [saved, setSaved] = useState<Set<string>>(new Set());
   const [savingIds, setSavingIds] = useState<Set<string>>(new Set());
@@ -280,16 +305,32 @@ export default function MatchPage() {
   useEffect(() => {
     async function load() {
       const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      try {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
+        if (authError || !user) {
+          window.location.href = "/auth/login?redirectTo=/dashboard/match";
+          return;
+        }
 
-      const [{ data: prof }, { data: savedRows }] = await Promise.all([
-        supabase.from("profiles").select("*").eq("id", user.id).single(),
-        supabase.from("saved_scholarships").select("scholarship_id").eq("user_id", user.id),
-      ]);
+        const [
+          { data: prof, error: profileError },
+          { data: savedRows, error: savedError },
+        ] = await Promise.all([
+          supabase.from("profiles").select("*").eq("id", user.id).maybeSingle(),
+          supabase.from("saved_scholarships").select("scholarship_id").eq("user_id", user.id),
+        ]);
 
-      setProfile(prof);
-      if (savedRows) setSaved(new Set(savedRows.map((r: any) => r.scholarship_id)));
+        if (profileError) throw profileError;
+        if (savedError) throw savedError;
+
+        setProfile(prof);
+        if (savedRows) setSaved(new Set(savedRows.map((r: any) => r.scholarship_id)));
+      } catch (err) {
+        console.error("Failed to load matching profile", err);
+        setLoadError("Unable to load your matching profile. Please refresh and try again.");
+      } finally {
+        setProfileLoading(false);
+      }
     }
     load();
   }, []);
@@ -304,16 +345,29 @@ export default function MatchPage() {
     setHistoryLoading(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setHistoryLoading(false); return; }
+    if (!user) {
+      window.location.href = "/auth/login?redirectTo=/dashboard/match";
+      setHistoryLoading(false);
+      return;
+    }
 
-    const { data: rows } = await supabase
+    const { data: rows, error: historyError } = await supabase
       .from("match_history")
       .select("id, run_at, explanation, profile_snapshot, results")
       .eq("user_id", user.id)
       .order("run_at", { ascending: false })
       .limit(20);
 
-    setHistory((rows as HistorySession[]) ?? []);
+    if (historyError) {
+      console.error("Failed to load match history", historyError);
+      setLoadError("Unable to load match history. Please try again.");
+      setHistory([]);
+      setHistoryLoading(false);
+      return;
+    }
+
+    setLoadError("");
+    setHistory(((rows ?? []).map(sanitizeHistorySession).filter(Boolean) as HistorySession[]));
     setHistoryLoading(false);
   }
 
@@ -333,7 +387,13 @@ export default function MatchPage() {
         return;
       }
 
-      setData(json.data);
+      const responseData = json.data as MatchResponse;
+      setData({
+        explanation: responseData?.explanation ?? null,
+        results: Array.isArray(responseData?.results)
+          ? responseData.results.filter(isMatchResult)
+          : [],
+      });
       setStatus("done");
     } catch {
       setErrorMsg("Network error. Please check your connection and try again.");
@@ -344,28 +404,45 @@ export default function MatchPage() {
   // ── Toggle save ───────────────────────────────────────────
   async function toggleSave(scholarshipId: string) {
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      window.location.href = "/auth/login?redirectTo=/dashboard/match";
+      return;
+    }
 
     setSavingIds((prev) => new Set([...prev, scholarshipId]));
 
-    if (saved.has(scholarshipId)) {
-      await supabase.from("saved_scholarships")
-        .delete().eq("user_id", user.id).eq("scholarship_id", scholarshipId);
-      setSaved((prev) => { const n = new Set(prev); n.delete(scholarshipId); return n; });
-    } else {
-      await supabase.from("saved_scholarships")
-        .insert({ user_id: user.id, scholarship_id: scholarshipId });
-      setSaved((prev) => new Set([...prev, scholarshipId]));
+    try {
+      if (saved.has(scholarshipId)) {
+        const { error } = await supabase.from("saved_scholarships")
+          .delete().eq("user_id", user.id).eq("scholarship_id", scholarshipId);
+        if (error) throw error;
+        setSaved((prev) => { const n = new Set(prev); n.delete(scholarshipId); return n; });
+      } else {
+        const { error } = await supabase.from("saved_scholarships")
+          .insert({ user_id: user.id, scholarship_id: scholarshipId });
+        if (error) throw error;
+        setSaved((prev) => new Set([...prev, scholarshipId]));
+      }
+      setLoadError("");
+    } catch (err) {
+      console.error("Failed to toggle saved scholarship", err);
+      setLoadError("Unable to update saved scholarships. Please try again.");
+    } finally {
+      setSavingIds((prev) => { const n = new Set(prev); n.delete(scholarshipId); return n; });
     }
-
-    setSavingIds((prev) => { const n = new Set(prev); n.delete(scholarshipId); return n; });
   }
 
   // ── Delete history session ────────────────────────────────
   async function deleteSession(id: string) {
     const supabase = createClient();
-    await supabase.from("match_history").delete().eq("id", id);
+    const { error } = await supabase.from("match_history").delete().eq("id", id);
+    if (error) {
+      console.error("Failed to delete match history session", error);
+      setLoadError("Unable to delete this match session. Please try again.");
+      return;
+    }
+    setLoadError("");
     setHistory((prev) => prev.filter((s) => s.id !== id));
   }
 
@@ -389,7 +466,19 @@ export default function MatchPage() {
       </div>
 
       {/* ── Profile readiness banner ──────────────────────── */}
-      {profile && (
+      {loadError && (
+        <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <AlertCircle className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <span>{loadError}</span>
+        </div>
+      )}
+
+      {profileLoading ? (
+        <div className="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-3 text-sm text-slate-500">
+          <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+          Loading profile readiness...
+        </div>
+      ) : profile && (
         <div className={`rounded-xl border p-4 flex items-center gap-4 ${profileComplete ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
           }`}>
           <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${profileComplete ? "bg-emerald-100" : "bg-amber-100"
@@ -479,14 +568,14 @@ export default function MatchPage() {
 
               <button
                 onClick={runMatching}
-                disabled={status === "loading" || !profileComplete}
+                disabled={status === "loading" || profileLoading || !profileComplete}
                 className="inline-flex items-center gap-2 px-7 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors text-sm"
               >
                 {status === "loading"
                   ? <><Loader2 className="w-4 h-4 animate-spin" /><span className="whitespace-nowrap">Matching...</span></>
                   : <><Sparkles className="w-4 h-4" /><span className="whitespace-nowrap">Run AI Matching</span></>}
               </button>
-              {!profileComplete && (
+              {!profileLoading && !profileComplete && (
                 <p className="text-xs text-slate-400 mt-3">Complete your profile to enable matching</p>
               )}
             </div>

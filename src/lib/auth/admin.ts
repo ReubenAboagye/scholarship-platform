@@ -21,7 +21,13 @@ export async function isAdminUser(
     .from("profiles")
     .select("role")
     .eq("id", userId)
-    .single();
+    .maybeSingle();
+
+  if (error) {
+    console.warn("Admin role lookup failed", { userId, error });
+  } else if (!profile) {
+    console.warn("Admin role lookup found no profile", { userId });
+  }
 
   return !error && profile?.role === "admin";
 }

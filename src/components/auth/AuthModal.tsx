@@ -87,14 +87,14 @@ export default function AuthModal({ isOpen, onClose, featureName, redirectUrl }:
 
                 <div className="space-y-3">
                   <Link 
-                    href={`/auth/login?redirect=${encodeURIComponent(redirectUrl)}`}
+                    href={`/auth/login?redirectTo=${encodeURIComponent(redirectUrl)}`}
                     onClick={onClose}
                     className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 px-4 py-3.5 text-sm font-semibold text-white hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
                   >
                     Log in to continue
                   </Link>
                   <Link 
-                    href={`/auth/signup?redirect=${encodeURIComponent(redirectUrl)}`}
+                    href={`/auth/signup?redirectTo=${encodeURIComponent(redirectUrl)}`}
                     onClick={onClose}
                     className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors duration-200"
                   >

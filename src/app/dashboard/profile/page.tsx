@@ -141,7 +141,10 @@ export default function ProfilePage() {
     const supabase = createClient();
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        window.location.href = "/auth/login?redirectTo=/dashboard/profile";
+        return;
+      }
       setEmail(user.email ?? "");
       const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
       if (data) {
@@ -181,6 +184,11 @@ export default function ProfilePage() {
     setSaving(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setSaving(false);
+      window.location.href = "/auth/login?redirectTo=/dashboard/profile";
+      return;
+    }
     await supabase.from("profiles").update({
       full_name:         form.full_name         || null,
       country_of_origin: form.country_of_origin || null,
@@ -195,7 +203,7 @@ export default function ProfilePage() {
                        : form.financial_need === "false" ? false : null,
       interests:              form.interests.length > 0 ? form.interests : [],
       notification_preferences: notifPrefs,
-    }).eq("id", user!.id);
+    }).eq("id", user.id);
     setSaving(false); setSaved(true); setDirty(false);
   }
 

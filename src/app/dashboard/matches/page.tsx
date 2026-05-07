@@ -39,6 +39,27 @@ interface HistorySession {
   results: MatchResult[];
 }
 
+function isMatchResult(value: unknown): value is MatchResult {
+  const result = value as MatchResult;
+  return Boolean(
+    result?.scholarship?.id &&
+    result.scholarship.name &&
+    typeof result.match_score === "number"
+  );
+}
+
+function sanitizeSession(value: unknown): HistorySession | null {
+  const session = value as HistorySession | null;
+  if (!session?.id) return null;
+
+  return {
+    ...session,
+    results: Array.isArray(session.results)
+      ? session.results.filter(isMatchResult)
+      : [],
+  };
+}
+
 // ── Helpers ────────────────────────────────────────────────────────────────
 
 function scoreColor(score: number) {
@@ -307,13 +328,13 @@ export default function MatchesDashboardPage() {
           .eq("user_id", user.id)
           .order("run_at", { ascending: false })
           .limit(1)
-          .single(),
+          .maybeSingle(),
         supabase.from("saved_scholarships").select("scholarship_id").eq("user_id", user.id),
         supabase.from("dismissed_scholarships").select("scholarship_id").eq("user_id", user.id),
-        supabase.from("profiles").select("field_of_study,degree_level,citizenship,gpa,bio,career_goals,country_of_origin,full_name,financial_need").eq("id", user.id).single(),
+        supabase.from("profiles").select("field_of_study,degree_level,citizenship,gpa,bio,career_goals,country_of_origin,full_name,financial_need").eq("id", user.id).maybeSingle(),
       ]);
 
-      const sess = sessionData as HistorySession | null;
+      const sess = sanitizeSession(sessionData);
       setSession(sess);
       setSavedIds(new Set((savedRows ?? []).map((r: any) => r.scholarship_id)));
       setDismissedIds(new Set((dismissedRows ?? []).map((r: any) => r.scholarship_id)));

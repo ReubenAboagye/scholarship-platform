@@ -8,8 +8,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await getAuthenticatedUser(supabase);
   if (!user) redirect("/auth/login");
 
-  const { data: profile } = await supabase
-    .from("profiles").select("role, full_name, email").eq("id", user.id).single();
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles").select("role, full_name, email").eq("id", user.id).maybeSingle();
+
+  if (profileError) {
+    console.warn("Admin layout profile lookup failed", { userId: user.id, error: profileError });
+  } else if (!profile) {
+    console.warn("Admin layout profile lookup found no profile", { userId: user.id });
+  }
 
   const admin = await isAdminUser(supabase, user.id);
   if (!admin) redirect("/dashboard");
