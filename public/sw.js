@@ -1,10 +1,23 @@
-const CACHE_NAME = 'scholarbridge-v1';
+const CACHE_NAME = 'scholarbridge-v2';
 const STATIC_ASSETS = [
   '/',
-  '/dashboard',
-  '/admin',
   '/favicon.ico',
 ];
+
+function shouldSkipRequest(request) {
+  const url = new URL(request.url);
+
+  return (
+    request.method !== 'GET' ||
+    url.origin !== self.location.origin ||
+    url.pathname.startsWith('/api/') ||
+    url.pathname.startsWith('/auth/') ||
+    url.pathname.startsWith('/dashboard') ||
+    url.pathname.startsWith('/admin') ||
+    url.pathname.startsWith('/_next/') ||
+    request.url.includes('supabase')
+  );
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -29,13 +42,8 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
-  // Skip non-GET and API/Supabase requests
-  if (
-    request.method !== 'GET' ||
-    request.url.includes('/api/') ||
-    request.url.includes('/auth/') ||
-    request.url.includes('supabase')
-  ) {
+  // Never intercept auth-gated routes or non-cacheable requests.
+  if (shouldSkipRequest(request)) {
     return;
   }
 
@@ -44,6 +52,10 @@ self.addEventListener('fetch', (event) => {
       if (cached) return cached;
       return fetch(request)
         .then((response) => {
+          if (!response.ok || response.redirected || response.type === 'opaqueredirect') {
+            return response;
+          }
+
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
