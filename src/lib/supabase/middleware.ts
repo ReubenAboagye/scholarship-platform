@@ -22,14 +22,28 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const { data } = await supabase.auth.getClaims();
-  const userId = typeof data?.claims?.sub === 'string' ? data.claims.sub : null;
+  // Wrap getClaims in try/catch — a malformed/expired token can throw,
+  // which (without this guard) would 500 the request and create
+  // perceived loops in the browser as it retries.
+  let userId: string | null = null;
+  let claimsFailed = false;
+  try {
+    const { data, error } = await supabase.auth.getClaims();
+    if (error) claimsFailed = true;
+    userId = typeof data?.claims?.sub === 'string' ? data.claims.sub : null;
+  } catch {
+    claimsFailed = true;
+    userId = null;
+  }
 
   const path = request.nextUrl.pathname;
   const isDashboard = path.startsWith('/dashboard');
   const isAdmin     = path.startsWith('/admin');
   const isAuthPage  = path.startsWith('/auth');
 
+  // Protected route, no valid session → redirect to login.
+  // If claims failed (stale/corrupt token), nuke the supabase cookies
+  // before redirecting so the browser doesn't loop with bad state.
   if ((isDashboard || isAdmin) && !userId) {
     const url = request.nextUrl.clone();
     const destination = `${path}${request.nextUrl.search}`;
@@ -37,16 +51,43 @@ export async function updateSession(request: NextRequest) {
     url.pathname = '/auth/login';
     url.search = '';
     url.searchParams.set('redirectTo', sanitizeRedirectPath(destination));
-    return NextResponse.redirect(url);
+
+    const redirectResponse = NextResponse.redirect(url);
+
+    if (claimsFailed) {
+      // Clear any sb-* cookies; @supabase/ssr will re-issue on next login
+      for (const cookie of request.cookies.getAll()) {
+        if (cookie.name.startsWith('sb-')) {
+          redirectResponse.cookies.delete(cookie.name);
+        }
+      }
+    }
+
+    return redirectResponse;
   }
 
+  // Authenticated user landing on an auth page → bounce to redirectTo.
+  // CRITICAL: skip this when already mid-callback or the redirectTo would
+  // resolve back to an auth page (sanitizeRedirectPath enforces this) —
+  // also skip /auth/callback and /auth/confirm so OAuth/email flows complete.
   if (isAuthPage && userId) {
-    const url = request.nextUrl.clone();
-    const redirectTo = sanitizeRedirectPath(request.nextUrl.searchParams.get('redirectTo'));
+    const isCallback = path.startsWith('/auth/callback') || path.startsWith('/auth/confirm');
+    if (!isCallback) {
+      const url = request.nextUrl.clone();
+      const redirectTo = sanitizeRedirectPath(request.nextUrl.searchParams.get('redirectTo'));
 
-    url.pathname = redirectTo;
-    url.search = '';
-    return NextResponse.redirect(url);
+      // Defensive: never redirect from /auth/* to another /auth/* path.
+      // sanitizeRedirectPath already enforces this, but the safeguard is
+      // cheap and prevents future regressions.
+      const safeTarget = redirectTo.startsWith('/auth') ? '/dashboard' : redirectTo;
+
+      // Don't redirect to the same page we're already on (no-op loop).
+      if (safeTarget !== path) {
+        url.pathname = safeTarget;
+        url.search = '';
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   return supabaseResponse;

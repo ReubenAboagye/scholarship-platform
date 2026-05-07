@@ -7,8 +7,8 @@ export default function NewScholarshipPage() {
   const router = useRouter();
 
   return (
-    <div className="max-w-[1400px] mx-auto pt-6">
-      <ScholarshipForm 
+    <div className="pt-2">
+      <ScholarshipForm
         onSaved={() => router.push("/admin/scholarships")}
         onCancel={() => router.push("/admin/scholarships")}
       />

@@ -157,6 +157,19 @@
   .custom-scrollbar::-webkit-scrollbar-track {
     background-color: transparent;
   }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* iOS safe-area inset for fixed bottom navbars */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
 }
 
 @keyframes shimmer {

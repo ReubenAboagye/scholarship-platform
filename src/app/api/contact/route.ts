@@ -5,9 +5,8 @@ import { buildContactEmail } from "@/emails/contact";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
-const APP_DOMAIN = new URL(APP_URL).hostname;
-const FROM = `ScholarMatch <contact@${APP_DOMAIN}>`;
-const TO = process.env.CONTACT_EMAIL ?? "support@gentechmart.shop";
+const FROM = "ScholarMatch <onboarding@resend.dev>";
+const TO = process.env.CONTACT_EMAIL ?? "reubenaboagye23@gmail.com";
 
 // Zod schema for form validation
 const contactSchema = z.object({

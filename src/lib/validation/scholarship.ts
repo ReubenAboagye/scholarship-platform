@@ -47,6 +47,10 @@ const scholarshipBaseSchema = z.object({
     .max(30)
     .transform((v) => Array.from(new Set(v))),
   is_active: z.boolean().optional().default(true),
+  verified_at: z
+    .union([z.string().datetime(), z.null()])
+    .optional()
+    .default(null),
 
   // ── Structured eligibility (for hard-gate SQL matching) ──
   citizenship_required:  z

@@ -7,10 +7,13 @@ import { countryFlag, formatDeadline, fundingBadgeColor } from "@/lib/utils";
 import {
   Plus, Pencil, Loader2, ExternalLink, Search,
   LayoutGrid, LayoutList, ChevronLeft, ChevronRight,
-  Filter, Download, X, Calendar,
+  Filter, Download, X, Calendar, Trash2, Eye, Copy,
+  Square, SquareCheck, Power,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
+import ActionDropdown from "@/components/admin/ActionDropdown";
+import { useToast } from "@/components/admin/ToastProvider";
 
 // ─────────────────────────────────────────────────────────────
 // Admin scholarships page.
@@ -70,6 +73,7 @@ export default function AdminScholarshipsPage() {
   const supabase     = createClient();
   const router       = useRouter();
   const searchParams = useSearchParams();
+  const toast        = useToast();
 
   // ── URL-driven state ──
   const search       = searchParams.get("q") ?? "";
@@ -84,6 +88,7 @@ export default function AdminScholarshipsPage() {
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
   const [loading,      setLoading]      = useState(true);
   const [filtersOpen,  setFiltersOpen]  = useState(false);
+  const [selectedIds,  setSelectedIds]  = useState<Set<string>>(new Set());
 
   // ── URL update helper ──
   // Always reset to page 1 unless the caller explicitly preserves it,
@@ -124,10 +129,21 @@ export default function AdminScholarshipsPage() {
       headers: { "Content-Type": "application/json" },
       body:    JSON.stringify({ is_active: !current }),
     });
-    if (!response.ok) return;
+    if (!response.ok) { toast.addToast("Failed to update status", "error"); return; }
     setScholarships(prev =>
       prev.map(s => (s.id === id ? { ...s, is_active: !current } : s))
     );
+    toast.addToast(current ? "Scholarship paused" : "Scholarship activated", "success");
+  }
+
+  // ── Delete ──
+  async function deleteScholarship(id: string) {
+    if (!confirm("Are you sure you want to delete this scholarship? This action cannot be undone.")) return;
+    const response = await fetch(`/api/scholarships/${id}`, { method: "DELETE" });
+    if (!response.ok) { toast.addToast("Failed to delete scholarship", "error"); return; }
+    setScholarships(prev => prev.filter(s => s.id !== id));
+    setSelectedIds(prev => { const next = new Set(prev); next.delete(id); return next; });
+    toast.addToast("Scholarship deleted", "success");
   }
 
   // ── Filtering ──
@@ -162,6 +178,62 @@ export default function AdminScholarshipsPage() {
   const safePage   = Math.min(page, totalPages);
   const pageStart  = (safePage - 1) * PAGE_SIZE;
   const pageRows   = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+
+  // ── Bulk selection helpers (must be after pageRows) ──
+  const allPageSelected = pageRows.length > 0 && pageRows.every(r => selectedIds.has(r.id));
+  function toggleSelect(id: string) {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+  function toggleSelectAll() {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (allPageSelected) {
+        pageRows.forEach(r => next.delete(r.id));
+      } else {
+        pageRows.forEach(r => next.add(r.id));
+      }
+      return next;
+    });
+  }
+  function clearSelection() { setSelectedIds(new Set()); }
+
+  async function bulkActivate() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_active: true }),
+    })));
+    setScholarships(prev => prev.map(s => selectedIds.has(s.id) ? { ...s, is_active: true } : s));
+    toast.addToast(`${ids.length} scholarship(s) activated`, "success");
+    clearSelection();
+  }
+
+  async function bulkDeactivate() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ is_active: false }),
+    })));
+    setScholarships(prev => prev.map(s => selectedIds.has(s.id) ? { ...s, is_active: false } : s));
+    toast.addToast(`${ids.length} scholarship(s) paused`, "success");
+    clearSelection();
+  }
+
+  async function bulkDelete() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (!confirm(`Delete ${ids.length} scholarship(s)? This cannot be undone.`)) return;
+    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, { method: "DELETE" })));
+    setScholarships(prev => prev.filter(s => !selectedIds.has(s.id)));
+    toast.addToast(`${ids.length} scholarship(s) deleted`, "success");
+    clearSelection();
+  }
 
   // ── CSV export ──
   function exportCsv() {
@@ -403,6 +475,50 @@ export default function AdminScholarshipsPage() {
         </AnimatePresence>
       </motion.div>
 
+      {/* ── Bulk actions bar ──────────────────────────── */}
+      <AnimatePresence>
+        {selectedIds.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="flex items-center justify-between gap-3 px-4 py-3 bg-slate-900 text-white rounded-lg shadow-lg"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium">
+                {selectedIds.size} selected
+              </span>
+              <button
+                onClick={clearSelection}
+                className="text-[10px] font-medium uppercase tracking-wider text-slate-400 hover:text-white transition-colors"
+              >
+                Clear
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={bulkActivate}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
+              >
+                <Power className="w-3 h-3" /> Activate
+              </button>
+              <button
+                onClick={bulkDeactivate}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
+              >
+                <Power className="w-3 h-3" /> Pause
+              </button>
+              <button
+                onClick={bulkDelete}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
+              >
+                <Trash2 className="w-3 h-3" /> Delete
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Content ─────────────────────────────────────── */}
       {loading ? (
         <div className="flex flex-col items-center justify-center h-80 rounded-2xl bg-white border border-slate-200 shadow-sm">
@@ -425,9 +541,23 @@ export default function AdminScholarshipsPage() {
           )}
         </motion.div>
       ) : view === "list" ? (
-        <ListView rows={pageRows} onToggle={toggleActive} />
+        <ListView
+          rows={pageRows}
+          onToggle={toggleActive}
+          selectedIds={selectedIds}
+          onSelect={toggleSelect}
+          onSelectAll={toggleSelectAll}
+          allSelected={allPageSelected}
+          onDelete={deleteScholarship}
+        />
       ) : (
-        <GridView rows={pageRows} onToggle={toggleActive} />
+        <GridView
+          rows={pageRows}
+          onToggle={toggleActive}
+          selectedIds={selectedIds}
+          onSelect={toggleSelect}
+          onDelete={deleteScholarship}
+        />
       )}
 
       {/* ── Pagination ──────────────────────────────────── */}
@@ -483,14 +613,37 @@ export default function AdminScholarshipsPage() {
 // ── List view ────────────────────────────────────────────────
 
 function ListView({
-  rows, onToggle,
-}: { rows: Scholarship[]; onToggle: (id: string, current: boolean) => void }) {
+  rows,
+  onToggle,
+  selectedIds,
+  onSelect,
+  onSelectAll,
+  allSelected,
+  onDelete,
+}: {
+  rows: Scholarship[];
+  onToggle: (id: string, current: boolean) => void;
+  selectedIds: Set<string>;
+  onSelect: (id: string) => void;
+  onSelectAll: () => void;
+  allSelected: boolean;
+  onDelete: (id: string) => void;
+}) {
   return (
     <motion.div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-200 text-left">
+              <th className="px-3 py-3 w-10">
+                <button
+                  onClick={onSelectAll}
+                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                  aria-label={allSelected ? "Deselect all" : "Select all"}
+                >
+                  {allSelected ? <SquareCheck className="w-4 h-4" /> : <Square className="w-4 h-4" />}
+                </button>
+              </th>
               <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Scholarship</th>
               <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Jurisdiction</th>
               <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Funding</th>
@@ -501,78 +654,110 @@ function ListView({
           </thead>
           <tbody className="divide-y divide-slate-100">
             <AnimatePresence mode="popLayout">
-              {rows.map(s => (
-                <motion.tr
-                  key={s.id}
-                  layout
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{    opacity: 0 }}
-                  className={`group hover:bg-blue-50/30 transition-colors ${!s.is_active ? "opacity-60 grayscale-[0.5]" : ""}`}
-                >
-                  <td className="px-4 py-3.5 min-w-[280px]">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
-                        {countryFlag(s.country)}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-xs font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
-                        <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-slate-200 bg-slate-50 text-[10px] font-medium uppercase tracking-tight text-slate-600">
-                      {s.country}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type)} border-current/20`}>
-                      {s.funding_type}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <div className="flex flex-col">
-                      <span className="text-xs font-medium text-slate-700">{formatDeadline(s.application_deadline)}</span>
-                      <span className="text-[9px] font-medium text-slate-400 uppercase tracking-tighter mt-0.5">Closes</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3.5">
-                    <button
-                      onClick={() => onToggle(s.id, s.is_active)}
-                      className={`inline-flex items-center gap-2 rounded px-3 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
-                        s.is_active
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
-                          : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
-                      }`}
-                    >
-                      {s.is_active ? "Live" : "Hold"}
-                    </button>
-                  </td>
-                  <td className="px-4 py-3.5 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
-                      <a
-                        href={`/admin/scholarships/${s.id}/edit`}
-                        className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
-                        aria-label="Edit"
+              {rows.map(s => {
+                const isSelected = selectedIds.has(s.id);
+                return (
+                  <motion.tr
+                    key={s.id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className={`group hover:bg-blue-50/30 transition-colors ${!s.is_active ? "opacity-60 grayscale-[0.5]" : ""} ${isSelected ? "bg-blue-50/40" : ""}`}
+                  >
+                    <td className="px-3 py-3.5">
+                      <button
+                        onClick={() => onSelect(s.id)}
+                        className="text-slate-400 hover:text-slate-700 transition-colors"
+                        aria-label={isSelected ? "Deselect" : "Select"}
                       >
-                        <Pencil className="w-3.5 h-3.5" />
-                      </a>
-                      {s.application_url && (
+                        {isSelected ? <SquareCheck className="w-4 h-4 text-blue-600" /> : <Square className="w-4 h-4" />}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3.5 min-w-[280px]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
+                          {countryFlag(s.country)}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
+                          <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-slate-200 bg-slate-50 text-[10px] font-medium uppercase tracking-tight text-slate-600">
+                        {s.country}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type)} border-current/20`}>
+                        {s.funding_type}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex flex-col">
+                        <span className="text-xs font-medium text-slate-700">{formatDeadline(s.application_deadline)}</span>
+                        <span className="text-[9px] font-medium text-slate-400 uppercase tracking-tighter mt-0.5">Closes</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <button
+                        onClick={() => onToggle(s.id, s.is_active)}
+                        className={`inline-flex items-center gap-2 rounded px-3 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
+                          s.is_active
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
+                            : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                        }`}
+                      >
+                        {s.is_active ? "Live" : "Hold"}
+                      </button>
+                    </td>
+                    <td className="px-4 py-3.5 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
                         <a
-                          href={s.application_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          href={`/admin/scholarships/${s.id}/edit`}
                           className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
-                          aria-label="Open application URL"
+                          aria-label="Edit"
                         >
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <Pencil className="w-3.5 h-3.5" />
                         </a>
-                      )}
-                    </div>
-                  </td>
-                </motion.tr>
-              ))}
+                        {s.application_url && (
+                          <a
+                            href={s.application_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                            aria-label="Open application URL"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <ActionDropdown
+                          actions={[
+                            {
+                              label: "View Public",
+                              icon: <Eye className="w-3.5 h-3.5" />,
+                              onClick: () => window.open(`/scholarships/${s.id}`, "_blank"),
+                            },
+                            {
+                              label: "Copy ID",
+                              icon: <Copy className="w-3.5 h-3.5" />,
+                              onClick: () => { navigator.clipboard.writeText(s.id); },
+                            },
+                            {
+                              label: "Delete",
+                              icon: <Trash2 className="w-3.5 h-3.5" />,
+                              danger: true,
+                              onClick: () => onDelete(s.id),
+                            },
+                          ]}
+                        />
+                      </div>
+                    </td>
+                  </motion.tr>
+                );
+              })}
             </AnimatePresence>
           </tbody>
         </table>
@@ -584,84 +769,125 @@ function ListView({
 // ── Grid view ────────────────────────────────────────────────
 
 function GridView({
-  rows, onToggle,
-}: { rows: Scholarship[]; onToggle: (id: string, current: boolean) => void }) {
+  rows,
+  onToggle,
+  selectedIds,
+  onSelect,
+  onDelete,
+}: {
+  rows: Scholarship[];
+  onToggle: (id: string, current: boolean) => void;
+  selectedIds: Set<string>;
+  onSelect: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {
   return (
     <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <AnimatePresence mode="popLayout">
-        {rows.map(s => (
-          <motion.div
-            key={s.id}
-            layout
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{    opacity: 0 }}
-            className={`group bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-all flex flex-col ${
-              !s.is_active ? "opacity-60 grayscale-[0.4]" : ""
-            }`}
-          >
-            <div className="p-4 flex-1 flex flex-col">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl shadow-inner shrink-0">
-                  {countryFlag(s.country)}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="text-sm font-medium text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    {s.name}
-                  </h3>
-                  <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[9px] font-medium uppercase tracking-tight text-slate-600">
-                  {s.country}
-                </span>
-                <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type)} border-current/20`}>
-                  {s.funding_type}
-                </span>
-              </div>
-
-              <div className="text-[10px] font-medium text-slate-500 flex items-center gap-1.5 mt-auto">
-                <Calendar className="w-3 h-3 text-slate-400" />
-                <span className="uppercase tracking-tight">Closes {formatDeadline(s.application_deadline)}</span>
-              </div>
-            </div>
-
-            <div className="border-t border-slate-100 px-3 py-2 flex items-center justify-between gap-2">
-              <button
-                onClick={() => onToggle(s.id, s.is_active)}
-                className={`inline-flex items-center gap-2 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
-                  s.is_active
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
-                    : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
-                }`}
-              >
-                {s.is_active ? "Live" : "Hold"}
-              </button>
-              <div className="flex items-center gap-1.5">
-                <a
-                  href={`/admin/scholarships/${s.id}/edit`}
-                  className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
-                  aria-label="Edit"
-                >
-                  <Pencil className="w-3 h-3" />
-                </a>
-                {s.application_url && (
-                  <a
-                    href={s.application_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
-                    aria-label="Open application URL"
+        {rows.map(s => {
+          const isSelected = selectedIds.has(s.id);
+          return (
+            <motion.div
+              key={s.id}
+              layout
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className={`group bg-white border rounded-lg shadow-sm hover:shadow-md transition-all flex flex-col ${
+                !s.is_active ? "opacity-60 grayscale-[0.4]" : ""
+              } ${isSelected ? "border-blue-400 ring-1 ring-blue-400/30" : "border-slate-200"}`}
+            >
+              <div className="p-4 flex-1 flex flex-col">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl shadow-inner shrink-0">
+                    {countryFlag(s.country)}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-medium text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {s.name}
+                    </h3>
+                    <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
+                  </div>
+                  <button
+                    onClick={() => onSelect(s.id)}
+                    className="text-slate-400 hover:text-blue-600 transition-colors"
+                    aria-label={isSelected ? "Deselect" : "Select"}
                   >
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
-                )}
+                    {isSelected ? <SquareCheck className="w-4 h-4 text-blue-600" /> : <Square className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-1.5 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[9px] font-medium uppercase tracking-tight text-slate-600">
+                    {s.country}
+                  </span>
+                  <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type)} border-current/20`}>
+                    {s.funding_type}
+                  </span>
+                </div>
+
+                <div className="text-[10px] font-medium text-slate-500 flex items-center gap-1.5 mt-auto">
+                  <Calendar className="w-3 h-3 text-slate-400" />
+                  <span className="uppercase tracking-tight">Closes {formatDeadline(s.application_deadline)}</span>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
+
+              <div className="border-t border-slate-100 px-3 py-2 flex items-center justify-between gap-2">
+                <button
+                  onClick={() => onToggle(s.id, s.is_active)}
+                  className={`inline-flex items-center gap-2 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
+                    s.is_active
+                      ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
+                      : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                  }`}
+                >
+                  {s.is_active ? "Live" : "Hold"}
+                </button>
+                <div className="flex items-center gap-1.5">
+                  <a
+                    href={`/admin/scholarships/${s.id}/edit`}
+                    className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                    aria-label="Edit"
+                  >
+                    <Pencil className="w-3 h-3" />
+                  </a>
+                  {s.application_url && (
+                    <a
+                      href={s.application_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                      aria-label="Open application URL"
+                    >
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  )}
+                  <ActionDropdown
+                    align="right"
+                    actions={[
+                      {
+                        label: "View Public",
+                        icon: <Eye className="w-3.5 h-3.5" />,
+                        onClick: () => window.open(`/scholarships/${s.id}`, "_blank"),
+                      },
+                      {
+                        label: "Copy ID",
+                        icon: <Copy className="w-3.5 h-3.5" />,
+                        onClick: () => { navigator.clipboard.writeText(s.id); },
+                      },
+                      {
+                        label: "Delete",
+                        icon: <Trash2 className="w-3.5 h-3.5" />,
+                        danger: true,
+                        onClick: () => onDelete(s.id),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </AnimatePresence>
     </motion.div>
   );

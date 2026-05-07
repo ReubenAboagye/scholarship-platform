@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import AdminSidebar from "@/components/admin/AdminSidebar";
+import AdminLayoutClient from "@/components/admin/AdminLayoutClient";
 import { getAuthenticatedUser, isAdminUser } from "@/lib/auth/admin";
-import { ExternalLink, Search, Bell } from "lucide-react";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -15,62 +14,5 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const admin = await isAdminUser(supabase, user.id);
   if (!admin) redirect("/dashboard");
 
-  return (
-    <div className="h-screen bg-slate-50 flex overflow-hidden">
-      <AdminSidebar profile={profile} />
-      
-      <div className="flex-1 flex flex-col min-w-0 relative">
-        {/* Top Navigation Bar */}
-        <header className="sticky top-0 z-30 h-14 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            {/* Mobile Menu Trigger (Visual Only for now as mobile sidebar isn't implemented) */}
-            <div className="md:hidden w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center">
-              <div className="space-y-1">
-                <div className="w-5 h-0.5 bg-slate-600 rounded-full" />
-                <div className="w-3 h-0.5 bg-slate-600 rounded-full" />
-                <div className="w-5 h-0.5 bg-slate-600 rounded-full" />
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider">
-              <span className="text-slate-400">Admin</span>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-900">Dashboard</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 lg:gap-5">
-            {/* Functional-looking Search */}
-            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-slate-400 focus-within:ring-2 focus-within:ring-blue-500/10 focus-within:border-blue-500/50 transition-all">
-              <Search className="w-3.5 h-3.5" />
-              <input type="text" placeholder="Search Console..." className="bg-transparent border-none outline-none text-xs text-slate-900 w-32 lg:w-40 placeholder:text-slate-400" />
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button className="relative w-9 h-9 flex items-center justify-center rounded-lg hover:bg-slate-100 transition-colors">
-                <Bell className="w-5 h-5 text-slate-600" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />
-              </button>
-              
-              <a 
-                href="/" 
-                target="_blank"
-                className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 text-slate-50 rounded text-[11px] font-normal uppercase tracking-wider hover:bg-slate-800 transition-colors shadow-sm"
-              >
-                <span>Live Site</span>
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-20 md:pb-8 custom-scrollbar relative z-10">
-          <div className="max-w-[1600px] mx-auto">
-            {children}
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+  return <AdminLayoutClient profile={profile}>{children}</AdminLayoutClient>;
 }

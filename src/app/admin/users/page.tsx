@@ -4,11 +4,14 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
-  Users, Search, MoreVertical, Mail, MapPin, Calendar, Shield,
+  Users, Search, Mail, MapPin, Calendar, Shield,
   Filter, Download, ChevronLeft, ChevronRight, X, Crown, UserCheck,
+  Eye, ClipboardCopy,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
+import ActionDropdown from "@/components/admin/ActionDropdown";
+import { useToast } from "@/components/admin/ToastProvider";
 
 // ─────────────────────────────────────────────────────────────
 // Admin users page.
@@ -60,6 +63,7 @@ function readStringParam<T extends string>(
 export default function AdminUsersPage() {
   const router       = useRouter();
   const searchParams = useSearchParams();
+  const toast        = useToast();
 
   // ── URL-driven state ──
   const search        = searchParams.get("q") ?? "";
@@ -77,6 +81,7 @@ export default function AdminUsersPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<{ user: UserRow; nextRole: "user" | "admin" } | null>(null);
   const [working, setWorking] = useState(false);
+  const [detailUser, setDetailUser] = useState<UserRow | null>(null);
 
   const updateParams = useCallback((patch: Record<string, string | string[] | null>, opts?: { keepPage?: boolean }) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -214,12 +219,13 @@ export default function AdminUsersPage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        alert(body?.error ?? "Role change failed");
+        toast.addToast(body?.error ?? "Role change failed", "error");
         return;
       }
       setUsers(prev => prev.map(u =>
         u.id === confirm.user.id ? { ...u, role: confirm.nextRole } : u
       ));
+      toast.addToast(`User ${confirm.nextRole === "admin" ? "promoted" : "demoted"} successfully`, "success");
       setConfirm(null);
     } finally {
       setWorking(false);
@@ -522,10 +528,25 @@ export default function AdminUsersPage() {
                   <span>{u.role === "admin" ? "Demote" : "Promote"}</span>
                 </button>
 
-                {/* Reserved for future per-row actions (suspend, etc.) */}
-                <button className="w-8 h-8 flex items-center justify-center rounded bg-slate-50 text-slate-400 hover:text-slate-900 transition-colors" aria-label="More">
-                  <MoreVertical className="w-4 h-4" />
-                </button>
+                <ActionDropdown
+                  actions={[
+                    {
+                      label: "View Details",
+                      icon: <Eye className="w-3.5 h-3.5" />,
+                      onClick: () => setDetailUser(u),
+                    },
+                    {
+                      label: "Copy Email",
+                      icon: <ClipboardCopy className="w-3.5 h-3.5" />,
+                      onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
+                    },
+                    {
+                      label: "Copy ID",
+                      icon: <ClipboardCopy className="w-3.5 h-3.5" />,
+                      onClick: () => { navigator.clipboard.writeText(u.id); toast.addToast("ID copied", "info"); },
+                    },
+                  ]}
+                />
               </div>
             </motion.div>
           ))}
@@ -643,6 +664,131 @@ export default function AdminUsersPage() {
                 >
                   {working ? "Working…" : confirm.nextRole === "admin" ? "Promote" : "Demote"}
                 </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── User detail drawer ──────────────────────────── */}
+      <AnimatePresence>
+        {detailUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => setDetailUser(null)}
+          >
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="w-full max-w-md bg-white border-l border-slate-200 shadow-2xl h-full overflow-y-auto custom-scrollbar"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6 space-y-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded bg-slate-900 flex items-center justify-center text-lg font-medium text-white uppercase">
+                      {(detailUser.full_name || detailUser.email)[0].toUpperCase()}
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-medium text-slate-900">
+                        {detailUser.full_name || "New Explorer"}
+                      </h2>
+                      <p className="text-xs text-slate-500">{detailUser.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setDetailUser(null)}
+                    className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded transition-colors"
+                    aria-label="Close"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+                    <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-500">Profile Summary</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Role</p>
+                        <span className={`inline-flex items-center gap-1.5 mt-1 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-widest border ${
+                          detailUser.role === "admin"
+                            ? "bg-amber-50 text-amber-600 border-amber-200/50"
+                            : "bg-blue-50 text-blue-600 border-blue-200/50"
+                        }`}>
+                          {detailUser.role}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Country</p>
+                        <p className="text-sm font-medium text-slate-700 mt-1">{detailUser.country_of_origin || "Not specified"}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Onboarding</p>
+                        <p className="text-sm font-medium text-slate-700 mt-1">
+                          {detailUser.onboarding_complete ? "Complete" : "Incomplete"}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Joined</p>
+                        <p className="text-sm font-medium text-slate-700 mt-1">
+                          {new Date(detailUser.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
+                    <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-500">Identifiers</h3>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500 font-mono">{detailUser.id}</p>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(detailUser.id); toast.addToast("ID copied", "info"); }}
+                          className="text-[10px] font-medium uppercase tracking-wider text-slate-500 hover:text-slate-900 transition-colors"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-slate-500">{detailUser.email}</p>
+                        <button
+                          onClick={() => { navigator.clipboard.writeText(detailUser.email); toast.addToast("Email copied", "info"); }}
+                          className="text-[10px] font-medium uppercase tracking-wider text-slate-500 hover:text-slate-900 transition-colors"
+                        >
+                          Copy
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-slate-100 flex gap-2">
+                  <a
+                    href={`mailto:${detailUser.email}`}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded text-xs font-medium uppercase tracking-wider hover:bg-slate-800 transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5" /> Email User
+                  </a>
+                  {detailUser.id !== currentUserId && (
+                    <button
+                      onClick={() => { setDetailUser(null); requestPromote(detailUser); }}
+                      className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded text-xs font-medium uppercase tracking-wider transition-colors ${
+                        detailUser.role === "admin"
+                          ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
+                          : "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100"
+                      }`}
+                    >
+                      {detailUser.role === "admin" ? <UserCheck className="w-3.5 h-3.5" /> : <Crown className="w-3.5 h-3.5" />}
+                      {detailUser.role === "admin" ? "Demote" : "Promote"}
+                    </button>
+                  )}
+                </div>
               </div>
             </motion.div>
           </motion.div>

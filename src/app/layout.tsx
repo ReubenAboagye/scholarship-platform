@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import PageViewTracker from "@/components/tracking/PageViewTracker";
@@ -11,6 +11,19 @@ export const metadata: Metadata = {
   verification: {
     google: "goMoxBw1rpkbCyFAH_jITdw0bmLF4BkYFFitr2p-yPY",
   },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "ScholarBridge",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1e3a8a",
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -37,6 +50,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PageViewTracker />
         </Suspense>
         {children}
+        <script
+          id="sw-register"
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js').catch(function(err) {
+                  console.error('SW registration failed:', err);
+                });
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   );
