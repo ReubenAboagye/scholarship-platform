@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   description:
     "Scholarship discovery for students pursuing higher education in the UK, USA, Germany, and Canada. Verified opportunities, direct application links, matched to your profile.",
   keywords: ["scholarship", "international scholarship", "scholarship finder", "study abroad funding"],
+  verification: {
+    google: "goMoxBw1rpkbCyFAH_jITdw0bmLF4BkYFFitr2p-yPY",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
