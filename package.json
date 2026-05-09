@@ -12,6 +12,7 @@
   "dependencies": {
     "@ai-sdk/google": "^3.0.62",
     "@ai-sdk/openai": "^3.0.52",
+    "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-dialog": "^1.1.15",

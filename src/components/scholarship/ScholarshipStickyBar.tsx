@@ -46,7 +46,7 @@ export default function ScholarshipStickyBar({
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur
+      className={`fixed top-0 left-0 right-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur safe-top
         transition-all duration-200
         ${visible ? "translate-y-0 opacity-100" : "-translate-y-full opacity-0 pointer-events-none"}`}
     >

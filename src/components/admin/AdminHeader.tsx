@@ -27,7 +27,7 @@ export default function AdminHeader() {
   const title = pageLabel(pathname);
 
   return (
-    <header className="sticky top-0 z-30 h-14 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-5 lg:px-10">
+    <header className="sticky top-0 z-30 min-h-[56px] bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-5 lg:px-10 safe-top">
       {/* Left: Breadcrumbs & Title */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="hidden md:flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider">
