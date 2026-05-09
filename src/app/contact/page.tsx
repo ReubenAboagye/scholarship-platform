@@ -160,17 +160,17 @@ export default function ContactPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Full Name</label>
-                          <input required className={inp} placeholder="Your name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                          <input required className={inp} placeholder="Your name" value={form.name} onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))} />
                         </div>
                         <div className="space-y-2">
                           <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Email Address</label>
-                          <input required type="email" className={inp} placeholder="you@example.com" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                          <input required type="email" className={inp} placeholder="you@example.com" value={form.email} onChange={(e) => setForm(prev => ({ ...prev, email: e.target.value }))} />
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Subject</label>
-                        <select required className={inp + " cursor-pointer appearance-none"} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })}>
+                        <select required className={inp + " cursor-pointer appearance-none"} value={form.subject} onChange={(e) => setForm(prev => ({ ...prev, subject: e.target.value }))}>
                           <option value="">Select a subject</option>
                           <option>General enquiry</option>
                           <option>Suggest a scholarship</option>
@@ -182,7 +182,7 @@ export default function ContactPage() {
 
                       <div className="space-y-2">
                         <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-widest">Message</label>
-                        <textarea required rows={5} className={inp + " resize-none"} placeholder="Tell us how we can help..." value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} />
+                        <textarea required rows={5} className={inp + " resize-none"} placeholder="Tell us how we can help..." value={form.message} onChange={(e) => setForm(prev => ({ ...prev, message: e.target.value }))} />
                       </div>
 
                       <button 

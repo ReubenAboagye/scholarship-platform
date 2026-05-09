@@ -48,14 +48,14 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
   if (p.effort === "quick")  query = query.lte("effort_minutes", 60);
   if (p.effort === "medium") query = query.gt("effort_minutes", 60);
 
-  const { data: scholarships } = await query;
-
-  // Metadata for filters
-  const { data: countryRows } = await supabase
-    .from("scholarships")
-    .select("country")
-    .eq("is_active", true)
-    .order("country", { ascending: true });
+  const [{ data: scholarships }, { data: countryRows }] = await Promise.all([
+    query,
+    supabase
+      .from("scholarships")
+      .select("country")
+      .eq("is_active", true)
+      .order("country", { ascending: true }),
+  ]);
   
   const countries = ["All", ...Array.from(new Set((countryRows ?? []).map((r: any) => r.country)))];
   const fundingTypes  = ["All", "Full", "Partial", "Tuition Only", "Living Allowance"];

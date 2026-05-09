@@ -333,7 +333,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   className={fieldClass("name")}
                   value={form.name}
                   onBlur={() => markTouched("name")}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  onChange={(e) => setForm(prev => ({ ...prev, name: e.target.value }))}
                   placeholder="e.g. Chevening Scholarship"
                 />
                 <FieldError msg={touched.name ? fieldErrors.name || liveErrors.name : undefined} />
@@ -347,7 +347,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                     className={fieldClass("provider")}
                     value={form.provider}
                     onBlur={() => markTouched("provider")}
-                    onChange={(e) => setForm({ ...form, provider: e.target.value })}
+                    onChange={(e) => setForm(prev => ({ ...prev, provider: e.target.value }))}
                     placeholder="e.g. UK FCDO"
                   />
                   <FieldError msg={touched.provider ? fieldErrors.provider || liveErrors.provider : undefined} />
@@ -356,7 +356,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
                     Country <span className="text-red-400">*</span>
                   </label>
-                  <CountrySelect value={form.country} onChange={(v) => setForm({ ...form, country: v })} />
+                  <CountrySelect value={form.country} onChange={(v) => setForm(prev => ({ ...prev, country: v }))} />
                 </div>
               </div>
               <div>
@@ -368,7 +368,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   className={fieldClass("description", "resize-none")}
                   value={form.description}
                   onBlur={() => markTouched("description")}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  onChange={(e) => setForm(prev => ({ ...prev, description: e.target.value }))}
                   placeholder="Describe the scholarship, its mission, and what it covers..."
                 />
                 <FieldError msg={touched.description ? fieldErrors.description || liveErrors.description : undefined} />
@@ -386,13 +386,13 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
                     Funding Type <span className="text-red-400">*</span>
                   </label>
-                  <select className={fieldClass("funding_type")} value={form.funding_type} onChange={(e) => setForm({ ...form, funding_type: e.target.value })}>
+                  <select className={fieldClass("funding_type")} value={form.funding_type} onChange={(e) => setForm(prev => ({ ...prev, funding_type: e.target.value }))}>
                     {FUNDING.map((f) => <option key={f}>{f}</option>)}
                   </select>
                 </div>
                 <div>
                   <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">Funding Amount</label>
-                  <input className={fieldClass("funding_amount")} value={form.funding_amount} onChange={(e) => setForm({ ...form, funding_amount: e.target.value })} placeholder="e.g. Full tuition + £1,200/month" />
+                  <input className={fieldClass("funding_amount")} value={form.funding_amount} onChange={(e) => setForm(prev => ({ ...prev, funding_amount: e.target.value }))} placeholder="e.g. Full tuition + £1,200/month" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -407,7 +407,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                       className={fieldClass("application_url", "pl-10")}
                       value={form.application_url}
                       onBlur={() => markTouched("application_url")}
-                      onChange={(e) => setForm({ ...form, application_url: e.target.value })}
+                      onChange={(e) => setForm(prev => ({ ...prev, application_url: e.target.value }))}
                       placeholder="https://..."
                     />
                   </div>
@@ -421,7 +421,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                       type="date"
                       className={fieldClass("application_deadline", "pl-10")}
                       value={form.application_deadline}
-                      onChange={(e) => setForm({ ...form, application_deadline: e.target.value })}
+                      onChange={(e) => setForm(prev => ({ ...prev, application_deadline: e.target.value }))}
                     />
                   </div>
                 </div>
@@ -460,7 +460,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                 <input
                   className={fieldClass("fields_of_study")}
                   value={form.fields_of_study}
-                  onChange={(e) => setForm({ ...form, fields_of_study: e.target.value })}
+                  onChange={(e) => setForm(prev => ({ ...prev, fields_of_study: e.target.value }))}
                   placeholder="e.g. Engineering, Medicine, Any"
                 />
                 {selectedFields.length > 0 && (
@@ -532,7 +532,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   rows={4}
                   className={fieldClass("eligibility_criteria", "resize-none")}
                   value={form.eligibility_criteria}
-                  onChange={(e) => setForm({ ...form, eligibility_criteria: e.target.value })}
+                  onChange={(e) => setForm(prev => ({ ...prev, eligibility_criteria: e.target.value }))}
                   placeholder={"Must be a citizen of a Commonwealth country\nHold a Bachelor's degree\nAge under 35"}
                 />
               </div>
@@ -554,7 +554,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <input
                     className={fieldClass("citizenship_required")}
                     value={form.citizenship_required}
-                    onChange={(e) => setForm({ ...form, citizenship_required: e.target.value })}
+                    onChange={(e) => setForm(prev => ({ ...prev, citizenship_required: e.target.value }))}
                     placeholder="e.g. African, Commonwealth"
                   />
                 </div>
@@ -570,7 +570,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                     className={fieldClass("min_gpa")}
                     value={form.min_gpa}
                     onBlur={() => markTouched("min_gpa")}
-                    onChange={(e) => setForm({ ...form, min_gpa: e.target.value })}
+                    onChange={(e) => setForm(prev => ({ ...prev, min_gpa: e.target.value }))}
                     placeholder="e.g. 3.5"
                   />
                   <FieldError msg={touched.min_gpa ? fieldErrors.min_gpa || liveErrors.min_gpa : undefined} />
@@ -586,7 +586,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                     className={fieldClass("effort_minutes")}
                     value={form.effort_minutes}
                     onBlur={() => markTouched("effort_minutes")}
-                    onChange={(e) => setForm({ ...form, effort_minutes: e.target.value })}
+                    onChange={(e) => setForm(prev => ({ ...prev, effort_minutes: e.target.value }))}
                     placeholder="e.g. 120"
                   />
                   <FieldError msg={touched.effort_minutes ? fieldErrors.effort_minutes || liveErrors.effort_minutes : undefined} />
