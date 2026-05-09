@@ -294,7 +294,7 @@ export default function FilterSidebar({
     <>
       {/* Mobile trigger: quiet bar with filter button + active-count */}
       <div
-        className="lg:hidden sticky top-[-16px] z-40 -mx-4 px-4 py-3
+        className="lg:hidden sticky top-[-16px] z-10 -mx-4 px-4 py-3
                    bg-white/95 backdrop-blur-md border-b border-zinc-200 mb-6
                    flex items-center justify-between"
       >
@@ -344,32 +344,36 @@ export default function FilterSidebar({
         />
       </aside>
 
-      {/* Mobile drawer overlay */}
+      {/* Mobile modal overlay */}
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-zinc-900/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[60] bg-zinc-900/50 backdrop-blur-sm lg:hidden animate-fade-in"
           onClick={() => setDrawerOpen(false)}
         />
       )}
 
-      {/* Mobile drawer panel */}
+      {/* Mobile modal panel */}
       <div
-        className={`fixed inset-y-0 right-0 z-[70] w-80 bg-white shadow-xl lg:hidden
-                    transform transition-transform duration-200 ease-out
-                    ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed inset-0 z-[70] lg:hidden flex items-center justify-center p-4
+                    ${drawerOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}
+                    transition-all duration-300`}
       >
-        <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200">
-            <h2 className="text-base font-semibold text-zinc-900">Filters</h2>
+        <div
+          className={`bg-white rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-hidden
+                      ${drawerOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"}
+                      transition-all duration-300`}
+        >
+          <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200">
+            <h2 className="text-lg font-semibold text-zinc-900">Filters</h2>
             <button
               onClick={() => setDrawerOpen(false)}
               aria-label="Close filters"
-              className="p-1.5 hover:bg-zinc-100 rounded-md transition-colors"
+              className="p-2 hover:bg-zinc-100 rounded-full transition-colors"
             >
-              <X className="size-4 text-zinc-500" />
+              <X className="size-5 text-zinc-500" />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto px-5 py-3">
+          <div className="flex-1 overflow-y-auto px-6 py-4 max-h-[calc(90vh-140px)]">
             <FilterContent
               active={active}
               baseUrl={baseUrl}
@@ -381,10 +385,10 @@ export default function FilterSidebar({
               onClose={handleClose}
             />
           </div>
-          <div className="p-4 border-t border-zinc-200">
+          <div className="p-4 border-t border-zinc-200 bg-zinc-50">
             <button
               onClick={() => setDrawerOpen(false)}
-              className="w-full bg-brand-600 text-white py-2.5 rounded-md
+              className="w-full bg-brand-600 text-white py-3 rounded-lg
                          font-semibold text-sm hover:bg-brand-700 transition-colors"
             >
               Apply filters
