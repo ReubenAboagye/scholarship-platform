@@ -87,7 +87,7 @@ function FilterContent({
           {active.international === "true" && <input type="hidden" name="international" value="true" />}
           {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -tranzinc-y-1/2 size-3.5 text-zinc-400" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-zinc-400" />
             <input
               name="search" defaultValue={active.search} placeholder="Keyword…"
               className="w-full pl-8 pr-3 py-2 text-sm bg-white border border-zinc-200 rounded-md
@@ -220,7 +220,7 @@ function FilterContent({
                 >
                   <span
                     className={`absolute top-0.5 size-3 bg-white rounded-full shadow-sm transition-transform
-                      ${on ? "tranzinc-x-4" : "tranzinc-x-0.5"}`}
+                      ${on ? "translate-x-4" : "translate-x-0.5"}`}
                   />
                 </span>
               </a>
@@ -356,7 +356,7 @@ export default function FilterSidebar({
       <div
         className={`fixed inset-y-0 right-0 z-[70] w-80 bg-white shadow-xl lg:hidden
                     transform transition-transform duration-200 ease-out
-                    ${drawerOpen ? "tranzinc-x-0" : "tranzinc-x-full"}`}
+                    ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="h-full flex flex-col">
           <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200">

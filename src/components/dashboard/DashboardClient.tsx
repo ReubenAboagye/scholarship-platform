@@ -2,7 +2,7 @@
 
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { Sparkles, Bookmark, ListChecks, ArrowRight, AlertCircle, Clock, CheckCircle } from "lucide-react";
+import { Sparkles, Bookmark, ListChecks, ArrowRight, AlertCircle, Clock, CheckCircle, Trophy, PlusCircle, RefreshCw } from "lucide-react";
 import { formatDeadline, cn, countryFlag } from "@/lib/utils";
 
 interface Props {
@@ -12,10 +12,13 @@ interface Props {
   completionPct: number;
   bannerHref: string;
   saved: number;
+  savedData: any[];
   tracked: any[];
   dueThisWeek: any[];
   topMatches: any[];
   hasMatchHistory: boolean;
+  potentialValue: number;
+  acceptedValue: number;
 }
 
 const fade: Variants = {
@@ -46,8 +49,9 @@ function scoreColor(score: number) {
 
 export default function DashboardClient({
   firstName, profileComplete, onboardingComplete,
-  completionPct, bannerHref, saved, tracked,
+  completionPct, bannerHref, saved, savedData, tracked,
   dueThisWeek, topMatches, hasMatchHistory,
+  potentialValue, acceptedValue,
 }: Props) {
 
   const activeCount    = tracked.filter((t) => ["Interested","In Progress"].includes(t.status)).length;
@@ -70,6 +74,110 @@ export default function DashboardClient({
             className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-zinc-800 bg-white border border-zinc-300 hover:bg-zinc-50 px-3.5 py-2 rounded-md mt-1 transition-all">
             Browse Directory <ArrowRight className="size-3" />
           </a>
+        </m.div>
+
+        {/* ── Quick Actions Bar ── */}
+        <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-semibold text-zinc-800">Quick Actions</h2>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {!profileComplete && (
+              <a href={bannerHref}
+                className="flex flex-col items-center gap-2 p-3 rounded-lg bg-amber-50 hover:bg-amber-100 transition-colors group">
+                <div className="size-8 bg-amber-200 rounded-lg flex items-center justify-center group-hover:bg-amber-300 transition-colors">
+                  <AlertCircle className="size-4 text-amber-700" />
+                </div>
+                <span className="text-xs font-medium text-amber-800 text-center">Complete Profile</span>
+              </a>
+            )}
+            {profileComplete && !hasMatchHistory && (
+              <a href="/dashboard/match"
+                className="flex flex-col items-center gap-2 p-3 rounded-lg bg-brand-50 hover:bg-brand-100 transition-colors group">
+                <div className="size-8 bg-brand-200 rounded-lg flex items-center justify-center group-hover:bg-brand-300 transition-colors">
+                  <Sparkles className="size-4 text-brand-700" />
+                </div>
+                <span className="text-xs font-medium text-brand-800 text-center">Run AI Match</span>
+              </a>
+            )}
+            <a href="/dashboard/scholarships"
+              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
+              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
+                <Bookmark className="size-4 text-zinc-700" />
+              </div>
+              <span className="text-xs font-medium text-zinc-800 text-center">Browse Scholarships</span>
+            </a>
+            <a href="/dashboard/profile"
+              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
+              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
+                <ListChecks className="size-4 text-zinc-700" />
+              </div>
+              <span className="text-xs font-medium text-zinc-800 text-center">Update Profile</span>
+            </a>
+            <a href="/dashboard/tracker"
+              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
+              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
+                <Clock className="size-4 text-zinc-700" />
+              </div>
+              <span className="text-xs font-medium text-zinc-800 text-center">Track Applications</span>
+            </a>
+          </div>
+        </m.div>
+
+        {/* ── Deadline Timeline ── */}
+        <m.div variants={fade}>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+              <Clock className="size-4 text-red-500" /> Upcoming Deadlines
+            </h2>
+            <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
+          </div>
+          <div className="bg-white border border-zinc-200 rounded-lg p-4">
+            {dueThisWeek.length === 0 ? (
+              <div className="text-center py-4">
+                <Clock className="size-8 text-zinc-300 mx-auto mb-2" />
+                <p className="text-sm text-zinc-500">No deadlines this week</p>
+                <p className="text-xs text-zinc-400 mt-1">Great job staying ahead!</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {dueThisWeek.map((t: any) => {
+                  const deadline = t.scholarships?.application_deadline;
+                  const days = deadline ? daysLeft(deadline) : null;
+                  const urgencyColor = days && days <= 3 ? 'text-red-600 bg-red-50' : 
+                                       days && days <= 7 ? 'text-amber-600 bg-amber-50' : 'text-blue-600 bg-blue-50';
+                  return (
+                    <div key={t.id} className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                      <div className={cn("size-2 rounded-full flex-shrink-0",
+                        days && days <= 3 ? 'bg-red-500' : 
+                        days && days <= 7 ? 'bg-amber-500' : 'bg-blue-500'
+                      )} />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zinc-800 truncate">{t.scholarships?.name ?? "Scholarship"}</p>
+                        <p className="text-xs text-zinc-500">
+                          {deadline ? new Date(deadline).toLocaleDateString('en-US', { 
+                            weekday: 'short', 
+                            month: 'short', 
+                            day: 'numeric' 
+                          }) : 'No deadline'}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={cn("text-xs font-bold px-2 py-1 rounded-full", urgencyColor)}>
+                          {days !== null ? `${days}d left` : "TBA"}
+                        </span>
+                        <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full",
+                          t.status === "In Progress" ? "bg-blue-50 text-blue-600" : "bg-zinc-50 text-zinc-500"
+                        )}>
+                          {t.status}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </m.div>
 
         {/* ── Profile banner (only when incomplete) ── */}
@@ -105,7 +213,7 @@ export default function DashboardClient({
         <m.div variants={stagger} className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {[
             { label: "Saved",     value: saved,          icon: Bookmark,    href: "/dashboard/saved",   color: "bg-brand-50 text-brand-600" },
-            { label: "Active",    value: activeCount,    icon: ListChecks,  href: "/dashboard/tracker", color: "bg-indigo-50 text-indigo-600" },
+            { label: "In Progress", value: activeCount,    icon: ListChecks,  href: "/dashboard/tracker", color: "bg-indigo-50 text-indigo-600" },
             { label: "Submitted", value: submittedCount, icon: Clock,       href: "/dashboard/tracker", color: "bg-amber-50 text-amber-600" },
             { label: "Accepted",  value: acceptedCount,  icon: CheckCircle, href: "/dashboard/tracker", color: "bg-emerald-50 text-emerald-600" },
           ].map((s) => (
@@ -217,11 +325,11 @@ export default function DashboardClient({
           )}
         </m.div>
 
-        {/* ── Application tracker summary ── */}
+        {/* ── Application Progress Pipeline ── */}
         <m.div variants={fade}>
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-sm text-zinc-800 flex items-center gap-2">
-              <ListChecks className="size-4 text-indigo-500" /> Application tracker
+              <ListChecks className="size-4 text-indigo-500" /> Application Pipeline
             </h2>
             <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">Manage →</a>
           </div>
@@ -234,31 +342,155 @@ export default function DashboardClient({
               </a>
             </div>
           ) : (
-            <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden divide-y divide-zinc-50">
-              {tracked.slice(0, 5).map((t: any) => (
-                <div key={t.id} className="flex items-center gap-3 px-4 py-3">
-                  <div className={cn("size-2 rounded-full flex-shrink-0",
-                    t.status === "Accepted"          ? "bg-emerald-500"
-                    : t.status === "Submitted"       ? "bg-brand-500"
-                    : t.status === "In Progress"     ? "bg-blue-400"
-                    : t.status === "Awaiting Decision" ? "bg-amber-400"
-                    : t.status === "Rejected"        ? "bg-rose-400"
-                    : "bg-zinc-300"
-                  )} />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-zinc-800 truncate">{t.scholarships?.name ?? "Scholarship"}</p>
-                    <p className="text-xs text-zinc-400">{t.status}</p>
+            <div className="bg-white border border-zinc-200 rounded-lg p-4">
+              {/* Pipeline stages */}
+              <div className="grid grid-cols-4 gap-2 mb-4">
+                {[
+                  { stage: "Draft", count: tracked.filter(t => ["Interested"].includes(t.status)).length, color: "bg-zinc-100 text-zinc-700 border-zinc-200" },
+                  { stage: "In Progress", count: tracked.filter(t => ["In Progress"].includes(t.status)).length, color: "bg-blue-50 text-blue-700 border-blue-200" },
+                  { stage: "Submitted", count: tracked.filter(t => ["Submitted"].includes(t.status)).length, color: "bg-amber-50 text-amber-700 border-amber-200" },
+                  { stage: "Decision", count: tracked.filter(t => ["Accepted", "Rejected", "Awaiting Decision"].includes(t.status)).length, color: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+                ].map((stage, i) => (
+                  <div key={stage.stage} className="text-center">
+                    <div className={cn("text-xs font-bold px-2 py-1 rounded-lg border mb-1", stage.color)}>
+                      {stage.count}
+                    </div>
+                    <p className="text-[10px] text-zinc-600">{stage.stage}</p>
                   </div>
-                  {t.scholarships?.application_deadline && (
-                    <span className="text-[11px] text-zinc-400 flex-shrink-0">
-                      {formatDeadline(t.scholarships.application_deadline)}
-                    </span>
-                  )}
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Recent applications */}
+              <div className="space-y-2">
+                {tracked.slice(0, 5).map((t: any) => {
+                  const getStageIndex = (status: string) => {
+                    if (["Interested"].includes(status)) return 0;
+                    if (["In Progress"].includes(status)) return 1;
+                    if (["Submitted"].includes(status)) return 2;
+                    if (["Accepted", "Rejected", "Awaiting Decision"].includes(status)) return 3;
+                    return 0;
+                  };
+                  
+                  const stageIndex = getStageIndex(t.status);
+                  const stageColors = ["bg-zinc-500", "bg-blue-500", "bg-amber-500", "bg-emerald-500"];
+                  
+                  return (
+                    <div key={t.id} className="flex items-center gap-3 p-2 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors">
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-zinc-800 truncate">{t.scholarships?.name ?? "Scholarship"}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <div className="flex gap-0.5">
+                            {[0, 1, 2, 3].map((i) => (
+                              <div
+                                key={i}
+                                className={cn("h-1 w-4 rounded-full", 
+                                  i <= stageIndex ? stageColors[i] : "bg-zinc-200"
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <span className="text-xs text-zinc-500">{t.status}</span>
+                        </div>
+                      </div>
+                      {t.scholarships?.application_deadline && (
+                        <span className="text-[11px] text-zinc-400 flex-shrink-0">
+                          {formatDeadline(t.scholarships.application_deadline)}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </m.div>
+
+        {/* ── Financial Summary ── */}
+        <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="size-4 text-emerald-600" />
+              <h2 className="text-sm text-zinc-800">Financial Summary</h2>
+            </div>
+            <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View details →</a>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="text-center p-3 bg-zinc-50 rounded-lg">
+              <p className="text-2xl font-bold text-zinc-900">
+                ${potentialValue.toLocaleString()}
+              </p>
+              <p className="text-xs text-zinc-500 mt-1">Potential Award Value</p>
+              <p className="text-[10px] text-zinc-400 mt-1">From active applications</p>
+            </div>
+            <div className="text-center p-3 bg-emerald-50 rounded-lg">
+              <p className="text-2xl font-bold text-emerald-700">
+                ${acceptedValue.toLocaleString()}
+              </p>
+              <p className="text-xs text-emerald-600 mt-1">Accepted Funding</p>
+              <p className="text-[10px] text-emerald-500 mt-1">
+                {acceptedCount > 0 ? `${acceptedCount} scholarship${acceptedCount > 1 ? 's' : ''}` : 'None yet'}
+              </p>
+            </div>
+          </div>
+          {potentialValue > 0 && acceptedValue > 0 && (
+            <div className="mt-3 pt-3 border-t border-zinc-100">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-zinc-500">Success rate</span>
+                <span className="font-semibold text-zinc-700">
+                  {Math.round((acceptedValue / potentialValue) * 100)}%
+                </span>
+              </div>
+            </div>
+          )}
+        </m.div>
+
+        {/* ── Saved Scholarships Preview ── */}
+        {saved > 0 && (
+          <m.div variants={fade}>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+                <Bookmark className="size-4 text-brand-600" /> Saved Scholarships
+              </h2>
+              <a href="/dashboard/saved" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
+            </div>
+            <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden divide-y divide-zinc-50">
+              {savedData.slice(0, 2).map((item: any) => {
+                const s = item.scholarships;
+                if (!s) return null;
+                const deadline = s.application_deadline ? new Date(s.application_deadline) : null;
+                const isUrgent = deadline && (deadline.getTime() - Date.now()) <= 7 * 24 * 60 * 60 * 1000;
+                return (
+                  <a
+                    key={item.id}
+                    href={`/dashboard/scholarships/${s.slug || s.id}`}
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 transition-colors group"
+                  >
+                    <div className="size-5 rounded bg-zinc-100 flex items-center justify-center flex-shrink-0 text-[10px] font-black text-zinc-400">
+                      <Bookmark className="size-3" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-zinc-800 group-hover:text-brand-700 truncate transition-colors">
+                        {s.name}
+                      </p>
+                      <p className="text-xs text-zinc-400 truncate">
+                        {countryFlag(s.country)} {s.provider} · {s.amount ? `$${s.amount.toLocaleString()}` : 'Amount TBD'}
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 text-right">
+                      {deadline && (
+                        <span className={cn("text-[11px] font-semibold px-2 py-0.5 rounded-full", 
+                          isUrgent ? "bg-red-50 text-red-600" : "bg-zinc-50 text-zinc-500"
+                        )}>
+                          {formatDeadline(s.application_deadline)}
+                        </span>
+                      )}
+                    </div>
+                  </a>
+                );
+              })}
+            </div>
+          </m.div>
+        )}
 
         {/* ── Profile completeness meter ── */}
         <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
@@ -294,6 +526,99 @@ export default function DashboardClient({
               Complete profile to improve match accuracy →
             </a>
           )}
+        </m.div>
+
+        {/* ── Activity Feed ── */}
+        <m.div variants={fade}>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+              <RefreshCw className="size-4 text-brand-600" /> Recent Activity
+            </h2>
+          </div>
+          <div className="bg-white border border-zinc-200 rounded-lg p-4">
+            <div className="space-y-3">
+              {/* Recent match activity */}
+              {hasMatchHistory && validTopMatches.length > 0 && (
+                <div className="flex items-start gap-3">
+                  <div className="size-8 bg-brand-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="size-4 text-brand-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-zinc-800">
+                      <span className="font-semibold">New AI matches found</span>
+                    </p>
+                    <p className="text-xs text-zinc-500 mt-0.5">
+                      {validTopMatches.length} scholarships matched to your profile
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-zinc-400">Today</span>
+                </div>
+              )}
+
+              {/* Saved scholarship activity */}
+              {savedData.length > 0 && (
+                <div className="flex items-start gap-3">
+                  <div className="size-8 bg-zinc-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Bookmark className="size-4 text-zinc-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-zinc-800">
+                      <span className="font-semibold">{savedData.length} scholarship{savedData.length > 1 ? 's' : ''} saved</span>
+                    </p>
+                    <p className="text-xs text-zinc-500 mt-0.5">
+                      Keep track of opportunities
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-zinc-400">Recent</span>
+                </div>
+              )}
+
+              {/* Application progress */}
+              {tracked.length > 0 && (
+                <div className="flex items-start gap-3">
+                  <div className="size-8 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <ListChecks className="size-4 text-indigo-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-zinc-800">
+                      <span className="font-semibold">{tracked.length} application{tracked.length > 1 ? 's' : ''} tracked</span>
+                    </p>
+                    <p className="text-xs text-zinc-500 mt-0.5">
+                      {activeCount} in progress, {submittedCount} submitted, {acceptedCount} accepted
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-zinc-400">Ongoing</span>
+                </div>
+              )}
+
+              {/* Accepted funding */}
+              {acceptedValue > 0 && (
+                <div className="flex items-start gap-3">
+                  <div className="size-8 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Trophy className="size-4 text-emerald-600" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-zinc-800">
+                      <span className="font-semibold">${acceptedValue.toLocaleString()} accepted</span>
+                    </p>
+                    <p className="text-xs text-zinc-500 mt-0.5">
+                      Congratulations on your success!
+                    </p>
+                  </div>
+                  <span className="text-[10px] text-zinc-400">Achieved</span>
+                </div>
+              )}
+
+              {/* No activity yet */}
+              {!hasMatchHistory && savedData.length === 0 && tracked.length === 0 && (
+                <div className="text-center py-4">
+                  <RefreshCw className="size-8 text-zinc-300 mx-auto mb-2" />
+                  <p className="text-sm text-zinc-500">No recent activity</p>
+                  <p className="text-xs text-zinc-400 mt-1">Start browsing scholarships to get started</p>
+                </div>
+              )}
+            </div>
+          </div>
         </m.div>
 
       </m.div>

@@ -17,8 +17,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="h-[100dvh] bg-paper flex overflow-hidden">
-      <DashboardSidebar profile={profile} />
-      <main className="flex-1 min-w-0 flex flex-col overflow-y-auto">
+      <DashboardSidebar />
+      <main className="flex-1 min-w-0 flex flex-col overflow-y-auto pt-[56px]">
         <DashboardHeader profile={profile} />
         <div className="flex-1 p-5 lg:p-10 pb-28 md:pb-10 custom-scrollbar">
           {children}

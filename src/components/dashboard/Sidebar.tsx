@@ -4,9 +4,8 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Search, Bookmark, ListChecks,
-  User, LogOut, ChevronLeft, Sparkles,
+  User, ChevronLeft, Sparkles,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
@@ -28,28 +27,9 @@ const mobileNavItems = [
   { href: "/dashboard/profile", icon: User,            label: "Profile" },
 ];
 
-interface Props {
-  profile: {
-    full_name: string | null;
-    email: string;
-    role: string;
-    avatar_url: string | null;
-  } | null;
-}
-
-export default function DashboardSidebar({ profile }: Props) {
+export default function DashboardSidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
-
-  async function handleSignOut() {
-    const supabase = createClient();
-    await supabase.auth.signOut();
-    window.location.href = "/";
-  }
-
-  const initials = profile
-    ? (profile.full_name || profile.email)[0].toUpperCase()
-    : "?";
 
   function isActive(href: string) {
     return href === "/dashboard"
@@ -122,43 +102,6 @@ export default function DashboardSidebar({ profile }: Props) {
             );
           })}
         </nav>
-
-        <div className="border-t border-zinc-100/80 shrink-0 p-3">
-          {profile ? (
-            <button
-              onClick={handleSignOut}
-              title="Sign out"
-              className={cn(
-                "w-full flex items-center gap-3 p-3 hover:bg-white/80 rounded-xl transition-colors text-left",
-                collapsed && "justify-center px-2"
-              )}
-            >
-              <div className="size-9 rounded-xl bg-zinc-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
-                {initials}
-              </div>
-              {!collapsed && (
-                <>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-zinc-900 truncate">
-                      {profile.full_name || "Account"}
-                    </p>
-                    <p className="text-[11px] text-zinc-400 truncate">{profile.email}</p>
-                  </div>
-                  <LogOut className="size-4 text-zinc-400 shrink-0" />
-                </>
-              )}
-            </button>
-          ) : (
-            <div className="p-2 text-center">
-              <button
-                onClick={handleSignOut}
-                className="p-2 text-zinc-400 hover:text-zinc-600 hover:bg-white/80 rounded-lg transition-colors"
-              >
-                <LogOut className="size-4 mx-auto" />
-              </button>
-            </div>
-          )}
-        </div>
       </aside>
 
 
@@ -184,7 +127,7 @@ export default function DashboardSidebar({ profile }: Props) {
               <item.icon className={cn("size-[22px]", active && "scale-110")} />
               <span>{item.label}</span>
               {active && (
-                <div className="absolute -top-[1px] left-1/2 -tranzinc-x-1/2 w-8 h-[2px] bg-brand-600 rounded-b-full" />
+                <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-8 h-[2px] bg-brand-600 rounded-b-full" />
               )}
             </a>
           );
