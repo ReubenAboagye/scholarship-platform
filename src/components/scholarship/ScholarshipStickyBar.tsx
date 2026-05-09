@@ -30,12 +30,18 @@ export default function ScholarshipStickyBar({
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    function onScroll() {
-      setVisible(window.scrollY > 280);
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    const sentinel = document.getElementById("scholarship-sticky-trigger");
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setVisible(!entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: "-56px 0px 0px 0px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
   }, []);
 
   return (

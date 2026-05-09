@@ -63,7 +63,7 @@ export default function DashboardSidebar({ profile }: Props) {
       {/* ── Desktop sidebar ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col bg-paper border-r border-slate-200/80 transition-all duration-300 ease-out flex-shrink-0 sticky top-0 h-screen",
+          "hidden md:flex flex-col bg-paper border-r border-slate-200/80 transition-all duration-300 ease-out flex-shrink-0 sticky top-0 h-full",
           collapsed ? "w-[68px]" : "w-[232px]"
         )}
       >

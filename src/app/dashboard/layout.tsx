@@ -16,11 +16,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     .single();
 
   return (
-    <div className="min-h-[100dvh] bg-paper flex overflow-hidden">
+    <div className="h-[100dvh] bg-paper flex overflow-hidden">
       <DashboardSidebar profile={profile} />
-      <main className="flex-1 min-w-0 flex flex-col overflow-hidden">
+      <main className="flex-1 min-w-0 flex flex-col overflow-y-auto">
         <DashboardHeader profile={profile} />
-        <div className="flex-1 overflow-y-auto p-5 lg:p-10 pb-28 md:pb-10 custom-scrollbar">
+        <div className="flex-1 p-5 lg:p-10 pb-28 md:pb-10 custom-scrollbar">
           {children}
         </div>
       </main>

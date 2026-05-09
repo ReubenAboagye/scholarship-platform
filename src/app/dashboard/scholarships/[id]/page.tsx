@@ -271,6 +271,9 @@ export default async function DashboardScholarshipDetailPage({
           </dl>
         </header>
 
+        {/* Sentinel for ScholarshipStickyBar scroll detection */}
+        <div id="scholarship-sticky-trigger" aria-hidden="true" />
+
         {/* ── Main grid: content + sidebar ─────────────────── */}
         <div className="grid lg:grid-cols-3 gap-10">
 
