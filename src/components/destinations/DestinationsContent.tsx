@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { ArrowRight, Globe, CheckCircle, GraduationCap, MapPin } from "lucide-react";
 import { CountryMetadata } from "@/types";
 
@@ -27,7 +27,8 @@ interface DestinationsContentProps {
 
 export default function DestinationsContent({ countries }: DestinationsContentProps) {
   return (
-    <>
+    <LazyMotion features={domAnimation}>
+      <>
       {/* Hero Section - Using Scholarship Page Hero Image */}
       <section className="relative overflow-hidden" style={{ minHeight: "380px" }}>
         <img
@@ -38,22 +39,22 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/50" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
-          <motion.div 
+          <m.div 
             initial="hidden"
             animate="visible"
             variants={stagger}
           >
-            <motion.p variants={fadeInUp} className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90 mb-3">
+            <m.p variants={fadeInUp} className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90 mb-3">
               Global Study Destinations
-            </motion.p>
-            <motion.h1 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-tight tracking-tight mb-6">
+            </m.p>
+            <m.h1 variants={fadeInUp} className="text-3xl sm:text-4xl lg:text-[3.2rem] font-black text-white leading-tight tracking-tight mb-6">
               Explore Your <span className="text-brand-400">Future</span> Destinations
-            </motion.h1>
-            <motion.p variants={fadeInUp} className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
+            </m.h1>
+            <m.p variants={fadeInUp} className="text-white/80 text-lg max-w-2xl mx-auto leading-relaxed">
               We focus on 4 major destinations where international students find the greatest success. 
               Each offers unique academic cultures and world-class funding opportunities.
-            </motion.p>
-          </motion.div>
+            </m.p>
+          </m.div>
         </div>
       </section>
 
@@ -62,7 +63,7 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
             {countries.map((c, i) => (
-              <motion.a 
+              <m.a 
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
                 className="group relative flex flex-col items-center justify-center bg-white rounded-none border border-slate-200 shadow-sm aspect-square p-8 hover:shadow-xl hover:border-brand-200 transition-all duration-300"
@@ -86,7 +87,7 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
 
                 {/* Subtle Decorative Element */}
                 <div className="absolute top-6 right-6 w-2 h-2 rounded-full bg-slate-100 group-hover:bg-brand-100 transition-colors" />
-              </motion.a>
+              </m.a>
             ))}
           </div>
         </div>
@@ -159,6 +160,7 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
           </div>
         </div>
       </section>
-    </>
+      </>
+    </LazyMotion>
   );
 }

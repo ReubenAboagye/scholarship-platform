@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { AlertCircle, ArrowLeft, CheckCircle, Loader2 } from "lucide-react";
 import { resetPasswordAction } from "@/app/auth/actions";
 
@@ -22,7 +22,8 @@ const item = {
 
 function BrandPanel() {
   return (
-    <motion.div
+    <LazyMotion features={domAnimation}>
+      <m.div
       initial={{ opacity: 0, scale: 1.02 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
@@ -37,7 +38,8 @@ function BrandPanel() {
         </span>
       </div>
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/30 via-transparent to-brand-800/10" />
-    </motion.div>
+      </m.div>
+    </LazyMotion>
   );
 }
 
@@ -67,7 +69,7 @@ export default function ForgotPasswordPage() {
     return (
       <div className="flex w-full min-h-screen">
         <BrandPanel />
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
@@ -90,23 +92,24 @@ export default function ForgotPasswordPage() {
               Return to sign in
             </a>
           </div>
-        </motion.div>
+        </m.div>
       </div>
     );
   }
 
   return (
-    <div className="flex w-full min-h-screen">
-      <BrandPanel />
+    <LazyMotion features={domAnimation}>
+      <div className="flex w-full min-h-screen">
+        <BrandPanel />
 
-      <motion.div
+        <m.div
         variants={container}
         initial="hidden"
         animate="show"
         className="flex w-full lg:w-1/2 flex-col justify-center items-center px-6 py-12 bg-white"
       >
         <div className="w-full max-w-[360px]">
-          <motion.div variants={item} className="flex justify-center mb-6">
+          <m.div variants={item} className="flex justify-center mb-6">
             <a href="/" className="flex items-baseline">
               <span
                 className="text-2xl tracking-tight text-slate-900"
@@ -121,21 +124,21 @@ export default function ForgotPasswordPage() {
                 </span>
               </span>
             </a>
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             variants={item}
             className="text-center text-lg font-medium text-slate-900"
             style={SERIF_FONT}
           >
             Reset your password
-          </motion.h1>
-          <motion.p variants={item} className="text-center text-xs text-slate-500 mt-2 mb-8">
+          </m.h1>
+          <m.p variants={item} className="text-center text-xs text-slate-500 mt-2 mb-8">
             Enter your email and we&apos;ll send you a secure reset link.
-          </motion.p>
+          </m.p>
 
           {error && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -143,10 +146,10 @@ export default function ForgotPasswordPage() {
             >
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
-            </motion.div>
+            </m.div>
           )}
 
-          <motion.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
+          <m.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
             <div
               className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0"
               aria-hidden="true"
@@ -190,9 +193,9 @@ export default function ForgotPasswordPage() {
                 "Send reset link"
               )}
             </button>
-          </motion.form>
+          </m.form>
 
-          <motion.div variants={item} className="flex items-center justify-center mt-6">
+          <m.div variants={item} className="flex items-center justify-center mt-6">
             <a
               href="/auth/login"
               className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-brand-700 transition-colors"
@@ -200,9 +203,10 @@ export default function ForgotPasswordPage() {
               <ArrowLeft className="w-3.5 h-3.5" />
               Back to sign in
             </a>
-          </motion.div>
+          </m.div>
         </div>
-      </motion.div>
+      </m.div>
     </div>
+  </LazyMotion>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { ExternalLink, X, LogIn, UserPlus, Shield } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 
 // ─────────────────────────────────────────────────────────────
 // ApplyButton — gated outbound click for the public scholarship
@@ -97,8 +97,9 @@ export default function ApplyButton({
   }
 
   return (
-    <>
-      <button
+    <LazyMotion features={domAnimation}>
+      <>
+        <button
         type="button"
         onClick={() => setOpen(true)}
         className={`${baseClass} ${className ?? ""}`}
@@ -108,7 +109,7 @@ export default function ApplyButton({
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{    opacity: 0 }}
@@ -119,7 +120,7 @@ export default function ApplyButton({
             aria-modal="true"
             aria-labelledby="apply-modal-title"
           >
-            <motion.div
+            <m.div
               initial="hidden"
               animate="visible"
               exit="exit"
@@ -153,7 +154,7 @@ export default function ApplyButton({
                   <X className="w-5 h-5" />
                 </button>
 
-                <motion.div 
+                <m.div 
                   variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
                   className="mb-6 pr-8"
                 >
@@ -164,28 +165,28 @@ export default function ApplyButton({
                   <p className="text-sm text-slate-600 font-medium leading-relaxed">
                     Access to the official application portal is restricted. Please authenticate your identity to proceed securely with your application.
                   </p>
-                </motion.div>
+                </m.div>
 
-                <motion.div 
+                <m.div 
                   variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
                   className="bg-slate-50/80 border border-slate-200/60 p-5 mb-8 rounded-sm shadow-inner"
                 >
                   <p className="text-sm font-semibold text-slate-800 mb-4">Authentication provides access to:</p>
                   <ul className="space-y-3.5">
                     {SIGNUP_PITCH.map((line, i) => (
-                      <motion.li 
+                      <m.li 
                         key={line} 
                         variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0, transition: { duration: 0.3, delay: i * 0.05 } } }}
                         className="flex items-start gap-3.5 text-sm text-slate-700 font-medium"
                       >
                         <div className="mt-1.5 w-1.5 h-1.5 bg-blue-600 rounded-sm shadow-sm flex-shrink-0" />
                         <span className="leading-tight">{line}</span>
-                      </motion.li>
+                      </m.li>
                     ))}
                   </ul>
-                </motion.div>
+                </m.div>
 
-                <motion.div 
+                <m.div 
                   variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
                   className="flex flex-col sm:flex-row gap-3"
                 >
@@ -203,10 +204,10 @@ export default function ApplyButton({
                     <UserPlus className="w-4 h-4" />
                     Create Account
                   </a>
-                </motion.div>
+                </m.div>
               </div>
               
-              <motion.div 
+              <m.div 
                 variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, delay: 0.2 } } }}
                 className="px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-50 border-t border-slate-200 flex items-center gap-2.5 text-slate-500"
               >
@@ -214,11 +215,12 @@ export default function ApplyButton({
                 <p className="text-[13px] font-medium">
                   Official portal. All data is protected and strictly confidential.
                 </p>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </m.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
-    </>
+      </>
+    </LazyMotion>
   );
 }

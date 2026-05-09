@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { X, Lock, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -38,11 +38,12 @@ export default function AuthModal({ isOpen, onClose, featureName, redirectUrl }:
   }, [onClose]);
 
   return (
-    <AnimatePresence>
+    <LazyMotion features={domAnimation}>
+      <AnimatePresence>
       {isOpen && (
         <>
           {/* Backdrop */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -53,7 +54,7 @@ export default function AuthModal({ isOpen, onClose, featureName, redirectUrl }:
 
           {/* Modal Container */}
           <div className="fixed inset-0 z-[101] flex items-center justify-center p-4 sm:p-6 pointer-events-none">
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -108,10 +109,11 @@ export default function AuthModal({ isOpen, onClose, featureName, redirectUrl }:
                   YOUR DATA IS PRIVATE AND SECURE
                 </p>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </>
       )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </LazyMotion>
   );
 }

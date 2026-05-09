@@ -2,7 +2,7 @@
 
 import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { sanitizeRedirectPath } from "@/lib/auth/redirect";
 import { signInAction, signInWithGoogleAction } from "@/app/auth/actions";
@@ -24,7 +24,8 @@ const item = {
 
 function BrandPanel() {
   return (
-    <motion.div
+    <LazyMotion features={domAnimation}>
+      <m.div
       initial={{ opacity: 0, scale: 1.02 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }}
@@ -42,7 +43,8 @@ function BrandPanel() {
       
       {/* Subtle gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/30 via-transparent to-brand-800/10" />
-    </motion.div>
+      </m.div>
+    </LazyMotion>
   );
 }
 
@@ -116,10 +118,11 @@ function LoginContent() {
   }
 
   return (
-    <div className="flex w-full min-h-screen">
-      <BrandPanel />
+    <LazyMotion features={domAnimation}>
+      <div className="flex w-full min-h-screen">
+        <BrandPanel />
 
-      <motion.div
+        <m.div
         variants={container}
         initial="hidden"
         animate="show"
@@ -127,7 +130,7 @@ function LoginContent() {
       >
         <div className="w-full max-w-[360px]">
           {/* Logo */}
-          <motion.div variants={item} className="flex justify-center mb-6">
+          <m.div variants={item} className="flex justify-center mb-6">
             <a href="/" className="flex items-baseline">
               <span
                 className="text-2xl tracking-tight text-slate-900"
@@ -142,19 +145,19 @@ function LoginContent() {
                 </span>
               </span>
             </a>
-          </motion.div>
+          </m.div>
 
           {/* Heading */}
-          <motion.h1
+          <m.h1
             variants={item}
             className="text-center text-lg font-medium text-slate-900 mb-8"
             style={SERIF_FONT}
           >
             Log in to ScholarBridge
-          </motion.h1>
+          </m.h1>
 
           {error && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -162,10 +165,10 @@ function LoginContent() {
             >
               <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
-            </motion.div>
+            </m.div>
           )}
 
-          <motion.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
+          <m.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
             {/* Honeypot field */}
             <div
               className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0"
@@ -237,9 +240,9 @@ function LoginContent() {
                 "Log In"
               )}
             </button>
-          </motion.form>
+          </m.form>
 
-          <motion.div variants={item} className="flex items-center justify-between mt-4">
+          <m.div variants={item} className="flex items-center justify-between mt-4">
             <a
               href="/auth/forgot-password"
               className="text-xs text-slate-500 hover:text-brand-700 transition-colors"
@@ -252,15 +255,15 @@ function LoginContent() {
             >
               Create an account
             </a>
-          </motion.div>
+          </m.div>
 
-          <motion.div variants={item} className="flex items-center gap-3 my-6">
+          <m.div variants={item} className="flex items-center gap-3 my-6">
             <div className="flex-1 h-px bg-slate-100" />
             <span className="text-[11px] text-slate-400">or</span>
             <div className="flex-1 h-px bg-slate-100" />
-          </motion.div>
+          </m.div>
 
-          <motion.button
+          <m.button
             variants={item}
             type="button"
             onClick={handleGoogle}
@@ -288,10 +291,11 @@ function LoginContent() {
               />
             </svg>
             Continue with Google
-          </motion.button>
+          </m.button>
         </div>
-      </motion.div>
+      </m.div>
     </div>
+  </LazyMotion>
   );
 }
 

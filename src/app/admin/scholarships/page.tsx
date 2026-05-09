@@ -10,7 +10,7 @@ import {
   Filter, Download, X, Calendar, Trash2, Eye, Copy,
   Square, SquareCheck, Power,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
 import ActionDropdown from "@/components/admin/ActionDropdown";
 import { useToast } from "@/components/admin/ToastProvider";
@@ -274,14 +274,15 @@ export default function AdminScholarshipsPage() {
   const item      = { hidden: { opacity: 0, y: 15 }, show: { opacity: 1, y: 0 } };
 
   return (
-    <motion.div
+    <LazyMotion features={domAnimation}>
+      <m.div
       variants={container}
       initial="hidden"
       animate="show"
       className="max-w-[1400px] mx-auto space-y-8"
     >
       {/* ── Header ──────────────────────────────────────── */}
-      <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <m.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
           <h1 className="text-3xl font-medium text-slate-900 display">Scholarships Catalog</h1>
           <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
@@ -306,10 +307,10 @@ export default function AdminScholarshipsPage() {
             <span>New Entry</span>
           </a>
         </div>
-      </motion.div>
+      </m.div>
 
       {/* ── Control Bar ─────────────────────────────────── */}
-      <motion.div variants={item} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+      <m.div variants={item} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
         <div className="flex flex-col lg:flex-row gap-3 items-center">
           <div className="flex-1 w-full relative">
             <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -361,7 +362,7 @@ export default function AdminScholarshipsPage() {
         {/* ── Filter drawer (inline, animated) ──────────── */}
         <AnimatePresence>
           {filtersOpen && (
-            <motion.div
+            <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}
               exit={{    height: 0, opacity: 0 }}
@@ -470,15 +471,15 @@ export default function AdminScholarshipsPage() {
                   </button>
                 </div>
               )}
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
-      </motion.div>
+      </m.div>
 
       {/* ── Bulk actions bar ──────────────────────────── */}
       <AnimatePresence>
         {selectedIds.size > 0 && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
@@ -515,7 +516,7 @@ export default function AdminScholarshipsPage() {
                 <Trash2 className="w-3 h-3" /> Delete
               </button>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -526,7 +527,7 @@ export default function AdminScholarshipsPage() {
           <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Loading Catalog...</p>
         </div>
       ) : filtered.length === 0 ? (
-        <motion.div variants={item} className="bg-white border border-slate-200 rounded-lg shadow-sm py-20 text-center">
+        <m.div variants={item} className="bg-white border border-slate-200 rounded-lg shadow-sm py-20 text-center">
           <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-6">
             <Search className="w-8 h-8 text-slate-200" />
           </div>
@@ -539,7 +540,7 @@ export default function AdminScholarshipsPage() {
               Clear all filters
             </button>
           )}
-        </motion.div>
+        </m.div>
       ) : view === "list" ? (
         <ListView
           rows={pageRows}
@@ -562,7 +563,7 @@ export default function AdminScholarshipsPage() {
 
       {/* ── Pagination ──────────────────────────────────── */}
       {!loading && filtered.length > 0 && (
-        <motion.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <m.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
             Showing <span className="text-slate-900">{pageStart + 1}</span>–
             <span className="text-slate-900">{pageStart + pageRows.length}</span> of{" "}
@@ -604,9 +605,10 @@ export default function AdminScholarshipsPage() {
               </button>
             </div>
           )}
-        </motion.div>
+        </m.div>
       )}
-    </motion.div>
+      </m.div>
+    </LazyMotion>
   );
 }
 
@@ -630,7 +632,7 @@ function ListView({
   onDelete: (id: string) => void;
 }) {
   return (
-    <motion.div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+    <m.div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
@@ -657,7 +659,7 @@ function ListView({
               {rows.map(s => {
                 const isSelected = selectedIds.has(s.id);
                 return (
-                  <motion.tr
+                  <m.tr
                     key={s.id}
                     layout
                     initial={{ opacity: 0 }}
@@ -755,14 +757,14 @@ function ListView({
                         />
                       </div>
                     </td>
-                  </motion.tr>
+                  </m.tr>
                 );
               })}
             </AnimatePresence>
           </tbody>
         </table>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -782,12 +784,12 @@ function GridView({
   onDelete: (id: string) => void;
 }) {
   return (
-    <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <m.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <AnimatePresence mode="popLayout">
         {rows.map(s => {
           const isSelected = selectedIds.has(s.id);
           return (
-            <motion.div
+            <m.div
               key={s.id}
               layout
               initial={{ opacity: 0, y: 10 }}
@@ -885,10 +887,10 @@ function GridView({
                   />
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           );
         })}
       </AnimatePresence>
-    </motion.div>
+    </m.div>
   );
 }
