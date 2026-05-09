@@ -61,17 +61,46 @@ function SignupPageContent() {
   const [honeypot, setHoneypot] = useState("");
 
   async function handleGoogle() {
-    const formData = new FormData();
-    formData.append("redirectTo", redirectTo);
-    formData.append("origin", window.location.origin);
-    const result = await signInWithGoogleAction(formData);
-    if (result.error) {
-      setError(result.error);
+    setError(null);
+
+    // Open popup immediately to avoid browser blocker
+    const width = 500;
+    const height = 600;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    const popup = window.open(
+      "about:blank",
+      "oauthPopup",
+      `width=${width},height=${height},left=${left},top=${top},popup=1`
+    );
+
+    if (!popup) {
+      setError("Popup was blocked. Please allow popups for this site.");
       return;
     }
-    if (result.url) {
-      window.location.href = result.url;
+
+    const formData = new FormData();
+    formData.append("redirectTo", redirectTo);
+    formData.append("popup", "true");
+    const result = await signInWithGoogleAction(formData);
+    if (result.error || !result.url) {
+      popup.close();
+      setError(result.error ?? "Unable to start Google sign-in.");
+      return;
     }
+
+    popup.location.href = result.url;
+
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === "oauth:success") {
+        window.removeEventListener("message", handleMessage);
+        window.location.href = e.data.destination ?? "/dashboard";
+      } else if (e.data?.type === "oauth:error") {
+        window.removeEventListener("message", handleMessage);
+        setError("Authentication failed. Please try again.");
+      }
+    };
+    window.addEventListener("message", handleMessage);
   }
 
   async function handleSubmit(e: React.FormEvent) {

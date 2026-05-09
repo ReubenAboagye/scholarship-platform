@@ -26,7 +26,10 @@ export default function DashboardHeader({ profile }: Props) {
   };
 
   return (
-    <header className="sticky top-0 z-30 h-16 w-full border-b border-slate-100 glass-effect flex items-center justify-between px-5 lg:px-10">
+    <header
+      className="sticky top-0 z-30 w-full border-b border-slate-100 glass-effect flex items-center justify-between px-5 lg:px-10 safe-top min-h-[56px]"
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+    >
       {/* Left: Breadcrumbs & Title */}
       <div className="flex items-center gap-3 min-w-0">
         <div className="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-400">

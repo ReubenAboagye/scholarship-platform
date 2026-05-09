@@ -96,7 +96,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-md">
+      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-md safe-top">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
@@ -203,8 +203,8 @@ export default function Navbar() {
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            className={`md:hidden inline-flex flex-col items-center justify-center gap-[5px]
-                        w-10 h-10 rounded-md border transition-all duration-200
+            className={`md:hidden relative inline-flex flex-col items-center justify-center gap-[5px]
+                        w-11 h-11 rounded-md border transition-all duration-200 cursor-pointer
                         ${mobileOpen
                           ? "border-slate-300 bg-slate-100 text-slate-900 hamburger-open"
                           : "border-slate-200 bg-white/60 text-slate-700 hover:bg-slate-100 hover:border-slate-300 active:scale-[0.97]"}`}
@@ -235,7 +235,7 @@ export default function Navbar() {
                       bg-white shadow-2xl flex flex-col
                       transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
                       ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+          style={{ paddingTop: "env(safe-area-inset-top)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           {/* Header: brand + close */}
           <div className="flex items-center justify-between px-5 h-16 border-b border-slate-100 shrink-0">
@@ -247,7 +247,7 @@ export default function Navbar() {
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Close menu"
-              className="w-9 h-9 inline-flex items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 active:scale-[0.96] transition"
+              className="w-11 h-11 inline-flex items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 active:scale-[0.96] transition"
             >
               <X className="w-4 h-4" />
             </button>

@@ -232,14 +232,14 @@ export default async function HomePage() {
             <div className="relative animate-scale-in order-first lg:order-last" style={{ animationDelay: '0.2s' }}>
               <div className="relative">
                 <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-amber-500/20 to-brand-500/20 rounded-2xl blur-2xl" />
-                <div className="relative overflow-hidden rounded-2xl border border-brand-500/30 shadow-2xl">
+                <div className="relative overflow-hidden rounded-2xl border border-brand-500/30 shadow-2xl h-[280px] sm:h-[350px] lg:h-[450px] xl:h-[550px]">
                   <Image
                     src="/images/marketing/students-collab.jpg"
                     alt="Students studying together"
-                    width={1600}
-                    height={1067}
-                    className="h-[280px] sm:h-[350px] lg:h-[450px] xl:h-[550px] w-full object-cover"
+                    fill
+                    className="object-cover"
                     priority
+                    sizes="(max-width: 1023px) 100vw, 45vw"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-brand-900/80 via-transparent to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">

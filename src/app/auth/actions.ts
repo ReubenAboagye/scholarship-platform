@@ -119,12 +119,13 @@ export async function signInWithGoogleAction(formData: FormData) {
 
   const redirectTo = sanitizeRedirectPath(String(formData.get("redirectTo") ?? "/dashboard"));
   const origin = await getSiteUrl();
+  const popup = String(formData.get("popup") ?? "") === "true";
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {
-      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
+      redirectTo: `${origin}/auth/callback?next=${encodeURIComponent(redirectTo)}${popup ? "&popup=true" : ""}`,
     },
   });
 

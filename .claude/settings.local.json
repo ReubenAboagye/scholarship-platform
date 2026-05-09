@@ -6,7 +6,9 @@
       "mcp__claude_ai_Supabase__execute_sql",
       "mcp__claude_ai_Supabase__get_project_url",
       "mcp__claude_ai_Supabase__get_publishable_keys",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(npx tsx *)"
     ]
   }
 }

@@ -165,7 +165,7 @@ export default function DashboardSidebar({ profile }: Props) {
 
 
       {/* ── Mobile bottom nav ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-100 flex items-stretch h-16 safe-bottom">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-100 flex items-stretch min-h-[64px] safe-bottom shadow-[0_-6px_16px_rgba(2,6,23,0.04)] rounded-t-2xl">
         {mobileNavItems.map((item) => {
           const active = isActive(item.href);
           const isAI   = item.href === "/dashboard/match";
@@ -174,7 +174,7 @@ export default function DashboardSidebar({ profile }: Props) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex-1 flex flex-col items-center justify-center gap-1 text-[10px] font-semibold transition-all active:scale-95 relative",
+                "flex-1 flex flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-all active:scale-95 relative pt-1",
                 active
                   ? "text-brand-600"
                   : isAI
@@ -182,7 +182,7 @@ export default function DashboardSidebar({ profile }: Props) {
                     : "text-slate-400"
               )}
             >
-              <item.icon className={cn("w-5 h-5", active && "scale-110")} />
+              <item.icon className={cn("w-[22px] h-[22px]", active && "scale-110")} />
               <span>{item.label}</span>
               {active && (
                 <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-8 h-[2px] bg-brand-600 rounded-b-full" />
