@@ -28,7 +28,6 @@ async function enforceRateLimit(ip: string, namespace: string) {
 // Sign In
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line server-auth-actions
 export async function signInAction(formData: FormData) {
   const ip = await getClientIp();
   const rateLimitError = await enforceRateLimit(ip, "login");
@@ -61,7 +60,6 @@ export async function signInAction(formData: FormData) {
 // Sign Up
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line server-auth-actions
 export async function signUpAction(formData: FormData) {
   const ip = await getClientIp();
   const rateLimitError = await enforceRateLimit(ip, "signup");
@@ -114,7 +112,6 @@ export async function signUpAction(formData: FormData) {
 // Google OAuth — rate-limited + returns the consent URL
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line server-auth-actions
 export async function signInWithGoogleAction(formData: FormData) {
   const ip = await getClientIp();
   const rateLimitError = await enforceRateLimit(ip, "login");
@@ -143,7 +140,6 @@ export async function signInWithGoogleAction(formData: FormData) {
 // Reset Password
 /* ------------------------------------------------------------------ */
 
-// eslint-disable-next-line server-auth-actions
 export async function resetPasswordAction(formData: FormData) {
   const ip = await getClientIp();
   const rateLimitError = await enforceRateLimit(ip, "reset");
