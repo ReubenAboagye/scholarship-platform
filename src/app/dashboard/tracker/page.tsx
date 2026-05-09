@@ -61,14 +61,21 @@ const SORT_OPTIONS: SortConfig[] = [
   { key: "name",     label: "Name (A-Z)" },
 ];
 
-const KANBAN_COLS: { status: Status; color: string; dot: string }[] = [
-  { status: "Interested",        color: "bg-slate-50 border-slate-200",   dot: "bg-slate-300" },
-  { status: "In Progress",       color: "bg-blue-50 border-blue-200",     dot: "bg-blue-400" },
-  { status: "Submitted",         color: "bg-violet-50 border-violet-200", dot: "bg-violet-500" },
-  { status: "Awaiting Decision", color: "bg-amber-50 border-amber-200",   dot: "bg-amber-400" },
-  { status: "Accepted",          color: "bg-emerald-50 border-emerald-200",dot: "bg-emerald-500" },
-  { status: "Rejected",          color: "bg-rose-50 border-rose-200",     dot: "bg-rose-400" },
-  { status: "Withdrawn",         color: "bg-slate-50 border-slate-200",   dot: "bg-slate-400" },
+const KANBAN_COLS: {
+  status: Status;
+  headerBg: string;
+  border: string;
+  dot: string;
+  topBar: string;
+  cardBorder: string;
+}[] = [
+  { status: "Interested",        headerBg: "bg-slate-100/60", border: "border-slate-200", dot: "bg-slate-400", topBar: "bg-slate-400", cardBorder: "hover:border-slate-300" },
+  { status: "In Progress",       headerBg: "bg-blue-100/60", border: "border-blue-200", dot: "bg-blue-500", topBar: "bg-blue-500", cardBorder: "hover:border-blue-300" },
+  { status: "Submitted",         headerBg: "bg-violet-100/60", border: "border-violet-200", dot: "bg-violet-500", topBar: "bg-violet-500", cardBorder: "hover:border-violet-300" },
+  { status: "Awaiting Decision", headerBg: "bg-amber-100/60", border: "border-amber-200", dot: "bg-amber-500", topBar: "bg-amber-500", cardBorder: "hover:border-amber-300" },
+  { status: "Accepted",          headerBg: "bg-emerald-100/60", border: "border-emerald-200", dot: "bg-emerald-500", topBar: "bg-emerald-500", cardBorder: "hover:border-emerald-300" },
+  { status: "Rejected",          headerBg: "bg-rose-100/60", border: "border-rose-200", dot: "bg-rose-400", topBar: "bg-rose-400", cardBorder: "hover:border-rose-300" },
+  { status: "Withdrawn",         headerBg: "bg-slate-100/60", border: "border-slate-300", dot: "bg-slate-400", topBar: "bg-slate-400", cardBorder: "hover:border-slate-400" },
 ];
 
 interface StatCard {
@@ -223,7 +230,7 @@ function DeleteConfirmDialog({ item, onConfirm, onCancel }: {
 
 // ── Tracker card (shared by list + kanban) ──────────────────────
 
-function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper, isDragging, isSaved, isSelected, onToggleSelect, onToggleReminder }: {
+function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper, isDragging, isSaved, isSelected, onToggleSelect, onToggleReminder, col }: {
   item: TrackerItem;
   onStatusChange: (id: string, status: Status) => void;
   onDelete: (id: string) => void;
@@ -234,6 +241,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
   isSelected?: boolean;
   onToggleSelect?: (id: string) => void;
   onToggleReminder?: (id: string, enabled: boolean) => void;
+  col?: (typeof KANBAN_COLS)[number];
 }) {
   const s = item.scholarship;
   if (!s) return null;
@@ -241,12 +249,17 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
   const curIdx = KANBAN_COLS.findIndex(c => c.status === item.status);
   const days = daysUntilDeadline(s.application_deadline);
 
+  const isKanban = !!hideStepper;
+
   return (
     <div className={cn(
-      "bg-white rounded-xl border transition-all p-4 space-y-3",
+      "bg-white rounded-xl border transition-all",
+      isKanban ? "p-3 space-y-2.5" : "p-4 space-y-3",
       isDragging
         ? "border-brand-400 shadow-lg ring-2 ring-brand-100"
-        : "border-slate-200 hover:border-slate-300"
+        : isKanban && col
+          ? cn("border-slate-200", col.cardBorder)
+          : "border-slate-200 hover:border-slate-300"
     )}>
       {/* Header */}
       <div className="flex items-start gap-3">
@@ -332,44 +345,91 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
       )}
 
       {/* Footer actions */}
-      <div className="flex items-center gap-1.5 pt-1 border-t border-slate-50">
-        <span className="text-xs text-slate-400 flex-1">{s.funding_type} funding</span>
-        {onToggleReminder && s.application_deadline && (
+      {isKanban ? (
+        <div className="flex items-center gap-1">
+          <span className="text-[11px] text-slate-400 flex-1 leading-none">{s.funding_type}</span>
+          <div className="flex items-center gap-0.5">
+            {onToggleReminder && s.application_deadline && (
+              <button
+                onClick={() => onToggleReminder(item.id, !item.deadline_reminder)}
+                title={item.deadline_reminder ? "Reminder on" : "Remind me"}
+                className={cn(
+                  "p-1.5 rounded-lg transition-all",
+                  item.deadline_reminder
+                    ? "text-amber-500 hover:text-amber-600"
+                    : "text-slate-300 hover:text-amber-500"
+                )}>
+                {item.deadline_reminder ? <Bell className="w-3.5 h-3.5" /> : <BellOff className="w-3.5 h-3.5" />}
+              </button>
+            )}
+            {s.application_deadline && (
+              <button
+                onClick={() => downloadScholarshipICS(s.name, s.application_deadline!)}
+                title="Add to calendar"
+                className="p-1.5 text-slate-300 hover:text-brand-600 rounded-lg transition-all">
+                <CalendarPlus className="w-3.5 h-3.5" />
+              </button>
+            )}
+            <button
+              onClick={() => onOpenNotes(item)}
+              title={item.notes ? "Edit notes" : "Add notes"}
+              className={cn(
+                "p-1.5 rounded-lg transition-all",
+                item.notes ? "text-brand-500 hover:text-brand-600" : "text-slate-300 hover:text-brand-500"
+              )}>
+              <StickyNote className="w-3.5 h-3.5" />
+            </button>
+            <a href={`/dashboard/scholarships/${s.slug || s.id}`}
+              title="Details"
+              className="p-1.5 text-slate-300 hover:text-slate-600 rounded-lg transition-all">
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+              className="ml-0.5 flex items-center gap-1 px-2 py-1 bg-slate-900 text-white rounded-md text-[11px] font-bold hover:bg-slate-800 transition-all">
+              Apply
+            </a>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-center gap-1.5 pt-1 border-t border-slate-50">
+          <span className="text-xs text-slate-400 flex-1">{s.funding_type} funding</span>
+          {onToggleReminder && s.application_deadline && (
+            <button
+              onClick={() => onToggleReminder(item.id, !item.deadline_reminder)}
+              title={item.deadline_reminder ? "Reminder on" : "Remind me before deadline"}
+              className={cn(
+                "p-1.5 border rounded-lg transition-all",
+                item.deadline_reminder
+                  ? "border-amber-300 text-amber-500 hover:border-amber-400 hover:text-amber-600"
+                  : "border-slate-200 text-slate-400 hover:border-amber-300 hover:text-amber-500"
+              )}>
+              {item.deadline_reminder ? <Bell className="w-3.5 h-3.5" /> : <BellOff className="w-3.5 h-3.5" />}
+            </button>
+          )}
+          {s.application_deadline && (
+            <button
+              onClick={() => downloadScholarshipICS(s.name, s.application_deadline!)}
+              title="Add deadline to calendar"
+              className="p-1.5 border border-slate-200 text-slate-400 rounded-lg hover:border-brand-300 hover:text-brand-600 transition-all">
+              <CalendarPlus className="w-3.5 h-3.5" />
+            </button>
+          )}
           <button
-            onClick={() => onToggleReminder(item.id, !item.deadline_reminder)}
-            title={item.deadline_reminder ? "Reminder on" : "Remind me before deadline"}
-            className={cn(
-              "p-1.5 border rounded-lg transition-all",
-              item.deadline_reminder
-                ? "border-amber-300 text-amber-500 hover:border-amber-400 hover:text-amber-600"
-                : "border-slate-200 text-slate-400 hover:border-amber-300 hover:text-amber-500"
-            )}>
-            {item.deadline_reminder ? <Bell className="w-3.5 h-3.5" /> : <BellOff className="w-3.5 h-3.5" />}
+            onClick={() => onOpenNotes(item)}
+            className="flex items-center gap-1 px-2.5 py-1.5 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:border-brand-300 hover:text-brand-600 transition-all">
+            <StickyNote className="w-3 h-3" />
+            {item.notes ? "Edit" : "Notes"}
           </button>
-        )}
-        {s.application_deadline && (
-          <button
-            onClick={() => downloadScholarshipICS(s.name, s.application_deadline!)}
-            title="Add deadline to calendar"
-            className="p-1.5 border border-slate-200 text-slate-400 rounded-lg hover:border-brand-300 hover:text-brand-600 transition-all">
-            <CalendarPlus className="w-3.5 h-3.5" />
-          </button>
-        )}
-        <button
-          onClick={() => onOpenNotes(item)}
-          className="flex items-center gap-1 px-2.5 py-1.5 border border-slate-200 text-slate-500 rounded-lg text-xs font-semibold hover:border-brand-300 hover:text-brand-600 transition-all">
-          <StickyNote className="w-3 h-3" />
-          {item.notes ? "Edit" : "Notes"}
-        </button>
-        <a href={`/dashboard/scholarships/${s.slug || s.id}`}
-          className="px-2.5 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:border-slate-300 transition-all">
-          Details
-        </a>
-        <a href={s.application_url} target="_blank" rel="noopener noreferrer"
-          className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all">
-          Apply <ExternalLink className="w-3 h-3" />
-        </a>
-      </div>
+          <a href={`/dashboard/scholarships/${s.slug || s.id}`}
+            className="px-2.5 py-1.5 border border-slate-200 text-slate-600 rounded-lg text-xs font-semibold hover:border-slate-300 transition-all">
+            Details
+          </a>
+          <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1 px-2.5 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-bold hover:bg-slate-800 transition-all">
+            Apply <ExternalLink className="w-3 h-3" />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -386,23 +446,34 @@ function KanbanColumn({ col, items, onStatusChange, onDelete, onOpenNotes, isDro
   isSaved: (scholarshipId: string) => boolean;
 }) {
   return (
-    <div className="w-64 flex-shrink-0">
-      <div className={`flex items-center gap-2 px-3 py-2 rounded-t-xl border ${col.color} border-b-0 mb-0`}>
+    <div className="w-72 lg:w-80 flex-shrink-0 flex flex-col">
+      {/* Header */}
+      <div className="relative flex items-center gap-2.5 px-3.5 py-2.5 rounded-t-xl border border-b-0 bg-white">
+        <div className={`absolute top-0 left-0 right-0 h-[3px] rounded-t-xl ${col.topBar}`} />
         <span className={`w-2 h-2 rounded-full ${col.dot}`} />
-        <span className="text-xs font-bold text-slate-700">{col.status}</span>
-        <span className="ml-auto text-xs font-bold text-slate-400">{items.length}</span>
+        <span className="text-[13px] font-bold text-slate-700">{col.status}</span>
+        <span className="ml-auto text-[11px] font-bold text-white bg-slate-900/80 px-2 py-0.5 rounded-full min-w-[1.5rem] text-center">
+          {items.length}
+        </span>
       </div>
+      {/* Drop zone */}
       <Droppable droppableId={col.status} isDropDisabled={isDropDisabled}>
-        {(provided: DroppableProvided) => (
+        {(provided: DroppableProvided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`min-h-[200px] rounded-b-xl rounded-tr-xl border ${col.color} p-2 space-y-2 transition-colors`}
+            className={cn(
+              "flex-1 min-h-[220px] max-h-[calc(100vh-300px)] overflow-y-auto rounded-b-xl rounded-tr-xl border bg-white p-2.5 space-y-2.5 transition-colors scrollbar-thin",
+              col.border,
+              snapshot.isDraggingOver && "bg-slate-50/80"
+            )}
           >
             {items.length === 0 ? (
-              <p className="text-xs text-slate-300 text-center py-6">
-                {isDropDisabled ? "No items" : "Drop here"}
-              </p>
+              <div className="flex flex-col items-center justify-center py-8 px-4 border border-dashed border-slate-200 rounded-lg">
+                <p className="text-xs font-medium text-slate-400">
+                  {isDropDisabled ? "No items" : "Drop here"}
+                </p>
+              </div>
             ) : (
               items.map((item, index) => (
                 <Draggable key={item.id} draggableId={item.id} index={index}>
@@ -420,6 +491,7 @@ function KanbanColumn({ col, items, onStatusChange, onDelete, onOpenNotes, isDro
                         hideStepper
                         isDragging={snapshot.isDragging}
                         isSaved={isSaved(item.scholarship_id)}
+                        col={col}
                       />
                     </div>
                   )}
@@ -956,7 +1028,7 @@ export default function TrackerPage() {
       ) : (
         // ── Kanban view with drag-and-drop ──
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="pb-4">
             {/* Archive toggle for Rejected/Withdrawn columns */}
             <div className="flex items-center justify-end mb-3">
               <button
@@ -964,8 +1036,8 @@ export default function TrackerPage() {
                 className={cn(
                   "flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-full border transition-all",
                   showArchived
-                    ? "bg-slate-200 text-slate-700 border-slate-300"
-                    : "bg-white text-slate-400 border-slate-200 hover:border-slate-300"
+                    ? "bg-slate-800 text-white border-slate-800"
+                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
                 )}
               >
                 <Archive className="w-3 h-3" />
