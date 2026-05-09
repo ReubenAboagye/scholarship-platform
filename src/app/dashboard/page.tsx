@@ -20,11 +20,12 @@ export default async function DashboardPage() {
       .maybeSingle(),
     supabase
       .from("saved_scholarships")
-      .select("id")
-      .eq("user_id", user.id),
+      .select("id, created_at, scholarships(name, application_deadline, amount, country, provider, slug)")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false }),
     supabase
       .from("application_tracker")
-      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug)")
+      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug, amount)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
     supabase
@@ -74,6 +75,14 @@ export default async function DashboardPage() {
   // Top match results (up to 3) from latest session
   const topMatches = ((latestMatch as any)?.results ?? []).slice(0, 3);
 
+  // Financial calculations
+  const potentialValue = (tracked ?? [])
+    .filter(t => t.status !== "Rejected")
+    .reduce((sum, t) => sum + (t.scholarships?.[0]?.amount || 0), 0);
+  const acceptedValue = (tracked ?? [])
+    .filter(t => t.status === "Accepted")
+    .reduce((sum, t) => sum + (t.scholarships?.[0]?.amount || 0), 0);
+
   return (
     <DashboardClient
       firstName={firstName}
@@ -82,10 +91,13 @@ export default async function DashboardPage() {
       completionPct={completionPct}
       bannerHref={bannerHref}
       saved={saved?.length ?? 0}
+      savedData={saved ?? []}
       tracked={tracked ?? []}
       dueThisWeek={dueThisWeek}
       topMatches={topMatches}
       hasMatchHistory={!!(latestMatch as any)?.id}
+      potentialValue={potentialValue}
+      acceptedValue={acceptedValue}
     />
   );
 }
