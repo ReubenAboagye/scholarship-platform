@@ -29,6 +29,7 @@ export default function Navbar() {
   const [studentsOpen, setStudentsOpen] = useState(false);
   const [companyOpen, setCompanyOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [scrolled, setScrolled] = useState(false);
   
   // Auth Modal State
   const [authModal, setAuthModal] = useState({ isOpen: false, featureName: "", redirectUrl: "" });
@@ -49,6 +50,16 @@ export default function Navbar() {
     });
 
     return () => subscription.unsubscribe();
+  }, []);
+
+  // Handle scroll detection for navbar background
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -96,25 +107,27 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/85 backdrop-blur-md safe-top">
+      <header className={`fixed top-0 left-0 right-0 z-40 safe-top transition-all duration-300 ${
+        scrolled ? "bg-white border-b border-zinc-200/70 shadow-sm" : "bg-transparent border-transparent"
+      }`}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           <a href="/" className="flex items-baseline">
-            <span className="text-2xl tracking-tight text-zinc-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
-              Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
+            <span className={`text-2xl tracking-tight transition-colors ${scrolled ? "text-zinc-900" : "text-white"}`} style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              Scholar<span className={`${scrolled ? "text-brand-600" : "text-amber-400"}`} style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
             </span>
           </a>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
               <button onClick={() => { setStudentsOpen(!studentsOpen); setCompanyOpen(false); }}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
                 Students
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${studentsOpen ? "rotate-180" : ""}`} />
               </button>
               {studentsOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-[520px] -tranzinc-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-[520px] -translate-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
                   <div className="grid grid-cols-2 p-2">
                     {studentsMenu.map((item) => (
                       <a
@@ -149,12 +162,12 @@ export default function Navbar() {
 
             <div ref={companyRef} className="relative">
               <button onClick={() => { setCompanyOpen(!companyOpen); setStudentsOpen(false); }}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
                 Company
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${companyOpen ? "rotate-180" : ""}`} />
               </button>
               {companyOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -tranzinc-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
                   <div className="p-2">
                     {companyMenu.map((item) => (
                       <a
@@ -180,7 +193,7 @@ export default function Navbar() {
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
 
 
-            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
+            <a href="/#how-it-works" className={`px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
               How It Works
             </a>
           </nav>
@@ -192,7 +205,7 @@ export default function Navbar() {
               </a>
             ) : (
               <>
-                <a href="/auth/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Log in</a>
+                <a href="/auth/login" className={`text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>Log in</a>
                 <a href="/auth/signup" className="inline-flex items-center rounded-md bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-colors">
                   Get started
                 </a>
@@ -209,7 +222,9 @@ export default function Navbar() {
                         size-11 rounded-md border transition-all duration-200 cursor-pointer
                         ${mobileOpen
                           ? "border-zinc-300 bg-zinc-100 text-zinc-900 hamburger-open"
-                          : "border-zinc-200 bg-white/60 text-zinc-700 hover:bg-zinc-100 hover:border-zinc-300 active:scale-[0.97]"}`}
+                          : scrolled
+                            ? "border-zinc-200 bg-white/60 text-zinc-700 hover:bg-zinc-100 hover:border-zinc-300 active:scale-[0.97]"
+                            : "border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 active:scale-[0.97]"}`}
           >
             <span className="hamburger-line line-1" />
             <span className="hamburger-line line-2" />
@@ -236,14 +251,13 @@ export default function Navbar() {
           className={`fixed top-0 right-0 z-50 w-[85vw] max-w-[360px] h-[100dvh]
                       bg-white shadow-2xl flex flex-col
                       transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
-                      ${mobileOpen ? "tranzinc-x-0" : "tranzinc-x-full"}`}
+                      ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
           style={{ paddingTop: "env(safe-area-inset-top)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           {/* Header: brand + close */}
           <div className="flex items-center justify-between px-5 h-16 border-b border-zinc-100 shrink-0">
             <a href="/" onClick={() => setMobileOpen(false)} className="flex items-baseline">
               <span className="text-xl tracking-tight text-zinc-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
-                Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
               </span>
             </a>
             <button

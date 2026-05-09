@@ -84,7 +84,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden" style={{ minHeight: "360px" }}>
+      <section className="relative overflow-hidden pt-16" style={{ minHeight: "360px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop"
@@ -104,6 +104,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
             </h1>
             <p className="text-white/75 text-sm sm:text-base leading-relaxed">
               {scholarships?.length ?? 0} curated opportunities across {countries.length - 1} countries.
+              
               Search by keyword or filter below.
             </p>
           </div>
@@ -122,7 +123,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
 
           {/* Quiet subtitle line replaces the glass pills */}
           <p className="text-center text-xs text-white/60 mt-5">
-            Filter more specifically on the results page · Always free for students
+            Filter more specifically on the results page
           </p>
         </div>
       </section>

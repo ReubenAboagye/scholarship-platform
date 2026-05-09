@@ -2,6 +2,9 @@ import Image from "next/image";
 import { ArrowRight, Check, ChevronDown, Compass, Globe, Lock, Shield, Award, BookOpen, Users, Sparkles } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import HeroSpotlight from "@/components/home/HeroSpotlight";
+import ScholarshipCategories from "@/components/home/ScholarshipCategories";
+import ScrollToTop from "@/components/home/ScrollToTop";
 import { createClient } from "@/lib/supabase/server";
 import { countryFlagUrl, formatDeadline } from "@/lib/utils";
 
@@ -155,21 +158,24 @@ export default async function HomePage() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <Navbar />
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900">
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 size-[800px] bg-brand-500 rounded-full blur-3xl -tranzinc-y-1/2 tranzinc-x-1/2" />
-          <div className="absolute bottom-0 left-0 size-[600px] bg-brand-400 rounded-full blur-3xl tranzinc-y-1/2 -tranzinc-x-1/2" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-700 to-brand-900 overflow-x-hidden pt-16">
+        {/* Mouse-following spotlight effect */}
+        <HeroSpotlight />
+
+        {/* Decorative background elements - Unipix-style with floating animations */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 right-0 size-[800px] bg-brand-600 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-float" />
+          <div className="absolute bottom-0 left-0 size-[600px] bg-brand-500 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-float-delayed" />
         </div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-20 items-center">
-            <div className="animate-fade-up">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-6 sm:mb-8">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-6 sm:mb-8 animate-fade-up" style={{ animationDelay: '0ms' }}>
                 <Sparkles className="size-3.5 sm:w-4 sm:h-4 text-amber-400" />
                 <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-200">
                   Official Scholarship Portal
@@ -177,8 +183,8 @@ export default async function HomePage() {
               </div>
 
               <h1
-                className="text-[32px] sm:text-[40px] lg:text-[52px] xl:text-[64px] text-white mb-5 sm:mb-6 leading-tight lg:leading-tight"
-                style={SERIF}
+                className="text-[32px] sm:text-[40px] lg:text-[52px] xl:text-[64px] text-white mb-5 sm:mb-6 leading-tight lg:leading-tight animate-fade-up"
+                style={{ ...SERIF, animationDelay: '100ms' }}
               >
                 Scholarships matched
                 <br className="hidden sm:block" />
@@ -187,11 +193,11 @@ export default async function HomePage() {
                 <span className="text-amber-400"> profile.</span>
               </h1>
 
-              <p className="text-base sm:text-lg lg:text-xl text-zinc-300 leading-relaxed mb-8 sm:mb-10 max-w-xl">
+              <p className="text-base sm:text-lg lg:text-xl text-zinc-300 leading-relaxed mb-8 sm:mb-10 max-w-xl animate-fade-up" style={{ animationDelay: '200ms' }}>
                 Access verified funding opportunities from government agencies and accredited universities. Our eligibility engine matches you with scholarships you actually qualify for.
               </p>
 
-              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-lg">
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-8 sm:mb-10 max-w-lg animate-fade-up" style={{ animationDelay: '300ms' }}>
                 {[
                   { icon: Shield, text: "Official sources" },
                   { icon: Globe, text: "4 countries" },
@@ -207,17 +213,17 @@ export default async function HomePage() {
                 ))}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-up" style={{ animationDelay: '400ms' }}>
                 <a
                   href="/auth/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-amber-500 text-brand-900 font-bold text-sm sm:text-base hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 transform hover:-tranzinc-y-0.5"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white text-brand-600 font-bold text-sm sm:text-base hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
                   <span>Find my scholarships</span>
                   <ArrowRight className="size-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="/scholarships"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-sm sm:text-base hover:bg-white/20 transition-all"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-sm sm:text-base hover:bg-white/20 transition-all transform hover:-translate-y-1"
                 >
                   <span>Browse directory</span>
                   <ArrowRight className="size-4 sm:w-5 sm:h-5" />
@@ -229,9 +235,9 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <div className="relative animate-scale-in order-first lg:order-last" style={{ animationDelay: '0.2s' }}>
+            <div className="relative animate-scale-in order-first lg:order-last animate-pulse-glow" style={{ animationDelay: '0.2s' }}>
               <div className="relative">
-                <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-amber-500/20 to-brand-500/20 rounded-2xl blur-2xl" />
+                <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-amber-500/20 to-brand-500/20 rounded-2xl blur-2xl animate-float" />
                 <div className="relative overflow-hidden rounded-2xl border border-brand-500/30 shadow-2xl h-[280px] sm:h-[350px] lg:h-[450px] xl:h-[550px]">
                   <Image
                     src="/images/marketing/students-collab.jpg"
@@ -273,7 +279,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white border-b border-zinc-200/70">
+      {/* Scholarship Categories Section - adapted from Unipix template */}
+      <ScholarshipCategories />
+
+      <section className="bg-white border-b border-zinc-200/70 overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {trustStrip.map((block) => (
@@ -415,34 +424,43 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="bg-paper border-b border-zinc-200/70">
+      <section id="how-it-works" className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="max-w-2xl mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-16">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
               How it works
             </p>
-            <h2 className="text-3xl lg:text-4xl text-zinc-900 mb-3" style={SERIF}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl text-zinc-900 mb-3 whitespace-nowrap" style={SERIF}>
               From sign-up to ranked matches in two minutes
             </h2>
-            <p className="text-zinc-500 leading-relaxed">
+            <p className="text-sm sm:text-base text-zinc-500 leading-relaxed whitespace-nowrap">
               A straightforward four-step flow with no quizzes, no upsells, and no surveys to unlock your results.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, index) => (
-              <div key={step.n} className="relative">
+              <div
+                key={step.n}
+                className="relative group bg-white border border-zinc-200 rounded-xl p-6 hover:border-brand-300 hover:shadow-lg transition-all duration-300"
+              >
+                {/* Step number circle */}
+                <div className="absolute -top-4 left-6 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md group-hover:bg-brand-700 transition-colors">
+                  {index + 1}
+                </div>
+
+                {/* Content */}
+                <div className="pt-2">
+                  <h3 className="font-semibold text-zinc-900 mb-2 text-[15px]">{step.title}</h3>
+                  <p className="text-sm text-zinc-600 leading-relaxed">{step.body}</p>
+                </div>
+
+                {/* Arrow indicator */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-4 left-[calc(100%-12px)] w-[calc(100%-24px)] h-px bg-zinc-200" aria-hidden />
+                  <div className="hidden lg:block absolute top-1/2 -right-3 transform -translate-y-1/2 text-zinc-300">
+                    <ArrowRight className="size-4" />
+                  </div>
                 )}
-                <p
-                  className="text-brand-600 text-2xl leading-none mb-4"
-                  style={{ ...SERIF, fontStyle: "italic", fontWeight: 500 }}
-                >
-                  {step.n}
-                </p>
-                <h3 className="font-semibold text-zinc-900 mb-2 text-[15px]">{step.title}</h3>
-                <p className="text-sm text-zinc-600 leading-relaxed">{step.body}</p>
               </div>
             ))}
           </div>
@@ -474,32 +492,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-zinc-950 text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
-          <h2 className="text-4xl lg:text-5xl text-white mb-5 leading-tight" style={SERIF}>
-            Most students apply to three scholarships.
-            <br className="hidden sm:block" />
-            <span className="text-brand-300" style={{ fontStyle: "italic", fontWeight: 400 }}>
-              You can find ten you qualify for.
-            </span>
-          </h2>
-          <p className="text-zinc-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-            Free for students. No credit card. No email spam. Just the scholarships you actually qualify for.
-          </p>
-          <a
-            href="/auth/signup"
-            className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 transition-colors"
-          >
-            Find my scholarships
-            <ArrowRight className="size-4" />
-          </a>
-          <p className="mt-6 text-zinc-500 text-xs font-medium uppercase tracking-[0.18em]">
-            Takes about two minutes
-          </p>
-        </div>
-      </section>
-
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }

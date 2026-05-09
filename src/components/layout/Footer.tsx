@@ -4,7 +4,7 @@ const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900 text-zinc-300 border-t border-brand-800">
+    <footer className="bg-zinc-950 text-zinc-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16">
           <div className="md:col-span-2">
@@ -28,7 +28,7 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-400 mb-5">Platform</h4>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white mb-5">Platform</h4>
             <ul className="space-y-3 text-sm">
               <li><a href="/scholarships" className="text-zinc-400 hover:text-white transition-colors flex items-center gap-1 group">
                 Browse scholarships
@@ -41,7 +41,7 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-400 mb-5">Legal</h4>
+            <h4 className="text-xs font-semibold uppercase tracking-[0.15em] text-white mb-5">Legal</h4>
             <ul className="space-y-3 text-sm">
               <li><a href="/privacy" className="text-zinc-400 hover:text-white transition-colors">Privacy policy</a></li>
               <li><a href="/terms" className="text-zinc-400 hover:text-white transition-colors">Terms of use</a></li>
@@ -49,7 +49,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-brand-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
+        <div className="mt-12 pt-8 border-t border-zinc-800 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-zinc-500">
           <p>© {new Date().getFullYear()} ScholarBridge. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy</a>

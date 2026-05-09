@@ -62,9 +62,12 @@ export async function logImpressions(
       session_id:     sessionId ?? null,
     }));
 
-    await supabase.from('match_events').insert(rows);
-  } catch {
-    // Non-fatal
+    const { error } = await supabase.from('match_events').insert(rows);
+    if (error) {
+      console.warn('logImpressions failed:', error);
+    }
+  } catch (err) {
+    console.warn('logImpressions threw:', err);
   }
 }
 

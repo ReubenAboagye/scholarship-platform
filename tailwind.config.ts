@@ -15,20 +15,19 @@ const config: Config = {
         serif: ['Fraunces', 'Georgia', 'ui-serif', 'serif'],
       },
       colors: {
-        // Brand is now a deep institutional navy rather than indigo/violet.
-        // Keeps the existing "brand-50…brand-900" API intact so we don't have
-        // to rewrite every component at once.
+        // Brand colors - Unipix-inspired crimson/maroon theme
+        // Primary crimson/maroon for hero sections and CTAs
         brand: {
-          50:  '#f1f5f9',
-          100: '#e2e8f0',
-          200: '#cbd5e1',
-          300: '#94a3b8',
-          400: '#64748b',
-          500: '#334155',
-          600: '#1e3a8a', // Primary Navy
-          700: '#1e3578', // Hover Navy
-          800: '#1a2e66',
-          900: '#172554', // Deep Navy
+          50:  '#FEF2F2',
+          100: '#FEE2E2',
+          200: '#FECACA',
+          300: '#FCA5A5',
+          400: '#F87171',
+          500: '#EF4444',
+          600: '#890C25', // Primary Crimson (Unipix)
+          700: '#B71A34', // Hover Crimson (Unipix)
+          800: '#991B1B',
+          900: '#7F1D1D', // Deep Crimson
         },
         // Neutral paper — flat off-white for sections that used to be bg-slate-50
         paper: {
@@ -61,6 +60,10 @@ const config: Config = {
         'slide-in': 'slideIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
         'shimmer':  'shimmer 2s infinite linear',
         'scale-in': 'scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'float':    'float 6s ease-in-out infinite',
+        'float-delayed': 'float 6s ease-in-out 3s infinite',
+        'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
+        'spotlight': 'spotlight 8s linear infinite',
       },
       keyframes: {
         fadeUp:  { from: { opacity: '0', transform: 'translateY(16px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
@@ -68,6 +71,9 @@ const config: Config = {
         slideIn: { from: { opacity: '0', transform: 'translateX(20px)' }, to: { opacity: '1', transform: 'translateX(0)' } },
         scaleIn: { from: { opacity: '0', transform: 'scale(0.96)' }, to: { opacity: '1', transform: 'scale(1)' } },
         shimmer: { from: { backgroundPosition: '-200% 0' }, to: { backgroundPosition: '200% 0' } },
+        float:   { '0%, 100%': { transform: 'translateY(0px)' }, '50%': { transform: 'translateY(-20px)' } },
+        pulseGlow: { '0%, 100%': { opacity: '0.5', transform: 'scale(1)' }, '50%': { opacity: '0.8', transform: 'scale(1.05)' } },
+        spotlight: { '0%': { transform: 'rotate(0deg)' }, '100%': { transform: 'rotate(360deg)' } },
       },
     },
   },
