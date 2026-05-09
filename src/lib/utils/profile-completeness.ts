@@ -33,3 +33,65 @@ export function computeCompleteness(profile: Record<string, any>): number {
   const earned = NUDGE_FIELDS.filter(f => Boolean(profile[f.field])).reduce((s, f) => s + f.weight, 0);
   return Math.round((earned / total) * 100);
 }
+
+// Confidence levels for match scores
+export type MatchConfidence = 'high' | 'medium' | 'low';
+
+export interface ConfidenceResult {
+  level: MatchConfidence;
+  label: string;
+  message: string | null;
+  actionHref: string | null;
+}
+
+// Derive match confidence from match_score and profile completeness
+export function computeMatchConfidence(
+  matchScore: number,
+  completionPct: number
+): ConfidenceResult {
+  // Low profile completeness reduces confidence regardless of match score
+  if (completionPct < 60) {
+    if (matchScore >= 70) {
+      return {
+        level: 'medium',
+        label: 'Potential match',
+        message: 'Complete your profile to confirm eligibility',
+        actionHref: '/dashboard/profile',
+      };
+    }
+    return {
+      level: 'low',
+      label: 'Possible match',
+      message: 'Add profile details for better matches',
+      actionHref: '/dashboard/profile',
+    };
+  }
+
+  // High completeness + high match score = high confidence
+  if (matchScore >= 70 && completionPct >= 80) {
+    return {
+      level: 'high',
+      label: 'Strong match',
+      message: null,
+      actionHref: null,
+    };
+  }
+
+  // High completeness + medium match score = medium confidence
+  if (matchScore >= 60 && completionPct >= 60) {
+    return {
+      level: 'medium',
+      label: 'Good match',
+      message: null,
+      actionHref: null,
+    };
+  }
+
+  // Low match score = low confidence
+  return {
+    level: 'low',
+    label: 'Possible match',
+    message: null,
+    actionHref: null,
+  };
+}

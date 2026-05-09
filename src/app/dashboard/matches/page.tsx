@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { countryFlag, formatDeadline } from "@/lib/utils";
 import { logMatchEvent, logImpressions, dismissScholarship, type NotRelevantReason } from "@/lib/utils/events";
-import { getTopNudge } from "@/lib/utils/profile-completeness";
+import { getTopNudge, computeMatchConfidence, computeCompleteness, type ConfidenceResult } from "@/lib/utils/profile-completeness";
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -74,6 +74,14 @@ function scoreDot(score: number) {
   return "bg-amber-400";
 }
 
+function confidenceColor(level: ConfidenceResult['level']) {
+  switch (level) {
+    case 'high': return "text-emerald-700 bg-emerald-50 border-emerald-200";
+    case 'medium': return "text-blue-700 bg-blue-50 border-blue-200";
+    case 'low': return "text-amber-700 bg-amber-50 border-amber-200";
+  }
+}
+
 function tagColor(tag: string) {
   const m: Record<string, string> = {
     UK: "bg-blue-50 text-blue-600 border-blue-200",
@@ -91,19 +99,21 @@ function tagColor(tag: string) {
 // ── Match Row ──────────────────────────────────────────────────────────────
 
 function MatchRow({
-  result, rank, saved, sessionId,
+  result, rank, saved, sessionId, completionPct,
   onToggleSave, onDismiss,
 }: {
   result: MatchResult;
   rank: number;
   saved: boolean;
   sessionId: string;
+  completionPct: number;
   onToggleSave: (id: string) => void;
   onDismiss: (id: string, reason?: NotRelevantReason) => void;
 }) {
   const [hovered, setHovered] = useState(false);
   const [showReasons, setShowReasons] = useState(false);
   const s = result.scholarship;
+  const confidence = computeMatchConfidence(result.match_score, completionPct);
 
   const REASONS: { code: NotRelevantReason; label: string }[] = [
     { code: "wrong_country", label: "Wrong country" },
@@ -230,10 +240,14 @@ function MatchRow({
 
       {/* Tags + reasons row */}
       <div className="flex flex-wrap items-center gap-1.5 mt-2.5 ml-9">
-        <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${scoreColor(result.match_score)}`}>
-          <span className={`size-1.5 rounded-full ${scoreDot(result.match_score)}`} />
-          {result.match_score >= 70 ? "Strong match" : result.match_score >= 50 ? "Good match" : "Possible match"}
+        <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${confidenceColor(confidence.level)}`}>
+          {confidence.label}
         </span>
+        {confidence.message && confidence.actionHref && (
+          <a href={confidence.actionHref} className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:text-blue-700 hover:underline">
+            {confidence.message} →
+          </a>
+        )}
         {s.renewable && (
           <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-zinc-500 border border-stone-200">
             <RefreshCw className="size-2.5" /> Renewable
@@ -313,6 +327,7 @@ export default function MatchesDashboardPage() {
   const [openFilter, setOpenFilter] = useState<string | null>(null);
   const [scoreFilter, setScoreFilter] = useState<string[]>(["strong", "good", "possible"]);
   const [nudge, setNudge] = useState<ReturnType<typeof getTopNudge>>(null);
+  const [completionPct, setCompletionPct] = useState(100);
   const filterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -529,6 +544,7 @@ export default function MatchesDashboardPage() {
               rank={i + 1}
               saved={savedIds.has(r.scholarship.id)}
               sessionId={session.id}
+              completionPct={completionPct}
               onToggleSave={toggleSave}
               onDismiss={handleDismiss}
             />

@@ -21,7 +21,7 @@ import {
 
 const STATUSES = [
   "Interested", "In Progress", "Submitted",
-  "Awaiting Decision", "Accepted", "Rejected", "Withdrawn",
+  "Awaiting Decision", "Accepted", "Rejected", "Withdrawn", "Deadline Passed",
 ] as const;
 type Status = (typeof STATUSES)[number];
 
@@ -76,6 +76,7 @@ const KANBAN_COLS: {
   { status: "Accepted",          headerBg: "bg-emerald-100/60", border: "border-emerald-200", dot: "bg-emerald-500", topBar: "bg-emerald-500", cardBorder: "hover:border-emerald-300" },
   { status: "Rejected",          headerBg: "bg-rose-100/60", border: "border-rose-200", dot: "bg-rose-400", topBar: "bg-rose-400", cardBorder: "hover:border-rose-300" },
   { status: "Withdrawn",         headerBg: "bg-zinc-100/60", border: "border-zinc-300", dot: "bg-zinc-400", topBar: "bg-zinc-400", cardBorder: "hover:border-zinc-400" },
+  { status: "Deadline Passed",   headerBg: "bg-slate-100/60", border: "border-slate-300", dot: "bg-slate-500", topBar: "bg-slate-500", cardBorder: "hover:border-slate-400" },
 ];
 
 interface StatCard {
@@ -310,7 +311,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
       {/* Status stepper - horizontal scroll (hidden in kanban) */}
       {!hideStepper && (
         <div className="flex items-center overflow-x-auto pb-0.5 -mx-1 px-1 gap-0 scrollbar-none">
-          {KANBAN_COLS.filter(c => c.status !== "Rejected" && c.status !== "Withdrawn").map((col, i, arr) => {
+          {KANBAN_COLS.filter(c => c.status !== "Rejected" && c.status !== "Withdrawn" && c.status !== "Deadline Passed").map((col, i, arr) => {
             const actualIdx = KANBAN_COLS.findIndex(c => c.status === col.status);
             const isDone    = actualIdx < curIdx;
             const isActive  = actualIdx === curIdx;
@@ -329,7 +330,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
               </div>
             );
           })}
-          {(item.status === "Rejected" || item.status === "Withdrawn") && (
+          {(item.status === "Rejected" || item.status === "Withdrawn" || item.status === "Deadline Passed") && (
             <span className={`ml-2 flex-shrink-0 text-[10px] font-bold px-2.5 py-1 rounded-full ${statusColor(item.status)}`}>
               {item.status}
             </span>
@@ -704,9 +705,9 @@ export default function TrackerPage() {
     if (item) {
       const sourceIdx = KANBAN_COLS.findIndex(c => c.status === item.status);
       const destIdx   = KANBAN_COLS.findIndex(c => c.status === newStatus);
-      // Don't allow moving back from Rejected(5) or Withdrawn(6)
+      // Don't allow moving back from Rejected(5), Withdrawn(6), or Deadline Passed(7)
       if (sourceIdx >= 5 && destIdx < sourceIdx) {
-        setError("Cannot move applications back from archived statuses.");
+        setError("Cannot move applications back from archived statuses (Rejected, Withdrawn, Deadline Passed).");
         return;
       }
     }
@@ -753,7 +754,7 @@ export default function TrackerPage() {
     return computedItems.filter(i => {
       const days = daysUntilDeadline(i.scholarship?.application_deadline ?? null);
       return days !== null && days >= 0 && days <= 7 &&
-        !["Submitted", "Accepted", "Rejected", "Withdrawn"].includes(i.status);
+        !["Submitted", "Accepted", "Rejected", "Withdrawn", "Deadline Passed"].includes(i.status);
     });
   }, [computedItems]);
 
@@ -1029,7 +1030,7 @@ export default function TrackerPage() {
         // ── Kanban view with drag-and-drop ──
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="pb-4">
-            {/* Archive toggle for Rejected/Withdrawn columns */}
+            {/* Archive toggle for Rejected/Withdrawn/Deadline Passed columns */}
             <div className="flex items-center justify-end mb-3">
               <button
                 onClick={() => setShowArchived(!showArchived)}
@@ -1046,9 +1047,9 @@ export default function TrackerPage() {
             </div>
             <div className="flex gap-4 min-w-max">
               {KANBAN_COLS.map(col => {
-                if ((col.status === "Rejected" || col.status === "Withdrawn") && !showArchived) return null;
+                if ((col.status === "Rejected" || col.status === "Withdrawn" || col.status === "Deadline Passed") && !showArchived) return null;
                 const colItems = computedItems.filter(i => i.status === col.status);
-                const isFinalCol = col.status === "Rejected" || col.status === "Withdrawn";
+                const isFinalCol = col.status === "Rejected" || col.status === "Withdrawn" || col.status === "Deadline Passed";
                 return (
                   <KanbanColumn
                     key={col.status}

@@ -4,6 +4,7 @@ import { LazyMotion, domAnimation, m } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { Sparkles, Bookmark, ListChecks, ArrowRight, AlertCircle, Clock, CheckCircle, Trophy, PlusCircle, RefreshCw } from "lucide-react";
 import { formatDeadline, cn, countryFlag } from "@/lib/utils";
+import { computeMatchConfidence, type ConfidenceResult } from "@/lib/utils/profile-completeness";
 
 interface Props {
   firstName: string;
@@ -45,6 +46,14 @@ function scoreColor(score: number) {
   if (score >= 80) return "text-emerald-600 bg-emerald-50 border-emerald-200";
   if (score >= 60) return "text-blue-600 bg-blue-50 border-blue-200";
   return "text-amber-600 bg-amber-50 border-amber-200";
+}
+
+function confidenceColor(level: ConfidenceResult['level']) {
+  switch (level) {
+    case 'high': return "text-emerald-700 bg-emerald-50 border-emerald-200";
+    case 'medium': return "text-blue-700 bg-blue-50 border-blue-200";
+    case 'low': return "text-amber-700 bg-amber-50 border-amber-200";
+  }
 }
 
 export default function DashboardClient({
@@ -298,6 +307,7 @@ export default function DashboardClient({
             <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden divide-y divide-zinc-50">
               {validTopMatches.map((r: any, i: number) => {
                 const s = r.scholarship;
+                const confidence = computeMatchConfidence(r.match_score, completionPct);
                 return (
                   <a
                     key={s.id}
@@ -315,9 +325,14 @@ export default function DashboardClient({
                         {countryFlag(s.country)} {s.provider} · {formatDeadline(s.application_deadline)}
                       </p>
                     </div>
-                    <span className={cn("flex-shrink-0 text-[11px] font-black px-2.5 py-1 rounded-full border", scoreColor(r.match_score))}>
-                      {r.match_score}%
-                    </span>
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full border", confidenceColor(confidence.level))}>
+                        {confidence.label}
+                      </span>
+                      <span className={cn("flex-shrink-0 text-[11px] font-black px-2.5 py-1 rounded-full border", scoreColor(r.match_score))}>
+                        {r.match_score}%
+                      </span>
+                    </div>
                   </a>
                 );
               })}

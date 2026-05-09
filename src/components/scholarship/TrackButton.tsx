@@ -13,6 +13,7 @@ const STATUSES = [
   "Accepted",
   "Rejected",
   "Withdrawn",
+  "Deadline Passed",
 ] as const;
 
 interface Props {
