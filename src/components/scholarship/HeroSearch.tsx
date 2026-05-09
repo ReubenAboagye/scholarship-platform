@@ -6,6 +6,22 @@ import { Search, X, Loader2, Building2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { countryFlagUrl } from "@/lib/utils";
 
+// Highlight the matched substring in a suggestion title.
+function Highlighted({ text, term }: { text: string; term: string }) {
+  if (!term) return <>{text}</>;
+  const i = text.toLowerCase().indexOf(term.toLowerCase());
+  if (i === -1) return <>{text}</>;
+  return (
+    <>
+      {text.slice(0, i)}
+      <mark className="bg-yellow-100 text-slate-900 rounded px-0.5">
+        {text.slice(i, i + term.length)}
+      </mark>
+      {text.slice(i + term.length)}
+    </>
+  );
+}
+
 // ─────────────────────────────────────────────────────────────
 // HeroSearch — scholarship hero search.
 //
@@ -206,22 +222,6 @@ export default function HeroSearch({
     setSearch("");
     setSuggestions([]);
     setSuggestionsOpen(false);
-  }
-
-  // Highlight the matched substring in a suggestion title.
-  function Highlighted({ text, term }: { text: string; term: string }) {
-    if (!term) return <>{text}</>;
-    const i = text.toLowerCase().indexOf(term.toLowerCase());
-    if (i === -1) return <>{text}</>;
-    return (
-      <>
-        {text.slice(0, i)}
-        <mark className="bg-yellow-100 text-slate-900 rounded px-0.5">
-          {text.slice(i, i + term.length)}
-        </mark>
-        {text.slice(i + term.length)}
-      </>
-    );
   }
 
   return (

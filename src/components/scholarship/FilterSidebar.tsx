@@ -59,36 +59,21 @@ function optionClasses(isActive: boolean) {
   ].join(" ");
 }
 
-export default function FilterSidebar({
-  active, countries, fundingTypes, degreeLevels, baseUrl = "/scholarships",
-}: FilterSidebarProps) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+interface FilterContentProps {
+  active: FilterSidebarProps["active"];
+  baseUrl: string;
+  countries: string[];
+  fundingTypes: string[];
+  degreeLevels: string[];
+  hasFilters: boolean;
+  buildUrl: (overrides: Partial<FilterSidebarProps["active"]>) => string;
+  onClose: () => void;
+}
 
-  // Build a canonical URL with overrides applied. This keeps the
-  // filter state encoded in the query string so it survives page
-  // refreshes and is shareable.
-  const buildUrl = (overrides: Partial<typeof active>) => {
-    const merged = { ...active, ...overrides };
-    const params = new URLSearchParams();
-    if (merged.country       !== "All" ) params.set("country",       merged.country);
-    if (merged.funding_type  !== "All" ) params.set("funding_type",  merged.funding_type);
-    if (merged.degree_level  !== "All" ) params.set("degree_level",  merged.degree_level);
-    if (merged.deadline      !== "any" ) params.set("deadline",      merged.deadline);
-    if (merged.renewable     === "true") params.set("renewable",     "true");
-    if (merged.international === "true") params.set("international", "true");
-    if (merged.effort        !== "any" ) params.set("effort",        merged.effort);
-    if (merged.search                  ) params.set("search",        merged.search);
-    const qs = params.toString();
-    return `${baseUrl}${qs ? "?" + qs : ""}`;
-  };
-
-  const hasFilters =
-    active.country !== "All" || active.funding_type !== "All" ||
-    active.degree_level !== "All" || active.search !== "" ||
-    active.deadline !== "any" || active.renewable === "true" ||
-    active.international === "true" || active.effort !== "any";
-
-  const FilterContent = () => (
+function FilterContent({
+  active, baseUrl, countries, fundingTypes, degreeLevels, hasFilters, buildUrl, onClose,
+}: FilterContentProps) {
+  return (
     <div>
       {/* ── Search ─────────────────────────────────────── */}
       <FilterSection label="Search">
@@ -125,7 +110,7 @@ export default function FilterSidebar({
             <a
               key={v}
               href={buildUrl({ deadline: v })}
-              onClick={() => setDrawerOpen(false)}
+              onClick={onClose}
               className={optionClasses(active.deadline === v)}
             >
               {l}
@@ -141,7 +126,7 @@ export default function FilterSidebar({
             <a
               key={c}
               href={buildUrl({ country: c })}
-              onClick={() => setDrawerOpen(false)}
+              onClick={onClose}
               className={optionClasses(active.country === c)}
             >
               {c !== "All" && countryFlagUrl(c) ? (
@@ -166,7 +151,7 @@ export default function FilterSidebar({
             <a
               key={d}
               href={buildUrl({ degree_level: d })}
-              onClick={() => setDrawerOpen(false)}
+              onClick={onClose}
               className={optionClasses(active.degree_level === d)}
             >
               {d === "All" ? "Any level" : d}
@@ -182,7 +167,7 @@ export default function FilterSidebar({
             <a
               key={f}
               href={buildUrl({ funding_type: f })}
-              onClick={() => setDrawerOpen(false)}
+              onClick={onClose}
               className={optionClasses(active.funding_type === f)}
             >
               {f === "All" ? "Any funding" : f}
@@ -202,7 +187,7 @@ export default function FilterSidebar({
             <a
               key={v}
               href={buildUrl({ effort: v })}
-              onClick={() => setDrawerOpen(false)}
+              onClick={onClose}
               className={optionClasses(active.effort === v)}
             >
               {l}
@@ -223,7 +208,7 @@ export default function FilterSidebar({
               <a
                 key={key}
                 href={buildUrl({ [key]: on ? "" : "true" } as any)}
-                onClick={() => setDrawerOpen(false)}
+                onClick={onClose}
                 className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-colors
                   ${on ? "bg-slate-100 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-50"}`}
               >
@@ -249,7 +234,7 @@ export default function FilterSidebar({
         <div className="pt-3">
           <a
             href={baseUrl}
-            onClick={() => setDrawerOpen(false)}
+            onClick={onClose}
             className="block w-full text-center py-2 text-sm font-medium text-slate-600
                        border border-slate-200 hover:border-slate-300 hover:text-slate-900
                        rounded-md transition-colors"
@@ -260,6 +245,38 @@ export default function FilterSidebar({
       )}
     </div>
   );
+}
+
+export default function FilterSidebar({
+  active, countries, fundingTypes, degreeLevels, baseUrl = "/scholarships",
+}: FilterSidebarProps) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  // Build a canonical URL with overrides applied. This keeps the
+  // filter state encoded in the query string so it survives page
+  // refreshes and is shareable.
+  const buildUrl = (overrides: Partial<typeof active>) => {
+    const merged = { ...active, ...overrides };
+    const params = new URLSearchParams();
+    if (merged.country       !== "All" ) params.set("country",       merged.country);
+    if (merged.funding_type  !== "All" ) params.set("funding_type",  merged.funding_type);
+    if (merged.degree_level  !== "All" ) params.set("degree_level",  merged.degree_level);
+    if (merged.deadline      !== "any" ) params.set("deadline",      merged.deadline);
+    if (merged.renewable     === "true") params.set("renewable",     "true");
+    if (merged.international === "true") params.set("international", "true");
+    if (merged.effort        !== "any" ) params.set("effort",        merged.effort);
+    if (merged.search                  ) params.set("search",        merged.search);
+    const qs = params.toString();
+    return `${baseUrl}${qs ? "?" + qs : ""}`;
+  };
+
+  const hasFilters =
+    active.country !== "All" || active.funding_type !== "All" ||
+    active.degree_level !== "All" || active.search !== "" ||
+    active.deadline !== "any" || active.renewable === "true" ||
+    active.international === "true" || active.effort !== "any";
+
+  const handleClose = () => setDrawerOpen(false);
 
   // Count active filters for the mobile trigger badge
   const activeCount = [
@@ -315,7 +332,16 @@ export default function FilterSidebar({
             {activeCount} active
           </p>
         )}
-        <FilterContent />
+        <FilterContent
+          active={active}
+          baseUrl={baseUrl}
+          countries={countries}
+          fundingTypes={fundingTypes}
+          degreeLevels={degreeLevels}
+          hasFilters={hasFilters}
+          buildUrl={buildUrl}
+          onClose={handleClose}
+        />
       </aside>
 
       {/* Mobile drawer overlay */}
@@ -344,7 +370,16 @@ export default function FilterSidebar({
             </button>
           </div>
           <div className="flex-1 overflow-y-auto px-5 py-3">
-            <FilterContent />
+            <FilterContent
+              active={active}
+              baseUrl={baseUrl}
+              countries={countries}
+              fundingTypes={fundingTypes}
+              degreeLevels={degreeLevels}
+              hasFilters={hasFilters}
+              buildUrl={buildUrl}
+              onClose={handleClose}
+            />
           </div>
           <div className="p-4 border-t border-slate-200">
             <button

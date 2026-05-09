@@ -1,7 +1,24 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
+import Script from "next/script";
+import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import PageViewTracker from "@/components/tracking/PageViewTracker";
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  axes: ["opsz", "SOFT"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: { default: "ScholarBridge — Find Your Scholarship", template: "%s | ScholarBridge" },
@@ -28,16 +45,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* Inter for body/UI, Fraunces for editorial display headlines */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="en" className={`${inter.variable} ${fraunces.variable}`}>
+      <head />
       <body>
         {/*
           PageViewTracker logs navigation to Supabase via a
@@ -51,8 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Suspense>
         {children}
         {process.env.NODE_ENV === 'production' && (
-          <script
+          <Script
             id="sw-register"
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
                 if ('serviceWorker' in navigator) {

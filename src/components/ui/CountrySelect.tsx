@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { ChevronDown, Globe, Search } from "lucide-react";
 import { COUNTRIES } from "@/lib/constants/countries";
 import { cn } from "@/lib/utils";
@@ -34,17 +34,21 @@ export default function CountrySelect({ value, onChange, placeholder = "Select c
     return COUNTRIES.filter(c => c.toLowerCase().includes(term));
   }, [search]);
 
-  // Reset search when opening/closing
-  useEffect(() => {
-    if (open) setSearch("");
-  }, [open]);
+  const openDropdown = useCallback(() => {
+    setSearch("");
+    setOpen(true);
+  }, []);
+
+  const closeDropdown = useCallback(() => {
+    setOpen(false);
+  }, []);
 
   return (
     <div ref={ref} className={cn("relative", className)}>
       {/* Trigger */}
       <button
         type="button"
-        onClick={() => setOpen(!open)}
+        onClick={() => (open ? closeDropdown() : openDropdown())}
         className="w-full h-[40px] flex items-center justify-between px-3.5 py-2 rounded-lg border bg-white text-sm text-slate-800 border-slate-200 hover:border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-50 transition-all text-left group"
       >
         <div className="flex items-center gap-2.5 min-w-0">
