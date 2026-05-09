@@ -106,17 +106,17 @@ function MatchCard({
   const isSaving = saving.has(s.id);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden hover:border-slate-300 hover:shadow-sm transition-all">
+    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden hover:border-zinc-300 hover:shadow-sm transition-all">
       <div className="p-5">
         <div className="flex items-start gap-4">
-          <div className="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0 text-xs font-black text-slate-500">
+          <div className="size-8 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0 text-xs font-black text-zinc-500">
             {rank}
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-3 mb-1">
               <div>
-                <h3 className="font-bold text-slate-900 leading-snug">{s.name}</h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <h3 className="text-zinc-900 leading-snug">{s.name}</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">
                   {countryFlag(s.country)} {s.country} · {s.provider}
                 </p>
               </div>
@@ -125,7 +125,7 @@ function MatchCard({
               </div>
             </div>
 
-            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-3">
+            <div className="w-full h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-3">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${colors.bar}`}
                 style={{ width: `${result.match_score}%` }}
@@ -137,9 +137,9 @@ function MatchCard({
                 {s.funding_type} Funding
               </span>
               {s.degree_levels?.map((d) => (
-                <span key={d} className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium">{d}</span>
+                <span key={d} className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 font-medium">{d}</span>
               ))}
-              <span className="text-xs text-slate-400">
+              <span className="text-xs text-zinc-400">
                 Deadline: {formatDeadline(s.application_deadline)}
               </span>
             </div>
@@ -149,37 +149,37 @@ function MatchCard({
                 {result.match_reasons.map((reason) => (
                   <span key={reason}
                     className="inline-flex items-center gap-1 text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
-                    <CheckCircle className="w-2.5 h-2.5" /> {reason}
+                    <CheckCircle className="size-2.5" /> {reason}
                   </span>
                 ))}
               </div>
             )}
 
-            <p className="text-xs font-semibold text-slate-700">{s.funding_amount}</p>
+            <p className="text-xs font-semibold text-zinc-700">{s.funding_amount}</p>
           </div>
         </div>
       </div>
 
-      <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between bg-slate-50">
+      <div className="border-t border-zinc-100 px-5 py-3 flex items-center justify-between bg-zinc-50">
         <button
           onClick={() => onToggleSave(s.id)}
           disabled={isSaving}
-          className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${isSaved ? "text-blue-600 hover:text-red-500" : "text-slate-500 hover:text-blue-600"
+          className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${isSaved ? "text-blue-600 hover:text-red-500" : "text-zinc-500 hover:text-blue-600"
             }`}
         >
           {isSaving
-            ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
-            : isSaved ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Bookmark className="w-3.5 h-3.5" />}
+            ? <Loader2 className="size-3.5 animate-spin" />
+            : isSaved ? <BookmarkCheck className="size-3.5" /> : <Bookmark className="size-3.5" />}
           {isSaved ? "Saved" : "Save"}
         </button>
         <div className="flex items-center gap-3">
           <a href={`/dashboard/scholarships/${s.slug || s.id}`}
-            className="text-xs font-medium text-slate-500 hover:text-slate-800 flex items-center gap-1 transition-colors">
-            Details <ChevronRight className="w-3 h-3" />
+            className="text-xs font-medium text-zinc-500 hover:text-zinc-800 flex items-center gap-1 transition-colors">
+            Details <ChevronRight className="size-3" />
           </a>
           <a href={s.application_url} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition-colors">
-            Apply <ExternalLink className="w-3 h-3" />
+            Apply <ExternalLink className="size-3" />
           </a>
         </div>
       </div>
@@ -204,7 +204,7 @@ function HistoryRow({
   const colors = scoreColor(topScore);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+    <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
       {/* Row header — always visible */}
       <div
         role="button"
@@ -216,17 +216,17 @@ function HistoryRow({
             setExpanded((v) => !v);
           }
         }}
-        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+        className="w-full flex items-center gap-4 px-5 py-4 hover:bg-zinc-50 transition-colors text-left cursor-pointer"
       >
-        <div className="flex-shrink-0 w-9 h-9 bg-slate-100 rounded-xl flex items-center justify-center">
-          <Clock className="w-4 h-4 text-slate-400" />
+        <div className="flex-shrink-0 size-9 bg-zinc-100 rounded-xl flex items-center justify-center">
+          <Clock className="size-4 text-zinc-400" />
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-slate-800">
+          <p className="text-sm font-semibold text-zinc-800">
             {session.results.length} matches found
           </p>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             {snap.degree_level && `${snap.degree_level} · `}
             {snap.field_of_study && `${snap.field_of_study} · `}
             {snap.country_of_origin}
@@ -238,29 +238,29 @@ function HistoryRow({
           <span className={`hidden sm:inline text-[11px] font-black px-2.5 py-1 rounded-full border ${colors.bg} ${colors.text}`}>
             Top: {topScore}%
           </span>
-          <span className="text-xs text-slate-400">{formatRunAt(session.run_at)}</span>
+          <span className="text-xs text-zinc-400">{formatRunAt(session.run_at)}</span>
 
           {/* Delete */}
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(session.id); }}
-            className="p-1.5 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
             title="Delete this session"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="size-3.5" />
           </button>
 
           {expanded
-            ? <ChevronUp className="w-4 h-4 text-slate-400" />
-            : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            ? <ChevronUp className="size-4 text-zinc-400" />
+            : <ChevronDown className="size-4 text-zinc-400" />}
         </div>
       </div>
 
       {/* Expanded content */}
       {expanded && (
-        <div className="border-t border-slate-100 px-5 py-5 space-y-4">
+        <div className="border-t border-zinc-100 p-5 space-y-4">
           {session.explanation && (
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
-              <Sparkles className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <Sparkles className="size-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">AI Analysis</p>
                 <p className="text-sm text-blue-800 leading-relaxed">{session.explanation}</p>
@@ -454,11 +454,11 @@ export default function MatchPage() {
 
       {/* ── Page header ──────────────────────────────────── */}
       <div className="pb-2">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">AI Feature</p>
+        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-1">AI Feature</p>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Scholarship Matching</h1>
-            <p className="text-sm text-slate-400 mt-1">
+            <h1 className="text-2xl text-zinc-900">Scholarship Matching</h1>
+            <p className="text-sm text-zinc-400 mt-1">
               Ranks every scholarship in the database against your academic profile.
             </p>
           </div>
@@ -474,18 +474,18 @@ export default function MatchPage() {
       )}
 
       {profileLoading ? (
-        <div className="rounded-xl border border-slate-200 bg-white p-4 flex items-center gap-3 text-sm text-slate-500">
-          <Loader2 className="w-4 h-4 animate-spin text-slate-400" />
+        <div className="rounded-xl border border-zinc-200 bg-white p-4 flex items-center gap-3 text-sm text-zinc-500">
+          <Loader2 className="size-4 animate-spin text-zinc-400" />
           Loading profile readiness...
         </div>
       ) : profile && (
         <div className={`rounded-xl border p-4 flex items-center gap-4 ${profileComplete ? "bg-emerald-50 border-emerald-200" : "bg-amber-50 border-amber-200"
           }`}>
-          <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${profileComplete ? "bg-emerald-100" : "bg-amber-100"
+          <div className={`size-9 rounded-full flex items-center justify-center flex-shrink-0 ${profileComplete ? "bg-emerald-100" : "bg-amber-100"
             }`}>
             {profileComplete
-              ? <CheckCircle className="w-5 h-5 text-emerald-600" />
-              : <AlertCircle className="w-5 h-5 text-amber-500" />}
+              ? <CheckCircle className="size-5 text-emerald-600" />
+              : <AlertCircle className="size-5 text-amber-500" />}
           </div>
           <div className="flex-1 min-w-0">
             {profileComplete ? (
@@ -515,28 +515,28 @@ export default function MatchPage() {
       )}
 
       {/* ── Tabs ─────────────────────────────────────────── */}
-      <div className="flex items-center gap-1 border-b border-slate-200">
+      <div className="flex items-center gap-1 border-b border-zinc-200">
         <button
           onClick={() => setTab("run")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${tab === "run"
             ? "border-blue-600 text-blue-600"
-            : "border-transparent text-slate-500 hover:text-slate-700"
+            : "border-transparent text-zinc-500 hover:text-zinc-700"
             }`}
         >
-          <Sparkles className="w-4 h-4 flex-shrink-0" />
+          <Sparkles className="size-4 flex-shrink-0" />
           <span className="whitespace-nowrap">Run matching</span>
         </button>
         <button
           onClick={() => setTab("history")}
           className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${tab === "history"
             ? "border-blue-600 text-blue-600"
-            : "border-transparent text-slate-500 hover:text-slate-700"
+            : "border-transparent text-zinc-500 hover:text-zinc-700"
             }`}
         >
-          <History className="w-4 h-4" />
+          <History className="size-4" />
           History
           {history.length > 0 && (
-            <span className="ml-1 text-[11px] bg-slate-100 text-slate-500 font-bold px-1.5 py-0.5 rounded-full">
+            <span className="ml-1 text-[11px] bg-zinc-100 text-zinc-500 font-bold px-1.5 py-0.5 rounded-full">
               {history.length}
             </span>
           )}
@@ -550,18 +550,18 @@ export default function MatchPage() {
         <>
           {/* Idle / error — show run button */}
           {status !== "done" && (
-            <div className="bg-white border border-slate-200 rounded-xl px-6 py-8 text-center">
-              <div className="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
-                <Sparkles className="w-6 h-6 text-blue-600" />
+            <div className="bg-white border border-zinc-200 rounded-xl px-6 py-8 text-center">
+              <div className="size-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
+                <Sparkles className="size-6 text-blue-600" />
               </div>
-              <h2 className="text-base font-bold text-slate-900 mb-1">Ready to find your matches?</h2>
-              <p className="text-sm text-slate-500 mb-5 max-w-sm mx-auto">
+              <h2 className="text-base text-zinc-900 mb-1">Ready to find your matches?</h2>
+              <p className="text-sm text-zinc-500 mb-5 max-w-sm mx-auto">
                 We&apos;ll rank all scholarships against your profile in seconds. Every run is saved to history.
               </p>
 
               {status === "error" && (
                 <div className="flex items-center gap-2 p-3 mb-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 text-left max-w-sm mx-auto">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <AlertCircle className="size-4 flex-shrink-0" />
                   {errorMsg}
                 </div>
               )}
@@ -569,14 +569,14 @@ export default function MatchPage() {
               <button
                 onClick={runMatching}
                 disabled={status === "loading" || profileLoading || !profileComplete}
-                className="inline-flex items-center gap-2 px-7 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors text-sm"
+                className="inline-flex items-center gap-2 px-7 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-200 disabled:text-zinc-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors text-sm"
               >
                 {status === "loading"
-                  ? <><Loader2 className="w-4 h-4 animate-spin" /><span className="whitespace-nowrap">Matching...</span></>
-                  : <><Sparkles className="w-4 h-4" /><span className="whitespace-nowrap">Run AI Matching</span></>}
+                  ? <><Loader2 className="size-4 animate-spin" /><span className="whitespace-nowrap">Matching...</span></>
+                  : <><Sparkles className="size-4" /><span className="whitespace-nowrap">Run AI Matching</span></>}
               </button>
               {!profileLoading && !profileComplete && (
-                <p className="text-xs text-slate-400 mt-3">Complete your profile to enable matching</p>
+                <p className="text-xs text-zinc-400 mt-3">Complete your profile to enable matching</p>
               )}
             </div>
           )}
@@ -586,7 +586,7 @@ export default function MatchPage() {
             <div className="space-y-4">
               {data.explanation && (
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex gap-3">
-                  <Sparkles className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                  <Sparkles className="size-5 text-blue-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <p className="text-xs font-bold text-blue-700 uppercase tracking-wide mb-1">AI Analysis</p>
                     <p className="text-sm text-blue-800 leading-relaxed">{data.explanation}</p>
@@ -595,16 +595,16 @@ export default function MatchPage() {
               )}
 
               <div className="flex items-center justify-between">
-                <p className="text-sm font-bold text-slate-700">
+                <p className="text-sm font-bold text-zinc-700">
                   {data.results.length} matches found
-                  <span className="ml-2 text-xs font-normal text-slate-400">— saved to history</span>
+                  <span className="ml-2 text-xs font-normal text-zinc-400">— saved to history</span>
                 </p>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => { setTab("history"); loadHistory(); }}
-                    className="text-xs text-slate-500 hover:text-slate-700 font-medium flex items-center gap-1"
+                    className="text-xs text-zinc-500 hover:text-zinc-700 font-medium flex items-center gap-1"
                   >
-                    <History className="w-3.5 h-3.5" /> View history
+                    <History className="size-3.5" /> View history
                   </button>
                   <button
                     onClick={runMatching}
@@ -616,9 +616,9 @@ export default function MatchPage() {
               </div>
 
               {data.results.length === 0 ? (
-                <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
-                  <p className="text-slate-500 text-sm">No eligible scholarships matched your profile.</p>
-                  <p className="text-slate-400 text-xs mt-1">
+                <div className="bg-white border border-zinc-200 rounded-xl p-10 text-center">
+                  <p className="text-zinc-500 text-sm">No eligible scholarships matched your profile.</p>
+                  <p className="text-zinc-400 text-xs mt-1">
                     Try broadening your profile or adding more detail to your academic background.
                   </p>
                   <a href="/dashboard/profile" className="inline-block mt-3 text-sm font-bold text-blue-600 hover:underline">
@@ -648,17 +648,17 @@ export default function MatchPage() {
       {tab === "history" && (
         <div className="space-y-3">
           {historyLoading ? (
-            <div className="flex items-center justify-center py-16 text-slate-400 gap-2">
-              <Loader2 className="w-5 h-5 animate-spin" />
+            <div className="flex items-center justify-center py-16 text-zinc-400 gap-2">
+              <Loader2 className="size-5 animate-spin" />
               <span className="text-sm">Loading history...</span>
             </div>
           ) : history.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-xl p-10 text-center">
-              <div className="w-12 h-12 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <History className="w-6 h-6 text-slate-300" />
+            <div className="bg-white border border-zinc-200 rounded-xl p-10 text-center">
+              <div className="size-12 bg-zinc-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <History className="size-6 text-zinc-300" />
               </div>
-              <p className="text-sm font-semibold text-slate-500">No match history yet</p>
-              <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+              <p className="text-sm font-semibold text-zinc-500">No match history yet</p>
+              <p className="text-xs text-zinc-400 mt-1 max-w-xs mx-auto">
                 Every time you run AI matching, the session is saved here so you can revisit your results.
               </p>
               <button
@@ -670,7 +670,7 @@ export default function MatchPage() {
             </div>
           ) : (
             <>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-zinc-400">
                 {history.length} session{history.length !== 1 ? "s" : ""} — click any row to expand results
               </p>
               {history.map((session) => (

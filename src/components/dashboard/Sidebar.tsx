@@ -62,30 +62,30 @@ export default function DashboardSidebar({ profile }: Props) {
       {/* ── Desktop sidebar ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col bg-paper border-r border-slate-200/80 transition-all duration-300 ease-out flex-shrink-0 sticky top-0 h-full",
+          "hidden md:flex flex-col bg-paper border-r border-zinc-200/80 transition-all duration-300 ease-out flex-shrink-0 sticky top-0 h-full",
           collapsed ? "w-[68px]" : "w-[232px]"
         )}
       >
         <div
           className={cn(
-            "flex items-center border-b border-slate-100/80 h-16 px-4",
+            "flex items-center border-b border-zinc-100/80 h-16 px-4",
             collapsed ? "justify-center" : "justify-between"
           )}
         >
           {!collapsed && (
             <a href="/" className="flex items-baseline">
-              <span className="text-lg tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              <span className="text-lg tracking-tight text-zinc-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
                 Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
               </span>
             </a>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100/80 rounded-lg transition-colors"
+            className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100/80 rounded-lg transition-colors"
           >
             <ChevronLeft
               className={cn(
-                "w-4 h-4 transition-transform duration-300",
+                "size-4 transition-transform duration-300",
                 collapsed && "rotate-180"
               )}
             />
@@ -104,14 +104,14 @@ export default function DashboardSidebar({ profile }: Props) {
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all",
                   active
-                    ? "bg-white text-brand-700 font-semibold shadow-sm border border-slate-100"
+                    ? "bg-white text-brand-700 font-semibold shadow-sm border border-zinc-100"
                     : isAI
                       ? "text-brand-600 hover:bg-white/60 hover:shadow-sm"
-                      : "text-slate-500 hover:bg-white/60 hover:text-slate-800",
+                      : "text-zinc-500 hover:bg-white/60 hover:text-zinc-800",
                   collapsed && "justify-center px-2"
                 )}
               >
-                <item.icon className={cn("flex-shrink-0", collapsed ? "w-5 h-5" : "w-4 h-4")} />
+                <item.icon className={cn("flex-shrink-0", collapsed ? "size-5" : "size-4")} />
                 {!collapsed && <span>{item.label}</span>}
                 {!collapsed && isAI && (
                   <span className="ml-auto text-[9px] font-bold uppercase tracking-wider text-brand-500 bg-brand-50 px-1.5 py-0.5 rounded">
@@ -123,28 +123,28 @@ export default function DashboardSidebar({ profile }: Props) {
           })}
         </nav>
 
-        <div className="border-t border-slate-100/80 shrink-0 p-3">
+        <div className="border-t border-zinc-100/80 shrink-0 p-3">
           {profile ? (
             <button
               onClick={handleSignOut}
               title="Sign out"
               className={cn(
-                "w-full flex items-center gap-3 px-3 py-3 hover:bg-white/80 rounded-xl transition-colors text-left",
+                "w-full flex items-center gap-3 p-3 hover:bg-white/80 rounded-xl transition-colors text-left",
                 collapsed && "justify-center px-2"
               )}
             >
-              <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
+              <div className="size-9 rounded-xl bg-zinc-900 text-white flex items-center justify-center text-xs font-bold shrink-0">
                 {initials}
               </div>
               {!collapsed && (
                 <>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-slate-900 truncate">
+                    <p className="text-sm font-semibold text-zinc-900 truncate">
                       {profile.full_name || "Account"}
                     </p>
-                    <p className="text-[11px] text-slate-400 truncate">{profile.email}</p>
+                    <p className="text-[11px] text-zinc-400 truncate">{profile.email}</p>
                   </div>
-                  <LogOut className="w-4 h-4 text-slate-400 shrink-0" />
+                  <LogOut className="size-4 text-zinc-400 shrink-0" />
                 </>
               )}
             </button>
@@ -152,9 +152,9 @@ export default function DashboardSidebar({ profile }: Props) {
             <div className="p-2 text-center">
               <button
                 onClick={handleSignOut}
-                className="p-2 text-slate-400 hover:text-slate-600 hover:bg-white/80 rounded-lg transition-colors"
+                className="p-2 text-zinc-400 hover:text-zinc-600 hover:bg-white/80 rounded-lg transition-colors"
               >
-                <LogOut className="w-4 h-4 mx-auto" />
+                <LogOut className="size-4 mx-auto" />
               </button>
             </div>
           )}
@@ -164,7 +164,7 @@ export default function DashboardSidebar({ profile }: Props) {
 
 
       {/* ── Mobile bottom nav ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-100 flex items-stretch min-h-[64px] safe-bottom shadow-[0_-6px_16px_rgba(2,6,23,0.04)] rounded-t-2xl">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-100 flex items-stretch min-h-[64px] safe-bottom shadow-[0_-6px_16px_rgba(2,6,23,0.04)] rounded-t-2xl">
         {mobileNavItems.map((item) => {
           const active = isActive(item.href);
           const isAI   = item.href === "/dashboard/match";
@@ -178,13 +178,13 @@ export default function DashboardSidebar({ profile }: Props) {
                   ? "text-brand-600"
                   : isAI
                     ? "text-brand-500"
-                    : "text-slate-400"
+                    : "text-zinc-400"
               )}
             >
-              <item.icon className={cn("w-[22px] h-[22px]", active && "scale-110")} />
+              <item.icon className={cn("size-[22px]", active && "scale-110")} />
               <span>{item.label}</span>
               {active && (
-                <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-8 h-[2px] bg-brand-600 rounded-b-full" />
+                <div className="absolute -top-[1px] left-1/2 -tranzinc-x-1/2 w-8 h-[2px] bg-brand-600 rounded-b-full" />
               )}
             </a>
           );

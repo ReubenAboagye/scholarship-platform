@@ -45,14 +45,14 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-zinc-50">
       <Navbar />
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <section className="relative overflow-hidden" style={{ minHeight: "320px" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={heroImage} alt="" aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center" />
+          className="absolute inset-0 size-full object-cover object-center" />
         {/* Gradient: transparent top → dark bottom so content is readable */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/75" />
 
@@ -60,7 +60,7 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
           {/* Back link */}
           <a href="/scholarships"
             className="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white mb-10 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to scholarships
+            <ArrowLeft className="size-4" /> Back to scholarships
           </a>
 
           {/* Flag + funding badge */}
@@ -80,7 +80,7 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
           </div>
 
           {/* Title + provider */}
-          <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight tracking-tight mb-2">
+          <h1 className="text-3xl sm:text-4xl text-white leading-tight tracking-tight mb-2">
             {scholarship.name}
           </h1>
           <p className="text-white/70 text-sm mb-8">{scholarship.provider}</p>
@@ -94,7 +94,7 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               { icon: Calendar,      label: formatDeadline(scholarship.application_deadline) },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-lg px-3 py-2">
-                <Icon className="w-3.5 h-3.5 text-white/60" />
+                <Icon className="size-3.5 text-white/60" />
                 <span className="text-white text-xs font-medium">{label}</span>
               </div>
             ))}
@@ -118,22 +118,22 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
 
             {/* About */}
             <section>
-              <h2 className="text-base font-bold text-slate-900 mb-3">About this Scholarship</h2>
-              <p className="text-slate-600 text-[15px] leading-[1.85]">{scholarship.description}</p>
+              <h2 className="text-base text-zinc-900 mb-3">About this Scholarship</h2>
+              <p className="text-zinc-600 text-[15px] leading-[1.85]">{scholarship.description}</p>
             </section>
 
-            <hr className="border-slate-100" />
+            <hr className="border-zinc-100" />
 
             {/* Eligibility */}
             <section>
-              <h2 className="text-base font-bold text-slate-900 mb-5">Eligibility Criteria</h2>
+              <h2 className="text-base text-zinc-900 mb-5">Eligibility Criteria</h2>
               <ul className="space-y-4">
                 {scholarship.eligibility_criteria?.map((c: string, i: number) => (
                   <li key={i} className="flex items-start gap-3.5">
-                    <span className="mt-[3px] flex-shrink-0 w-5 h-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
-                      <CheckCircle className="w-3 h-3 text-emerald-600" />
+                    <span className="mt-[3px] flex-shrink-0 size-5 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                      <CheckCircle className="size-3 text-emerald-600" />
                     </span>
-                    <span className="text-[15px] text-slate-600 leading-relaxed">{c}</span>
+                    <span className="text-[15px] text-zinc-600 leading-relaxed">{c}</span>
                   </li>
                 ))}
               </ul>
@@ -141,12 +141,12 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
 
             {scholarship.fields_of_study?.length > 0 && scholarship.fields_of_study[0] !== "Any" && (
               <>
-                <hr className="border-slate-100" />
+                <hr className="border-zinc-100" />
                 <section>
-                  <h2 className="text-base font-bold text-slate-900 mb-4">Fields of Study</h2>
+                  <h2 className="text-base text-zinc-900 mb-4">Fields of Study</h2>
                   <div className="flex flex-wrap gap-2">
                     {scholarship.fields_of_study.map((f: string) => (
-                      <span key={f} className="text-sm px-3 py-1.5 border border-slate-200 bg-slate-50 text-slate-600 font-medium rounded-lg">
+                      <span key={f} className="text-sm px-3 py-1.5 border border-zinc-200 bg-zinc-50 text-zinc-600 font-medium rounded-lg">
                         {f}
                       </span>
                     ))}
@@ -155,12 +155,12 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
               </>
             )}
 
-            <hr className="border-slate-100" />
+            <hr className="border-zinc-100" />
 
             {/* How to Apply — no card, plain content */}
             <section>
-              <h2 className="text-base font-bold text-slate-900 mb-3">How to Apply</h2>
-              <p className="text-slate-600 text-[15px] leading-[1.85] mb-5">
+              <h2 className="text-base text-zinc-900 mb-3">How to Apply</h2>
+              <p className="text-zinc-600 text-[15px] leading-[1.85] mb-5">
                 Applications are submitted directly through the official scholarship portal. Make sure you have all required documents ready — including transcripts, references, and a personal statement — before starting your application.
               </p>
               <ApplyButton
@@ -175,38 +175,38 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
 
           {/* ── RIGHT: sticky fact card ─────────────────────────── */}
           <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100">
-                <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">Quick Facts</p>
+            <div className="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+              <div className="px-5 py-4 border-b border-zinc-100">
+                <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-zinc-400">Quick Facts</p>
               </div>
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-zinc-100">
                 <div className="flex items-center gap-3 px-5 py-3.5">
-                  <MapPin className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                  <MapPin className="size-4 text-zinc-300 flex-shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-0.5">Country</p>
+                    <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold mb-0.5">Country</p>
                     <div className="flex items-center gap-1.5">
                       {countryFlagUrl(scholarship.country) && (
                         <img src={countryFlagUrl(scholarship.country)!} alt={scholarship.country}
-                          className="w-4 h-3 object-cover rounded-sm border border-slate-100" />
+                          className="w-4 h-3 object-cover rounded-sm border border-zinc-100" />
                       )}
-                      <p className="text-sm font-semibold text-slate-900">{scholarship.country}</p>
+                      <p className="text-sm font-semibold text-zinc-900">{scholarship.country}</p>
                     </div>
                   </div>
                 </div>
                 {infoCards.map((card) => (
                   <div key={card.label} className="flex items-center gap-3 px-5 py-3.5">
-                    <card.icon className="w-4 h-4 text-slate-300 flex-shrink-0" />
+                    <card.icon className="size-4 text-zinc-300 flex-shrink-0" />
                     <div className="min-w-0">
-                      <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-0.5">{card.label}</p>
-                      <p className={`text-sm font-semibold truncate ${card.label === "Deadline" && isPast ? "text-rose-500" : "text-slate-900"}`}>
+                      <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold mb-0.5">{card.label}</p>
+                      <p className={`text-sm font-semibold truncate ${card.label === "Deadline" && isPast ? "text-rose-500" : "text-zinc-900"}`}>
                         {card.value}
                       </p>
                     </div>
                   </div>
                 ))}
-                <div className="px-5 py-4 bg-slate-50">
-                  <p className="text-[10px] uppercase tracking-widest text-slate-400 font-semibold mb-1">Award</p>
-                  <p className="text-sm font-bold text-slate-900 leading-snug">{scholarship.funding_amount}</p>
+                <div className="px-5 py-4 bg-zinc-50">
+                  <p className="text-[10px] uppercase tracking-widest text-zinc-400 font-semibold mb-1">Award</p>
+                  <p className="text-sm font-bold text-zinc-900 leading-snug">{scholarship.funding_amount}</p>
                 </div>
               </div>
             </div>
@@ -218,7 +218,7 @@ export default async function ScholarshipDetailPage({ params }: { params: Promis
             />
             {!user && (
               <a href="/auth/signup"
-                className="flex items-center justify-center w-full py-3 border border-slate-200 hover:border-slate-300 text-slate-600 font-medium transition-colors text-sm rounded-xl">
+                className="flex items-center justify-center w-full py-3 border border-zinc-200 hover:border-zinc-300 text-zinc-600 font-medium transition-colors text-sm rounded-xl">
                 Sign in to Save & Track
               </a>
             )}

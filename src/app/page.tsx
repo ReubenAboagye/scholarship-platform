@@ -161,8 +161,8 @@ export default async function HomePage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900">
         {/* Decorative background elements */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-brand-500 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-brand-400 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
+          <div className="absolute top-0 right-0 size-[800px] bg-brand-500 rounded-full blur-3xl -tranzinc-y-1/2 tranzinc-x-1/2" />
+          <div className="absolute bottom-0 left-0 size-[600px] bg-brand-400 rounded-full blur-3xl tranzinc-y-1/2 -tranzinc-x-1/2" />
         </div>
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
         
@@ -170,7 +170,7 @@ export default async function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-20 items-center">
             <div className="animate-fade-up">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-6 sm:mb-8">
-                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
+                <Sparkles className="size-3.5 sm:w-4 sm:h-4 text-amber-400" />
                 <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-200">
                   Official Scholarship Portal
                 </span>
@@ -187,7 +187,7 @@ export default async function HomePage() {
                 <span className="text-amber-400"> profile.</span>
               </h1>
 
-              <p className="text-base sm:text-lg lg:text-xl text-slate-300 leading-relaxed mb-8 sm:mb-10 max-w-xl">
+              <p className="text-base sm:text-lg lg:text-xl text-zinc-300 leading-relaxed mb-8 sm:mb-10 max-w-xl">
                 Access verified funding opportunities from government agencies and accredited universities. Our eligibility engine matches you with scholarships you actually qualify for.
               </p>
 
@@ -198,9 +198,9 @@ export default async function HomePage() {
                   { icon: BookOpen, text: "Full & partial" },
                   { icon: Lock, text: "Data stays private" },
                 ].map((item) => (
-                  <div key={item.text} className="flex items-center gap-2 sm:gap-3 text-slate-200">
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-brand-700/50 flex items-center justify-center flex-shrink-0">
-                      <item.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" strokeWidth={2} />
+                  <div key={item.text} className="flex items-center gap-2 sm:gap-3 text-zinc-200">
+                    <div className="size-7 sm:w-8 sm:h-8 rounded-lg bg-brand-700/50 flex items-center justify-center flex-shrink-0">
+                      <item.icon className="size-3.5 sm:w-4 sm:h-4 text-amber-400" strokeWidth={2} />
                     </div>
                     <span className="text-xs sm:text-sm font-medium">{item.text}</span>
                   </div>
@@ -210,21 +210,21 @@ export default async function HomePage() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <a
                   href="/auth/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-amber-500 text-brand-900 font-bold text-sm sm:text-base hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 transform hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-amber-500 text-brand-900 font-bold text-sm sm:text-base hover:bg-amber-400 transition-all shadow-lg hover:shadow-amber-500/25 transform hover:-tranzinc-y-0.5"
                 >
                   <span>Find my scholarships</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <ArrowRight className="size-4 sm:w-5 sm:h-5" />
                 </a>
                 <a
                   href="/scholarships"
                   className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold text-sm sm:text-base hover:bg-white/20 transition-all"
                 >
                   <span>Browse directory</span>
-                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <ArrowRight className="size-4 sm:w-5 sm:h-5" />
                 </a>
               </div>
               
-              <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-slate-400">
+              <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-zinc-400">
                 Free for students • No credit card required • Takes 2 minutes
               </p>
             </div>
@@ -247,10 +247,10 @@ export default async function HomePage() {
                       {COUNTRY_META.map((country, idx) => (
                         <div
                           key={country.code}
-                          className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg bg-brand-800 ${idx > 0 ? '-ml-2 sm:-ml-3' : ''}`}
+                          className={`size-8 sm:w-10 sm:h-10 rounded-full border-2 border-white/20 overflow-hidden shadow-lg bg-brand-800 ${idx > 0 ? '-ml-2 sm:-ml-3' : ''}`}
                           aria-hidden
                         >
-                          <img src={flagUrl(country.flag)} alt="" className="w-full h-full object-cover" />
+                          <img src={flagUrl(country.flag)} alt="" className="size-full object-cover" />
                         </div>
                       ))}
                     </div>
@@ -261,7 +261,7 @@ export default async function HomePage() {
                       <p className="text-white text-xl sm:text-2xl font-bold" style={SERIF}>
                         {totalScholarships} Scholarships
                       </p>
-                      <p className="text-slate-300 text-xs sm:text-sm mt-1">
+                      <p className="text-zinc-300 text-xs sm:text-sm mt-1">
                         Across UK, USA, Germany & Canada
                       </p>
                     </div>
@@ -273,17 +273,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-white border-b border-slate-200/70">
+      <section className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {trustStrip.map((block) => (
-              <div key={block.title} className="flex gap-3 items-start p-4 rounded-lg hover:bg-slate-50 transition-colors">
-                <div className="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
-                  <block.icon className="w-5 h-5 text-brand-600" strokeWidth={1.75} />
+              <div key={block.title} className="flex gap-3 items-start p-4 rounded-lg hover:bg-zinc-50 transition-colors">
+                <div className="size-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
+                  <block.icon className="size-5 text-brand-600" strokeWidth={1.75} />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-900 mb-1">{block.title}</p>
-                  <p className="text-[13px] text-slate-500 leading-relaxed">{block.desc}</p>
+                  <p className="text-sm font-semibold text-zinc-900 mb-1">{block.title}</p>
+                  <p className="text-[13px] text-zinc-500 leading-relaxed">{block.desc}</p>
                 </div>
               </div>
             ))}
@@ -291,17 +291,17 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="bg-paper border-b border-slate-200/70">
+      <section className="bg-paper border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
                 Featured
               </p>
-              <h2 className="text-3xl lg:text-4xl text-slate-900" style={SERIF}>
+              <h2 className="text-3xl lg:text-4xl text-zinc-900" style={SERIF}>
                 Fully-funded opportunities
               </h2>
-              <p className="text-slate-500 mt-2">
+              <p className="text-zinc-500 mt-2">
                 Pulled from the current scholarship database, not a static marketing list.
               </p>
             </div>
@@ -310,7 +310,7 @@ export default async function HomePage() {
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors whitespace-nowrap"
             >
               See the full directory
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="size-4" />
             </a>
           </div>
 
@@ -319,7 +319,7 @@ export default async function HomePage() {
               <a
                 key={scholarship.slug!}
                 href={`/scholarships/${scholarship.slug}`}
-                className="group block bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-card-hover transition-all"
+                className="group block bg-white border border-zinc-200 rounded-lg p-6 hover:border-zinc-300 hover:shadow-card-hover transition-all"
               >
                 <div className="flex items-center justify-between mb-5">
                   <div className="flex items-center gap-2.5">
@@ -331,7 +331,7 @@ export default async function HomePage() {
                         aria-hidden
                       />
                     )}
-                    <span className="text-xs font-medium text-slate-500">
+                    <span className="text-xs font-medium text-zinc-500">
                       {getCountryLabel(scholarship.country)}
                     </span>
                   </div>
@@ -341,30 +341,30 @@ export default async function HomePage() {
                 </div>
 
                 <h3
-                  className="text-xl text-slate-900 mb-2 group-hover:text-brand-700 transition-colors leading-tight"
+                  className="text-xl text-zinc-900 mb-2 group-hover:text-brand-700 transition-colors leading-tight"
                   style={SERIF}
                 >
                   {scholarship.name}
                 </h3>
-                <p className="text-xs text-slate-500 mb-5">
+                <p className="text-xs text-zinc-500 mb-5">
                   {scholarship.degree_levels?.join(" / ") || "Any level"}
                 </p>
 
                 <div className="mb-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400 mb-1">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-zinc-400 mb-1">
                     Funding
                   </p>
-                  <p className="text-sm font-semibold text-slate-900 leading-snug">
+                  <p className="text-sm font-semibold text-zinc-900 leading-snug">
                     {scholarship.funding_amount || `${scholarship.funding_type} funding`}
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 pt-4 border-t border-slate-100">
-                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-600 bg-slate-50 px-2.5 py-1 rounded">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500" aria-hidden />
+                <div className="flex flex-wrap gap-2 pt-4 border-t border-zinc-100">
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-600 bg-zinc-50 px-2.5 py-1 rounded">
+                    <span className="size-1.5 rounded-full bg-amber-500" aria-hidden />
                     Deadline: {formatDeadline(scholarship.application_deadline).replace(" (Closed)", "")}
                   </span>
-                  <span className="inline-flex items-center text-[11px] font-medium text-slate-600 bg-slate-50 px-2.5 py-1 rounded">
+                  <span className="inline-flex items-center text-[11px] font-medium text-zinc-600 bg-zinc-50 px-2.5 py-1 rounded">
                     {formatEffort(scholarship.effort_minutes)}
                   </span>
                 </div>
@@ -374,16 +374,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="countries" className="bg-white border-b border-slate-200/70">
+      <section id="countries" className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="max-w-2xl mb-10">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
               Destinations
             </p>
-            <h2 className="text-3xl lg:text-4xl text-slate-900 mb-3" style={SERIF}>
+            <h2 className="text-3xl lg:text-4xl text-zinc-900 mb-3" style={SERIF}>
               Four destinations, curated
             </h2>
-            <p className="text-slate-500 leading-relaxed">
+            <p className="text-zinc-500 leading-relaxed">
               Rather than list 10,000 scholarships we cannot verify, we cover four destinations deeply. Every listing is traceable to an official source.
             </p>
           </div>
@@ -393,21 +393,21 @@ export default async function HomePage() {
               <a
                 key={country.code}
                 href={`/scholarships?country=${country.code}`}
-                className="group block bg-white border border-slate-200 rounded-lg p-6 hover:border-slate-300 hover:shadow-card-hover transition-all"
+                className="group block bg-white border border-zinc-200 rounded-lg p-6 hover:border-zinc-300 hover:shadow-card-hover transition-all"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <img src={flagUrl(country.flag)} alt="" className="w-10 h-auto rounded-sm shadow-sm" aria-hidden />
                   <div>
-                    <h3 className="text-base font-semibold text-slate-900 leading-tight">{country.name}</h3>
-                    <p className="text-xs text-slate-500">{country.count} scholarships</p>
+                    <h3 className="text-base font-semibold text-zinc-900 leading-tight">{country.name}</h3>
+                    <p className="text-xs text-zinc-500">{country.count} scholarships</p>
                   </div>
                 </div>
-                <p className="text-[13px] text-slate-600 leading-relaxed mb-5 line-clamp-2">
+                <p className="text-[13px] text-zinc-600 leading-relaxed mb-5 line-clamp-2">
                   {country.top}
                 </p>
                 <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:gap-2.5 transition-all">
                   Browse
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="size-3.5" />
                 </div>
               </a>
             ))}
@@ -415,16 +415,16 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="bg-paper border-b border-slate-200/70">
+      <section id="how-it-works" className="bg-paper border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="max-w-2xl mb-12">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
               How it works
             </p>
-            <h2 className="text-3xl lg:text-4xl text-slate-900 mb-3" style={SERIF}>
+            <h2 className="text-3xl lg:text-4xl text-zinc-900 mb-3" style={SERIF}>
               From sign-up to ranked matches in two minutes
             </h2>
-            <p className="text-slate-500 leading-relaxed">
+            <p className="text-zinc-500 leading-relaxed">
               A straightforward four-step flow with no quizzes, no upsells, and no surveys to unlock your results.
             </p>
           </div>
@@ -433,7 +433,7 @@ export default async function HomePage() {
             {steps.map((step, index) => (
               <div key={step.n} className="relative">
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-4 left-[calc(100%-12px)] w-[calc(100%-24px)] h-px bg-slate-200" aria-hidden />
+                  <div className="hidden lg:block absolute top-4 left-[calc(100%-12px)] w-[calc(100%-24px)] h-px bg-zinc-200" aria-hidden />
                 )}
                 <p
                   className="text-brand-600 text-2xl leading-none mb-4"
@@ -441,40 +441,40 @@ export default async function HomePage() {
                 >
                   {step.n}
                 </p>
-                <h3 className="font-semibold text-slate-900 mb-2 text-[15px]">{step.title}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">{step.body}</p>
+                <h3 className="font-semibold text-zinc-900 mb-2 text-[15px]">{step.title}</h3>
+                <p className="text-sm text-zinc-600 leading-relaxed">{step.body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-white border-b border-slate-200/70">
+      <section className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="max-w-2xl mb-10">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
               Questions
             </p>
-            <h2 className="text-3xl lg:text-4xl text-slate-900" style={SERIF}>
+            <h2 className="text-3xl lg:text-4xl text-zinc-900" style={SERIF}>
               Frequently asked
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-16">
             {faqs.map((faq, index) => (
-              <details key={index} className="group border-b border-slate-200 py-5 cursor-pointer">
-                <summary className="flex items-center justify-between text-slate-900 font-semibold text-[15px] list-none">
+              <details key={index} className="group border-b border-zinc-200 py-5 cursor-pointer">
+                <summary className="flex items-center justify-between text-zinc-900 font-semibold text-[15px] list-none">
                   {faq.q}
-                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform flex-shrink-0 ml-4" />
+                  <ChevronDown className="size-4 text-zinc-400 group-open:rotate-180 transition-transform flex-shrink-0 ml-4" />
                 </summary>
-                <p className="mt-3 text-sm text-slate-600 leading-relaxed pr-8">{faq.a}</p>
+                <p className="mt-3 text-sm text-zinc-600 leading-relaxed pr-8">{faq.a}</p>
               </details>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-slate-950 text-white">
+      <section className="bg-zinc-950 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
           <h2 className="text-4xl lg:text-5xl text-white mb-5 leading-tight" style={SERIF}>
             Most students apply to three scholarships.
@@ -483,17 +483,17 @@ export default async function HomePage() {
               You can find ten you qualify for.
             </span>
           </h2>
-          <p className="text-slate-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
+          <p className="text-zinc-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed">
             Free for students. No credit card. No email spam. Just the scholarships you actually qualify for.
           </p>
           <a
             href="/auth/signup"
-            className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-slate-950 font-semibold text-sm hover:bg-slate-100 transition-colors"
+            className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 transition-colors"
           >
             Find my scholarships
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="size-4" />
           </a>
-          <p className="mt-6 text-slate-500 text-xs font-medium uppercase tracking-[0.18em]">
+          <p className="mt-6 text-zinc-500 text-xs font-medium uppercase tracking-[0.18em]">
             Takes about two minutes
           </p>
         </div>

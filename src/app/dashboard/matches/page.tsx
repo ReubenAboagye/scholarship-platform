@@ -85,7 +85,7 @@ function tagColor(tag: string) {
     "Tuition Only": "bg-purple-50 text-purple-600 border-purple-200",
     "Living Allowance": "bg-orange-50 text-orange-600 border-orange-200",
   };
-  return m[tag] ?? "bg-stone-50 text-slate-600 border-stone-200";
+  return m[tag] ?? "bg-stone-50 text-zinc-600 border-stone-200";
 }
 
 // ── Match Row ──────────────────────────────────────────────────────────────
@@ -133,7 +133,7 @@ function MatchRow({
     >
       <div className="flex items-start gap-3">
         {/* Rank */}
-        <div className="w-6 h-6 rounded-md bg-stone-100 flex items-center justify-center flex-shrink-0 text-[11px] font-black text-slate-400 mt-0.5">
+        <div className="size-6 rounded-md bg-stone-100 flex items-center justify-center flex-shrink-0 text-[11px] font-black text-zinc-400 mt-0.5">
           {rank}
         </div>
 
@@ -142,11 +142,11 @@ function MatchRow({
           <a
             href={`/dashboard/scholarships/${s.slug || s.id}`}
             onClick={handleClick}
-            className="text-[15px] font-semibold text-slate-800 hover:text-orange-600 transition-colors leading-snug"
+            className="text-[15px] font-semibold text-zinc-800 hover:text-orange-600 transition-colors leading-snug"
           >
             {s.name}
           </a>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-zinc-400 mt-0.5">
             {countryFlag(s.country)} {s.provider} · {s.degree_levels?.join(", ")}
           </p>
         </div>
@@ -154,16 +154,16 @@ function MatchRow({
         {/* Stat columns */}
         <div className="hidden sm:flex items-start gap-5 flex-shrink-0 text-right">
           <div>
-            <p className="text-sm font-bold text-slate-800">{s.funding_amount}</p>
-            <p className="text-[11px] text-slate-400">Amount</p>
+            <p className="text-sm font-bold text-zinc-800">{s.funding_amount}</p>
+            <p className="text-[11px] text-zinc-400">Amount</p>
           </div>
           <div>
-            <p className="text-sm font-bold text-slate-800">{formatDeadline(s.application_deadline)}</p>
-            <p className="text-[11px] text-slate-400">Deadline</p>
+            <p className="text-sm font-bold text-zinc-800">{formatDeadline(s.application_deadline)}</p>
+            <p className="text-[11px] text-zinc-400">Deadline</p>
           </div>
           <div className="text-right">
             <span className={`inline-flex items-center gap-1 text-xs font-black px-2.5 py-1 rounded-full border ${scoreColor(result.match_score)}`}>
-              <span className={`w-1.5 h-1.5 rounded-full ${scoreDot(result.match_score)}`} />
+              <span className={`size-1.5 rounded-full ${scoreDot(result.match_score)}`} />
               {result.match_score}%
             </span>
           </div>
@@ -178,27 +178,27 @@ function MatchRow({
           <div className="relative">
             <button
               onClick={() => setShowReasons((v) => !v)}
-              className="p-1.5 rounded-lg text-slate-300 hover:text-red-400 hover:bg-red-50 transition-colors"
+              className="p-1.5 rounded-lg text-zinc-300 hover:text-red-400 hover:bg-red-50 transition-colors"
               title="Not relevant"
             >
-              <XCircle className="w-3.5 h-3.5" />
+              <XCircle className="size-3.5" />
             </button>
             {showReasons && (
               <div className="absolute right-0 top-full mt-1 bg-white rounded-xl shadow-xl border border-stone-200 z-50 p-3 w-48">
-                <p className="text-[11px] font-bold text-slate-500 uppercase tracking-wide mb-2">Why not relevant?</p>
+                <p className="text-[11px] font-bold text-zinc-500 uppercase tracking-wide mb-2">Why not relevant?</p>
                 <div className="space-y-1">
                   {REASONS.map((r) => (
                     <button
                       key={r.code}
                       onClick={() => { setShowReasons(false); onDismiss(s.id, r.code); }}
-                      className="w-full text-left text-xs text-slate-600 hover:text-red-600 hover:bg-red-50 px-2 py-1.5 rounded-lg transition-colors"
+                      className="w-full text-left text-xs text-zinc-600 hover:text-red-600 hover:bg-red-50 px-2 py-1.5 rounded-lg transition-colors"
                     >
                       {r.label}
                     </button>
                   ))}
                   <button
                     onClick={() => { setShowReasons(false); onDismiss(s.id); }}
-                    className="w-full text-left text-xs text-slate-400 hover:text-slate-600 px-2 py-1.5 rounded-lg transition-colors border-t border-stone-100 mt-1 pt-2"
+                    className="w-full text-left text-xs text-zinc-400 hover:text-zinc-600 px-2 py-1.5 rounded-lg transition-colors border-t border-stone-100 mt-1 pt-2"
                   >
                     Just dismiss
                   </button>
@@ -210,9 +210,9 @@ function MatchRow({
           {/* Save */}
           <button
             onClick={handleSave}
-            className={`p-1.5 rounded-lg transition-colors ${saved ? "text-rose-500 bg-rose-50" : "text-slate-300 hover:text-rose-400 hover:bg-rose-50"}`}
+            className={`p-1.5 rounded-lg transition-colors ${saved ? "text-rose-500 bg-rose-50" : "text-zinc-300 hover:text-rose-400 hover:bg-rose-50"}`}
           >
-            {saved ? <BookmarkCheck className="w-3.5 h-3.5" /> : <Heart className="w-3.5 h-3.5" />}
+            {saved ? <BookmarkCheck className="size-3.5" /> : <Heart className="size-3.5" />}
           </button>
 
           {/* Apply */}
@@ -221,9 +221,9 @@ function MatchRow({
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleApply}
-            className="p-1.5 rounded-lg text-slate-300 hover:text-orange-500 hover:bg-orange-50 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-300 hover:text-orange-500 hover:bg-orange-50 transition-colors"
           >
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="size-3.5" />
           </a>
         </div>
       </div>
@@ -231,12 +231,12 @@ function MatchRow({
       {/* Tags + reasons row */}
       <div className="flex flex-wrap items-center gap-1.5 mt-2.5 ml-9">
         <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full border ${scoreColor(result.match_score)}`}>
-          <span className={`w-1.5 h-1.5 rounded-full ${scoreDot(result.match_score)}`} />
+          <span className={`size-1.5 rounded-full ${scoreDot(result.match_score)}`} />
           {result.match_score >= 70 ? "Strong match" : result.match_score >= 50 ? "Good match" : "Possible match"}
         </span>
         {s.renewable && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-slate-500 border border-stone-200">
-            <RefreshCw className="w-2.5 h-2.5" /> Renewable
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-zinc-500 border border-stone-200">
+            <RefreshCw className="size-2.5" /> Renewable
           </span>
         )}
         {[s.country, s.funding_type].map((tag) => (
@@ -246,11 +246,11 @@ function MatchRow({
         ))}
         {result.match_reasons.slice(0, 2).map((reason) => (
           <span key={reason} className="inline-flex items-center gap-1 text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">
-            <CheckCircle className="w-2.5 h-2.5" /> {reason}
+            <CheckCircle className="size-2.5" /> {reason}
           </span>
         ))}
         {s.effort_minutes && (
-          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-slate-500 border border-stone-200">
+          <span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-stone-50 text-zinc-500 border border-stone-200">
             ~{s.effort_minutes} min
           </span>
         )}
@@ -273,29 +273,29 @@ function ScoreFilterDropdown({ selected, onToggle, onClear }: {
   ];
   return (
     <div className="absolute top-full left-0 mt-1 w-68 bg-white rounded-xl shadow-xl border border-stone-200 z-50 p-4">
-      <p className="text-sm font-bold text-slate-800 mb-3">Filter by match score</p>
+      <p className="text-sm font-bold text-zinc-800 mb-3">Filter by match score</p>
       <div className="space-y-3">
         {opts.map((o) => (
           <label key={o.v} className="flex items-start gap-3 cursor-pointer">
             <button
               onClick={() => onToggle(o.v)}
-              className={`mt-0.5 w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${selected.includes(o.v) ? "bg-orange-500 border-orange-500" : "border-stone-300 hover:border-orange-400"
+              className={`mt-0.5 size-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${selected.includes(o.v) ? "bg-orange-500 border-orange-500" : "border-stone-300 hover:border-orange-400"
                 }`}
             >
               {selected.includes(o.v) && (
-                <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 10 10" fill="none">
+                <svg className="size-2.5 text-white" viewBox="0 0 10 10" fill="none">
                   <path d="M2 5l2.5 2.5L8 3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
                 </svg>
               )}
             </button>
             <div>
-              <p className="text-xs font-semibold text-slate-700">{o.label}</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">{o.desc}</p>
+              <p className="text-xs font-semibold text-zinc-700">{o.label}</p>
+              <p className="text-[11px] text-zinc-400 mt-0.5">{o.desc}</p>
             </div>
           </label>
         ))}
       </div>
-      <button onClick={onClear} className="text-xs font-semibold text-slate-400 hover:text-slate-700 mt-3 transition-colors">
+      <button onClick={onClear} className="text-xs font-semibold text-zinc-400 hover:text-zinc-700 mt-3 transition-colors">
         Clear
       </button>
     </div>
@@ -403,25 +403,25 @@ export default function MatchesDashboardPage() {
   ];
 
   if (loading) return (
-    <div className="flex items-center justify-center py-24 text-slate-400 gap-2">
-      <Loader2 className="w-5 h-5 animate-spin" />
+    <div className="flex items-center justify-center py-24 text-zinc-400 gap-2">
+      <Loader2 className="size-5 animate-spin" />
       <span className="text-sm">Loading your matches…</span>
     </div>
   );
 
   if (!session) return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-black text-slate-900 tracking-tight">Scholarship matches</h1>
+      <h1 className="text-2xl font-black text-zinc-900 tracking-tight">Scholarship matches</h1>
       <div className="bg-white rounded-xl border border-stone-200 py-20 text-center shadow-sm">
-        <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
-          <Sparkles className="w-6 h-6 text-orange-500" />
+        <div className="size-12 rounded-xl bg-orange-50 flex items-center justify-center mx-auto mb-3">
+          <Sparkles className="size-6 text-orange-500" />
         </div>
-        <p className="text-sm font-bold text-slate-700 mb-1">No match results yet</p>
-        <p className="text-xs text-slate-400 mb-4 max-w-xs mx-auto">
+        <p className="text-sm font-bold text-zinc-700 mb-1">No match results yet</p>
+        <p className="text-xs text-zinc-400 mb-4 max-w-xs mx-auto">
           Run the AI matching engine to see your personalised scholarship matches here.
         </p>
         <a href="/dashboard/match" className="inline-flex items-center gap-2 px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-sm font-bold rounded-xl transition-colors">
-          <Sparkles className="w-4 h-4" /> Run AI Matching
+          <Sparkles className="size-4" /> Run AI Matching
         </a>
       </div>
     </div>
@@ -430,15 +430,15 @@ export default function MatchesDashboardPage() {
   return (
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4 flex-wrap">
-        <h1 className="text-2xl font-black text-slate-900 tracking-tight">Scholarship matches</h1>
+        <h1 className="text-2xl font-black text-zinc-900 tracking-tight">Scholarship matches</h1>
         <a href="/dashboard/match" className="text-xs font-semibold text-orange-500 hover:text-orange-600 flex items-center gap-1.5 transition-colors">
-          <Sparkles className="w-3.5 h-3.5" /> Re-run matching
+          <Sparkles className="size-3.5" /> Re-run matching
         </a>
       </div>
 
       {session.explanation && (
         <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex gap-3">
-          <Sparkles className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+          <Sparkles className="size-4 text-orange-500 flex-shrink-0 mt-0.5" />
           <p className="text-sm text-orange-800 leading-relaxed">{session.explanation}</p>
         </div>
       )}
@@ -461,13 +461,13 @@ export default function MatchesDashboardPage() {
             <button
               onClick={() => setOpenFilter((p) => p === btn.key ? null : btn.key)}
               className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full border transition-all whitespace-nowrap ${openFilter === btn.key
-                  ? "bg-slate-800 text-white border-slate-800"
-                  : "bg-white text-slate-600 border-stone-200 hover:border-slate-400"
+                  ? "bg-zinc-800 text-white border-zinc-800"
+                  : "bg-white text-zinc-600 border-stone-200 hover:border-zinc-400"
                 }`}
             >
-              <btn.icon className="w-3.5 h-3.5" />
+              <btn.icon className="size-3.5" />
               {btn.label}
-              <ChevronDown className={`w-3 h-3 transition-transform ${openFilter === btn.key ? "rotate-180" : ""}`} />
+              <ChevronDown className={`size-3 transition-transform ${openFilter === btn.key ? "rotate-180" : ""}`} />
             </button>
             {openFilter === "credibility" && btn.key === "credibility" && (
               <ScoreFilterDropdown
@@ -478,10 +478,10 @@ export default function MatchesDashboardPage() {
             )}
             {openFilter === "applicants" && btn.key === "applicants" && (
               <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-xl shadow-xl border border-stone-200 z-50 p-4">
-                <p className="text-sm font-bold text-slate-800 mb-1">Filter by applicants number</p>
-                <p className="text-xs text-slate-400 mb-4">Find scholarships with fewest applicants.</p>
+                <p className="text-sm font-bold text-zinc-800 mb-1">Filter by applicants number</p>
+                <p className="text-xs text-zinc-400 mb-4">Find scholarships with fewest applicants.</p>
                 <button className="w-full flex items-center justify-center gap-2 bg-orange-50 hover:bg-orange-100 text-orange-600 font-bold text-xs px-4 py-2.5 rounded-lg border border-orange-200 transition-colors">
-                  <Lock className="w-3.5 h-3.5" /> Go Pro to Unlock
+                  <Lock className="size-3.5" /> Go Pro to Unlock
                 </button>
               </div>
             )}
@@ -491,12 +491,12 @@ export default function MatchesDashboardPage() {
 
       {/* Results bar + search */}
       <div className="flex items-center justify-between gap-4 flex-wrap">
-        <p className="text-sm text-slate-500">
-          <span className="font-bold text-slate-700">{filtered.length}</span> match{filtered.length !== 1 ? "es" : ""}
-          {dismissedIds.size > 0 && <span className="ml-2 text-slate-400">· {dismissedIds.size} dismissed</span>}
+        <p className="text-sm text-zinc-500">
+          <span className="font-bold text-zinc-700">{filtered.length}</span> match{filtered.length !== 1 ? "es" : ""}
+          {dismissedIds.size > 0 && <span className="ml-2 text-zinc-400">· {dismissedIds.size} dismissed</span>}
         </p>
         <div className="relative flex-shrink-0">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+          <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 size-4 text-stone-400" />
           <input
             type="text"
             placeholder="Search by keywords"
@@ -505,8 +505,8 @@ export default function MatchesDashboardPage() {
             className="pl-9 pr-8 py-2 text-sm bg-white border border-stone-200 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-300/40 focus:border-orange-400 w-52 transition-all"
           />
           {search && (
-            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-slate-600">
-              <X className="w-3.5 h-3.5" />
+            <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -tranzinc-y-1/2 text-stone-400 hover:text-zinc-600">
+              <X className="size-3.5" />
             </button>
           )}
         </div>
@@ -514,8 +514,8 @@ export default function MatchesDashboardPage() {
 
       {filtered.length === 0 ? (
         <div className="bg-white rounded-xl border border-stone-200 py-16 text-center shadow-sm">
-          <Search className="w-8 h-8 mx-auto mb-3 text-stone-300" />
-          <p className="text-sm font-medium text-slate-500">No matches found</p>
+          <Search className="size-8 mx-auto mb-3 text-stone-300" />
+          <p className="text-sm font-medium text-zinc-500">No matches found</p>
           <button onClick={() => { setSearch(""); setScoreFilter(["strong", "good", "possible"]); }} className="text-xs text-orange-500 hover:underline mt-1">
             Clear filters
           </button>

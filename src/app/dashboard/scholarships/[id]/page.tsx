@@ -184,16 +184,16 @@ export default async function DashboardScholarshipDetailPage({
             <a
               href="/dashboard/scholarships"
               aria-label="Back to scholarships"
-              className="p-1.5 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+              className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="size-4" />
             </a>
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-slate-500">
-              <a href="/dashboard" className="hover:text-slate-900 hover:underline">Dashboard</a>
-              <span className="text-slate-300">/</span>
-              <a href="/dashboard/scholarships" className="hover:text-slate-900 hover:underline">Scholarships</a>
-              <span className="text-slate-300">/</span>
-              <span className="text-slate-700 truncate max-w-[200px]">{scholarship.name}</span>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-xs text-zinc-500">
+              <a href="/dashboard" className="hover:text-zinc-900 hover:underline">Dashboard</a>
+              <span className="text-zinc-300">/</span>
+              <a href="/dashboard/scholarships" className="hover:text-zinc-900 hover:underline">Scholarships</a>
+              <span className="text-zinc-300">/</span>
+              <span className="text-zinc-700 truncate max-w-[200px]">{scholarship.name}</span>
             </nav>
           </div>
 
@@ -205,43 +205,43 @@ export default async function DashboardScholarshipDetailPage({
                 initialStatus={(tracked as any)?.status ?? null} variant="default" />
               <button
                 aria-label="Share"
-                className="p-2 rounded-md border border-slate-200 text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                className="p-2 rounded-md border border-zinc-200 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="size-4" />
               </button>
             </div>
           )}
         </div>
 
         {/* ── Hero ─────────────────────────────────────────── */}
-        <header className="mb-8 pb-8 border-b border-slate-200">
+        <header className="mb-8 pb-8 border-b border-zinc-200">
           <div className="flex items-center gap-2 mb-5 text-xs">
             {countryFlagUrl(scholarship.country) && (
               <img
                 src={countryFlagUrl(scholarship.country)!}
                 alt=""
-                className="w-6 h-4 object-cover rounded-sm border border-slate-200"
+                className="w-6 h-4 object-cover rounded-sm border border-zinc-200"
               />
             )}
-            <span className="text-slate-600 font-medium">{scholarship.country}</span>
-            <span className="text-slate-300">·</span>
-            <span className="text-slate-600">{scholarship.funding_type} funding</span>
+            <span className="text-zinc-600 font-medium">{scholarship.country}</span>
+            <span className="text-zinc-300">·</span>
+            <span className="text-zinc-600">{scholarship.funding_type} funding</span>
             {scholarship.verified_at && (
               <>
-                <span className="text-slate-300">·</span>
+                <span className="text-zinc-300">·</span>
                 <span className="inline-flex items-center gap-1 text-emerald-700">
-                  <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                  <CheckCircle2 className="size-3.5" /> Verified
                 </span>
               </>
             )}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl text-zinc-900 leading-tight tracking-tight mb-4">
             {scholarship.name}
           </h1>
 
-          <div className="flex items-center gap-2 text-slate-600 mb-6">
-            <Building2 className="w-4 h-4 text-slate-400" />
+          <div className="flex items-center gap-2 text-zinc-600 mb-6">
+            <Building2 className="size-4 text-zinc-400" />
             <span className="text-sm">{scholarship.provider}</span>
           </div>
 
@@ -257,11 +257,11 @@ export default async function DashboardScholarshipDetailPage({
               { icon: Calendar, label: "Deadline", value: null },
             ].map((item, i) => (
               <div key={i}>
-                <dt className="flex items-center gap-1.5 text-xs text-slate-500 mb-1">
-                  <item.icon className="w-3.5 h-3.5" />
+                <dt className="flex items-center gap-1.5 text-xs text-zinc-500 mb-1">
+                  <item.icon className="size-3.5" />
                   {item.label}
                 </dt>
-                <dd className="text-sm font-semibold text-slate-900">
+                <dd className="text-sm font-semibold text-zinc-900">
                   {item.label === "Deadline"
                     ? <DeadlineCountdown deadline={scholarship.application_deadline} size="md" />
                     : item.value}
@@ -282,7 +282,7 @@ export default async function DashboardScholarshipDetailPage({
 
             {/* Eligibility status */}
             <section aria-labelledby="eligibility-heading" className="space-y-4">
-              <h2 id="eligibility-heading" className="text-lg font-semibold text-slate-900">
+              <h2 id="eligibility-heading" className="text-lg font-semibold text-zinc-900">
                 Eligibility
               </h2>
               <EligibilityStatus
@@ -296,7 +296,7 @@ export default async function DashboardScholarshipDetailPage({
                   <summary className="text-sm text-brand-700 hover:text-brand-800 cursor-pointer font-medium">
                     Full eligibility requirements from the provider
                   </summary>
-                  <ul className="mt-3 space-y-2 text-sm text-slate-700 list-disc list-inside pl-2">
+                  <ul className="mt-3 space-y-2 text-sm text-zinc-700 list-disc list-inside pl-2">
                     {scholarship.eligibility_criteria.map((c: string, i: number) => (
                       <li key={i}>{c}</li>
                     ))}
@@ -307,10 +307,10 @@ export default async function DashboardScholarshipDetailPage({
 
             {/* About */}
             <section aria-labelledby="about-heading" className="space-y-3">
-              <h2 id="about-heading" className="text-lg font-semibold text-slate-900">
+              <h2 id="about-heading" className="text-lg font-semibold text-zinc-900">
                 About this scholarship
               </h2>
-              <p className="text-slate-700 leading-relaxed whitespace-pre-line">
+              <p className="text-zinc-700 leading-relaxed whitespace-pre-line">
                 {scholarship.description}
               </p>
             </section>
@@ -320,13 +320,13 @@ export default async function DashboardScholarshipDetailPage({
               && !(scholarship.fields_of_study.length === 1
                    && scholarship.fields_of_study[0] === "Any") && (
               <section aria-labelledby="fields-heading" className="space-y-3">
-                <h2 id="fields-heading" className="text-lg font-semibold text-slate-900">
+                <h2 id="fields-heading" className="text-lg font-semibold text-zinc-900">
                   Eligible fields of study
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {scholarship.fields_of_study.map((f: string) => (
                     <span key={f}
-                      className="px-3 py-1 bg-slate-100 text-slate-700 rounded-md text-sm font-medium">
+                      className="px-3 py-1 bg-zinc-100 text-zinc-700 rounded-md text-sm font-medium">
                       {f}
                     </span>
                   ))}
@@ -335,11 +335,11 @@ export default async function DashboardScholarshipDetailPage({
             )}
 
             {/* Apply CTA */}
-            <section className="border-t border-slate-200 pt-8">
-              <h2 className="text-lg font-semibold text-slate-900 mb-2">
+            <section className="border-t border-zinc-200 pt-8">
+              <h2 className="text-lg font-semibold text-zinc-900 mb-2">
                 {isPast ? "Applications are closed" : "Ready to apply?"}
               </h2>
-              <p className="text-sm text-slate-600 mb-5 max-w-lg">
+              <p className="text-sm text-zinc-600 mb-5 max-w-lg">
                 {isPast
                   ? "This year's application window has closed. Save this scholarship to be reminded when the next cycle opens."
                   : "Applications are handled on the official provider portal. Review the full documentation requirements before starting."}
@@ -352,7 +352,7 @@ export default async function DashboardScholarshipDetailPage({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white font-semibold rounded-md hover:bg-brand-700 transition-colors text-sm"
                   >
-                    Visit official portal <ExternalLink className="w-4 h-4" />
+                    Visit official portal <ExternalLink className="size-4" />
                   </a>
                 )}
                 {user && !saved && (
@@ -368,17 +368,17 @@ export default async function DashboardScholarshipDetailPage({
 
             {/* Award breakdown */}
             <section aria-labelledby="award-heading">
-              <h3 id="award-heading" className="text-sm font-semibold text-slate-900 mb-3">
+              <h3 id="award-heading" className="text-sm font-semibold text-zinc-900 mb-3">
                 Award details
               </h3>
-              <div className="border border-slate-200 rounded-lg bg-white overflow-hidden">
-                <div className="p-4 bg-slate-50 border-b border-slate-200">
-                  <p className="text-xs text-slate-500 mb-1">Total value</p>
-                  <p className="text-base font-semibold text-slate-900 leading-snug">
+              <div className="border border-zinc-200 rounded-lg bg-white overflow-hidden">
+                <div className="p-4 bg-zinc-50 border-b border-zinc-200">
+                  <p className="text-xs text-zinc-500 mb-1">Total value</p>
+                  <p className="text-base font-semibold text-zinc-900 leading-snug">
                     {scholarship.funding_amount}
                   </p>
                 </div>
-                <dl className="divide-y divide-slate-100 text-sm">
+                <dl className="divide-y divide-zinc-100 text-sm">
                   {[
                     { label: "Funding type", value: scholarship.funding_type },
                     { label: "Renewable", value: scholarship.renewable ? "Yes" : "No" },
@@ -388,8 +388,8 @@ export default async function DashboardScholarshipDetailPage({
                         : "—" },
                   ].map((item) => (
                     <div key={item.label} className="flex items-center justify-between px-4 py-2.5">
-                      <dt className="text-slate-500">{item.label}</dt>
-                      <dd className="text-slate-900 font-medium">{item.value}</dd>
+                      <dt className="text-zinc-500">{item.label}</dt>
+                      <dd className="text-zinc-900 font-medium">{item.value}</dd>
                     </div>
                   ))}
                 </dl>
@@ -400,7 +400,7 @@ export default async function DashboardScholarshipDetailPage({
 
             {/* Verification note */}
             {scholarship.verified_at && (
-              <p className="text-xs text-slate-500 leading-relaxed border-t border-slate-200 pt-4">
+              <p className="text-xs text-zinc-500 leading-relaxed border-t border-zinc-200 pt-4">
                 Scholarship details verified on{" "}
                 <time dateTime={scholarship.verified_at}>
                   {new Date(scholarship.verified_at).toLocaleDateString("en-GB", {

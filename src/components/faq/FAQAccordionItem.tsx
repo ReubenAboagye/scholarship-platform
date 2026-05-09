@@ -17,13 +17,13 @@ export default function FAQAccordionItem({ question, answer }: FAQItemProps) {
 
   return (
     <LazyMotion features={domAnimation}>
-      <div className="border-b border-slate-100 last:border-0 group">
+      <div className="border-b border-zinc-100 last:border-0 group">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full py-5 flex items-center justify-between text-left outline-none group-hover:bg-slate-50/50 transition-colors px-2 -mx-2 rounded-lg"
+        className="w-full py-5 flex items-center justify-between text-left outline-none group-hover:bg-zinc-50/50 transition-colors px-2 -mx-2 rounded-lg"
       >
         <span 
-          className="font-semibold text-slate-900 text-base md:text-lg leading-snug"
+          className="font-semibold text-zinc-900 text-base md:text-lg leading-snug"
           style={SERIF}
         >
           {question}
@@ -31,9 +31,9 @@ export default function FAQAccordionItem({ question, answer }: FAQItemProps) {
         <m.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-          className="flex-shrink-0 ml-4 w-5 h-5 flex items-center justify-center rounded-full bg-slate-100 text-slate-400 group-hover:text-brand-600 transition-colors"
+          className="flex-shrink-0 ml-4 size-5 flex items-center justify-center rounded-full bg-zinc-100 text-zinc-400 group-hover:text-brand-600 transition-colors"
         >
-          <ChevronDown className="w-4 h-4" />
+          <ChevronDown className="size-4" />
         </m.div>
       </button>
 
@@ -46,7 +46,7 @@ export default function FAQAccordionItem({ question, answer }: FAQItemProps) {
             transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
             className="overflow-hidden"
           >
-            <div className="pb-6 pr-8 text-sm text-slate-600 leading-relaxed font-light">
+            <div className="pb-6 pr-8 text-sm text-zinc-600 leading-relaxed font-light">
               {answer}
             </div>
           </m.div>

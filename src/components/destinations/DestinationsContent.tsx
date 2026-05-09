@@ -34,7 +34,7 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
         <img
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop"
           alt="University Campus"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 size-full object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-black/50" />
         
@@ -59,34 +59,34 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Destinations Grid */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
             {countries.map((c, i) => (
               <m.a 
                 key={c.code}
                 href={`/scholarships?country=${c.code}`}
-                className="group relative flex flex-col items-center justify-center bg-white rounded-none border border-slate-200 shadow-sm aspect-square p-8 hover:shadow-xl hover:border-brand-200 transition-all duration-300"
+                className="group relative flex flex-col items-center justify-center bg-white rounded-none border border-zinc-200 shadow-sm aspect-square p-8 hover:shadow-xl hover:border-brand-200 transition-all duration-300"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeInUp}
                 whileHover={{ y: -8 }}
               >
-                <div className="w-full aspect-[3/2] border border-slate-100 overflow-hidden shadow-sm mb-6 transition-transform duration-500 group-hover:scale-105">
-                  <img src={c.image_url} alt={c.name} className="w-full h-full object-cover" />
+                <div className="w-full aspect-[3/2] border border-zinc-100 overflow-hidden shadow-sm mb-6 transition-transform duration-500 group-hover:scale-105">
+                  <img src={c.image_url} alt={c.name} className="size-full object-cover" />
                 </div>
                 
-                <h2 className="text-xl font-black text-slate-900 mb-2 group-hover:text-brand-600 transition-colors text-center tracking-tight">
+                <h2 className="text-xl font-black text-zinc-900 mb-2 group-hover:text-brand-600 transition-colors text-center tracking-tight">
                   {c.name}
                 </h2>
                 
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-brand-600 uppercase tracking-[0.1em] opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                  Explore <ArrowRight className="w-3 h-3" />
+                <div className="flex items-center gap-1.5 text-[10px] font-bold text-brand-600 uppercase tracking-[0.1em] opacity-0 group-hover:opacity-100 transition-all duration-300 transform tranzinc-y-2 group-hover:tranzinc-y-0">
+                  Explore <ArrowRight className="size-3" />
                 </div>
 
                 {/* Subtle Decorative Element */}
-                <div className="absolute top-6 right-6 w-2 h-2 rounded-full bg-slate-100 group-hover:bg-brand-100 transition-colors" />
+                <div className="absolute top-6 right-6 size-2 rounded-full bg-zinc-100 group-hover:bg-brand-100 transition-colors" />
               </m.a>
             ))}
           </div>
@@ -94,14 +94,14 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Focus Section - Value Driven */}
-      <section className="py-20 bg-white border-y border-slate-200">
+      <section className="py-20 bg-white border-y border-zinc-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 text-brand-600 font-bold text-xs uppercase tracking-widest mb-4">
-                <Globe className="w-4 h-4" /> Why these countries?
+                <Globe className="size-4" /> Why these countries?
               </div>
-              <h2 className="text-3xl lg:text-4xl font-black text-slate-900 mb-8 leading-tight">We focus on destinations with<br />high-value funding opportunities.</h2>
+              <h2 className="text-3xl lg:text-4xl font-black text-zinc-900 mb-8 leading-tight">We focus on destinations with<br />high-value funding opportunities.</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                 {[
                   { icon: CheckCircle, t: "Verified Sources", b: "We only list countries where we have manually verified official funding programs." },
@@ -110,26 +110,26 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
                   { icon: Globe, t: "International Hubs", b: "Rich cultural diversity and extensive support for foreign students." },
                 ].map((item) => (
                   <div key={item.t} className="flex flex-col gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center">
-                      <item.icon className="w-5 h-5 text-brand-600" />
+                    <div className="size-10 rounded-xl bg-brand-50 flex items-center justify-center">
+                      <item.icon className="size-5 text-brand-600" />
                     </div>
-                    <h3 className="font-bold text-slate-900">{item.t}</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed">{item.b}</p>
+                    <h3 className="text-zinc-900">{item.t}</h3>
+                    <p className="text-sm text-zinc-500 leading-relaxed">{item.b}</p>
                   </div>
                 ))}
               </div>
             </div>
             <div className="relative p-2">
               <div className="absolute inset-0 bg-brand-600 rounded-[3rem] rotate-3 opacity-10" />
-              <div className="relative bg-white rounded-[2.5rem] border border-slate-200 shadow-xl p-10 overflow-hidden">
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-brand-50 rounded-full blur-3xl opacity-50" />
-                <h3 className="text-2xl font-black text-slate-900 mb-4">Expanding Soon</h3>
-                <p className="text-slate-600 leading-relaxed mb-8">
+              <div className="relative bg-white rounded-[2.5rem] border border-zinc-200 shadow-xl p-10 overflow-hidden">
+                <div className="absolute -top-12 -right-12 size-48 bg-brand-50 rounded-full blur-3xl opacity-50" />
+                <h3 className="text-2xl font-black text-zinc-900 mb-4">Expanding Soon</h3>
+                <p className="text-zinc-600 leading-relaxed mb-8">
                   While we focus on the UK, USA, Germany, and Canada today, we are researching more destinations to ensure we only include the most reliable funding sources.
                 </p>
-                <div className="flex items-center gap-2 py-4 px-5 bg-slate-50 rounded-2xl border border-slate-100">
-                  <div className="w-4 h-4 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">New Destinations in Review</span>
+                <div className="flex items-center gap-2 py-4 px-5 bg-zinc-50 rounded-2xl border border-zinc-100">
+                  <div className="size-4 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">New Destinations in Review</span>
                 </div>
               </div>
             </div>
@@ -138,13 +138,13 @@ export default function DestinationsContent({ countries }: DestinationsContentPr
       </section>
 
       {/* Final CTA */}
-      <section className="py-24 bg-slate-900 relative overflow-hidden">
+      <section className="py-24 bg-zinc-900 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-brand-600 rounded-full blur-[100px]" />
+          <div className="absolute top-0 right-0 size-96 bg-brand-600 rounded-full blur-[100px]" />
         </div>
         <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl lg:text-5xl font-black text-white mb-6">Ready to find your match?</h2>
-          <p className="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+          <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto">
             Take the first step toward your international education. Create a free profile and get personalized matches.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

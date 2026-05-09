@@ -45,13 +45,13 @@ function SectionHeader({
   caption?: string;
 }) {
   return (
-    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-      <Icon className="w-4 h-4 text-slate-500" />
-      <h2 className="text-[11px] font-medium uppercase tracking-widest text-slate-900">
+    <div className="flex items-center gap-2 mb-4 pb-3 border-b border-zinc-200">
+      <Icon className="size-4 text-zinc-500" />
+      <h2 className="text-[11px] font-medium uppercase tracking-widest text-zinc-900">
         {title}
       </h2>
       {caption && (
-        <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400 ml-auto">
+        <span className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 ml-auto">
           {caption}
         </span>
       )}
@@ -61,7 +61,7 @@ function SectionHeader({
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className={`bg-slate-50/50 border border-slate-200 rounded-lg p-6 ${className}`}>
+    <div className={`bg-zinc-50/50 border border-zinc-200 rounded-lg p-6 ${className}`}>
       {children}
     </div>
   );
@@ -82,18 +82,18 @@ function TopStat({
 }) {
   const delta = weekOverWeekDelta(current, previous);
   const trendClass = delta.flat
-    ? "text-slate-400"
+    ? "text-zinc-400"
     : delta.up ? "text-emerald-600" : "text-red-600";
   return (
-    <div className="bg-slate-50/50 border border-slate-200 rounded-lg p-5 flex flex-col justify-between">
+    <div className="bg-zinc-50/50 border border-zinc-200 rounded-lg p-5 flex flex-col justify-between">
       <div className="flex items-start justify-between mb-4">
-        <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 w-2/3 leading-relaxed">
+        <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 w-2/3 leading-relaxed">
           {label}
         </p>
-        <Icon className="w-4 h-4 text-slate-400" />
+        <Icon className="size-4 text-zinc-400" />
       </div>
       <div className="flex items-end justify-between gap-2">
-        <p className="text-4xl font-medium display text-slate-900 tabular-nums">
+        <p className="text-4xl font-medium display text-zinc-900 tabular-nums">
           {value.toLocaleString()}
         </p>
         <span className={`text-[10px] font-medium uppercase tracking-widest ${trendClass}`} title="vs. previous 7 days">
@@ -174,10 +174,10 @@ function TimeSeriesChart({
 
 function MatchFunnel({ funnel }: { funnel: AdminOverviewBundle["funnel_30d"] }) {
   const stages = [
-    { key: "impressions",   label: "Impressions",   icon: Eye,             color: "bg-slate-300"   },
-    { key: "clicks",        label: "Clicks",        icon: MousePointerClick,color: "bg-slate-400"   },
-    { key: "saves",         label: "Saves",         icon: Bookmark,        color: "bg-slate-500"   },
-    { key: "apply_starts",  label: "Apply Starts",  icon: Send,            color: "bg-slate-700"   },
+    { key: "impressions",   label: "Impressions",   icon: Eye,             color: "bg-zinc-300"   },
+    { key: "clicks",        label: "Clicks",        icon: MousePointerClick,color: "bg-zinc-400"   },
+    { key: "saves",         label: "Saves",         icon: Bookmark,        color: "bg-zinc-500"   },
+    { key: "apply_starts",  label: "Apply Starts",  icon: Send,            color: "bg-zinc-700"   },
     { key: "apply_submits", label: "Apply Submits", icon: CheckCircle2,    color: "bg-emerald-700" },
   ] as const;
 
@@ -185,7 +185,7 @@ function MatchFunnel({ funnel }: { funnel: AdminOverviewBundle["funnel_30d"] }) 
 
   if (funnel.impressions === 0) {
     return (
-      <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-8">
+      <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-8">
         No matching activity in the last 30 days.
       </p>
     );
@@ -203,21 +203,21 @@ function MatchFunnel({ funnel }: { funnel: AdminOverviewBundle["funnel_30d"] }) 
         return (
           <div key={s.key} className="group">
             <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2 text-xs font-medium text-slate-700">
-                <s.icon className="w-3.5 h-3.5 text-slate-400" />
+              <div className="flex items-center gap-2 text-xs font-medium text-zinc-700">
+                <s.icon className="size-3.5 text-zinc-400" />
                 {s.label}
               </div>
               <div className="flex items-center gap-3 text-xs tabular-nums">
                 {stageRate !== null && (
-                  <span className="text-[10px] text-slate-400 flex items-center gap-1 uppercase tracking-tight">
-                    <ArrowDown className="w-3 h-3" />
+                  <span className="text-[10px] text-zinc-400 flex items-center gap-1 uppercase tracking-tight">
+                    <ArrowDown className="size-3" />
                     {stageRate}%
                   </span>
                 )}
-                <span className="font-medium text-slate-900">{value.toLocaleString()}</span>
+                <span className="font-medium text-zinc-900">{value.toLocaleString()}</span>
               </div>
             </div>
-            <div className="h-2 bg-slate-100 rounded-sm overflow-hidden">
+            <div className="h-2 bg-zinc-100 rounded-sm overflow-hidden">
               <div
                 className={`h-full rounded-sm transition-all duration-500 ${s.color}`}
                 style={{ width: `${widthPct}%` }}
@@ -234,28 +234,28 @@ function MatchFunnel({ funnel }: { funnel: AdminOverviewBundle["funnel_30d"] }) 
 
 function TopPagesTable({ rows }: { rows: TopPageRow[] }) {
   if (rows.length === 0) {
-    return <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-6">No page-view data yet.</p>;
+    return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-6">No page-view data yet.</p>;
   }
   return (
     <div className="overflow-x-auto -mx-2">
       <table className="w-full text-xs">
         <thead>
-          <tr className="text-left text-[10px] font-medium uppercase tracking-widest text-slate-500 border-b border-slate-200">
-            <th className="px-2 py-2">Path</th>
-            <th className="px-2 py-2 text-right">Views</th>
-            <th className="px-2 py-2 text-right">Avg Time</th>
-            <th className="px-2 py-2 text-right">Scroll</th>
+          <tr className="text-left text-[10px] font-medium uppercase tracking-widest text-zinc-500 border-b border-zinc-200">
+            <th className="p-2">Path</th>
+            <th className="p-2 text-right">Views</th>
+            <th className="p-2 text-right">Avg Time</th>
+            <th className="p-2 text-right">Scroll</th>
           </tr>
         </thead>
         <tbody>
           {rows.map(r => (
-            <tr key={r.path} className="border-b border-slate-100 hover:bg-white">
-              <td className="px-2 py-2 font-medium text-slate-700 truncate max-w-[280px]" title={r.path}>{r.path}</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-900">{r.views.toLocaleString()}</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-500">
+            <tr key={r.path} className="border-b border-zinc-100 hover:bg-white">
+              <td className="p-2 font-medium text-zinc-700 truncate max-w-[280px]" title={r.path}>{r.path}</td>
+              <td className="p-2 text-right tabular-nums text-zinc-900">{r.views.toLocaleString()}</td>
+              <td className="p-2 text-right tabular-nums text-zinc-500">
                 {r.avg_duration_ms != null ? `${Math.round(r.avg_duration_ms / 1000)}s` : "—"}
               </td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-500">
+              <td className="p-2 text-right tabular-nums text-zinc-500">
                 {r.avg_scroll_depth != null ? `${r.avg_scroll_depth}%` : "—"}
               </td>
             </tr>
@@ -270,7 +270,7 @@ function TopPagesTable({ rows }: { rows: TopPageRow[] }) {
 
 function TopReferrersTable({ rows }: { rows: TopReferrerRow[] }) {
   if (rows.length === 0) {
-    return <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-6">No referrer data yet.</p>;
+    return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-6">No referrer data yet.</p>;
   }
   const max = Math.max(...rows.map(r => r.views), 1);
   return (
@@ -278,12 +278,12 @@ function TopReferrersTable({ rows }: { rows: TopReferrerRow[] }) {
       {rows.map(r => (
         <div key={r.source}>
           <div className="flex items-center justify-between mb-1">
-            <span className="text-xs font-medium text-slate-700 truncate" title={r.source}>{r.source}</span>
-            <span className="text-xs font-medium text-slate-900 tabular-nums">{r.views.toLocaleString()}</span>
+            <span className="text-xs font-medium text-zinc-700 truncate" title={r.source}>{r.source}</span>
+            <span className="text-xs font-medium text-zinc-900 tabular-nums">{r.views.toLocaleString()}</span>
           </div>
-          <div className="h-1.5 bg-slate-100 rounded-sm overflow-hidden">
+          <div className="h-1.5 bg-zinc-100 rounded-sm overflow-hidden">
             <div
-              className="h-full rounded-sm bg-slate-700 transition-all duration-500"
+              className="h-full rounded-sm bg-zinc-700 transition-all duration-500"
               style={{ width: `${(r.views / max) * 100}%` }}
             />
           </div>
@@ -297,28 +297,28 @@ function TopReferrersTable({ rows }: { rows: TopReferrerRow[] }) {
 
 function UtmTable({ rows }: { rows: UtmRow[] }) {
   if (rows.length === 0) {
-    return <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-6">No UTM-tagged traffic in the last 30 days.</p>;
+    return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-6">No UTM-tagged traffic in the last 30 days.</p>;
   }
   return (
     <div className="overflow-x-auto -mx-2">
       <table className="w-full text-xs">
         <thead>
-          <tr className="text-left text-[10px] font-medium uppercase tracking-widest text-slate-500 border-b border-slate-200">
-            <th className="px-2 py-2">Source</th>
-            <th className="px-2 py-2">Medium</th>
-            <th className="px-2 py-2">Campaign</th>
-            <th className="px-2 py-2 text-right">Sessions</th>
-            <th className="px-2 py-2 text-right">Signups</th>
+          <tr className="text-left text-[10px] font-medium uppercase tracking-widest text-zinc-500 border-b border-zinc-200">
+            <th className="p-2">Source</th>
+            <th className="p-2">Medium</th>
+            <th className="p-2">Campaign</th>
+            <th className="p-2 text-right">Sessions</th>
+            <th className="p-2 text-right">Signups</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r, i) => (
-            <tr key={`${r.utm_source}-${r.utm_medium ?? ""}-${r.utm_campaign ?? ""}-${i}`} className="border-b border-slate-100 hover:bg-white">
-              <td className="px-2 py-2 font-medium text-slate-700 truncate max-w-[140px]" title={r.utm_source}>{r.utm_source}</td>
-              <td className="px-2 py-2 text-slate-500 truncate max-w-[120px]">{r.utm_medium   ?? "—"}</td>
-              <td className="px-2 py-2 text-slate-500 truncate max-w-[160px]">{r.utm_campaign ?? "—"}</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-900">{r.sessions}</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-700">{r.signups}</td>
+            <tr key={`${r.utm_source}-${r.utm_medium ?? ""}-${r.utm_campaign ?? ""}-${i}`} className="border-b border-zinc-100 hover:bg-white">
+              <td className="p-2 font-medium text-zinc-700 truncate max-w-[140px]" title={r.utm_source}>{r.utm_source}</td>
+              <td className="p-2 text-zinc-500 truncate max-w-[120px]">{r.utm_medium   ?? "—"}</td>
+              <td className="p-2 text-zinc-500 truncate max-w-[160px]">{r.utm_campaign ?? "—"}</td>
+              <td className="p-2 text-right tabular-nums text-zinc-900">{r.sessions}</td>
+              <td className="p-2 text-right tabular-nums text-zinc-700">{r.signups}</td>
             </tr>
           ))}
         </tbody>
@@ -330,16 +330,16 @@ function UtmTable({ rows }: { rows: UtmRow[] }) {
 // ── Device breakdown donut ──────────────────────────────────
 
 const DEVICE_COLORS: Record<string, string> = {
-  desktop: "#0f172a",  // slate-900
-  mobile:  "#475569",  // slate-600
-  tablet:  "#94a3b8",  // slate-400
+  desktop: "#0f172a",  // zinc-900
+  mobile:  "#475569",  // zinc-600
+  tablet:  "#94a3b8",  // zinc-400
   bot:     "#f59e0b",  // amber-500
-  unknown: "#cbd5e1",  // slate-300
+  unknown: "#cbd5e1",  // zinc-300
 };
 
 function DeviceDonut({ rows }: { rows: AnalyticsBundle["devices"] }) {
   if (rows.length === 0 || rows.every(r => r.sessions === 0)) {
-    return <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-8">No device data yet.</p>;
+    return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-8">No device data yet.</p>;
   }
   return (
     <div className="h-56">
@@ -378,13 +378,13 @@ function DeviceDonut({ rows }: { rows: AnalyticsBundle["devices"] }) {
 // ── Scholarship performance table (sortable) ────────────────
 
 const STATUS_COLORS: Record<string, string> = {
-  Interested: "bg-slate-400",
-  "In Progress": "bg-slate-600",
-  Submitted: "bg-slate-800",
+  Interested: "bg-zinc-400",
+  "In Progress": "bg-zinc-600",
+  Submitted: "bg-zinc-800",
   "Awaiting Decision": "bg-amber-600",
   Accepted: "bg-emerald-700",
   Rejected: "bg-red-800",
-  Withdrawn: "bg-slate-300",
+  Withdrawn: "bg-zinc-300",
 };
 
 const COUNTRY_FLAGS: Record<string, string> = {
@@ -407,7 +407,7 @@ function DistributionBars({
 }) {
   if (rows.length === 0) {
     return (
-      <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-8">
+      <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-8">
         {emptyLabel}
       </p>
     );
@@ -422,13 +422,13 @@ function DistributionBars({
           <div className="flex items-center justify-between mb-1.5">
             <div className="flex items-center gap-2">
               {leadFor?.(row.label)}
-              <span className="text-xs font-medium text-slate-700">{row.label}</span>
+              <span className="text-xs font-medium text-zinc-700">{row.label}</span>
             </div>
-            <span className="text-xs font-medium text-slate-900 tabular-nums">
+            <span className="text-xs font-medium text-zinc-900 tabular-nums">
               {row.count.toLocaleString()}
             </span>
           </div>
-          <div className="h-1.5 bg-slate-200 rounded-sm overflow-hidden">
+          <div className="h-1.5 bg-zinc-200 rounded-sm overflow-hidden">
             <div
               className={`h-full rounded-sm transition-all duration-500 ${colorFor(row.label)}`}
               style={{ width: `${(row.count / max) * 100}%` }}
@@ -460,17 +460,17 @@ function ScholarshipPerformanceTable({ rows }: { rows: ScholarshipPerformanceRow
   }, [rows, sortKey, sortDesc]);
 
   if (rows.length === 0) {
-    return <p className="text-[11px] font-medium uppercase tracking-widest text-slate-400 text-center py-6">No scholarship performance data yet.</p>;
+    return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-6">No scholarship performance data yet.</p>;
   }
 
   function header(key: SortKey, label: string, align: "left" | "right" = "right") {
     const active = sortKey === key;
     const alignClass = align === "left" ? "text-left" : "text-right";
     return (
-      <th className={`px-2 py-2 ${alignClass}`}>
+      <th className={`p-2 ${alignClass}`}>
         <button
           type="button"
-          className={`inline-flex items-center gap-1 select-none ${active ? "text-slate-900" : ""}`}
+          className={`inline-flex items-center gap-1 select-none ${active ? "text-zinc-900" : ""}`}
           onClick={() => {
             if (active) setSortDesc(d => !d);
             else { setSortKey(key); setSortDesc(true); }
@@ -479,7 +479,7 @@ function ScholarshipPerformanceTable({ rows }: { rows: ScholarshipPerformanceRow
           aria-label={`Sort by ${label}`}
         >
           {label}
-          <ArrowUpDown className={`w-3 h-3 ${active ? "opacity-100" : "opacity-30"}`} />
+          <ArrowUpDown className={`size-3 ${active ? "opacity-100" : "opacity-30"}`} />
         </button>
       </th>
     );
@@ -489,7 +489,7 @@ function ScholarshipPerformanceTable({ rows }: { rows: ScholarshipPerformanceRow
     <div className="overflow-x-auto -mx-2">
       <table className="w-full text-xs">
         <thead>
-          <tr className="text-[10px] font-medium uppercase tracking-widest text-slate-500 border-b border-slate-200">
+          <tr className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 border-b border-zinc-200">
             {header("name",         "Scholarship", "left")}
             {header("impressions",  "Impr.")}
             {header("clicks",       "Clicks")}
@@ -502,17 +502,17 @@ function ScholarshipPerformanceTable({ rows }: { rows: ScholarshipPerformanceRow
         </thead>
         <tbody>
           {sorted.map(r => (
-            <tr key={r.scholarship_id} className="border-b border-slate-100 hover:bg-white">
-              <td className="px-2 py-2 font-medium text-slate-700 truncate max-w-[260px]" title={r.name}>
+            <tr key={r.scholarship_id} className="border-b border-zinc-100 hover:bg-white">
+              <td className="p-2 font-medium text-zinc-700 truncate max-w-[260px]" title={r.name}>
                 {r.name}
               </td>
-              <td className="px-2 py-2 text-right tabular-nums">{r.impressions}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{r.clicks}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{r.saves}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{r.apply_starts}</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-500">{r.ctr}%</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-500">{r.save_rate}%</td>
-              <td className="px-2 py-2 text-right tabular-nums text-slate-500">{r.apply_rate}%</td>
+              <td className="p-2 text-right tabular-nums">{r.impressions}</td>
+              <td className="p-2 text-right tabular-nums">{r.clicks}</td>
+              <td className="p-2 text-right tabular-nums">{r.saves}</td>
+              <td className="p-2 text-right tabular-nums">{r.apply_starts}</td>
+              <td className="p-2 text-right tabular-nums text-zinc-500">{r.ctr}%</td>
+              <td className="p-2 text-right tabular-nums text-zinc-500">{r.save_rate}%</td>
+              <td className="p-2 text-right tabular-nums text-zinc-500">{r.apply_rate}%</td>
             </tr>
           ))}
         </tbody>
@@ -540,10 +540,10 @@ export default function AnalyticsClient({ bundle }: Props) {
     <div className="max-w-6xl mx-auto space-y-8">
       {/* ── Header ───────────────────────────────────── */}
       <div>
-        <h1 className="font-medium text-3xl display text-slate-900 tracking-tight">
+        <h1 className="font-medium text-3xl display text-zinc-900 tracking-tight">
           Official Analytics Report
         </h1>
-        <p className="text-[11px] font-medium uppercase tracking-widest text-slate-500 mt-2">
+        <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-500 mt-2">
           Platform Engagement &amp; Conversion · Last 30 Days
         </p>
       </div>
@@ -623,7 +623,7 @@ export default function AnalyticsClient({ bundle }: Props) {
           <DistributionBars
             rows={statusDistribution}
             emptyLabel="No application data logged."
-            colorFor={(label) => STATUS_COLORS[label] || "bg-slate-400"}
+            colorFor={(label) => STATUS_COLORS[label] || "bg-zinc-400"}
           />
         </Card>
         <Card>
@@ -631,7 +631,7 @@ export default function AnalyticsClient({ bundle }: Props) {
           <DistributionBars
             rows={countryDistribution}
             emptyLabel="No active scholarships."
-            colorFor={() => "bg-slate-800"}
+            colorFor={() => "bg-zinc-800"}
             leadFor={(label) => <span className="text-xs">{COUNTRY_FLAGS[label] || "🌍"}</span>}
           />
         </Card>
@@ -655,7 +655,7 @@ export default function AnalyticsClient({ bundle }: Props) {
       </Card>
 
       {/* ── Footer note ─────────────────────────────── */}
-      <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400 text-center pt-2">
+      <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400 text-center pt-2">
         All metrics computed against UTC days · Empty rows indicate no recorded activity for the period
       </p>
     </div>

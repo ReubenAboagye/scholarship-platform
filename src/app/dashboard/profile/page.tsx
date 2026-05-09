@@ -18,10 +18,10 @@ const INTEREST_OPTIONS = [
 ];
 
 const inp = [
-  "w-full px-3.5 py-2.5 rounded-lg border bg-white text-sm text-slate-800",
-  "border-slate-200 hover:border-slate-300",
+  "w-full px-3.5 py-2.5 rounded-lg border bg-white text-sm text-zinc-800",
+  "border-zinc-200 hover:border-zinc-300",
   "focus:outline-none focus:border-blue-500 focus:ring-3 focus:ring-blue-100",
-  "transition-all placeholder:text-slate-400",
+  "transition-all placeholder:text-zinc-400",
 ].join(" ");
 
 // ── Interests checkbox dropdown ────────────────────────────────────────────
@@ -67,10 +67,10 @@ function InterestsDropdown({
         onClick={() => setOpen((v) => !v)}
         className={`${inputClass} flex items-center justify-between cursor-pointer text-left`}
       >
-        <span className={selected.length === 0 ? "text-slate-400" : "text-slate-800"}>
+        <span className={selected.length === 0 ? "text-zinc-400" : "text-zinc-800"}>
           {label}
         </span>
-        <ChevronDown className={`w-4 h-4 text-slate-400 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`size-4 text-zinc-400 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {/* Selected chips (shown below trigger when >0 selected) */}
@@ -84,7 +84,7 @@ function InterestsDropdown({
                 onClick={() => toggle(s)}
                 className="hover:text-blue-900 transition-colors"
               >
-                <X className="w-3 h-3" />
+                <X className="size-3" />
               </button>
             </span>
           ))}
@@ -93,7 +93,7 @@ function InterestsDropdown({
 
       {/* Dropdown panel */}
       {open && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-1 max-h-56 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 py-1 max-h-56 overflow-y-auto">
           {options.map((option) => {
             const checked = selected.includes(option);
             return (
@@ -101,15 +101,15 @@ function InterestsDropdown({
                 key={option}
                 type="button"
                 onClick={() => toggle(option)}
-                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors text-left"
+                className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-zinc-50 transition-colors text-left"
               >
                 {/* Custom checkbox */}
-                <div className={`w-4 h-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
-                  checked ? "bg-blue-600 border-blue-600" : "border-slate-300"
+                <div className={`size-4 rounded border-2 flex-shrink-0 flex items-center justify-center transition-colors ${
+                  checked ? "bg-blue-600 border-blue-600" : "border-zinc-300"
                 }`}>
-                  {checked && <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />}
+                  {checked && <Check className="size-2.5 text-white" strokeWidth={3} />}
                 </div>
-                <span className="text-sm text-slate-700">{option}</span>
+                <span className="text-sm text-zinc-700">{option}</span>
               </button>
             );
           })}
@@ -241,7 +241,7 @@ export default function ProfilePage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-64">
-      <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+      <Loader2 className="size-5 animate-spin text-blue-600" />
     </div>
   );
 
@@ -250,15 +250,15 @@ export default function ProfilePage() {
 
       {/* Header */}
       <div className="pb-2 mb-5">
-        <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-1">Account</p>
+        <p className="text-xs font-semibold text-zinc-400 uppercase tracking-widest mb-1">Account</p>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900">Profile Settings</h1>
-            <p className="text-sm text-slate-400 mt-1">Your profile powers the AI matching engine.</p>
+            <h1 className="text-2xl text-zinc-900">Profile Settings</h1>
+            <p className="text-sm text-zinc-400 mt-1">Your profile powers the AI matching engine.</p>
           </div>
           <button type="submit" disabled={saving || !dirty}
-            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all mt-1">
-            {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : saved ? <Check className="w-3 h-3" /> : null}
+            className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-100 disabled:text-zinc-400 disabled:cursor-not-allowed text-white text-xs font-semibold rounded-lg transition-all mt-1">
+            {saving ? <Loader2 className="size-3 animate-spin" /> : saved ? <Check className="size-3" /> : null}
             {saving ? "Saving..." : saved ? "Saved" : "Save changes"}
           </button>
         </div>
@@ -277,25 +277,25 @@ export default function ProfilePage() {
         )}
 
         {/* Avatar card */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
           <div className="h-20 bg-gradient-to-r from-blue-600 to-blue-400" />
           <div className="px-5 pb-5">
             <div className="flex items-end justify-between -mt-10 mb-5">
               <div className="relative">
-                <div className="w-20 h-20 rounded-xl bg-slate-900 border-4 border-white flex items-center justify-center text-2xl font-black text-white shadow-md">
+                <div className="size-20 rounded-xl bg-zinc-900 border-4 border-white flex items-center justify-center text-2xl font-black text-white shadow-md">
                   {initials}
                 </div>
-                <button type="button" className="absolute -bottom-1 -right-1 w-6 h-6 bg-white border border-slate-200 rounded-full flex items-center justify-center shadow-sm hover:bg-slate-50 transition-colors">
-                  <Camera className="w-3 h-3 text-slate-500" />
+                <button type="button" className="absolute -bottom-1 -right-1 size-6 bg-white border border-zinc-200 rounded-full flex items-center justify-center shadow-sm hover:bg-zinc-50 transition-colors">
+                  <Camera className="size-3 text-zinc-500" />
                 </button>
               </div>
               {/* Match quality meter */}
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-2">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <div className="flex items-center gap-2 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2">
+                <Sparkles className="size-3.5 text-blue-600" />
                 <div>
-                  <p className="text-xs font-bold text-slate-700">Match quality</p>
+                  <p className="text-xs font-bold text-zinc-700">Match quality</p>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <div className="w-24 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                    <div className="w-24 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                       <div className="h-full rounded-full transition-all duration-700"
                         style={{ width: `${completionPct}%`, backgroundColor: completionPct === 100 ? "#10b981" : completionPct >= 60 ? "#3b82f6" : "#f59e0b" }} />
                     </div>
@@ -306,8 +306,8 @@ export default function ProfilePage() {
                 </div>
               </div>
             </div>
-            <p className="font-bold text-slate-900">{form.full_name || "Your Name"}</p>
-            <p className="text-sm text-slate-500">{email}</p>
+            <p className="font-bold text-zinc-900">{form.full_name || "Your Name"}</p>
+            <p className="text-sm text-zinc-500">{email}</p>
             {form.field_of_study && form.degree_level && (
               <p className="text-xs text-blue-600 font-medium mt-1">
                 {form.degree_level} · {form.field_of_study}{form.country_of_origin ? ` · ${form.country_of_origin}` : ""}
@@ -317,18 +317,18 @@ export default function ProfilePage() {
         </div>
 
         {/* Personal info */}
-        <div className="bg-white rounded-xl border border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center"><User className="w-3.5 h-3.5 text-blue-600" /></div>
-            <div><h2 className="text-sm font-bold text-slate-900">Personal Info</h2><p className="text-xs text-slate-400">Name, origin, and citizenship</p></div>
+        <div className="bg-white rounded-xl border border-zinc-200">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-100">
+            <div className="size-7 rounded-lg bg-blue-50 flex items-center justify-center"><User className="size-3.5 text-blue-600" /></div>
+            <div><h2 className="text-sm text-zinc-900">Personal Info</h2><p className="text-xs text-zinc-400">Name, origin, and citizenship</p></div>
           </div>
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Full Name</label>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">Full Name</label>
               <input className={inp} placeholder="e.g. Kofi Mensah" type="text" value={form.full_name} onChange={(e) => update("full_name", e.target.value)} />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Country of Origin</label>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">Country of Origin</label>
               <CountrySelect 
                 value={form.country_of_origin} 
                 onChange={(v) => update("country_of_origin", v)}
@@ -336,29 +336,29 @@ export default function ProfilePage() {
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Citizenship / Nationality <span className="normal-case font-normal text-slate-400">— used for eligibility filtering</span>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                Citizenship / Nationality <span className="normal-case font-normal text-zinc-400">— used for eligibility filtering</span>
               </label>
               <CountrySelect 
                 value={form.citizenship} 
                 onChange={(v) => update("citizenship", v)}
                 placeholder="e.g. Ghana"
               />
-              <p className="text-xs text-slate-400 mt-1.5">This is the single most important field for filtering scholarships correctly.</p>
+              <p className="text-xs text-zinc-400 mt-1.5">This is the single most important field for filtering scholarships correctly.</p>
             </div>
           </div>
         </div>
 
         {/* Academic profile */}
-        <div className="bg-white rounded-xl border border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-emerald-50 flex items-center justify-center"><BookOpen className="w-3.5 h-3.5 text-emerald-600" /></div>
-            <div><h2 className="text-sm font-bold text-slate-900">Academic Profile</h2><p className="text-xs text-slate-400">Degree, field, and GPA</p></div>
+        <div className="bg-white rounded-xl border border-zinc-200">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-100">
+            <div className="size-7 rounded-lg bg-emerald-50 flex items-center justify-center"><BookOpen className="size-3.5 text-emerald-600" /></div>
+            <div><h2 className="text-sm text-zinc-900">Academic Profile</h2><p className="text-xs text-zinc-400">Degree, field, and GPA</p></div>
           </div>
           <div className="p-4 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Field of Study</label>
+                <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">Field of Study</label>
                 <select className={inp + " cursor-pointer"} value={form.field_of_study} onChange={(e) => update("field_of_study", e.target.value)}>
                   <option value="">Select your field…</option>
                   {STUDY_FIELD_OPTIONS.map((field) => (
@@ -367,7 +367,7 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">Degree Level</label>
+                <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">Degree Level</label>
                 <select className={inp + " cursor-pointer"} value={form.degree_level} onChange={(e) => update("degree_level", e.target.value)}>
                   <option value="">Select level…</option>
                   {DEGREE_LEVELS.map((d) => <option key={d} value={d}>{d}</option>)}
@@ -375,18 +375,18 @@ export default function ProfilePage() {
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                GPA <span className="normal-case font-normal text-slate-400">— optional, 4.0 scale</span>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                GPA <span className="normal-case font-normal text-zinc-400">— optional, 4.0 scale</span>
               </label>
               <div className="relative w-32">
-                <Star className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                <Star className="absolute left-3 top-1/2 -tranzinc-y-1/2 size-3.5 text-zinc-400" />
                 <input type="number" step="0.01" min="0" max="4" className={inp + " pl-8"} placeholder="3.7"
                   value={form.gpa} onChange={(e) => update("gpa", e.target.value)} />
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Background <span className="normal-case font-normal text-slate-400">— optional</span>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                Background <span className="normal-case font-normal text-zinc-400">— optional</span>
               </label>
               <textarea rows={3} className={inp + " resize-none"}
                 placeholder="Describe your academic background, research interests, and achievements. More context = better matches."
@@ -396,15 +396,15 @@ export default function ProfilePage() {
         </div>
 
         {/* Goals & interests */}
-        <div className="bg-white rounded-xl border border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center"><Target className="w-3.5 h-3.5 text-purple-600" /></div>
-            <div><h2 className="text-sm font-bold text-slate-900">Goals & Interests</h2><p className="text-xs text-slate-400">Improves semantic matching</p></div>
+        <div className="bg-white rounded-xl border border-zinc-200">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-100">
+            <div className="size-7 rounded-lg bg-purple-50 flex items-center justify-center"><Target className="size-3.5 text-purple-600" /></div>
+            <div><h2 className="text-sm text-zinc-900">Goals & Interests</h2><p className="text-xs text-zinc-400">Improves semantic matching</p></div>
           </div>
           <div className="p-4 space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                Career Goals <span className="normal-case font-normal text-slate-400">— optional</span>
+              <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                Career Goals <span className="normal-case font-normal text-zinc-400">— optional</span>
               </label>
               <textarea rows={2} className={inp + " resize-none"}
                 placeholder="e.g. Become a public health researcher focusing on infectious diseases in West Africa"
@@ -412,8 +412,8 @@ export default function ProfilePage() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                  Financial Need <span className="normal-case font-normal text-slate-400">— optional</span>
+                <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                  Financial Need <span className="normal-case font-normal text-zinc-400">— optional</span>
                 </label>
                 <select
                   className={inp + " cursor-pointer"}
@@ -426,8 +426,8 @@ export default function ProfilePage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">
-                  Interests <span className="normal-case font-normal text-slate-400">— select all that apply</span>
+                <label className="block text-xs font-semibold text-zinc-600 mb-1.5 uppercase tracking-wide">
+                  Interests <span className="normal-case font-normal text-zinc-400">— select all that apply</span>
                 </label>
                 <InterestsDropdown
                   options={INTEREST_OPTIONS}
@@ -444,14 +444,14 @@ export default function ProfilePage() {
         </div>
 
         {/* Notification preferences */}
-        <div className="bg-white rounded-xl border border-slate-200">
-          <div className="flex items-center gap-3 px-4 py-3 border-b border-slate-100">
-            <div className="w-7 h-7 rounded-lg bg-sky-50 flex items-center justify-center">
-              <Bell className="w-3.5 h-3.5 text-sky-600" />
+        <div className="bg-white rounded-xl border border-zinc-200">
+          <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-100">
+            <div className="size-7 rounded-lg bg-sky-50 flex items-center justify-center">
+              <Bell className="size-3.5 text-sky-600" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900">Email Notifications</h2>
-              <p className="text-xs text-slate-400">Choose which emails you receive from ScholarMatch</p>
+              <h2 className="text-sm text-zinc-900">Email Notifications</h2>
+              <p className="text-xs text-zinc-400">Choose which emails you receive from ScholarMatch</p>
             </div>
           </div>
           <div className="p-4 space-y-3">
@@ -472,41 +472,41 @@ export default function ProfilePage() {
                 <button
                   type="button"
                   onClick={() => { setNotifPrefs((p) => ({ ...p, [key]: !p[key] })); setDirty(true); setSaved(false); }}
-                  className={`mt-0.5 w-10 h-6 rounded-full transition-colors relative flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-400 ${notifPrefs[key] ? "bg-blue-600" : "bg-slate-200"}`}
+                  className={`mt-0.5 w-10 h-6 rounded-full transition-colors relative flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-400 ${notifPrefs[key] ? "bg-blue-600" : "bg-zinc-200"}`}
                   aria-checked={notifPrefs[key]}
                   role="switch"
                   aria-label={label}
                 >
-                  <span className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${notifPrefs[key] ? "left-5" : "left-1"}`} />
+                  <span className={`absolute top-1 size-4 bg-white rounded-full shadow transition-all ${notifPrefs[key] ? "left-5" : "left-1"}`} />
                 </button>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-slate-800 leading-none">{label}</p>
-                  <p className="text-xs text-slate-400 mt-1">{desc}</p>
+                  <p className="text-sm font-semibold text-zinc-800 leading-none">{label}</p>
+                  <p className="text-xs text-zinc-400 mt-1">{desc}</p>
                 </div>
               </label>
             ))}
-            <p className="text-xs text-slate-400 pt-1 border-t border-slate-50">
+            <p className="text-xs text-zinc-400 pt-1 border-t border-zinc-50">
               Transactional emails (password reset, account security) are always sent.
             </p>
           </div>
         </div>
 
         {/* Completeness checklist */}
-        <div className="bg-white rounded-xl border border-slate-200 p-4">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Heart className="w-4 h-4 text-rose-400 flex-shrink-0" />
-            <h2 className="text-sm font-bold text-slate-900">Profile completeness</h2>
+            <Heart className="size-4 text-rose-400 flex-shrink-0" />
+            <h2 className="text-sm text-zinc-900">Profile completeness</h2>
             <span className="ml-auto text-xs font-bold text-blue-600">{completionPct}%</span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
             {weightedFields.map((f) => (
               <div key={f.label} className={["flex items-center gap-2 px-3 py-1.5 rounded-lg border text-xs font-medium",
-                f.value ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-slate-50 border-slate-200 text-slate-400"
+                f.value ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-zinc-50 border-zinc-200 text-zinc-400"
               ].join(" ")}>
-                <div className={["w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0",
-                  f.value ? "bg-emerald-500" : "border-2 border-slate-300"
+                <div className={["size-3.5 rounded-full flex items-center justify-center flex-shrink-0",
+                  f.value ? "bg-emerald-500" : "border-2 border-zinc-300"
                 ].join(" ")}>
-                  {f.value && <Check className="w-2 h-2 text-white" strokeWidth={3} />}
+                  {f.value && <Check className="size-2 text-white" strokeWidth={3} />}
                 </div>
                 {f.label}
                 <span className="ml-auto text-[10px] opacity-60">+{f.weight}%</span>
@@ -517,8 +517,8 @@ export default function ProfilePage() {
 
         <div className="flex justify-end pb-4">
           <button type="submit" disabled={saving || !dirty}
-            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-lg transition-all">
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : saved ? <Check className="w-4 h-4" /> : null}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-100 disabled:text-zinc-400 disabled:cursor-not-allowed text-white text-sm font-bold rounded-lg transition-all">
+            {saving ? <Loader2 className="size-4 animate-spin" /> : saved ? <Check className="size-4" /> : null}
             {saving ? "Saving..." : saved ? "Saved!" : "Save Changes"}
           </button>
         </div>

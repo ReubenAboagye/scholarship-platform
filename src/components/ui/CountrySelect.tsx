@@ -49,24 +49,24 @@ export default function CountrySelect({ value, onChange, placeholder = "Select c
       <button
         type="button"
         onClick={() => (open ? closeDropdown() : openDropdown())}
-        className="w-full h-[40px] flex items-center justify-between px-3.5 py-2 rounded-lg border bg-white text-sm text-slate-800 border-slate-200 hover:border-slate-300 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-50 transition-all text-left group"
+        className="w-full h-[40px] flex items-center justify-between px-3.5 py-2 rounded-lg border bg-white text-sm text-zinc-800 border-zinc-200 hover:border-zinc-300 focus:outline-none focus:border-brand-500 focus:ring-4 focus:ring-brand-50 transition-all text-left group"
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          {icon || <Globe className="w-4 h-4 text-slate-400 flex-shrink-0 group-hover:text-brand-500 transition-colors" />}
-          <span className={cn("truncate font-medium", !value && "text-slate-400 font-normal")}>
+          {icon || <Globe className="size-4 text-zinc-400 flex-shrink-0 group-hover:text-brand-500 transition-colors" />}
+          <span className={cn("truncate font-medium", !value && "text-zinc-400 font-normal")}>
             {value || placeholder}
           </span>
         </div>
-        <ChevronDown className={cn("w-4 h-4 text-slate-400 transition-transform duration-200 flex-shrink-0", open && "rotate-180")} />
+        <ChevronDown className={cn("size-4 text-zinc-400 transition-transform duration-200 flex-shrink-0", open && "rotate-180")} />
       </button>
 
       {/* Dropdown panel */}
       {open && (
-        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[280px] animate-fade-in translate-y-0">
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-zinc-200 rounded-xl shadow-2xl z-50 overflow-hidden flex flex-col max-h-[280px] animate-fade-in tranzinc-y-0">
           {/* Search container */}
-          <div className="p-2 border-b border-slate-50 sticky top-0 bg-white">
+          <div className="p-2 border-b border-zinc-50 sticky top-0 bg-white">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -tranzinc-y-1/2 size-3.5 text-zinc-400" />
               <input
                 autoFocus
                 type="text"
@@ -76,7 +76,7 @@ export default function CountrySelect({ value, onChange, placeholder = "Select c
                 onKeyDown={(e) => {
                   if (e.key === "Escape") setOpen(false);
                 }}
-                className="w-full h-9 pl-9 pr-4 text-xs bg-slate-50 border border-slate-100 rounded-lg outline-none focus:bg-white focus:border-brand-500 transition-all placeholder:text-slate-400"
+                className="w-full h-9 pl-9 pr-4 text-xs bg-zinc-50 border border-zinc-100 rounded-lg outline-none focus:bg-white focus:border-brand-500 transition-all placeholder:text-zinc-400"
               />
             </div>
           </div>
@@ -85,7 +85,7 @@ export default function CountrySelect({ value, onChange, placeholder = "Select c
           <div className="flex-1 overflow-y-auto py-1 custom-scrollbar">
             {filtered.length === 0 ? (
               <div className="px-4 py-10 text-center">
-                <p className="text-xs text-slate-400 font-medium italic">No results for &quot;{search}&quot;</p>
+                <p className="text-xs text-zinc-400 font-medium italic">No results for &quot;{search}&quot;</p>
               </div>
             ) : (
               filtered.map((country) => (
@@ -101,7 +101,7 @@ export default function CountrySelect({ value, onChange, placeholder = "Select c
                     "w-full flex items-center gap-3 px-4 py-2.5 transition-colors text-left text-xs sm:text-sm",
                     value === country 
                       ? "bg-brand-50 text-brand-700 font-bold" 
-                      : "text-slate-700 hover:bg-slate-50"
+                      : "text-zinc-700 hover:bg-zinc-50"
                   )}
                 >
                   {country}

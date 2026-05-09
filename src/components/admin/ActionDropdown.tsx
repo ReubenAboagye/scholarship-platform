@@ -35,17 +35,17 @@ export default function ActionDropdown({ actions, align = "right" }: Props) {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="p-1.5 text-slate-300 hover:text-slate-600 transition-colors rounded hover:bg-slate-50"
+        className="p-1.5 text-zinc-300 hover:text-zinc-600 transition-colors rounded hover:bg-zinc-50"
         aria-label="Actions"
         aria-expanded={open}
       >
-        <MoreVertical className="w-3.5 h-3.5" />
+        <MoreVertical className="size-3.5" />
       </button>
 
       {open && (
         <div
           className={cn(
-            "absolute z-50 mt-1 w-44 bg-white border border-slate-200 rounded-lg shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100",
+            "absolute z-50 mt-1 w-44 bg-white border border-zinc-200 rounded-lg shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100",
             align === "right" ? "right-0" : "left-0"
           )}
         >
@@ -61,11 +61,11 @@ export default function ActionDropdown({ actions, align = "right" }: Props) {
                 "w-full flex items-center gap-2 px-3 py-2 text-xs font-medium transition-colors text-left",
                 action.danger
                   ? "text-red-600 hover:bg-red-50"
-                  : "text-slate-700 hover:bg-slate-50",
+                  : "text-zinc-700 hover:bg-zinc-50",
                 action.disabled && "opacity-40 cursor-not-allowed"
               )}
             >
-              {action.icon && <span className="w-4 h-4 flex items-center justify-center">{action.icon}</span>}
+              {action.icon && <span className="size-4 flex items-center justify-center">{action.icon}</span>}
               <span>{action.label}</span>
             </button>
           ))}

@@ -80,7 +80,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
     active.international === "true" || active.effort !== "any";
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-zinc-50">
       <Navbar />
 
       {/* Hero */}
@@ -89,17 +89,17 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
         <img
           src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=1600&q=80&auto=format&fit=crop"
           alt="" aria-hidden="true"
-          className="absolute inset-0 w-full h-full object-cover object-center"
+          className="absolute inset-0 size-full object-cover object-center"
         />
         {/* Deeper scrim — ensures text and white form remain legible */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-950/60 to-slate-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-zinc-950/70 via-zinc-950/60 to-zinc-950/80" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
           <div className="text-center mb-8">
             <p className="text-xs font-medium uppercase tracking-[0.18em] text-white/70 mb-3">
               Scholarship Directory
             </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.5rem] font-bold text-white leading-tight tracking-tight mb-3">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.5rem] text-white leading-tight tracking-tight mb-3">
               Find the right scholarship for your ambitions
             </h1>
             <p className="text-white/75 text-sm sm:text-base leading-relaxed">
@@ -130,9 +130,9 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
       {/* Results */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-12">
         {isFiltered && (
-          <div className="flex items-center justify-between mb-6 py-3 px-4 bg-white border border-slate-200 rounded-xl text-sm">
-            <p className="text-slate-600">
-              Showing <span className="font-semibold text-slate-900">{scholarships?.length ?? 0}</span> result{scholarships?.length !== 1 ? "s" : ""}
+          <div className="flex items-center justify-between mb-6 py-3 px-4 bg-white border border-zinc-200 rounded-xl text-sm">
+            <p className="text-zinc-600">
+              Showing <span className="font-semibold text-zinc-900">{scholarships?.length ?? 0}</span> result{scholarships?.length !== 1 ? "s" : ""}
               {active.country      !== "All"  && <> in <span className="font-semibold">{active.country}</span></>}
               {active.funding_type !== "All"  && <> · <span className="font-semibold">{active.funding_type}</span></>}
               {active.degree_level !== "All"  && <> · <span className="font-semibold">{active.degree_level}</span></>}
@@ -142,7 +142,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
               {active.effort       !== "any"  && <> · <span className="font-semibold">{active.effort === "quick" ? "Quick apply" : "Full application"}</span></>}
               {active.search && <> matching &ldquo;<span className="font-semibold">{active.search}</span>&rdquo;</>}
             </p>
-            <a href="/scholarships" className="text-xs font-semibold text-slate-400 hover:text-brand-600 transition-colors">
+            <a href="/scholarships" className="text-xs font-semibold text-zinc-400 hover:text-brand-600 transition-colors">
               Clear filters
             </a>
           </div>
@@ -158,7 +158,7 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
           <div className="flex-1 min-w-0">
             {scholarships && scholarships.length > 0 ? (
               <>
-                <p className="text-xs text-slate-400 font-medium mb-5">
+                <p className="text-xs text-zinc-400 font-medium mb-5">
                   {scholarships.length} scholarship{scholarships.length !== 1 ? "s" : ""} found
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -168,16 +168,16 @@ export default async function ScholarshipsPage({ searchParams }: { searchParams:
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-28 text-center bg-white rounded-xl border border-slate-200">
-                <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mb-5">
-                  <Search className="w-5 h-5 text-slate-400" />
+              <div className="flex flex-col items-center justify-center py-28 text-center bg-white rounded-xl border border-zinc-200">
+                <div className="size-12 bg-zinc-100 rounded-full flex items-center justify-center mb-5">
+                  <Search className="size-5 text-zinc-400" />
                 </div>
-                <h3 className="font-bold text-slate-900 text-lg mb-2">No scholarships found</h3>
-                <p className="text-slate-500 text-sm max-w-xs mx-auto mb-7">
+                <h3 className="text-zinc-900 text-lg mb-2">No scholarships found</h3>
+                <p className="text-zinc-500 text-sm max-w-xs mx-auto mb-7">
                   No scholarships match your current filters. Try adjusting your criteria.
                 </p>
                 <a href="/scholarships"
-                  className="px-5 py-2.5 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all">
+                  className="px-5 py-2.5 bg-zinc-900 text-white text-sm font-semibold rounded-lg hover:bg-zinc-800 transition-all">
                   Clear all filters
                 </a>
               </div>

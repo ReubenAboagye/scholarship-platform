@@ -84,8 +84,8 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
       {/* Header — quiet, informational */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Browse scholarships</h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <h1 className="text-2xl text-zinc-900">Browse scholarships</h1>
+          <p className="text-sm text-zinc-500 mt-1">
             {scholarships?.length ?? 0} scholarship{scholarships?.length === 1 ? "" : "s"} across {countries.length - 1} countries
           </p>
         </div>
@@ -94,8 +94,8 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
       </div>
 
       {isFiltered && (
-        <div className="flex items-center justify-between py-2 px-3.5 bg-slate-50 border border-slate-200 rounded-md text-sm">
-          <p className="text-slate-700">
+        <div className="flex items-center justify-between py-2 px-3.5 bg-zinc-50 border border-zinc-200 rounded-md text-sm">
+          <p className="text-zinc-700">
             Filters applied
           </p>
           <a href="/dashboard/scholarships"
@@ -136,12 +136,12 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
               />
             )
           ) : (
-            <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-lg border border-slate-200 border-dashed">
-              <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-                <Search className="w-5 h-5 text-slate-400" />
+            <div className="flex flex-col items-center justify-center py-20 text-center bg-white rounded-lg border border-zinc-200 border-dashed">
+              <div className="size-12 bg-zinc-50 rounded-full flex items-center justify-center mb-4">
+                <Search className="size-5 text-zinc-400" />
               </div>
-              <h3 className="font-semibold text-slate-900 text-base mb-1.5">No scholarships match your filters</h3>
-              <p className="text-slate-500 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
+              <h3 className="font-semibold text-zinc-900 text-base mb-1.5">No scholarships match your filters</h3>
+              <p className="text-zinc-500 text-sm max-w-sm mx-auto mb-6 leading-relaxed">
                 Try broadening your search criteria or removing some filters.
               </p>
               <a href="/dashboard/scholarships"

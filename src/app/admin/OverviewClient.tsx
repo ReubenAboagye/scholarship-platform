@@ -61,7 +61,7 @@ function StatCard({
   const trendLabel = formatDelta(delta);
 
   const trendClass = delta.flat
-    ? "text-slate-400"
+    ? "text-zinc-400"
     : delta.up
       ? "text-emerald-600"
       : "text-red-600";
@@ -70,23 +70,23 @@ function StatCard({
 
   return (
     <m.div
-      className="group relative bg-white border border-slate-200 border-t-4 rounded-lg p-5 shadow-sm transition-all"
+      className="group relative bg-white border border-zinc-200 border-t-4 rounded-lg p-5 shadow-sm transition-all"
       style={{ borderTopColor: color }}
     >
       <div className="flex items-center justify-between mb-4">
-        <p className="text-[10px] font-medium text-slate-400 uppercase tracking-[0.1em]">{label}</p>
+        <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-[0.1em]">{label}</p>
         <div className={`flex items-center gap-1 text-[10px] font-medium ${trendClass}`} title="vs. previous 7 days">
-          <TrendIcon className="w-3 h-3" />
+          <TrendIcon className="size-3" />
           {trendLabel}
         </div>
       </div>
 
       <div className="flex items-end justify-between">
-        <h3 className="text-2xl font-medium text-slate-900 tracking-tight">
+        <h3 className="text-2xl font-medium text-zinc-900 tracking-tight">
           {value.toLocaleString()}
         </h3>
-        <div className="w-8 h-8 rounded bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-slate-900 transition-colors">
-          <Icon className="w-4 h-4" />
+        <div className="size-8 rounded bg-zinc-50 flex items-center justify-center text-zinc-400 group-hover:text-zinc-900 transition-colors">
+          <Icon className="size-4" />
         </div>
       </div>
     </m.div>
@@ -145,14 +145,14 @@ export default function OverviewClient({
         {/* ── Page Header ──────────────────────────────────── */}
         <m.div variants={item} className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-medium text-slate-900 display">Admin Overview</h1>
-            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1.5">
+            <h1 className="text-3xl font-medium text-zinc-900 display">Admin Overview</h1>
+            <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest mt-1.5">
               Official Management Console
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-200 rounded text-[11px] text-slate-600 font-medium uppercase tracking-wider">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <div className="flex items-center gap-2 px-3 py-1.5 bg-white border border-zinc-200 rounded text-[11px] text-zinc-600 font-medium uppercase tracking-wider">
+              <Calendar className="size-3.5 text-zinc-400" />
               <span>{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
             </div>
           </div>
@@ -197,12 +197,12 @@ export default function OverviewClient({
         {/* ── 30-day trend chart ──────────────────────────── */}
         <m.div variants={item} className="space-y-3">
           <div className="flex items-center justify-between px-1">
-            <h2 className="text-[11px] font-medium text-slate-900 uppercase tracking-widest">30-Day Activity</h2>
-            <span className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
+            <h2 className="text-[11px] font-medium text-zinc-900 uppercase tracking-widest">30-Day Activity</h2>
+            <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest">
               Signups + Page views
             </span>
           </div>
-          <div className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm">
+          <div className="bg-white border border-zinc-200 rounded-lg p-4 shadow-sm">
             <div className="h-64 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 8, left: 0 }}>
@@ -273,34 +273,34 @@ export default function OverviewClient({
           {/* Recent Scholarships */}
           <m.div variants={item} className="lg:col-span-3 space-y-3">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-[11px] font-medium text-slate-900 uppercase tracking-widest">Recent Postings</h2>
+              <h2 className="text-[11px] font-medium text-zinc-900 uppercase tracking-widest">Recent Postings</h2>
               <MiniLink
                 href="/admin/scholarships"
-                className="text-[10px] font-medium text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors flex items-center gap-1"
+                className="text-[10px] font-medium text-zinc-400 hover:text-zinc-900 uppercase tracking-widest transition-colors flex items-center gap-1"
               >
-                View All <ArrowUpRight className="w-3 h-3" />
+                View All <ArrowUpRight className="size-3" />
               </MiniLink>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
-              <div className="divide-y divide-slate-100">
+            <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden shadow-sm">
+              <div className="divide-y divide-zinc-100">
                 {recentScholarships.length === 0 ? (
-                  <div className="px-5 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-slate-400">
+                  <div className="px-5 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-zinc-400">
                     No scholarships yet
                   </div>
                 ) : recentScholarships.map((s) => (
-                  <div key={s.id} className="group flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors">
-                    <div className="w-9 h-9 rounded bg-slate-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
+                  <div key={s.id} className="group flex items-center gap-4 px-5 py-3.5 hover:bg-zinc-50 transition-colors">
+                    <div className="size-9 rounded bg-zinc-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
                       {countryFlag(s.country)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
+                      <p className="text-sm font-medium text-zinc-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
                       <div className="flex items-center gap-2.5 mt-0.5">
-                        <span className="text-[10px] font-medium text-slate-400 flex items-center gap-1 uppercase tracking-tight">
-                          <Calendar className="w-3 h-3" /> {formatDeadline(s.application_deadline)}
+                        <span className="text-[10px] font-medium text-zinc-400 flex items-center gap-1 uppercase tracking-tight">
+                          <Calendar className="size-3" /> {formatDeadline(s.application_deadline)}
                         </span>
-                        <span className="w-1 h-1 rounded-full bg-slate-200" />
-                        <span className="text-[10px] font-medium text-slate-500 uppercase tracking-tight">{s.country}</span>
+                        <span className="size-1 rounded-full bg-zinc-200" />
+                        <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-tight">{s.country}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -311,8 +311,8 @@ export default function OverviewClient({
                       }`}>
                         {s.funding_type}
                       </span>
-                      <button className="p-1.5 text-slate-300 hover:text-slate-600 transition-colors">
-                        <MoreVertical className="w-3.5 h-3.5" />
+                      <button className="p-1.5 text-zinc-300 hover:text-zinc-600 transition-colors">
+                        <MoreVertical className="size-3.5" />
                       </button>
                     </div>
                   </div>
@@ -320,7 +320,7 @@ export default function OverviewClient({
               </div>
               <MiniLink
                 href="/admin/scholarships"
-                className="block w-full py-4 text-center text-sm font-bold text-slate-400 hover:text-blue-600 hover:bg-slate-50 transition-all border-t border-slate-100"
+                className="block w-full py-4 text-center text-sm font-bold text-zinc-400 hover:text-blue-600 hover:bg-zinc-50 transition-all border-t border-zinc-100"
               >
                 Show all activities
               </MiniLink>
@@ -330,35 +330,35 @@ export default function OverviewClient({
           {/* Recent Users */}
           <m.div variants={item} className="lg:col-span-2 space-y-3">
             <div className="flex items-center justify-between px-1">
-              <h2 className="text-[11px] font-medium text-slate-900 uppercase tracking-widest">New Enrollees</h2>
+              <h2 className="text-[11px] font-medium text-zinc-900 uppercase tracking-widest">New Enrollees</h2>
               <MiniLink
                 href="/admin/users"
-                className="text-[10px] font-medium text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors flex items-center gap-1"
+                className="text-[10px] font-medium text-zinc-400 hover:text-zinc-900 uppercase tracking-widest transition-colors flex items-center gap-1"
               >
-                Directory <Users className="w-3 h-3" />
+                Directory <Users className="size-3" />
               </MiniLink>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-lg p-1.5 shadow-sm">
+            <div className="bg-white border border-zinc-200 rounded-lg p-1.5 shadow-sm">
               <div className="space-y-1">
                 {recentUsers.length === 0 ? (
-                  <div className="px-3 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-slate-400">
+                  <div className="px-3 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-zinc-400">
                     No users yet
                   </div>
                 ) : recentUsers.map((u) => (
-                  <div key={u.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-slate-50 transition-all group">
+                  <div key={u.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-zinc-50 transition-all group">
                     <div className="relative">
-                      <div className="w-8 h-8 rounded bg-slate-900 flex items-center justify-center text-[10px] font-medium text-white uppercase">
+                      <div className="size-8 rounded bg-zinc-900 flex items-center justify-center text-[10px] font-medium text-white uppercase">
                         {(u.full_name || u.email)[0].toUpperCase()}
                       </div>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-slate-900 truncate">{u.full_name || "New Explorer"}</p>
-                      <p className="text-[10px] font-medium text-slate-400 truncate mt-0.5">{u.email}</p>
+                      <p className="text-xs font-medium text-zinc-900 truncate">{u.full_name || "New Explorer"}</p>
+                      <p className="text-[10px] font-medium text-zinc-400 truncate mt-0.5">{u.email}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[9px] font-medium text-slate-900 uppercase tracking-tight">{u.country_of_origin || "Global"}</p>
-                      <p className="text-[9px] font-medium text-slate-400 mt-0.5">Joined</p>
+                      <p className="text-[9px] font-medium text-zinc-900 uppercase tracking-tight">{u.country_of_origin || "Global"}</p>
+                      <p className="text-[9px] font-medium text-zinc-400 mt-0.5">Joined</p>
                     </div>
                   </div>
                 ))}

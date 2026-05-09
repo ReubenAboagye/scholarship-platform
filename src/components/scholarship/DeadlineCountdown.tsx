@@ -33,8 +33,8 @@ export default function DeadlineCountdown({
 
   if (!deadline) {
     return (
-      <span className={`inline-flex items-center gap-1.5 ${textSize} font-medium text-slate-500`}>
-        <Clock className="w-3.5 h-3.5" />
+      <span className={`inline-flex items-center gap-1.5 ${textSize} font-medium text-zinc-500`}>
+        <Clock className="size-3.5" />
         Rolling — no fixed deadline
       </span>
     );
@@ -46,8 +46,8 @@ export default function DeadlineCountdown({
 
   if (diffMs <= 0) {
     return (
-      <span className={`inline-flex items-center gap-1.5 ${textSize} font-medium text-slate-500`}>
-        <Clock className="w-3.5 h-3.5" />
+      <span className={`inline-flex items-center gap-1.5 ${textSize} font-medium text-zinc-500`}>
+        <Clock className="size-3.5" />
         Closed
       </span>
     );
@@ -58,7 +58,7 @@ export default function DeadlineCountdown({
       ? "text-red-700"
       : days <= 30
       ? "text-amber-700"
-      : "text-slate-700";
+      : "text-zinc-700";
 
   const formatted = new Date(deadline).toLocaleDateString("en-GB", {
     day: "numeric",
@@ -68,7 +68,7 @@ export default function DeadlineCountdown({
 
   return (
     <span className={`inline-flex items-center gap-1.5 ${textSize} font-medium ${tone}`}>
-      <Clock className="w-3.5 h-3.5" />
+      <Clock className="size-3.5" />
       {days <= 60 ? `${days} day${days === 1 ? "" : "s"} left · ${formatted}` : formatted}
     </span>
   );

@@ -18,30 +18,30 @@ export default function ViewToggle() {
   }
 
   return (
-    <div className="flex items-center gap-1 bg-slate-100/50 border border-slate-200 p-1 rounded-xl">
+    <div className="flex items-center gap-1 bg-zinc-100/50 border border-zinc-200 p-1 rounded-xl">
       <button
         onClick={() => setView("grid")}
         title="Grid View"
         className={cn(
-          "flex items-center justify-center w-8 h-8 rounded-lg transition-all active:scale-95",
+          "flex items-center justify-center size-8 rounded-lg transition-all active:scale-95",
           currentView === "grid" 
-            ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
-            : "text-slate-400 hover:text-slate-600 hover:bg-white/50"
+            ? "bg-white text-zinc-900 shadow-sm border border-zinc-200" 
+            : "text-zinc-400 hover:text-zinc-600 hover:bg-white/50"
         )}
       >
-        <LayoutGrid className="w-4 h-4" />
+        <LayoutGrid className="size-4" />
       </button>
       <button
         onClick={() => setView("list")}
         title="List View"
         className={cn(
-          "flex items-center justify-center w-8 h-8 rounded-lg transition-all active:scale-95",
+          "flex items-center justify-center size-8 rounded-lg transition-all active:scale-95",
           currentView === "list" 
-            ? "bg-white text-slate-900 shadow-sm border border-slate-200" 
-            : "text-slate-400 hover:text-slate-600 hover:bg-white/50"
+            ? "bg-white text-zinc-900 shadow-sm border border-zinc-200" 
+            : "text-zinc-400 hover:text-zinc-600 hover:bg-white/50"
         )}
       >
-        <List className="w-4 h-4" />
+        <List className="size-4" />
       </button>
     </div>
   );

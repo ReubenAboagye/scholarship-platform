@@ -85,7 +85,7 @@ export default function TrackButton({ scholarshipId, userId, initialStatus, vari
   const heroTracked   = "bg-white/25 backdrop-blur-sm border border-white/40 text-white hover:bg-white/35";
   const heroUntracked = "bg-white/10 backdrop-blur-sm border border-white/25 text-white/90 hover:bg-white/20 hover:border-white/40";
   const defTracked    = "bg-brand-50 border-brand-200 text-brand-700 hover:bg-brand-100";
-  const defUntracked  = "border-slate-200 text-slate-600 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700";
+  const defUntracked  = "border-zinc-200 text-zinc-600 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700";
 
   const btnStyle = variant === "hero"
     ? (isTracked ? heroTracked : heroUntracked)
@@ -95,11 +95,11 @@ export default function TrackButton({ scholarshipId, userId, initialStatus, vari
     <>
       <div className="fixed inset-0 z-[9998]" onClick={() => setOpen(false)} />
       <div
-        className="absolute z-[9999] bg-white border border-slate-200 rounded-xl shadow-lg overflow-hidden"
+        className="absolute z-[9999] bg-white border border-zinc-200 rounded-xl shadow-lg overflow-hidden"
         style={{ top: dropPos.top, left: dropPos.left, width: dropPos.width }}
       >
-        <div className="px-3 py-2 border-b border-slate-100">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+        <div className="px-3 py-2 border-b border-zinc-100">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
             {isTracked ? "Update status" : "Start tracking as"}
           </p>
         </div>
@@ -111,18 +111,18 @@ export default function TrackButton({ scholarshipId, userId, initialStatus, vari
               className={`w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2 ${
                 status === s
                   ? "bg-brand-50 text-brand-700 font-semibold"
-                  : "text-slate-700 hover:bg-slate-50"
+                  : "text-zinc-700 hover:bg-zinc-50"
               }`}
             >
               {status === s
-                ? <CheckCircle className="w-3.5 h-3.5 flex-shrink-0" />
+                ? <CheckCircle className="size-3.5 flex-shrink-0" />
                 : <span className="w-3.5" />}
               {s}
             </button>
           ))}
         </div>
         {isTracked && (
-          <div className="border-t border-slate-100 py-1">
+          <div className="border-t border-zinc-100 py-1">
             <button
               onClick={removeFromTracker}
               className="w-full text-left px-3 py-2 text-sm text-rose-500 hover:bg-rose-50 transition-colors"
@@ -145,13 +145,13 @@ export default function TrackButton({ scholarshipId, userId, initialStatus, vari
         className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-medium transition-all ${btnStyle}`}
       >
         {loading
-          ? <Loader2 className="w-4 h-4 animate-spin" />
+          ? <Loader2 className="size-4 animate-spin" />
           : isTracked
-            ? <CheckCircle className="w-4 h-4" />
-            : <ListChecks className="w-4 h-4" />}
+            ? <CheckCircle className="size-4" />
+            : <ListChecks className="size-4" />}
         {isTracked ? status : "Track"}
         {!loading && (
-          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`size-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         )}
       </button>
       {dropdown}

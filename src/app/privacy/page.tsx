@@ -127,12 +127,12 @@ export default function PrivacyPage() {
 
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-500 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+          <div className="absolute top-0 right-0 size-[600px] bg-brand-500 rounded-full blur-3xl -tranzinc-y-1/2 tranzinc-x-1/2" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 lg:pt-32 lg:pb-24">
           <FadeIn>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-8">
-              <Shield className="w-4 h-4 text-amber-400" />
+              <Shield className="size-4 text-amber-400" />
               <span className="text-xs font-semibold uppercase tracking-[0.15em] text-amber-200">
                 Official Legal Documentation
               </span>
@@ -140,10 +140,10 @@ export default function PrivacyPage() {
             <h1 className="text-[40px] sm:text-[46px] lg:text-[56px] text-white mb-6 leading-tight" style={SERIF}>
               Privacy Policy
             </h1>
-            <p className="text-slate-300 text-lg max-w-2xl mb-6">
+            <p className="text-zinc-300 text-lg max-w-2xl mb-6">
               Your privacy is fundamental. This document outlines how we collect, use, and protect your personal information in accordance with data protection regulations.
             </p>
-            <p className="text-slate-400 text-sm font-medium">Last updated: {lastUpdated}</p>
+            <p className="text-zinc-400 text-sm font-medium">Last updated: {lastUpdated}</p>
           </FadeIn>
         </div>
       </section>
@@ -162,11 +162,11 @@ export default function PrivacyPage() {
                       className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                         activeSection === section.id
                           ? "bg-brand-600 text-white font-medium"
-                          : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                          : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <section.icon className="w-4 h-4 flex-shrink-0" />
+                        <section.icon className="size-4 flex-shrink-0" />
                         <span className="text-sm">{section.title}</span>
                       </div>
                     </button>
@@ -176,14 +176,14 @@ export default function PrivacyPage() {
 
               {/* Main Content */}
               <div className="flex-1 min-w-0">
-                <div className="bg-white border border-slate-200 rounded-2xl shadow-card p-8 lg:p-12 mb-12">
+                <div className="bg-white border border-zinc-200 rounded-2xl shadow-card p-8 lg:p-12 mb-12">
                   <div className="flex items-start gap-4 mb-6">
-                    <div className="w-12 h-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
-                      <Shield className="w-6 h-6 text-brand-600" />
+                    <div className="size-12 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
+                      <Shield className="size-6 text-brand-600" />
                     </div>
                     <div>
-                      <h2 className="text-xl font-semibold text-slate-900 mb-2">Our Commitment</h2>
-                      <p className="text-slate-600 leading-relaxed">
+                      <h2 className="text-xl font-semibold text-zinc-900 mb-2">Our Commitment</h2>
+                      <p className="text-zinc-600 leading-relaxed">
                         ScholarBridge is operated by GenTech Solutions. We are committed to protecting your privacy and ensuring the security of your personal data. This policy applies to all users of our platform.
                       </p>
                     </div>
@@ -194,15 +194,15 @@ export default function PrivacyPage() {
                   {sections.map((section) => (
                     <div key={section.id} id={section.id} className="scroll-mt-24">
                       <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
-                          <section.icon className="w-5 h-5 text-brand-600" />
+                        <div className="size-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
+                          <section.icon className="size-5 text-brand-600" />
                         </div>
-                        <h2 className="text-2xl font-semibold text-slate-900" style={SERIF}>{section.title}</h2>
+                        <h2 className="text-2xl font-semibold text-zinc-900" style={SERIF}>{section.title}</h2>
                       </div>
                       <ul className="space-y-4">
                         {section.content.map((item, i) => (
-                          <li key={i} className="flex items-start gap-3 text-slate-600 leading-relaxed text-base">
-                            <span className="w-1.5 h-1.5 rounded-full bg-brand-500 flex-shrink-0 mt-2.5" />
+                          <li key={i} className="flex items-start gap-3 text-zinc-600 leading-relaxed text-base">
+                            <span className="size-1.5 rounded-full bg-brand-500 flex-shrink-0 mt-2.5" />
                             {item}
                           </li>
                         ))}
@@ -212,16 +212,16 @@ export default function PrivacyPage() {
 
                   <div className="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-900 rounded-xl p-8 text-white">
                     <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <Mail className="w-6 h-6 text-amber-400" />
+                      <div className="size-12 rounded-xl bg-amber-500/20 flex items-center justify-center flex-shrink-0">
+                        <Mail className="size-6 text-amber-400" />
                       </div>
                       <div>
                         <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
-                        <p className="text-slate-300 mb-4">
+                        <p className="text-zinc-300 mb-4">
                           For any privacy-related questions or requests, please contact us:
                         </p>
                         <a href="mailto:support@gentechmart.shop" className="inline-flex items-center gap-2 text-amber-400 hover:text-amber-300 transition-colors font-medium">
-                          <Mail className="w-4 h-4" />
+                          <Mail className="size-4" />
                           support@gentechmart.shop
                         </a>
                       </div>

@@ -133,7 +133,7 @@ function LoginContent() {
           <m.div variants={item} className="flex justify-center mb-6">
             <a href="/" className="flex items-baseline">
               <span
-                className="text-2xl tracking-tight text-slate-900"
+                className="text-2xl tracking-tight text-zinc-900"
                 style={{ ...SERIF_FONT, fontWeight: 600 }}
               >
                 Scholar
@@ -150,7 +150,7 @@ function LoginContent() {
           {/* Heading */}
           <m.h1
             variants={item}
-            className="text-center text-lg font-medium text-slate-900 mb-8"
+            className="text-center text-lg font-medium text-zinc-900 mb-8"
             style={SERIF_FONT}
           >
             Log in to ScholarBridge
@@ -163,7 +163,7 @@ function LoginContent() {
               exit={{ opacity: 0, height: 0 }}
               className="flex items-start gap-2.5 px-4 py-3 mb-5 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700"
             >
-              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="size-4 flex-shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
             </m.div>
           )}
@@ -171,7 +171,7 @@ function LoginContent() {
           <m.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
             {/* Honeypot field */}
             <div
-              className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0"
+              className="absolute -left-[9999px] -top-[9999px] size-0 overflow-hidden opacity-0"
               aria-hidden="true"
             >
               <input
@@ -195,7 +195,7 @@ function LoginContent() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600"
+                className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 text-sm placeholder:text-zinc-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600"
               />
             </div>
 
@@ -209,19 +209,19 @@ function LoginContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600 pr-10"
+                className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 text-sm placeholder:text-zinc-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600 pr-10"
               />
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowPass((v) => !v)}
                 aria-label={showPass ? "Hide password" : "Show password"}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute right-3 top-1/2 -tranzinc-y-1/2 text-zinc-400 hover:text-zinc-600 transition-colors"
               >
                 {showPass ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="size-4" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="size-4" />
                 )}
               </button>
             </div>
@@ -233,7 +233,7 @@ function LoginContent() {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   Signing in...
                 </span>
               ) : (
@@ -245,33 +245,33 @@ function LoginContent() {
           <m.div variants={item} className="flex items-center justify-between mt-4">
             <a
               href="/auth/forgot-password"
-              className="text-xs text-slate-500 hover:text-brand-700 transition-colors"
+              className="text-xs text-zinc-500 hover:text-brand-700 transition-colors"
             >
               Forgot your password?
             </a>
             <a
               href="/auth/signup"
-              className="text-xs text-slate-500 hover:text-brand-700 transition-colors"
+              className="text-xs text-zinc-500 hover:text-brand-700 transition-colors"
             >
               Create an account
             </a>
           </m.div>
 
           <m.div variants={item} className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-slate-100" />
-            <span className="text-[11px] text-slate-400">or</span>
-            <div className="flex-1 h-px bg-slate-100" />
+            <div className="flex-1 h-px bg-zinc-100" />
+            <span className="text-[11px] text-zinc-400">or</span>
+            <div className="flex-1 h-px bg-zinc-100" />
           </m.div>
 
           <m.button
             variants={item}
             type="button"
             onClick={handleGoogle}
-            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 text-sm font-medium text-slate-700 transition-colors"
+            className="w-full flex items-center justify-center gap-3 px-4 py-2.5 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 text-sm font-medium text-zinc-700 transition-colors"
           >
             <svg
               viewBox="0 0 24 24"
-              className="w-4 h-4 flex-shrink-0"
+              className="size-4 flex-shrink-0"
             >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -304,7 +304,7 @@ export default function LoginPage() {
     <Suspense
       fallback={
         <div className="flex w-full min-h-screen items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+          <Loader2 className="size-8 animate-spin text-zinc-400" />
         </div>
       }
     >

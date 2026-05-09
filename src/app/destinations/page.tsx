@@ -19,7 +19,7 @@ export default async function DestinationsPage() {
     .order("display_order", { ascending: true });
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-zinc-50">
       <Navbar />
       <DestinationsContent countries={countries || []} />
       <Footer />

@@ -14,7 +14,7 @@ function Highlighted({ text, term }: { text: string; term: string }) {
   return (
     <>
       {text.slice(0, i)}
-      <mark className="bg-yellow-100 text-slate-900 rounded px-0.5">
+      <mark className="bg-yellow-100 text-zinc-900 rounded px-0.5">
         {text.slice(i, i + term.length)}
       </mark>
       {text.slice(i + term.length)}
@@ -235,7 +235,7 @@ export default function HeroSearch({
           <div
             aria-hidden="true"
             onClick={() => setSuggestionsOpen(false)}
-            className="fixed inset-0 top-16 z-20 bg-slate-900/20 backdrop-blur-[2px] transition-opacity"
+            className="fixed inset-0 top-16 z-20 bg-zinc-900/20 backdrop-blur-[2px] transition-opacity"
           />
         )}
 
@@ -243,11 +243,11 @@ export default function HeroSearch({
           {/* Search bar — solid white so the input itself stays crisp */}
           <div className="relative bg-white rounded-lg shadow-xl border border-white/10">
             <div className="flex items-center">
-              <div className="flex items-center pl-4 text-slate-400">
+              <div className="flex items-center pl-4 text-zinc-400">
                 {suggestionsLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Search className="w-4 h-4" />
+                  <Search className="size-4" />
                 )}
               </div>
               <input
@@ -260,16 +260,16 @@ export default function HeroSearch({
                 placeholder="Search scholarships"
                 autoComplete="off"
                 enterKeyHint="search"
-                className="flex-1 min-w-0 py-3.5 px-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none bg-transparent rounded-lg"
+                className="flex-1 min-w-0 py-3.5 px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none bg-transparent rounded-lg"
               />
               {search && (
                 <button
                   type="button"
                   onClick={clearSearch}
                   aria-label="Clear search"
-                  className="flex items-center justify-center w-10 h-10 text-slate-400 hover:text-slate-600"
+                  className="flex items-center justify-center size-10 text-zinc-400 hover:text-zinc-600"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="size-4" />
                 </button>
               )}
             </div>
@@ -288,7 +288,7 @@ export default function HeroSearch({
                          max-h-[min(60vh,22rem)] overflow-y-auto"
             >
               {suggestions.length === 0 && !suggestionsLoading && (
-                <div className="px-4 py-6 text-center text-sm text-slate-600">
+                <div className="px-4 py-6 text-center text-sm text-zinc-600">
                   No scholarships found for &ldquo;{search.trim()}&rdquo;
                 </div>
               )}
@@ -308,19 +308,19 @@ export default function HeroSearch({
                       <img
                         src={countryFlagUrl(s.country)!}
                         alt=""
-                        className="w-5 h-3.5 object-cover rounded-sm border border-slate-200 mt-1 shrink-0"
+                        className="w-5 h-3.5 object-cover rounded-sm border border-zinc-200 mt-1 shrink-0"
                       />
                     ) : (
-                      <div className="w-5 h-3.5 bg-slate-100 rounded-sm mt-1 shrink-0" />
+                      <div className="w-5 h-3.5 bg-zinc-100 rounded-sm mt-1 shrink-0" />
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-slate-900 leading-snug line-clamp-2">
+                      <p className="text-sm font-medium text-zinc-900 leading-snug line-clamp-2">
                         <Highlighted text={s.name} term={search.trim()} />
                       </p>
-                      <div className="flex items-center gap-1.5 text-xs text-slate-600 mt-1">
-                        <Building2 className="w-3 h-3 shrink-0" />
+                      <div className="flex items-center gap-1.5 text-xs text-zinc-600 mt-1">
+                        <Building2 className="size-3 shrink-0" />
                         <span className="truncate">{s.provider}</span>
-                        <span className="text-slate-400">·</span>
+                        <span className="text-zinc-400">·</span>
                         <span className="shrink-0">{s.country}</span>
                       </div>
                     </div>
@@ -348,12 +348,12 @@ export default function HeroSearch({
         aria-label="Scholarship search"
         className="hidden sm:block bg-white rounded-lg shadow-xl border border-white/10 overflow-hidden"
       >
-        <div className="flex items-center border-b border-slate-200">
-          <div className="flex items-center pl-4 text-slate-400">
+        <div className="flex items-center border-b border-zinc-200">
+          <div className="flex items-center pl-4 text-zinc-400">
             {isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
             ) : (
-              <Search className="w-4 h-4" />
+              <Search className="size-4" />
             )}
           </div>
           <input
@@ -361,27 +361,27 @@ export default function HeroSearch({
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name, provider, or keyword"
             autoComplete="off"
-            className="flex-1 min-w-0 py-3.5 px-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none"
+            className="flex-1 min-w-0 py-3.5 px-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none"
           />
           {search && (
             <button
               type="button"
               onClick={() => setSearch("")}
               aria-label="Clear search"
-              className="flex items-center justify-center w-9 h-9 text-slate-400 hover:text-slate-600"
+              className="flex items-center justify-center size-9 text-zinc-400 hover:text-zinc-600"
             >
-              <X className="w-4 h-4" />
+              <X className="size-4" />
             </button>
           )}
         </div>
 
         <div className="grid grid-cols-4">
-          <label className="flex flex-col px-4 py-3 border-r border-slate-200">
-            <span className="text-[11px] font-medium text-slate-500 mb-1">Country</span>
+          <label className="flex flex-col px-4 py-3 border-r border-zinc-200">
+            <span className="text-[11px] font-medium text-zinc-500 mb-1">Country</span>
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+              className="text-sm text-zinc-900 bg-transparent outline-none -ml-0.5"
             >
               {countries.map((c) => (
                 <option key={c} value={c}>
@@ -391,12 +391,12 @@ export default function HeroSearch({
             </select>
           </label>
 
-          <label className="flex flex-col px-4 py-3 border-r border-slate-200">
-            <span className="text-[11px] font-medium text-slate-500 mb-1">Degree level</span>
+          <label className="flex flex-col px-4 py-3 border-r border-zinc-200">
+            <span className="text-[11px] font-medium text-zinc-500 mb-1">Degree level</span>
             <select
               value={degree}
               onChange={(e) => setDegree(e.target.value)}
-              className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+              className="text-sm text-zinc-900 bg-transparent outline-none -ml-0.5"
             >
               {degreeLevels.map((d) => (
                 <option key={d} value={d}>
@@ -406,12 +406,12 @@ export default function HeroSearch({
             </select>
           </label>
 
-          <label className="flex flex-col px-4 py-3 border-r border-slate-200">
-            <span className="text-[11px] font-medium text-slate-500 mb-1">Funding</span>
+          <label className="flex flex-col px-4 py-3 border-r border-zinc-200">
+            <span className="text-[11px] font-medium text-zinc-500 mb-1">Funding</span>
             <select
               value={funding}
               onChange={(e) => setFunding(e.target.value)}
-              className="text-sm text-slate-900 bg-transparent outline-none -ml-0.5"
+              className="text-sm text-zinc-900 bg-transparent outline-none -ml-0.5"
             >
               {fundingTypes.map((f) => (
                 <option key={f} value={f}>
@@ -425,7 +425,7 @@ export default function HeroSearch({
             type="submit"
             className="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-6 py-3 transition-colors flex items-center justify-center gap-2"
           >
-            <Search className="w-4 h-4" />
+            <Search className="size-4" />
             Search
           </button>
         </div>

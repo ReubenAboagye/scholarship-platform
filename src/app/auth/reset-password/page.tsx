@@ -44,8 +44,8 @@ export default function ResetPasswordPage() {
     <div className="mx-auto w-full max-w-xl rounded-[2rem] border border-white/60 bg-white/85 p-8 shadow-[0_30px_80px_rgba(15,23,42,0.10)] backdrop-blur sm:p-10">
       <div className="mb-8">
         <p className="text-xs font-semibold uppercase tracking-[0.28em] text-emerald-900/75">New Password</p>
-        <h1 className="mt-4 text-3xl font-black tracking-[-0.04em] text-slate-950">Choose a new password</h1>
-        <p className="mt-3 text-sm leading-6 text-slate-600">
+        <h1 className="mt-4 text-3xl font-black tracking-[-0.04em] text-zinc-950">Choose a new password</h1>
+        <p className="mt-3 text-sm leading-6 text-zinc-600">
           Use a password you haven&apos;t used before for this account.
         </p>
       </div>
@@ -70,9 +70,9 @@ export default function ResetPasswordPage() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-800">New password</label>
-            <div className="relative rounded-[1.25rem] border border-slate-200 bg-[#faf7f2] transition focus-within:border-emerald-700 focus-within:ring-4 focus-within:ring-emerald-100">
-              <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <label className="mb-2 block text-sm font-semibold text-zinc-800">New password</label>
+            <div className="relative rounded-[1.25rem] border border-zinc-200 bg-[#faf7f2] transition focus-within:border-emerald-700 focus-within:ring-4 focus-within:ring-emerald-100">
+              <Lock className="absolute left-4 top-1/2 h-4 w-4 -tranzinc-y-1/2 text-zinc-400" />
               <input
                 type="password"
                 required
@@ -81,15 +81,15 @@ export default function ResetPasswordPage() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 placeholder="At least 8 characters"
-                className="w-full rounded-[1.25rem] border-none bg-transparent py-4 pl-12 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                className="w-full rounded-[1.25rem] border-none bg-transparent py-4 pl-12 pr-4 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-semibold text-slate-800">Confirm password</label>
-            <div className="relative rounded-[1.25rem] border border-slate-200 bg-[#faf7f2] transition focus-within:border-emerald-700 focus-within:ring-4 focus-within:ring-emerald-100">
-              <Lock className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <label className="mb-2 block text-sm font-semibold text-zinc-800">Confirm password</label>
+            <div className="relative rounded-[1.25rem] border border-zinc-200 bg-[#faf7f2] transition focus-within:border-emerald-700 focus-within:ring-4 focus-within:ring-emerald-100">
+              <Lock className="absolute left-4 top-1/2 h-4 w-4 -tranzinc-y-1/2 text-zinc-400" />
               <input
                 type="password"
                 required
@@ -98,7 +98,7 @@ export default function ResetPasswordPage() {
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
                 placeholder="Re-enter password"
-                className="w-full rounded-[1.25rem] border-none bg-transparent py-4 pl-12 pr-4 text-sm text-slate-900 outline-none placeholder:text-slate-400"
+                className="w-full rounded-[1.25rem] border-none bg-transparent py-4 pl-12 pr-4 text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
               />
             </div>
           </div>

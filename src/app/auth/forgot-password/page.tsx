@@ -79,11 +79,11 @@ export default function ForgotPasswordPage() {
             <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 border border-emerald-100">
               <CheckCircle className="h-6 w-6 text-emerald-600" />
             </div>
-            <h2 className="text-xl font-medium text-slate-900 tracking-tight" style={SERIF_FONT}>
+            <h2 className="text-xl font-medium text-zinc-900 tracking-tight" style={SERIF_FONT}>
               Check your email
             </h2>
-            <p className="mt-3 text-sm text-slate-500 font-medium leading-relaxed">
-              If an account exists for <span className="font-semibold text-slate-900">{email}</span>, we&apos;ve sent a password reset link. Use the most recent email only.
+            <p className="mt-3 text-sm text-zinc-500 font-medium leading-relaxed">
+              If an account exists for <span className="font-semibold text-zinc-900">{email}</span>, we&apos;ve sent a password reset link. Use the most recent email only.
             </p>
             <a
               href="/auth/login"
@@ -112,7 +112,7 @@ export default function ForgotPasswordPage() {
           <m.div variants={item} className="flex justify-center mb-6">
             <a href="/" className="flex items-baseline">
               <span
-                className="text-2xl tracking-tight text-slate-900"
+                className="text-2xl tracking-tight text-zinc-900"
                 style={{ ...SERIF_FONT, fontWeight: 600 }}
               >
                 Scholar
@@ -128,12 +128,12 @@ export default function ForgotPasswordPage() {
 
           <m.h1
             variants={item}
-            className="text-center text-lg font-medium text-slate-900"
+            className="text-center text-lg font-medium text-zinc-900"
             style={SERIF_FONT}
           >
             Reset your password
           </m.h1>
-          <m.p variants={item} className="text-center text-xs text-slate-500 mt-2 mb-8">
+          <m.p variants={item} className="text-center text-xs text-zinc-500 mt-2 mb-8">
             Enter your email and we&apos;ll send you a secure reset link.
           </m.p>
 
@@ -144,14 +144,14 @@ export default function ForgotPasswordPage() {
               exit={{ opacity: 0, height: 0 }}
               className="flex items-start gap-2.5 px-4 py-3 mb-5 bg-red-50 border border-red-100 rounded-lg text-sm text-red-700"
             >
-              <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="size-4 flex-shrink-0 mt-0.5" />
               <span className="font-medium">{error}</span>
             </m.div>
           )}
 
           <m.form onSubmit={handleSubmit} variants={item} className="space-y-3.5">
             <div
-              className="absolute -left-[9999px] -top-[9999px] w-0 h-0 overflow-hidden opacity-0"
+              className="absolute -left-[9999px] -top-[9999px] size-0 overflow-hidden opacity-0"
               aria-hidden="true"
             >
               <input
@@ -175,7 +175,7 @@ export default function ForgotPasswordPage() {
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="Email"
-                className="w-full px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-slate-900 text-sm placeholder:text-slate-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600"
+                className="w-full px-4 py-2.5 rounded-lg border border-zinc-200 bg-white text-zinc-900 text-sm placeholder:text-zinc-400 outline-none transition-all focus:border-brand-600 focus:ring-1 focus:ring-brand-600"
               />
             </div>
 
@@ -186,7 +186,7 @@ export default function ForgotPasswordPage() {
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   Sending link...
                 </span>
               ) : (
@@ -198,9 +198,9 @@ export default function ForgotPasswordPage() {
           <m.div variants={item} className="flex items-center justify-center mt-6">
             <a
               href="/auth/login"
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-brand-700 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs text-zinc-500 hover:text-brand-700 transition-colors"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
+              <ArrowLeft className="size-3.5" />
               Back to sign in
             </a>
           </m.div>

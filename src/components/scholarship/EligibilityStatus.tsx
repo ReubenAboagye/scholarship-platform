@@ -22,7 +22,7 @@ export default function EligibilityStatus({
   if (state === "eligible") {
     return (
       <div className="flex items-start gap-3 p-4 rounded-lg border border-emerald-200 bg-emerald-50">
-        <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+        <CheckCircle2 className="size-5 text-emerald-700 shrink-0 mt-0.5" />
         <div>
           <p className="text-sm font-semibold text-emerald-900">
             You meet the listed eligibility criteria
@@ -40,7 +40,7 @@ export default function EligibilityStatus({
   if (state === "not_eligible") {
     return (
       <div className="flex items-start gap-3 p-4 rounded-lg border border-amber-200 bg-amber-50">
-        <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+        <AlertCircle className="size-5 text-amber-700 shrink-0 mt-0.5" />
         <div className="min-w-0">
           <p className="text-sm font-semibold text-amber-900">
             Some requirements are not met
@@ -62,13 +62,13 @@ export default function EligibilityStatus({
   }
 
   return (
-    <div className="flex items-start gap-3 p-4 rounded-lg border border-slate-200 bg-slate-50">
-      <Info className="w-5 h-5 text-slate-500 shrink-0 mt-0.5" />
+    <div className="flex items-start gap-3 p-4 rounded-lg border border-zinc-200 bg-zinc-50">
+      <Info className="size-5 text-zinc-500 shrink-0 mt-0.5" />
       <div>
-        <p className="text-sm font-semibold text-slate-900">
+        <p className="text-sm font-semibold text-zinc-900">
           Eligibility cannot be checked yet
         </p>
-        <p className="text-xs text-slate-600 mt-0.5">
+        <p className="text-xs text-zinc-600 mt-0.5">
           {missingFields.length > 0
             ? `Add the following to your profile to check: ${missingFields.join(", ")}.`
             : "Complete your profile to see whether you match this scholarship."}

@@ -96,12 +96,12 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-slate-200/70 bg-white/85 backdrop-blur-md safe-top">
+      <header className="sticky top-0 z-40 border-b border-zinc-200/70 bg-white/85 backdrop-blur-md safe-top">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           <a href="/" className="flex items-baseline">
-            <span className="text-2xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+            <span className="text-2xl tracking-tight text-zinc-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
               Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
             </span>
           </a>
@@ -109,32 +109,32 @@ export default function Navbar() {
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
               <button onClick={() => { setStudentsOpen(!studentsOpen); setCompanyOpen(false); }}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
                 Students
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${studentsOpen ? "rotate-180" : ""}`} />
               </button>
               {studentsOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-[520px] -translate-x-1/2 rounded-lg border border-slate-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-[520px] -tranzinc-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
                   <div className="grid grid-cols-2 p-2">
                     {studentsMenu.map((item) => (
                       <a
                         key={item.title}
                         href={item.href}
                         onClick={(e) => handleMenuClick(e, item)}
-                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-zinc-50 transition-colors"
                       >
-                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-brand-600 transition-colors" />
+                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-500 group-hover:text-brand-600 transition-colors" />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-slate-900 group-hover:text-brand-700 transition-colors">
+                          <p className="text-sm font-medium text-zinc-900 group-hover:text-brand-700 transition-colors">
                             {item.title}
                           </p>
-                          <p className="mt-0.5 text-xs text-slate-500 line-clamp-1">{item.desc}</p>
+                          <p className="mt-0.5 text-xs text-zinc-500 line-clamp-1">{item.desc}</p>
                         </div>
                       </a>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 bg-slate-50">
-                    <p className="text-xs text-slate-500">Free for students. No credit card required.</p>
+                  <div className="flex items-center justify-between border-t border-zinc-200 px-4 py-3 bg-zinc-50">
+                    <p className="text-xs text-zinc-500">Free for students. No credit card required.</p>
                     <a
                       href={user ? "/dashboard" : "/auth/signup"}
                       onClick={() => setStudentsOpen(false)}
@@ -149,26 +149,26 @@ export default function Navbar() {
 
             <div ref={companyRef} className="relative">
               <button onClick={() => { setCompanyOpen(!companyOpen); setStudentsOpen(false); }}
-                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
                 Company
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${companyOpen ? "rotate-180" : ""}`} />
               </button>
               {companyOpen && (
-                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -translate-x-1/2 rounded-lg border border-slate-200 bg-white shadow-lg animate-scale-in overflow-hidden">
+                <div className="absolute left-1/2 top-full z-50 mt-2 w-64 -tranzinc-x-1/2 rounded-lg border border-zinc-200 bg-white shadow-lg animate-scale-in overflow-hidden">
                   <div className="p-2">
                     {companyMenu.map((item) => (
                       <a
                         key={item.title}
                         href={item.href}
                         onClick={() => setCompanyOpen(false)}
-                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-slate-50 transition-colors"
+                        className="group flex items-start gap-3 px-3 py-2.5 rounded-md hover:bg-zinc-50 transition-colors"
                       >
-                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-slate-500 group-hover:text-brand-600 transition-colors" />
+                        <item.icon className="mt-0.5 h-4 w-4 flex-shrink-0 text-zinc-500 group-hover:text-brand-600 transition-colors" />
                         <div className="min-w-0">
-                          <p className="text-sm font-medium text-slate-900 group-hover:text-brand-700 transition-colors">
+                          <p className="text-sm font-medium text-zinc-900 group-hover:text-brand-700 transition-colors">
                             {item.title}
                           </p>
-                          <p className="mt-0.5 text-xs text-slate-500 line-clamp-1">{item.desc}</p>
+                          <p className="mt-0.5 text-xs text-zinc-500 line-clamp-1">{item.desc}</p>
                         </div>
                       </a>
                     ))}
@@ -178,7 +178,9 @@ export default function Navbar() {
             </div>
 
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">
+
+
+            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
               How It Works
             </a>
           </nav>
@@ -190,7 +192,7 @@ export default function Navbar() {
               </a>
             ) : (
               <>
-                <a href="/auth/login" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Log in</a>
+                <a href="/auth/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Log in</a>
                 <a href="/auth/signup" className="inline-flex items-center rounded-md bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-colors">
                   Get started
                 </a>
@@ -204,10 +206,10 @@ export default function Navbar() {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             className={`md:hidden relative inline-flex flex-col items-center justify-center gap-[5px]
-                        w-11 h-11 rounded-md border transition-all duration-200 cursor-pointer
+                        size-11 rounded-md border transition-all duration-200 cursor-pointer
                         ${mobileOpen
-                          ? "border-slate-300 bg-slate-100 text-slate-900 hamburger-open"
-                          : "border-slate-200 bg-white/60 text-slate-700 hover:bg-slate-100 hover:border-slate-300 active:scale-[0.97]"}`}
+                          ? "border-zinc-300 bg-zinc-100 text-zinc-900 hamburger-open"
+                          : "border-zinc-200 bg-white/60 text-zinc-700 hover:bg-zinc-100 hover:border-zinc-300 active:scale-[0.97]"}`}
           >
             <span className="hamburger-line line-1" />
             <span className="hamburger-line line-2" />
@@ -222,7 +224,7 @@ export default function Navbar() {
         {/* Scrim */}
         <div
           onClick={() => setMobileOpen(false)}
-          className={`fixed inset-0 z-40 bg-slate-950/40 backdrop-blur-[2px] transition-opacity duration-300
+          className={`fixed inset-0 z-40 bg-zinc-950/40 backdrop-blur-[2px] transition-opacity duration-300
                       ${mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         />
 
@@ -234,22 +236,22 @@ export default function Navbar() {
           className={`fixed top-0 right-0 z-50 w-[85vw] max-w-[360px] h-[100dvh]
                       bg-white shadow-2xl flex flex-col
                       transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]
-                      ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+                      ${mobileOpen ? "tranzinc-x-0" : "tranzinc-x-full"}`}
           style={{ paddingTop: "env(safe-area-inset-top)", paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           {/* Header: brand + close */}
-          <div className="flex items-center justify-between px-5 h-16 border-b border-slate-100 shrink-0">
+          <div className="flex items-center justify-between px-5 h-16 border-b border-zinc-100 shrink-0">
             <a href="/" onClick={() => setMobileOpen(false)} className="flex items-baseline">
-              <span className="text-xl tracking-tight text-slate-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              <span className="text-xl tracking-tight text-zinc-900" style={{ ...LOGO_FONT, fontWeight: 600 }}>
                 Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
               </span>
             </a>
             <button
               onClick={() => setMobileOpen(false)}
               aria-label="Close menu"
-              className="w-11 h-11 inline-flex items-center justify-center rounded-md text-slate-600 hover:bg-slate-100 active:scale-[0.96] transition"
+              className="size-11 inline-flex items-center justify-center rounded-md text-zinc-600 hover:bg-zinc-100 active:scale-[0.96] transition"
             >
-              <X className="w-4 h-4" />
+              <X className="size-4" />
             </button>
           </div>
 
@@ -258,22 +260,22 @@ export default function Navbar() {
             <a
               href="/dashboard"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors shrink-0"
+              className="flex items-center gap-3 px-5 py-4 border-b border-zinc-100 hover:bg-zinc-50 transition-colors shrink-0"
             >
-              <div className="w-9 h-9 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
+              <div className="size-9 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shrink-0">
                 {(user.email?.[0] || "U").toUpperCase()}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-slate-900 truncate">
+                <p className="text-sm font-semibold text-zinc-900 truncate">
                   {user.user_metadata?.full_name || user.email?.split("@")[0] || "Account"}
                 </p>
-                <p className="text-xs text-slate-500 truncate">{user.email}</p>
+                <p className="text-xs text-zinc-500 truncate">{user.email}</p>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400 -rotate-90 shrink-0" />
+              <ChevronDown className="size-4 text-zinc-400 -rotate-90 shrink-0" />
             </a>
           ) : (
-            <div className="px-5 py-3 border-b border-slate-100 shrink-0 bg-slate-50/60">
-              <p className="text-[11px] font-medium uppercase tracking-wider text-slate-500">
+            <div className="px-5 py-3 border-b border-zinc-100 shrink-0 bg-zinc-50/60">
+              <p className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                 Not signed in
               </p>
             </div>
@@ -285,9 +287,9 @@ export default function Navbar() {
               
               {/* Students Accordion */}
               <details className="group" open>
-                <summary className="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 list-none cursor-pointer hover:bg-slate-50 transition-colors outline-none">
+                <summary className="flex items-center justify-between p-3 rounded-lg text-sm font-semibold text-zinc-900 list-none cursor-pointer hover:bg-zinc-50 transition-colors outline-none">
                   Students
-                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+                  <ChevronDown className="size-4 text-zinc-400 group-open:rotate-180 transition-transform" />
                 </summary>
                 <div className="pl-4 pr-2 pb-2 space-y-1">
                   {studentsMenu.map((item) => (
@@ -295,9 +297,9 @@ export default function Navbar() {
                       key={item.title}
                       href={item.href}
                       onClick={(e) => handleMenuClick(e, item)}
-                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
                     >
-                      <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
+                      <item.icon className="size-4 text-zinc-400 group-hover:text-brand-600 transition-colors shrink-0" />
                       <span className="flex-1 min-w-0 truncate">{item.title}</span>
                     </a>
                   ))}
@@ -306,9 +308,9 @@ export default function Navbar() {
 
               {/* Company Accordion */}
               <details className="group">
-                <summary className="flex items-center justify-between px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 list-none cursor-pointer hover:bg-slate-50 transition-colors outline-none mt-1">
+                <summary className="flex items-center justify-between p-3 rounded-lg text-sm font-semibold text-zinc-900 list-none cursor-pointer hover:bg-zinc-50 transition-colors outline-none mt-1">
                   Company
-                  <ChevronDown className="w-4 h-4 text-slate-400 group-open:rotate-180 transition-transform" />
+                  <ChevronDown className="size-4 text-zinc-400 group-open:rotate-180 transition-transform" />
                 </summary>
                 <div className="pl-4 pr-2 pb-2 space-y-1">
                   {companyMenu.map((item) => (
@@ -316,9 +318,9 @@ export default function Navbar() {
                       key={item.title}
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
-                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                      className="group flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
                     >
-                      <item.icon className="w-4 h-4 text-slate-400 group-hover:text-brand-600 transition-colors shrink-0" />
+                      <item.icon className="size-4 text-zinc-400 group-hover:text-brand-600 transition-colors shrink-0" />
                       <span className="flex-1 min-w-0 truncate">{item.title}</span>
                     </a>
                   ))}
@@ -327,11 +329,10 @@ export default function Navbar() {
 
               {/* Resources / Links */}
               <div className="mt-1">
-                {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
                 <a
                   href="/#how-it-works"
                   onClick={() => setMobileOpen(false)}
-                  className="flex items-center px-3 py-3 rounded-lg text-sm font-semibold text-slate-900 hover:bg-slate-50 transition-colors"
+                  className="flex items-center p-3 rounded-lg text-sm font-semibold text-zinc-900 hover:bg-zinc-50 transition-colors"
                 >
                   How it works
                 </a>
@@ -341,7 +342,7 @@ export default function Navbar() {
           </div>
 
           {/* Footer band: primary CTAs */}
-          <div className="shrink-0 border-t border-slate-100 px-5 py-4 bg-white">
+          <div className="shrink-0 border-t border-zinc-100 px-5 py-4 bg-white">
             {user ? (
               <a
                 href="/dashboard"
@@ -355,7 +356,7 @@ export default function Navbar() {
                 <a
                   href="/auth/login"
                   onClick={() => setMobileOpen(false)}
-                  className="flex-1 rounded-md border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex-1 rounded-md border border-zinc-200 py-2.5 text-center text-sm font-semibold text-zinc-700 hover:bg-zinc-50 transition-colors"
                 >
                   Log in
                 </a>

@@ -36,7 +36,7 @@ export default function SaveButton({ scholarshipId, userId, initialSaved, varian
 
   const defaultStyle = saved
     ? "bg-blue-50 border-blue-200 text-blue-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
-    : "border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700";
+    : "border-zinc-200 text-zinc-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700";
 
   return (
     <button
@@ -47,10 +47,10 @@ export default function SaveButton({ scholarshipId, userId, initialSaved, varian
       }`}
     >
       {loading
-        ? <Loader2 className="w-4 h-4 animate-spin" />
+        ? <Loader2 className="size-4 animate-spin" />
         : saved
-          ? <BookmarkCheck className="w-4 h-4" />
-          : <Bookmark className="w-4 h-4" />}
+          ? <BookmarkCheck className="size-4" />
+          : <Bookmark className="size-4" />}
       {saved ? "Saved" : "Save"}
     </button>
   );

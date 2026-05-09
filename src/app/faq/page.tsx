@@ -63,21 +63,21 @@ export default function FAQPage() {
       {/* ──────────────────────────────────────────────────────────────────
           CLOSING CTA (Consistent Dark Band)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="bg-slate-950 text-white border-t border-slate-900">
+      <section className="bg-zinc-950 text-white border-t border-zinc-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-24 text-center">
           <FadeIn>
             <h2 className="text-3xl lg:text-5xl text-white mb-6 leading-tight" style={SERIF}>
               Didn&apos;t find your answer?
             </h2>
-            <p className="text-slate-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed font-light">
+            <p className="text-zinc-400 text-base lg:text-lg mb-10 max-w-xl mx-auto leading-relaxed font-light">
               Our team is dedicated to providing students with the clarity they need. Reach out and we&apos;ll get back to you with an answer.
             </p>
             <a
               href="/contact"
-              className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-slate-950 font-semibold text-sm hover:bg-slate-100 transition-colors"
+              className="inline-flex items-center gap-2 rounded-md px-7 py-3.5 bg-white text-zinc-950 font-semibold text-sm hover:bg-zinc-100 transition-colors"
             >
               Contact Support
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="size-4" />
             </a>
           </FadeIn>
         </div>

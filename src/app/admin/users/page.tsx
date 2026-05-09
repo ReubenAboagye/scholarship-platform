@@ -239,11 +239,11 @@ export default function AdminUsersPage() {
   if (loading) {
     return (
       <div className="space-y-8 animate-pulse">
-        <div className="h-12 w-48 bg-slate-200 rounded-lg" />
-        <div className="h-20 bg-slate-200 rounded-lg" />
+        <div className="h-12 w-48 bg-zinc-200 rounded-lg" />
+        <div className="h-20 bg-zinc-200 rounded-lg" />
         <div className="space-y-4">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-20 bg-slate-200 rounded-lg" />
+            <div key={i} className="h-20 bg-zinc-200 rounded-lg" />
           ))}
         </div>
       </div>
@@ -254,11 +254,11 @@ export default function AdminUsersPage() {
     return (
       <div className="max-w-[1200px] mx-auto">
         <div className="bg-white border border-red-200 rounded-lg p-6 shadow-sm">
-          <p className="text-sm font-medium text-slate-900">Unable to load the user directory.</p>
-          <p className="text-xs text-slate-500 mt-1">{loadError}</p>
+          <p className="text-sm font-medium text-zinc-900">Unable to load the user directory.</p>
+          <p className="text-xs text-zinc-500 mt-1">{loadError}</p>
           <button
             onClick={() => void load()}
-            className="mt-4 inline-flex items-center justify-center px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded text-xs uppercase tracking-widest transition-all shadow-sm active:scale-95"
+            className="mt-4 inline-flex items-center justify-center px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded text-xs uppercase tracking-widest transition-all shadow-sm active:scale-95"
           >
             Retry
           </button>
@@ -278,8 +278,8 @@ export default function AdminUsersPage() {
         {/* ── Header ──────────────────────────────────────── */}
         <m.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-1">
-            <h1 className="text-3xl font-medium text-slate-900 display">User Directory</h1>
-            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
+            <h1 className="text-3xl font-medium text-zinc-900 display">User Directory</h1>
+            <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest mt-1">
               Registry &amp; Personnel Management
             </p>
           </div>
@@ -287,24 +287,24 @@ export default function AdminUsersPage() {
             <button
               onClick={exportCsv}
               disabled={filtered.length === 0}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 font-medium rounded text-xs uppercase tracking-widest transition-all hover:bg-slate-50 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-600 font-medium rounded text-xs uppercase tracking-widest transition-all hover:bg-zinc-50 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="size-3.5" />
               <span>Export Registry</span>
             </button>
           </div>
         </m.div>
 
         {/* ── Control Bar ─────────────────────────────────── */}
-        <m.div variants={item} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+        <m.div variants={item} className="bg-white border border-zinc-200 rounded-lg p-3 shadow-sm">
           <div className="flex flex-col lg:flex-row gap-3 items-center">
             <div className="flex-1 w-full relative">
-              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -tranzinc-y-1/2 text-zinc-400" />
               <input
                 value={search}
                 onChange={(e) => updateParams({ q: e.target.value || null })}
                 placeholder="Search personnel records..."
-                className="w-full rounded border border-slate-100 bg-slate-50 py-2 pl-10 pr-4 text-xs text-slate-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500/30"
+                className="w-full rounded border border-zinc-100 bg-zinc-50 py-2 pl-10 pr-4 text-xs text-zinc-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500/30"
               />
             </div>
             <div className="flex items-center gap-3 w-full lg:w-auto">
@@ -314,13 +314,13 @@ export default function AdminUsersPage() {
                 className={`flex-1 lg:flex-none inline-flex items-center justify-center gap-2 rounded border bg-white px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition ${
                   activeFilterCount > 0
                     ? "border-blue-300 text-blue-700 bg-blue-50/50 hover:bg-blue-50"
-                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
                 }`}
               >
                 <Filter className="h-3.5 w-3.5" />
                 <span>Filters{activeFilterCount > 0 ? ` · ${activeFilterCount}` : ""}</span>
               </button>
-              <div className="text-[10px] font-medium text-slate-400 px-2 hidden lg:block uppercase tracking-widest">
+              <div className="text-[10px] font-medium text-zinc-400 px-2 hidden lg:block uppercase tracking-widest">
                 {filtered.length} {filtered.length === 1 ? "Entry" : "Entries"}
               </div>
             </div>
@@ -336,10 +336,10 @@ export default function AdminUsersPage() {
                 transition={{ duration: 0.15 }}
                 className="overflow-hidden"
               >
-                <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                <div className="mt-4 pt-4 border-t border-zinc-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                   {/* Role */}
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Role</p>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Role</p>
                     <div className="flex flex-wrap gap-1.5">
                       {ROLE_OPTIONS.map(r => (
                         <button
@@ -347,8 +347,8 @@ export default function AdminUsersPage() {
                           onClick={() => updateParams({ role: r === "all" ? null : r })}
                           className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                             roleFilter === r
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              ? "bg-zinc-900 text-white border-zinc-900"
+                              : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                           }`}
                         >
                           {r === "all" ? "All" : r}
@@ -359,7 +359,7 @@ export default function AdminUsersPage() {
 
                   {/* Country */}
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Country</p>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Country</p>
                     <div className="flex flex-wrap gap-1.5">
                       {COUNTRY_OPTIONS.map(c => (
                         <button
@@ -367,8 +367,8 @@ export default function AdminUsersPage() {
                           onClick={() => toggleCountry(c)}
                           className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                             countries.includes(c)
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              ? "bg-zinc-900 text-white border-zinc-900"
+                              : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                           }`}
                         >
                           {c}
@@ -379,7 +379,7 @@ export default function AdminUsersPage() {
 
                   {/* Onboarding */}
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Onboarding</p>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Onboarding</p>
                     <div className="flex flex-wrap gap-1.5">
                       {ONBOARD_OPTIONS.map(o => (
                         <button
@@ -387,8 +387,8 @@ export default function AdminUsersPage() {
                           onClick={() => updateParams({ onboard: o === "all" ? null : o })}
                           className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                             onboardFilter === o
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              ? "bg-zinc-900 text-white border-zinc-900"
+                              : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                           }`}
                         >
                           {o === "all" ? "All" : o}
@@ -399,7 +399,7 @@ export default function AdminUsersPage() {
 
                   {/* Joined within */}
                   <div>
-                    <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Joined</p>
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Joined</p>
                     <div className="flex flex-wrap gap-1.5">
                       {[
                         { value: "all", label: "All time" },
@@ -412,8 +412,8 @@ export default function AdminUsersPage() {
                           onClick={() => updateParams({ joined: j.value === "all" ? null : j.value })}
                           className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                             joinedFilter === j.value
-                              ? "bg-slate-900 text-white border-slate-900"
-                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                              ? "bg-zinc-900 text-white border-zinc-900"
+                              : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                           }`}
                         >
                           {j.label}
@@ -424,15 +424,15 @@ export default function AdminUsersPage() {
                 </div>
 
                 {activeFilterCount > 0 && (
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                    <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">
+                  <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                    <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">
                       {filtered.length} of {users.length} match current filters
                     </p>
                     <button
                       onClick={clearFilters}
-                      className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-600 hover:text-slate-900"
+                      className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-widest text-zinc-600 hover:text-zinc-900"
                     >
-                      <X className="w-3 h-3" />
+                      <X className="size-3" />
                       Clear filters
                     </button>
                   </div>
@@ -444,11 +444,11 @@ export default function AdminUsersPage() {
 
         {/* ── User Listing ────────────────────────────────── */}
         {pageRows.length === 0 ? (
-          <m.div variants={item} className="py-20 text-center bg-white border border-dashed border-slate-200 rounded-2xl">
-            <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-4">
-              <Users className="w-8 h-8 text-slate-300" />
+          <m.div variants={item} className="py-20 text-center bg-white border border-dashed border-zinc-200 rounded-2xl">
+            <div className="size-16 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-4">
+              <Users className="size-8 text-zinc-300" />
             </div>
-            <p className="text-slate-400 font-medium uppercase tracking-widest text-xs">
+            <p className="text-zinc-400 font-medium uppercase tracking-widest text-xs">
               No users found matching your criteria
             </p>
             {(search || activeFilterCount > 0) && (
@@ -466,43 +466,43 @@ export default function AdminUsersPage() {
               <m.div
                 key={u.id}
                 layout
-                className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border border-slate-200 rounded-lg shadow-sm hover:shadow-md transition-all"
+                className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border border-zinc-200 rounded-lg shadow-sm hover:shadow-md transition-all"
               >
                 <div className="flex items-center gap-4 flex-1 min-w-0">
                   <div className="relative">
-                    <div className="w-10 h-10 rounded bg-slate-900 flex items-center justify-center text-xs font-medium text-white shadow-sm uppercase">
+                    <div className="size-10 rounded bg-zinc-900 flex items-center justify-center text-xs font-medium text-white shadow-sm uppercase">
                       {(u.full_name || u.email)[0].toUpperCase()}
                     </div>
                     {u.role === "admin" && (
-                      <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-sm">
-                        <Shield className="w-2.5 h-2.5 text-white" />
+                      <div className="absolute -top-1 -right-1 size-5 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-sm">
+                        <Shield className="size-2.5 text-white" />
                       </div>
                     )}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-sm font-medium text-zinc-900 truncate group-hover:text-blue-600 transition-colors">
                       {u.full_name || "New Explorer"}
                       {u.id === currentUserId && (
-                        <span className="ml-2 text-[9px] font-medium uppercase tracking-widest text-slate-400">(you)</span>
+                        <span className="ml-2 text-[9px] font-medium uppercase tracking-widest text-zinc-400">(you)</span>
                       )}
                     </h3>
                     <div className="flex flex-wrap items-center gap-y-1 gap-x-3 mt-0.5">
-                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-slate-500">
-                        <Mail className="w-3 h-3 text-slate-400" /> {u.email}
+                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500">
+                        <Mail className="size-3 text-zinc-400" /> {u.email}
                       </span>
-                      <span className="w-1 h-1 rounded-full bg-slate-200 hidden sm:block" />
-                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-slate-500 uppercase tracking-tight">
-                        <MapPin className="w-3 h-3 text-slate-400" /> {u.country_of_origin || "Global"}
+                      <span className="size-1 rounded-full bg-zinc-200 hidden sm:block" />
+                      <span className="flex items-center gap-1.5 text-[10px] font-medium text-zinc-500 uppercase tracking-tight">
+                        <MapPin className="size-3 text-zinc-400" /> {u.country_of_origin || "Global"}
                       </span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                  <div className="hidden lg:flex flex-col items-end px-4 border-l border-slate-100">
-                    <span className="text-[9px] font-medium text-slate-400 uppercase tracking-widest">Enrolled</span>
-                    <span className="text-[10px] font-medium text-slate-700 flex items-center gap-1 mt-0.5 uppercase tracking-tight">
-                      <Calendar className="w-3 h-3 text-slate-400" />
+                  <div className="hidden lg:flex flex-col items-end px-4 border-l border-zinc-100">
+                    <span className="text-[9px] font-medium text-zinc-400 uppercase tracking-widest">Enrolled</span>
+                    <span className="text-[10px] font-medium text-zinc-700 flex items-center gap-1 mt-0.5 uppercase tracking-tight">
+                      <Calendar className="size-3 text-zinc-400" />
                       {new Date(u.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                     </span>
                   </div>
@@ -523,9 +523,9 @@ export default function AdminUsersPage() {
                         ? "You cannot change your own role"
                         : u.role === "admin" ? "Demote to user" : "Promote to admin"
                     }
-                    className="ml-auto sm:ml-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-wide border bg-white border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="ml-auto sm:ml-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-wide border bg-white border-zinc-200 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    {u.role === "admin" ? <UserCheck className="w-3 h-3" /> : <Crown className="w-3 h-3" />}
+                    {u.role === "admin" ? <UserCheck className="size-3" /> : <Crown className="size-3" />}
                     <span>{u.role === "admin" ? "Demote" : "Promote"}</span>
                   </button>
 
@@ -533,17 +533,17 @@ export default function AdminUsersPage() {
                     actions={[
                       {
                         label: "View Details",
-                        icon: <Eye className="w-3.5 h-3.5" />,
+                        icon: <Eye className="size-3.5" />,
                         onClick: () => setDetailUser(u),
                       },
                       {
                         label: "Copy Email",
-                        icon: <ClipboardCopy className="w-3.5 h-3.5" />,
+                        icon: <ClipboardCopy className="size-3.5" />,
                         onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
                       },
                       {
                         label: "Copy ID",
-                        icon: <ClipboardCopy className="w-3.5 h-3.5" />,
+                        icon: <ClipboardCopy className="size-3.5" />,
                         onClick: () => { navigator.clipboard.writeText(u.id); toast.addToast("ID copied", "info"); },
                       },
                     ]}
@@ -556,18 +556,18 @@ export default function AdminUsersPage() {
 
         {/* ── Pagination ──────────────────────────────────── */}
         {filtered.length > 0 && (
-          <m.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100 pt-6">
-            <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
-              Showing <span className="text-slate-900">{pageStart + 1}</span>–
-              <span className="text-slate-900">{pageStart + pageRows.length}</span> of{" "}
-              <span className="text-slate-900">{filtered.length}</span>
+          <m.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-zinc-100 pt-6">
+            <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest">
+              Showing <span className="text-zinc-900">{pageStart + 1}</span>–
+              <span className="text-zinc-900">{pageStart + pageRows.length}</span> of{" "}
+              <span className="text-zinc-900">{filtered.length}</span>
             </p>
             {totalPages > 1 && (
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => updateParams({ page: String(Math.max(1, safePage - 1)) }, { keepPage: true })}
                   disabled={safePage <= 1}
-                  className="w-9 h-9 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="size-9 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   aria-label="Previous page"
                 >
                   <ChevronLeft className="h-4 w-4" />
@@ -578,10 +578,10 @@ export default function AdminUsersPage() {
                       key={p}
                       onClick={() => updateParams({ page: String(p) }, { keepPage: true })}
                       aria-current={safePage === p ? "page" : undefined}
-                      className={`w-8 h-8 rounded text-xs font-medium transition-colors ${
+                      className={`size-8 rounded text-xs font-medium transition-colors ${
                         safePage === p
-                          ? "bg-slate-900 text-white"
-                          : "text-slate-500 hover:bg-slate-100"
+                          ? "bg-zinc-900 text-white"
+                          : "text-zinc-500 hover:bg-zinc-100"
                       }`}
                     >
                       {p}
@@ -591,7 +591,7 @@ export default function AdminUsersPage() {
                 <button
                   onClick={() => updateParams({ page: String(Math.min(totalPages, safePage + 1)) }, { keepPage: true })}
                   disabled={safePage >= totalPages}
-                  className="w-9 h-9 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="size-9 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   aria-label="Next page"
                 >
                   <ChevronRight className="h-4 w-4" />
@@ -608,7 +608,7 @@ export default function AdminUsersPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{    opacity: 0 }}
-              className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm p-4"
               onClick={() => !working && setConfirm(null)}
             >
               <m.div
@@ -616,30 +616,30 @@ export default function AdminUsersPage() {
                 animate={{ opacity: 1, y: 0,  scale: 1 }}
                 exit={{    opacity: 0, y: 20, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="bg-white rounded-lg shadow-xl border border-slate-200 max-w-md w-full p-6"
+                className="bg-white rounded-lg shadow-xl border border-zinc-200 max-w-md w-full p-6"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-10 h-10 rounded flex items-center justify-center ${
+                  <div className={`size-10 rounded flex items-center justify-center ${
                     confirm.nextRole === "admin" ? "bg-amber-100" : "bg-blue-100"
                   }`}>
                     {confirm.nextRole === "admin"
-                      ? <Crown className="w-5 h-5 text-amber-600" />
-                      : <UserCheck className="w-5 h-5 text-blue-600" />}
+                      ? <Crown className="size-5 text-amber-600" />
+                      : <UserCheck className="size-5 text-blue-600" />}
                   </div>
                   <div>
-                    <h2 className="text-base font-medium text-slate-900">
+                    <h2 className="text-base font-medium text-zinc-900">
                       {confirm.nextRole === "admin" ? "Promote to admin?" : "Demote to user?"}
                     </h2>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-zinc-500 mt-0.5">
                       This change takes effect immediately.
                     </p>
                   </div>
                 </div>
-                <div className="bg-slate-50 border border-slate-200 rounded p-3 mb-5">
-                  <p className="text-xs text-slate-500 uppercase tracking-widest font-medium mb-1">User</p>
-                  <p className="text-sm font-medium text-slate-900">{confirm.user.full_name || confirm.user.email}</p>
-                  <p className="text-xs text-slate-500 mt-0.5">{confirm.user.email}</p>
+                <div className="bg-zinc-50 border border-zinc-200 rounded p-3 mb-5">
+                  <p className="text-xs text-zinc-500 uppercase tracking-widest font-medium mb-1">User</p>
+                  <p className="text-sm font-medium text-zinc-900">{confirm.user.full_name || confirm.user.email}</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">{confirm.user.email}</p>
                 </div>
                 {confirm.nextRole === "admin" && (
                   <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded p-2.5 mb-5 leading-relaxed">
@@ -650,7 +650,7 @@ export default function AdminUsersPage() {
                   <button
                     onClick={() => setConfirm(null)}
                     disabled={working}
-                    className="px-3 py-1.5 rounded text-xs font-medium uppercase tracking-widest text-slate-600 hover:bg-slate-100 transition-colors disabled:opacity-50"
+                    className="px-3 py-1.5 rounded text-xs font-medium uppercase tracking-widest text-zinc-600 hover:bg-zinc-100 transition-colors disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -660,7 +660,7 @@ export default function AdminUsersPage() {
                     className={`px-3 py-1.5 rounded text-xs font-medium uppercase tracking-widest text-white transition-colors disabled:opacity-50 ${
                       confirm.nextRole === "admin"
                         ? "bg-amber-600 hover:bg-amber-700"
-                        : "bg-slate-900 hover:bg-slate-800"
+                        : "bg-zinc-900 hover:bg-zinc-800"
                     }`}
                   >
                     {working ? "Working…" : confirm.nextRole === "admin" ? "Promote" : "Demote"}
@@ -678,7 +678,7 @@ export default function AdminUsersPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-50 flex justify-end bg-slate-900/40 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex justify-end bg-zinc-900/40 backdrop-blur-sm"
               onClick={() => setDetailUser(null)}
             >
               <m.div
@@ -686,37 +686,37 @@ export default function AdminUsersPage() {
                 animate={{ x: 0 }}
                 exit={{ x: "100%" }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="w-full max-w-md bg-white border-l border-slate-200 shadow-2xl h-full overflow-y-auto custom-scrollbar"
+                className="w-full max-w-md bg-white border-l border-zinc-200 shadow-2xl h-full overflow-y-auto custom-scrollbar"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="p-6 space-y-6">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded bg-slate-900 flex items-center justify-center text-lg font-medium text-white uppercase">
+                      <div className="size-14 rounded bg-zinc-900 flex items-center justify-center text-lg font-medium text-white uppercase">
                         {(detailUser.full_name || detailUser.email)[0].toUpperCase()}
                       </div>
                       <div>
-                        <h2 className="text-lg font-medium text-slate-900">
+                        <h2 className="text-lg font-medium text-zinc-900">
                           {detailUser.full_name || "New Explorer"}
                         </h2>
-                        <p className="text-xs text-slate-500">{detailUser.email}</p>
+                        <p className="text-xs text-zinc-500">{detailUser.email}</p>
                       </div>
                     </div>
                     <button
                       onClick={() => setDetailUser(null)}
-                      className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded transition-colors"
+                      className="p-1.5 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 rounded transition-colors"
                       aria-label="Close"
                     >
-                      <X className="w-4 h-4" />
+                      <X className="size-4" />
                     </button>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
-                      <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-500">Profile Summary</h3>
+                    <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-4 space-y-3">
+                      <h3 className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">Profile Summary</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Role</p>
+                          <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Role</p>
                           <span className={`inline-flex items-center gap-1.5 mt-1 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-widest border ${
                             detailUser.role === "admin"
                               ? "bg-amber-50 text-amber-600 border-amber-200/50"
@@ -726,41 +726,41 @@ export default function AdminUsersPage() {
                           </span>
                         </div>
                         <div>
-                          <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Country</p>
-                          <p className="text-sm font-medium text-slate-700 mt-1">{detailUser.country_of_origin || "Not specified"}</p>
+                          <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Country</p>
+                          <p className="text-sm font-medium text-zinc-700 mt-1">{detailUser.country_of_origin || "Not specified"}</p>
                         </div>
                         <div>
-                          <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Onboarding</p>
-                          <p className="text-sm font-medium text-slate-700 mt-1">
+                          <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Onboarding</p>
+                          <p className="text-sm font-medium text-zinc-700 mt-1">
                             {detailUser.onboarding_complete ? "Complete" : "Incomplete"}
                           </p>
                         </div>
                         <div>
-                          <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">Joined</p>
-                          <p className="text-sm font-medium text-slate-700 mt-1">
+                          <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Joined</p>
+                          <p className="text-sm font-medium text-zinc-700 mt-1">
                             {new Date(detailUser.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                           </p>
                         </div>
                       </div>
                     </div>
 
-                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-3">
-                      <h3 className="text-[10px] font-medium uppercase tracking-widest text-slate-500">Identifiers</h3>
+                    <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-4 space-y-3">
+                      <h3 className="text-[10px] font-medium uppercase tracking-widest text-zinc-500">Identifiers</h3>
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-slate-500 font-mono">{detailUser.id}</p>
+                          <p className="text-xs text-zinc-500 font-mono">{detailUser.id}</p>
                           <button
                             onClick={() => { navigator.clipboard.writeText(detailUser.id); toast.addToast("ID copied", "info"); }}
-                            className="text-[10px] font-medium uppercase tracking-wider text-slate-500 hover:text-slate-900 transition-colors"
+                            className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 hover:text-zinc-900 transition-colors"
                           >
                             Copy
                           </button>
                         </div>
                         <div className="flex items-center justify-between">
-                          <p className="text-xs text-slate-500">{detailUser.email}</p>
+                          <p className="text-xs text-zinc-500">{detailUser.email}</p>
                           <button
                             onClick={() => { navigator.clipboard.writeText(detailUser.email); toast.addToast("Email copied", "info"); }}
-                            className="text-[10px] font-medium uppercase tracking-wider text-slate-500 hover:text-slate-900 transition-colors"
+                            className="text-[10px] font-medium uppercase tracking-wider text-zinc-500 hover:text-zinc-900 transition-colors"
                           >
                             Copy
                           </button>
@@ -769,12 +769,12 @@ export default function AdminUsersPage() {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-slate-100 flex gap-2">
+                  <div className="pt-4 border-t border-zinc-100 flex gap-2">
                     <a
                       href={`mailto:${detailUser.email}`}
-                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded text-xs font-medium uppercase tracking-wider hover:bg-slate-800 transition-colors"
+                      className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-zinc-900 text-white rounded text-xs font-medium uppercase tracking-wider hover:bg-zinc-800 transition-colors"
                     >
-                      <Mail className="w-3.5 h-3.5" /> Email User
+                      <Mail className="size-3.5" /> Email User
                     </a>
                     {detailUser.id !== currentUserId && (
                       <button
@@ -785,7 +785,7 @@ export default function AdminUsersPage() {
                             : "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100"
                         }`}
                       >
-                        {detailUser.role === "admin" ? <UserCheck className="w-3.5 h-3.5" /> : <Crown className="w-3.5 h-3.5" />}
+                        {detailUser.role === "admin" ? <UserCheck className="size-3.5" /> : <Crown className="size-3.5" />}
                         {detailUser.role === "admin" ? "Demote" : "Promote"}
                       </button>
                     )}

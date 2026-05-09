@@ -91,7 +91,7 @@ export default function ApplyButton({
   if (loggedIn) {
     return (
       <a href={goPath} className={`${baseClass} ${className ?? ""}`}>
-        {label} <ExternalLink className={variant === "hero" ? "w-3.5 h-3.5" : "w-4 h-4"} />
+        {label} <ExternalLink className={variant === "hero" ? "size-3.5" : "size-4"} />
       </a>
     );
   }
@@ -104,7 +104,7 @@ export default function ApplyButton({
         onClick={() => setOpen(true)}
         className={`${baseClass} ${className ?? ""}`}
       >
-        {label} <ExternalLink className={variant === "hero" ? "w-3.5 h-3.5" : "w-4 h-4"} />
+        {label} <ExternalLink className={variant === "hero" ? "size-3.5" : "size-4"} />
       </button>
 
       <AnimatePresence>
@@ -114,7 +114,7 @@ export default function ApplyButton({
             animate={{ opacity: 1 }}
             exit={{    opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-md p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/60 backdrop-blur-md p-4"
             onClick={() => setOpen(false)}
             role="dialog"
             aria-modal="true"
@@ -142,44 +142,44 @@ export default function ApplyButton({
               className="bg-white shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] max-w-[480px] w-full relative rounded-sm overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="h-1.5 w-full bg-gradient-to-r from-slate-900 via-blue-800 to-slate-900" />
+              <div className="h-1.5 w-full bg-gradient-to-r from-zinc-900 via-blue-800 to-zinc-900" />
 
               <div className="p-8 pb-6">
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
                   aria-label="Close"
-                  className="absolute right-6 top-6 w-8 h-8 flex items-center justify-center text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-full transition-all"
+                  className="absolute right-6 top-6 size-8 flex items-center justify-center text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-full transition-all"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="size-5" />
                 </button>
 
                 <m.div 
                   variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
                   className="mb-6 pr-8"
                 >
-                  <h2 id="apply-modal-title" className="text-2xl text-slate-900 tracking-tight font-semibold" style={SERIF_FONT}>
+                  <h2 id="apply-modal-title" className="text-2xl text-zinc-900 tracking-tight font-semibold" style={SERIF_FONT}>
                     Authentication Required
                   </h2>
                   <div className="w-12 h-1 bg-gradient-to-r from-blue-700 to-blue-500 mt-4 mb-4" />
-                  <p className="text-sm text-slate-600 font-medium leading-relaxed">
+                  <p className="text-sm text-zinc-600 font-medium leading-relaxed">
                     Access to the official application portal is restricted. Please authenticate your identity to proceed securely with your application.
                   </p>
                 </m.div>
 
                 <m.div 
                   variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } } }}
-                  className="bg-slate-50/80 border border-slate-200/60 p-5 mb-8 rounded-sm shadow-inner"
+                  className="bg-zinc-50/80 border border-zinc-200/60 p-5 mb-8 rounded-sm shadow-inner"
                 >
-                  <p className="text-sm font-semibold text-slate-800 mb-4">Authentication provides access to:</p>
+                  <p className="text-sm font-semibold text-zinc-800 mb-4">Authentication provides access to:</p>
                   <ul className="space-y-3.5">
                     {SIGNUP_PITCH.map((line, i) => (
                       <m.li 
                         key={line} 
                         variants={{ hidden: { opacity: 0, x: -10 }, visible: { opacity: 1, x: 0, transition: { duration: 0.3, delay: i * 0.05 } } }}
-                        className="flex items-start gap-3.5 text-sm text-slate-700 font-medium"
+                        className="flex items-start gap-3.5 text-sm text-zinc-700 font-medium"
                       >
-                        <div className="mt-1.5 w-1.5 h-1.5 bg-blue-600 rounded-sm shadow-sm flex-shrink-0" />
+                        <div className="mt-1.5 size-1.5 bg-blue-600 rounded-sm shadow-sm flex-shrink-0" />
                         <span className="leading-tight">{line}</span>
                       </m.li>
                     ))}
@@ -192,16 +192,16 @@ export default function ApplyButton({
                 >
                   <a
                     href={`/auth/login?${loginQs}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-medium text-sm transition-all shadow-md hover:shadow-lg rounded-sm"
+                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 bg-gradient-to-r from-zinc-900 to-zinc-800 hover:from-zinc-800 hover:to-zinc-700 text-white font-medium text-sm transition-all shadow-md hover:shadow-lg rounded-sm"
                   >
-                    <LogIn className="w-4 h-4" />
+                    <LogIn className="size-4" />
                     Sign In
                   </a>
                   <a
                     href={`/auth/signup?${loginQs}`}
-                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 border border-slate-300 hover:border-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 text-slate-800 font-medium text-sm transition-all rounded-sm"
+                    className="flex-1 inline-flex items-center justify-center gap-2 py-3 border border-zinc-300 hover:border-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 text-zinc-800 font-medium text-sm transition-all rounded-sm"
                   >
-                    <UserPlus className="w-4 h-4" />
+                    <UserPlus className="size-4" />
                     Create Account
                   </a>
                 </m.div>
@@ -209,9 +209,9 @@ export default function ApplyButton({
               
               <m.div 
                 variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.5, delay: 0.2 } } }}
-                className="px-8 py-4 bg-gradient-to-r from-slate-100 to-slate-50 border-t border-slate-200 flex items-center gap-2.5 text-slate-500"
+                className="px-8 py-4 bg-gradient-to-r from-zinc-100 to-zinc-50 border-t border-zinc-200 flex items-center gap-2.5 text-zinc-500"
               >
-                <Shield className="w-4 h-4 text-slate-400" />
+                <Shield className="size-4 text-zinc-400" />
                 <p className="text-[13px] font-medium">
                   Official portal. All data is protected and strictly confidential.
                 </p>

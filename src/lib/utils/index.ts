@@ -58,20 +58,20 @@ export function truncate(text: string, maxLength: number): string {
 export function matchScoreColor(score: number): string {
   if (score >= 80) return 'text-emerald-600';
   if (score >= 60) return 'text-amber-500';
-  return 'text-slate-400';
+  return 'text-zinc-400';
 }
 
 export function statusColor(status: string): string {
   const map: Record<string, string> = {
-    'Interested':         'bg-slate-50 text-slate-500 border-slate-100 border',
+    'Interested':         'bg-zinc-50 text-zinc-500 border-zinc-100 border',
     'In Progress':        'bg-brand-50 text-brand-700 border-brand-100 border',
     'Submitted':          'bg-brand-100 text-brand-900 border-brand-200 border',
     'Awaiting Decision':  'bg-amber-50 text-amber-700 border-amber-100 border',
     'Accepted':           'bg-emerald-50 text-emerald-700 border-emerald-100 border',
     'Rejected':           'bg-rose-50 text-rose-700 border-rose-100 border',
-    'Withdrawn':          'bg-slate-100 text-slate-500',
+    'Withdrawn':          'bg-zinc-100 text-zinc-500',
   };
-  return map[status] ?? 'bg-slate-100 text-slate-700';
+  return map[status] ?? 'bg-zinc-100 text-zinc-700';
 }
 
 export function fundingBadgeColor(type: string): string {
@@ -81,5 +81,5 @@ export function fundingBadgeColor(type: string): string {
     'Tuition Only':     'bg-indigo-50 text-indigo-700 border-indigo-100 border',
     'Living Allowance': 'bg-amber-50 text-amber-700 border-amber-100 border',
   };
-  return map[type] ?? 'bg-slate-50 text-slate-600 border-slate-100 border';
+  return map[type] ?? 'bg-zinc-50 text-zinc-600 border-zinc-100 border';
 }

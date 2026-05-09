@@ -22,17 +22,17 @@ interface Props {
 }
 
 const inpBase = "w-full px-3.5 py-2.5 rounded-lg border outline-none text-sm transition-all bg-white";
-const inpOk = "border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10";
+const inpOk = "border-zinc-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10";
 const inpErr = "border-red-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/10 bg-red-50/30";
 
 function SectionHeader({ title, subtitle, icon: Icon }: { title: string; subtitle?: string; icon?: React.ComponentType<{className?: string}> }) {
   return (
-    <div className="pb-4 border-b border-slate-100 mb-6">
+    <div className="pb-4 border-b border-zinc-100 mb-6">
       <div className="flex items-center gap-2.5">
-        {Icon && <Icon className="w-4 h-4 text-blue-600" />}
-        <h2 className="text-sm font-semibold text-slate-900 uppercase tracking-widest">{title}</h2>
+        {Icon && <Icon className="size-4 text-blue-600" />}
+        <h2 className="text-sm font-semibold text-zinc-900 uppercase tracking-widest">{title}</h2>
       </div>
-      {subtitle && <p className="text-[11px] font-normal text-slate-400 mt-1 ml-6">{subtitle}</p>}
+      {subtitle && <p className="text-[11px] font-normal text-zinc-400 mt-1 ml-6">{subtitle}</p>}
     </div>
   );
 }
@@ -41,7 +41,7 @@ function FieldError({ msg }: { msg?: string }) {
   if (!msg) return null;
   return (
     <p className="mt-1.5 flex items-center gap-1 text-[11px] text-red-600 font-medium">
-      <AlertCircle className="w-3 h-3" /> {msg}
+      <AlertCircle className="size-3" /> {msg}
     </p>
   );
 }
@@ -66,26 +66,26 @@ function Toggle({
       className={`flex items-center gap-3 w-full text-left p-3 rounded-xl border transition-all ${
         checked
           ? "border-blue-200 bg-blue-50/40"
-          : "border-slate-200 bg-white hover:border-slate-300"
+          : "border-zinc-200 bg-white hover:border-zinc-300"
       }`}
     >
       <div
         className={`w-10 h-6 rounded-full transition-colors relative flex-shrink-0 ${
-          checked ? "bg-blue-600" : "bg-slate-300"
+          checked ? "bg-blue-600" : "bg-zinc-300"
         }`}
       >
         <span
-          className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${
+          className={`absolute top-1 size-4 bg-white rounded-full shadow transition-all ${
             checked ? "left-5" : "left-1"
           }`}
         />
       </div>
       <div className="min-w-0">
         <div className="flex items-center gap-1.5">
-          {Icon && <Icon className={`w-3.5 h-3.5 ${checked ? "text-blue-600" : "text-slate-400"}`} />}
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-800">{label}</p>
+          {Icon && <Icon className={`size-3.5 ${checked ? "text-blue-600" : "text-zinc-400"}`} />}
+          <p className="text-xs font-semibold uppercase tracking-wider text-zinc-800">{label}</p>
         </div>
-        {description && <p className="text-[11px] text-slate-400 mt-0.5">{description}</p>}
+        {description && <p className="text-[11px] text-zinc-400 mt-0.5">{description}</p>}
       </div>
     </button>
   );
@@ -273,14 +273,14 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
   return (
     <div className="max-w-6xl mx-auto pb-10 max-lg:pb-24">
       <div className="flex items-center gap-3 mb-8">
-        <button onClick={onCancel} className="p-2 rounded-xl text-slate-500 hover:bg-slate-100 transition-colors">
-          <ArrowLeft className="w-5 h-5" />
+        <button onClick={onCancel} className="p-2 rounded-xl text-zinc-500 hover:bg-zinc-100 transition-colors">
+          <ArrowLeft className="size-5" />
         </button>
         <div>
-          <h1 className="font-semibold text-2xl text-slate-900 tracking-tight">
+          <h1 className="font-semibold text-2xl text-zinc-900 tracking-tight">
             {initial ? "Edit Scholarship" : "New Scholarship"}
           </h1>
-          <p className="text-slate-400 text-[11px] font-medium uppercase tracking-widest mt-0.5">
+          <p className="text-zinc-400 text-[11px] font-medium uppercase tracking-widest mt-0.5">
             {initial ? "Update existing record" : "Create a new scholarship listing"}
           </p>
         </div>
@@ -288,7 +288,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
 
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl flex items-center gap-2">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <AlertCircle className="size-4 flex-shrink-0" />
           {error}
         </div>
       )}
@@ -297,7 +297,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
         <form onSubmit={handleSave} className="flex-1 min-w-0 space-y-6">
 
           {/* Status & Visibility */}
-          <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <SectionHeader
               title="Status & Visibility"
               subtitle="Control how this scholarship appears"
@@ -322,11 +322,11 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           </section>
 
           {/* Basic Information */}
-          <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <SectionHeader title="Basic Information" subtitle="Name, provider, and country" icon={FileText} />
             <div className="space-y-5">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                   Scholarship Name <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -340,7 +340,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                     Provider <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -353,14 +353,14 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <FieldError msg={touched.provider ? fieldErrors.provider || liveErrors.provider : undefined} />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                     Country <span className="text-red-400">*</span>
                   </label>
                   <CountrySelect value={form.country} onChange={(v) => setForm(prev => ({ ...prev, country: v }))} />
                 </div>
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                   Description <span className="text-red-400">*</span>
                 </label>
                 <textarea
@@ -372,18 +372,18 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   placeholder="Describe the scholarship, its mission, and what it covers..."
                 />
                 <FieldError msg={touched.description ? fieldErrors.description || liveErrors.description : undefined} />
-                <p className="text-[11px] text-slate-400 mt-1.5">{form.description.length} characters · Used for AI matching</p>
+                <p className="text-[11px] text-zinc-400 mt-1.5">{form.description.length} characters · Used for AI matching</p>
               </div>
             </div>
           </section>
 
           {/* Funding & Application */}
-          <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <SectionHeader title="Funding & Application" subtitle="Financial details and how to apply" icon={DollarSign} />
             <div className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                     Funding Type <span className="text-red-400">*</span>
                   </label>
                   <select className={fieldClass("funding_type")} value={form.funding_type} onChange={(e) => setForm(prev => ({ ...prev, funding_type: e.target.value }))}>
@@ -391,17 +391,17 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">Funding Amount</label>
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Funding Amount</label>
                   <input className={fieldClass("funding_amount")} value={form.funding_amount} onChange={(e) => setForm(prev => ({ ...prev, funding_amount: e.target.value }))} placeholder="e.g. Full tuition + £1,200/month" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                     Application URL <span className="text-red-400">*</span>
                   </label>
                   <div className="relative">
-                    <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Link2 className="absolute left-3 top-1/2 -tranzinc-y-1/2 size-4 text-zinc-400" />
                     <input
                       type="url"
                       className={fieldClass("application_url", "pl-10")}
@@ -414,9 +414,9 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <FieldError msg={touched.application_url ? fieldErrors.application_url || liveErrors.application_url : undefined} />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">Application Deadline</label>
+                  <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Application Deadline</label>
                   <div className="relative">
-                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Calendar className="absolute left-3 top-1/2 -tranzinc-y-1/2 size-4 text-zinc-400" />
                     <input
                       type="date"
                       className={fieldClass("application_deadline", "pl-10")}
@@ -430,11 +430,11 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           </section>
 
           {/* Eligibility & Degrees */}
-          <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <SectionHeader title="Eligibility & Degrees" subtitle="Who can apply — used for AI matching" icon={GraduationCap} />
             <div className="space-y-6">
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-3 uppercase tracking-widest">
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-3 uppercase tracking-widest">
                   Degree Levels <span className="text-red-400">*</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -446,7 +446,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                       className={`px-4 py-2 rounded-full text-xs font-semibold transition-all border ${
                         form.degree_levels.includes(d)
                           ? "bg-blue-600 text-white border-blue-600 shadow-sm"
-                          : "border-slate-200 text-slate-600 hover:border-blue-300 hover:bg-blue-50/30"
+                          : "border-zinc-200 text-zinc-600 hover:border-blue-300 hover:bg-blue-50/30"
                       }`}
                     >
                       {d}
@@ -456,7 +456,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                 <FieldError msg={touched.degree_levels ? fieldErrors.degree_levels || liveErrors.degree_levels : undefined} />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">Fields of Study</label>
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">Fields of Study</label>
                 <input
                   className={fieldClass("fields_of_study")}
                   value={form.fields_of_study}
@@ -469,7 +469,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                       <span key={field} className="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-blue-50 text-blue-700 text-[11px] font-medium border border-blue-100">
                         {field}
                         <button type="button" onClick={() => removeField(field)} className="hover:text-blue-900">
-                          <X className="w-3 h-3" />
+                          <X className="size-3" />
                         </button>
                       </span>
                     ))}
@@ -479,22 +479,22 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <button
                     type="button"
                     onClick={() => setStudyOpen((o) => !o)}
-                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-500 hover:text-blue-600 transition-colors"
+                    className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-500 hover:text-blue-600 transition-colors"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="size-3.5" />
                     Browse suggested fields
-                    <ChevronDown className={`w-3 h-3 transition-transform ${studyOpen ? "rotate-180" : ""}`} />
+                    <ChevronDown className={`size-3 transition-transform ${studyOpen ? "rotate-180" : ""}`} />
                   </button>
                   {studyOpen && (
-                    <div className="mt-2 p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                    <div className="mt-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl">
                       <div className="relative mb-2">
-                        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+                        <Search className="absolute left-2.5 top-1/2 -tranzinc-y-1/2 size-3.5 text-zinc-400" />
                         <input
                           type="text"
                           value={studySearch}
                           onChange={(e) => setStudySearch(e.target.value)}
                           placeholder="Search fields..."
-                          className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 outline-none focus:border-blue-500"
+                          className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-zinc-200 outline-none focus:border-blue-500"
                         />
                       </div>
                       <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto custom-scrollbar">
@@ -509,7 +509,7 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                               className={`px-2.5 py-1 rounded-full text-[11px] border transition-colors ${
                                 active
                                   ? "bg-blue-600 text-white border-blue-600"
-                                  : "bg-white text-slate-600 border-slate-200 hover:border-blue-300"
+                                  : "bg-white text-zinc-600 border-zinc-200 hover:border-blue-300"
                               }`}
                             >
                               {fieldName}
@@ -520,13 +520,13 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                     </div>
                   )}
                 </div>
-                <p className="text-[11px] text-slate-400 mt-2">
+                <p className="text-[11px] text-zinc-400 mt-2">
                   Recognized canonical fields improve taxonomy-based match quality.
                 </p>
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
-                  Eligibility Criteria <span className="normal-case font-normal text-slate-400">(one per line)</span>
+                <label className="block text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
+                  Eligibility Criteria <span className="normal-case font-normal text-zinc-400">(one per line)</span>
                 </label>
                 <textarea
                   rows={4}
@@ -540,15 +540,15 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
           </section>
 
           {/* Matching Engine */}
-          <section className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+          <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <SectionHeader title="Matching Engine" subtitle="Hard-gate filters for AI matching" icon={Sparkles} />
             <div className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
+                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
                     Citizenship Restriction
                     <span title="Leave empty if open to all">
-                      <Info className="w-3 h-3 text-slate-400 cursor-help" />
+                      <Info className="size-3 text-zinc-400 cursor-help" />
                     </span>
                   </label>
                   <input
@@ -559,8 +559,8 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   />
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
-                    Minimum GPA <span className="normal-case font-normal text-slate-400">(0–4)</span>
+                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
+                    Minimum GPA <span className="normal-case font-normal text-zinc-400">(0–4)</span>
                   </label>
                   <input
                     type="number"
@@ -576,8 +576,8 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                   <FieldError msg={touched.min_gpa ? fieldErrors.min_gpa || liveErrors.min_gpa : undefined} />
                 </div>
                 <div>
-                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 mb-2 uppercase tracking-widest">
-                    Effort <span className="normal-case font-normal text-slate-400">(minutes)</span>
+                  <label className="flex items-center gap-1.5 text-[10px] font-semibold text-zinc-500 mb-2 uppercase tracking-widest">
+                    Effort <span className="normal-case font-normal text-zinc-400">(minutes)</span>
                   </label>
                   <input
                     type="number"
@@ -617,11 +617,11 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
         <aside className="lg:w-80 flex-shrink-0">
           <div className="lg:sticky lg:top-6 space-y-6">
             {/* Completion Card */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-              <h3 className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3">Completion</h3>
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-3">Completion</h3>
               <div className="flex items-center gap-3">
-                <div className="relative w-12 h-12">
-                  <svg className="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
+                <div className="relative size-12">
+                  <svg className="size-12 -rotate-90" viewBox="0 0 36 36">
                     <circle cx="18" cy="18" r="15" fill="none" stroke="#f1f5f9" strokeWidth="3" />
                     <circle
                       cx="18" cy="18" r="15" fill="none"
@@ -631,15 +631,15 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
                       strokeLinecap="round"
                     />
                   </svg>
-                  <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-slate-700">
+                  <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-zinc-700">
                     {completion}%
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-900">
+                  <p className="text-sm font-medium text-zinc-900">
                     {completion === 100 ? "Ready to publish" : "Keep going"}
                   </p>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-zinc-400">
                     {completion === 100 ? "All required fields filled" : "Fill required fields to publish"}
                   </p>
                 </div>
@@ -647,20 +647,20 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
             </div>
 
             {/* Status Preview */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm">
-              <h3 className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3">Status Preview</h3>
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+              <h3 className="text-[10px] font-semibold text-zinc-500 uppercase tracking-widest mb-3">Status Preview</h3>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500">Visibility</span>
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${form.is_active ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
-                    {form.is_active ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
+                  <span className="text-xs text-zinc-500">Visibility</span>
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${form.is_active ? "bg-emerald-50 text-emerald-700" : "bg-zinc-100 text-zinc-500"}`}>
+                    {form.is_active ? <Eye className="size-3" /> : <EyeOff className="size-3" />}
                     {form.is_active ? "Published" : "Draft"}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500">Verification</span>
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${form.verified ? "bg-blue-50 text-blue-700" : "bg-slate-100 text-slate-500"}`}>
-                    {form.verified ? <ShieldCheck className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
+                  <span className="text-xs text-zinc-500">Verification</span>
+                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium uppercase tracking-wider ${form.verified ? "bg-blue-50 text-blue-700" : "bg-zinc-100 text-zinc-500"}`}>
+                    {form.verified ? <ShieldCheck className="size-3" /> : <AlertCircle className="size-3" />}
                     {form.verified ? "Verified" : "Unverified"}
                   </span>
                 </div>
@@ -668,20 +668,20 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
             </div>
 
             {/* Actions */}
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-3">
+            <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm space-y-3">
               <button
                 type="submit"
                 disabled={saving}
                 onClick={handleSave}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:opacity-60 text-white font-semibold uppercase tracking-widest rounded-lg text-xs transition-colors"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-black disabled:opacity-60 text-white font-semibold uppercase tracking-widest rounded-lg text-xs transition-colors"
               >
-                {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+                {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
                 {saving ? "Saving…" : initial ? "Update" : "Save"}
               </button>
               <button
                 type="button"
                 onClick={onCancel}
-                className="w-full px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+                className="w-full px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-zinc-600 border border-zinc-200 rounded-lg hover:bg-zinc-50 transition-colors"
               >
                 Cancel
               </button>
@@ -691,12 +691,12 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
       </div>
 
       {/* Mobile sticky action bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 lg:hidden z-50">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-zinc-200 p-4 lg:hidden z-50">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-slate-600 border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+            className="flex-1 px-4 py-2.5 text-xs font-semibold uppercase tracking-widest text-zinc-600 border border-zinc-200 rounded-lg hover:bg-zinc-50 transition-colors"
           >
             Cancel
           </button>
@@ -704,9 +704,9 @@ export default function ScholarshipForm({ initial, onSaved, onCancel }: Props) {
             type="button"
             disabled={saving}
             onClick={handleSave}
-            className="flex-[2] flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 hover:bg-black disabled:opacity-60 text-white font-semibold uppercase tracking-widest rounded-lg text-xs transition-colors"
+            className="flex-[2] flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-black disabled:opacity-60 text-white font-semibold uppercase tracking-widest rounded-lg text-xs transition-colors"
           >
-            {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
+            {saving ? <Loader2 className="size-3.5 animate-spin" /> : <Save className="size-3.5" />}
             {saving ? "Saving…" : initial ? "Update" : "Save"}
           </button>
         </div>

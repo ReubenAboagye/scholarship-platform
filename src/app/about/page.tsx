@@ -37,13 +37,13 @@ const values = [
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50 selection:bg-brand-500/30">
+    <div className="min-h-screen bg-zinc-50 selection:bg-brand-500/30">
       <Navbar />
 
       {/* ──────────────────────────────────────────────────────────────────
           HERO (Elevated Editorial Layout)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="relative pt-24 lg:pt-36 pb-32 overflow-hidden bg-white border-b border-slate-200">
+      <section className="relative pt-24 lg:pt-36 pb-32 overflow-hidden bg-white border-b border-zinc-200">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#f1f5f9_1px,transparent_1px),linear-gradient(to_bottom,#f1f5f9_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40 mix-blend-multiply pointer-events-none" />
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -60,7 +60,7 @@ export default function AboutPage() {
             
             <FadeIn delay={0.1}>
               <h1 
-                className="text-[44px] sm:text-[56px] lg:text-[72px] text-slate-900 mb-8 leading-[1.05] tracking-tight" 
+                className="text-[44px] sm:text-[56px] lg:text-[72px] text-zinc-900 mb-8 leading-[1.05] tracking-tight" 
                 style={SERIF}
               >
                 Built to help students find funding <span className="text-brand-600 italic">they can actually use.</span>
@@ -68,7 +68,7 @@ export default function AboutPage() {
             </FadeIn>
             
             <FadeIn delay={0.2}>
-              <p className="text-lg sm:text-xl text-slate-600 leading-relaxed mb-12 max-w-2xl mx-auto font-light">
+              <p className="text-lg sm:text-xl text-zinc-600 leading-relaxed mb-12 max-w-2xl mx-auto font-light">
                 ScholarBridge AI exists because scholarship discovery is usually fragmented, repetitive, and hard to trust. We keep the experience focused: verified opportunities, clear filters, and truth-driven AI matching.
               </p>
             </FadeIn>
@@ -78,8 +78,8 @@ export default function AboutPage() {
         {/* Floating Masterpiece Image */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 mt-4">
           <FadeIn delay={0.3} direction="up">
-            <div className="relative group rounded-2xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] ring-1 ring-slate-900/5 transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-transparent opacity-60 mix-blend-multiply z-10" />
+            <div className="relative group rounded-2xl overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] ring-1 ring-zinc-900/5 transition-all duration-700 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]">
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/60 via-zinc-900/10 to-transparent opacity-60 mix-blend-multiply z-10" />
               <Image
                 src="/images/marketing/graduates-group.jpg"
                 alt="Graduates celebrating together"
@@ -91,7 +91,7 @@ export default function AboutPage() {
               
               {/* Glassmorphic Stats Metric */}
               <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-10 z-20 hidden md:block">
-                <div className="backdrop-blur-md bg-white/80 border border-white/50 shadow-xl rounded-xl p-6 w-80 transform transition-transform duration-500 group-hover:-translate-y-2">
+                <div className="backdrop-blur-md bg-white/80 border border-white/50 shadow-xl rounded-xl p-6 w-80 transform transition-transform duration-500 group-hover:-tranzinc-y-2">
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-xs font-bold uppercase tracking-[0.15em] text-brand-700">
                       Global Scope
@@ -100,16 +100,16 @@ export default function AboutPage() {
                       {["gb", "us", "de", "ca"].map((code) => (
                         <div
                           key={code}
-                          className="w-7 h-7 rounded-full border-2 border-white overflow-hidden shadow-sm bg-slate-100"
+                          className="size-7 rounded-full border-2 border-white overflow-hidden shadow-sm bg-zinc-100"
                           aria-hidden
                         >
-                          <img src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`} alt="" className="w-full h-full object-cover" />
+                          <img src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`} alt="" className="size-full object-cover" />
                         </div>
                       ))}
                     </div>
                   </div>
-                  <p className="text-[15px] text-slate-800 leading-snug">
-                    <span className="font-bold text-slate-900 text-lg block mb-1">20+ Verified Sources</span> 
+                  <p className="text-[15px] text-zinc-800 leading-snug">
+                    <span className="font-bold text-zinc-900 text-lg block mb-1">20+ Verified Sources</span> 
                     Across four highly vetted academic destinations worldwide.
                   </p>
                 </div>
@@ -122,14 +122,14 @@ export default function AboutPage() {
       {/* ──────────────────────────────────────────────────────────────────
           VALUES / PRINCIPLES (Editorial Split List Layout)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="bg-white py-24 lg:py-32 relative border-t border-slate-200/60">
+      <section className="bg-white py-24 lg:py-32 relative border-t border-zinc-200/60">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 lg:mb-24 gap-8">
             <FadeIn>
-              <h2 className="text-3xl lg:text-5xl text-slate-900 mb-4" style={SERIF}>
+              <h2 className="text-3xl lg:text-5xl text-zinc-900 mb-4" style={SERIF}>
                 Core Principles
               </h2>
-              <p className="text-lg text-slate-500 max-w-xl font-light">
+              <p className="text-lg text-zinc-500 max-w-xl font-light">
                 The core rules that shape our platform. We believe in quality over quantity, and radical transparency over marketing.
               </p>
             </FadeIn>
@@ -140,28 +140,28 @@ export default function AboutPage() {
             </FadeIn>
           </div>
 
-          <div className="border-b border-slate-200">
+          <div className="border-b border-zinc-200">
             {values.map((v, i) => (
               <FadeIn key={v.title} delay={i * 0.1}>
-                <div className="group flex flex-col lg:flex-row lg:items-start lg:items-center py-10 lg:py-14 border-t border-slate-200 hover:bg-slate-50/50 transition-colors duration-300">
+                <div className="group flex flex-col lg:flex-row lg:items-start lg:items-center py-10 lg:py-14 border-t border-zinc-200 hover:bg-zinc-50/50 transition-colors duration-300">
                   
                   <div className="flex-shrink-0 w-full lg:w-1/3 mb-6 lg:mb-0 pr-8 flex items-center gap-6">
                     <span 
-                      className="text-4xl lg:text-5xl text-slate-300 group-hover:text-brand-600 transition-colors duration-500 font-light" 
+                      className="text-4xl lg:text-5xl text-zinc-300 group-hover:text-brand-600 transition-colors duration-500 font-light" 
                       style={SERIF}
                     >
                       0{i + 1}.
                     </span>
-                    <h3 className="text-xl lg:text-2xl font-semibold text-slate-900 group-hover:text-brand-900 transition-colors" style={SERIF}>
+                    <h3 className="text-xl lg:text-2xl font-semibold text-zinc-900 group-hover:text-brand-900 transition-colors" style={SERIF}>
                       {v.title}
                     </h3>
                   </div>
                   
-                  <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-slate-200/50 flex flex-col md:flex-row gap-6 md:items-center">
-                    <div className="hidden md:flex flex-shrink-0 w-14 h-14 bg-white text-slate-400 group-hover:text-brand-600 rounded-full border border-slate-200 items-center justify-center shadow-sm group-hover:border-brand-200 group-hover:shadow-md transition-all duration-300">
-                      <v.icon className="w-6 h-6" strokeWidth={1.5} />
+                  <div className="w-full lg:w-2/3 lg:pl-12 lg:border-l border-zinc-200/50 flex flex-col md:flex-row gap-6 md:items-center">
+                    <div className="hidden md:flex flex-shrink-0 size-14 bg-white text-zinc-400 group-hover:text-brand-600 rounded-full border border-zinc-200 items-center justify-center shadow-sm group-hover:border-brand-200 group-hover:shadow-md transition-all duration-300">
+                      <v.icon className="size-6" strokeWidth={1.5} />
                     </div>
-                    <p className="text-lg text-slate-600 leading-relaxed font-light">
+                    <p className="text-lg text-zinc-600 leading-relaxed font-light">
                       {v.body}
                     </p>
                   </div>
@@ -176,44 +176,44 @@ export default function AboutPage() {
       {/* ──────────────────────────────────────────────────────────────────
           OUR MISSION & DEEP DIVE (Split Layout with High Contrast)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="py-24 lg:py-32 bg-white border-t border-slate-200 hidden-overflow">
+      <section className="py-24 lg:py-32 bg-white border-t border-zinc-200 hidden-overflow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             
             <FadeIn direction="right">
               <div className="relative group">
-                <div className="absolute inset-0 bg-brand-600/10 rounded-2xl transform translate-x-4 translate-y-4 transition-transform group-hover:translate-x-6 group-hover:translate-y-6" />
+                <div className="absolute inset-0 bg-brand-600/10 rounded-2xl transform tranzinc-x-4 tranzinc-y-4 transition-transform group-hover:tranzinc-x-6 group-hover:tranzinc-y-6" />
                 <Image
                   src="/images/marketing/students-collab.jpg"
                   alt="Students collaborating"
                   width={800}
                   height={1000}
-                  className="relative w-full h-[500px] lg:h-[700px] object-cover rounded-2xl shadow-lg ring-1 ring-slate-900/10 grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+                  className="relative w-full h-[500px] lg:h-[700px] object-cover rounded-2xl shadow-lg ring-1 ring-zinc-900/10 grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
                 />
               </div>
             </FadeIn>
             
             <FadeIn direction="left" delay={0.2}>
               <div className="lg:pl-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold uppercase tracking-[0.2em] mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 text-zinc-700 text-xs font-semibold uppercase tracking-[0.2em] mb-6">
                   The Problem
                 </div>
                 
-                <h2 className="text-3xl lg:text-5xl text-slate-900 mb-8 leading-tight" style={SERIF}>
+                <h2 className="text-3xl lg:text-5xl text-zinc-900 mb-8 leading-tight" style={SERIF}>
                   Reducing friction for <span className="italic text-brand-600">students</span> and <span className="italic text-brand-600">funders</span>.
                 </h2>
                 
                 <div className="space-y-6">
-                  <p className="text-lg text-slate-600 leading-relaxed font-light">
+                  <p className="text-lg text-zinc-600 leading-relaxed font-light">
                     Thousands of fully-funded scholarships go unseen each year because students never reach the right source at the right time. ScholarBridge AI reduces that friction by combining curated listings with profile-based discovery.
                   </p>
-                  <p className="text-lg text-slate-600 leading-relaxed font-light">
+                  <p className="text-lg text-zinc-600 leading-relaxed font-light">
                     We focus heavily on four main destinations—the UK, USA, Germany, and Canada—and aim to make the path from research to application far clearer than a generic scholarship directory. The result is a cleaner workflow for students and a more trustworthy platform for organizations.
                   </p>
                   
-                  <div className="pt-8 mt-8 border-t border-slate-200">
-                    <p className="text-sm font-medium text-slate-500 uppercase tracking-widest mb-2">Designed & Built By</p>
-                    <p className="text-xl text-slate-900 font-semibold" style={SERIF}>
+                  <div className="pt-8 mt-8 border-t border-zinc-200">
+                    <p className="text-sm font-medium text-zinc-500 uppercase tracking-widest mb-2">Designed & Built By</p>
+                    <p className="text-xl text-zinc-900 font-semibold" style={SERIF}>
                       GenTech Solutions
                     </p>
                   </div>
@@ -222,10 +222,10 @@ export default function AboutPage() {
                 <div className="mt-10">
                   <a 
                     href="/contact" 
-                    className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 bg-slate-900 text-white font-semibold text-sm hover:bg-slate-800 transition-all hover:shadow-lg hover:-translate-y-0.5"
+                    className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 bg-zinc-900 text-white font-semibold text-sm hover:bg-zinc-800 transition-all hover:shadow-lg hover:-tranzinc-y-0.5"
                   >
                     Get in touch with us
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="size-4 group-hover:tranzinc-x-1 transition-transform" />
                   </a>
                 </div>
               </div>
@@ -238,9 +238,9 @@ export default function AboutPage() {
       {/* ──────────────────────────────────────────────────────────────────
           CLOSING CTA (Dramatic Dark Section)
           ────────────────────────────────────────────────────────────────── */}
-      <section className="bg-slate-950 text-white relative overflow-hidden">
+      <section className="bg-zinc-950 text-white relative overflow-hidden">
         {/* Subtle glowing orb background */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-brand-500/20 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -tranzinc-x-1/2 -tranzinc-y-1/2 size-[600px] bg-brand-500/20 rounded-full blur-[120px] pointer-events-none" />
         
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 text-center relative z-10">
           <FadeIn>
@@ -250,20 +250,20 @@ export default function AboutPage() {
             >
               Ready to find your scholarship?
             </h2>
-            <p className="text-slate-300 text-lg lg:text-xl mb-12 max-w-2xl mx-auto leading-relaxed font-light">
+            <p className="text-zinc-300 text-lg lg:text-xl mb-12 max-w-2xl mx-auto leading-relaxed font-light">
               Create a free profile and get matched in under 2 minutes. Free for students. No credit card. No email spam.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="/auth/signup"
-                className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 bg-white text-slate-950 font-bold text-sm hover:bg-slate-100 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:-translate-y-0.5"
+                className="group inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 bg-white text-zinc-950 font-bold text-sm hover:bg-zinc-100 transition-all hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:-tranzinc-y-0.5"
               >
                 Get Started Free
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="size-4 group-hover:tranzinc-x-1 transition-transform" />
               </a>
             </div>
-            <p className="mt-8 text-slate-400 text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <p className="mt-8 text-zinc-400 text-xs font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
               Takes about two minutes
             </p>
           </FadeIn>

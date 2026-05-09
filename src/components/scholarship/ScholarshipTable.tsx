@@ -45,34 +45,34 @@ export default function ScholarshipTable({ scholarships, baseUrl = "/scholarship
       </div>
 
       {/* Desktop: data table */}
-      <div className="hidden lg:block bg-white border border-slate-200 rounded-lg overflow-hidden">
+      <div className="hidden lg:block bg-white border border-zinc-200 rounded-lg overflow-hidden">
         <table className="w-full text-left border-separate border-spacing-0">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200">
-              <th className="px-5 py-3 text-sm font-medium text-slate-600">Scholarship</th>
-              <th className="px-5 py-3 text-sm font-medium text-slate-600">Country</th>
-              <th className="px-5 py-3 text-sm font-medium text-slate-600">Award</th>
-              <th className="px-5 py-3 text-sm font-medium text-slate-600">Deadline</th>
+            <tr className="bg-zinc-50 border-b border-zinc-200">
+              <th className="px-5 py-3 text-sm font-medium text-zinc-600">Scholarship</th>
+              <th className="px-5 py-3 text-sm font-medium text-zinc-600">Country</th>
+              <th className="px-5 py-3 text-sm font-medium text-zinc-600">Award</th>
+              <th className="px-5 py-3 text-sm font-medium text-zinc-600">Deadline</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-zinc-100">
             {scholarships.map((s) => {
               const href = `${baseUrl}/${s.slug || s.id}`;
 
               return (
-                <tr key={s.id} className="hover:bg-slate-50/70 transition-colors">
+                <tr key={s.id} className="hover:bg-zinc-50/70 transition-colors">
                   {/* Scholarship name + provider */}
                   <td className="px-5 py-4 align-top">
                     <a
                       href={href}
-                      className="font-medium text-slate-900 hover:text-brand-700
+                      className="font-medium text-zinc-900 hover:text-brand-700
                                  hover:underline underline-offset-4
                                  focus:outline-none focus-visible:underline"
                     >
                       {s.name}
                     </a>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-500 mt-0.5">
-                      <Building2 className="w-3 h-3 shrink-0" />
+                    <div className="flex items-center gap-1.5 text-xs text-zinc-500 mt-0.5">
+                      <Building2 className="size-3 shrink-0" />
                       <span className="truncate max-w-[260px]">{s.provider}</span>
                     </div>
                   </td>
@@ -84,21 +84,21 @@ export default function ScholarshipTable({ scholarships, baseUrl = "/scholarship
                         <img
                           src={countryFlagUrl(s.country)!}
                           alt=""
-                          className="w-5 h-3.5 object-cover rounded-sm border border-slate-200"
+                          className="w-5 h-3.5 object-cover rounded-sm border border-zinc-200"
                         />
                       ) : (
-                        <div className="w-5 h-3.5 bg-slate-100 rounded-sm" />
+                        <div className="w-5 h-3.5 bg-zinc-100 rounded-sm" />
                       )}
-                      <span className="text-sm text-slate-700">{s.country}</span>
+                      <span className="text-sm text-zinc-700">{s.country}</span>
                     </div>
                   </td>
 
                   {/* Award */}
                   <td className="px-5 py-4 align-top">
-                    <p className="text-sm font-medium text-slate-900 max-w-[220px]">
+                    <p className="text-sm font-medium text-zinc-900 max-w-[220px]">
                       {s.funding_amount || "Varies"}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-zinc-500 mt-0.5">
                       {s.funding_type}
                     </p>
                   </td>

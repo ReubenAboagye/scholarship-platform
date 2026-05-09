@@ -284,8 +284,8 @@ export default function AdminScholarshipsPage() {
       {/* ── Header ──────────────────────────────────────── */}
       <m.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-3xl font-medium text-slate-900 display">Scholarships Catalog</h1>
-          <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest mt-1">
+          <h1 className="text-3xl font-medium text-zinc-900 display">Scholarships Catalog</h1>
+          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest mt-1">
             Liaison &amp; Record Management
           </p>
         </div>
@@ -293,41 +293,41 @@ export default function AdminScholarshipsPage() {
           <button
             onClick={exportCsv}
             disabled={loading || filtered.length === 0}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 font-medium rounded text-xs uppercase tracking-widest transition-all hover:bg-slate-50 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-600 font-medium rounded text-xs uppercase tracking-widest transition-all hover:bg-zinc-50 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             title="Download filtered list as CSV"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="size-3.5" />
             <span>Export CSV</span>
           </button>
           <a
             href="/admin/scholarships/new"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded text-xs uppercase tracking-widest transition-all shadow-sm active:scale-95"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white font-medium rounded text-xs uppercase tracking-widest transition-all shadow-sm active:scale-95"
           >
-            <Plus className="w-3.5 h-3.5" />
+            <Plus className="size-3.5" />
             <span>New Entry</span>
           </a>
         </div>
       </m.div>
 
       {/* ── Control Bar ─────────────────────────────────── */}
-      <m.div variants={item} className="bg-white border border-slate-200 rounded-lg p-3 shadow-sm">
+      <m.div variants={item} className="bg-white border border-zinc-200 rounded-lg p-3 shadow-sm">
         <div className="flex flex-col lg:flex-row gap-3 items-center">
           <div className="flex-1 w-full relative">
-            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -tranzinc-y-1/2 text-zinc-400" />
             <input
               value={search}
               onChange={(e) => updateParams({ q: e.target.value || null })}
               placeholder="Search registries..."
-              className="w-full rounded border border-slate-100 bg-slate-50 py-2 pl-10 pr-4 text-xs text-slate-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500/30"
+              className="w-full rounded border border-zinc-100 bg-zinc-50 py-2 pl-10 pr-4 text-xs text-zinc-900 outline-none transition focus:bg-white focus:ring-2 focus:ring-blue-500/5 focus:border-blue-500/30"
             />
           </div>
           <div className="flex items-center gap-2 w-full lg:w-auto">
-            <div className="flex bg-slate-100 p-0.5 rounded">
+            <div className="flex bg-zinc-100 p-0.5 rounded">
               <button
                 onClick={() => updateParams({ view: "list" })}
                 aria-pressed={view === "list"}
                 className={`p-1.5 rounded transition-colors ${
-                  view === "list" ? "bg-white shadow-sm text-slate-900" : "text-slate-400 hover:text-slate-600"
+                  view === "list" ? "bg-white shadow-sm text-zinc-900" : "text-zinc-400 hover:text-zinc-600"
                 }`}
                 title="List view"
               >
@@ -337,7 +337,7 @@ export default function AdminScholarshipsPage() {
                 onClick={() => updateParams({ view: "grid" })}
                 aria-pressed={view === "grid"}
                 className={`p-1.5 rounded transition-colors ${
-                  view === "grid" ? "bg-white shadow-sm text-slate-900" : "text-slate-400 hover:text-slate-600"
+                  view === "grid" ? "bg-white shadow-sm text-zinc-900" : "text-zinc-400 hover:text-zinc-600"
                 }`}
                 title="Grid view"
               >
@@ -350,7 +350,7 @@ export default function AdminScholarshipsPage() {
               className={`flex-1 lg:flex-none inline-flex items-center justify-center gap-2 rounded border bg-white px-3 py-2 text-[11px] font-medium uppercase tracking-wider transition ${
                 activeFilterCount > 0
                   ? "border-blue-300 text-blue-700 bg-blue-50/50 hover:bg-blue-50"
-                  : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                  : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
               }`}
             >
               <Filter className="h-3.5 w-3.5" />
@@ -369,10 +369,10 @@ export default function AdminScholarshipsPage() {
               transition={{ duration: 0.15 }}
               className="overflow-hidden"
             >
-              <div className="mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div className="mt-4 pt-4 border-t border-zinc-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 {/* Country */}
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Country</p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Country</p>
                   <div className="flex flex-wrap gap-1.5">
                     {COUNTRY_OPTIONS.map(c => (
                       <button
@@ -380,8 +380,8 @@ export default function AdminScholarshipsPage() {
                         onClick={() => toggleArrayValue("country", c, countries)}
                         className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                           countries.includes(c)
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            ? "bg-zinc-900 text-white border-zinc-900"
+                            : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                         }`}
                       >
                         <span>{countryFlag(c)}</span>
@@ -393,7 +393,7 @@ export default function AdminScholarshipsPage() {
 
                 {/* Funding */}
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Funding</p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Funding</p>
                   <div className="flex flex-wrap gap-1.5">
                     {FUNDING_OPTIONS.map(f => (
                       <button
@@ -401,8 +401,8 @@ export default function AdminScholarshipsPage() {
                         onClick={() => toggleArrayValue("funding", f, fundings)}
                         className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                           fundings.includes(f)
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            ? "bg-zinc-900 text-white border-zinc-900"
+                            : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                         }`}
                       >
                         {f}
@@ -413,7 +413,7 @@ export default function AdminScholarshipsPage() {
 
                 {/* Status */}
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Status</p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Status</p>
                   <div className="flex flex-wrap gap-1.5">
                     {STATUS_OPTIONS.map(s => (
                       <button
@@ -421,8 +421,8 @@ export default function AdminScholarshipsPage() {
                         onClick={() => updateParams({ status: s === "all" ? null : s })}
                         className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                           statusFilter === s
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            ? "bg-zinc-900 text-white border-zinc-900"
+                            : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                         }`}
                       >
                         {s === "all" ? "All" : s}
@@ -433,7 +433,7 @@ export default function AdminScholarshipsPage() {
 
                 {/* Deadline */}
                 <div>
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-500 mb-2">Deadline</p>
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-500 mb-2">Deadline</p>
                   <div className="flex flex-wrap gap-1.5">
                     {[
                       { value: "all",       label: "All" },
@@ -446,8 +446,8 @@ export default function AdminScholarshipsPage() {
                         onClick={() => updateParams({ deadline: d.value === "all" ? null : d.value })}
                         className={`px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-tight border transition-colors ${
                           deadlineFilt === d.value
-                            ? "bg-slate-900 text-white border-slate-900"
-                            : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            ? "bg-zinc-900 text-white border-zinc-900"
+                            : "bg-white text-zinc-600 border-zinc-200 hover:bg-zinc-50"
                         }`}
                       >
                         {d.label}
@@ -458,15 +458,15 @@ export default function AdminScholarshipsPage() {
               </div>
 
               {activeFilterCount > 0 && (
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <p className="text-[10px] font-medium uppercase tracking-widest text-slate-400">
+                <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
+                  <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">
                     {filtered.length} of {scholarships.length} match current filters
                   </p>
                   <button
                     onClick={clearFilters}
-                    className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-widest text-slate-600 hover:text-slate-900"
+                    className="inline-flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-widest text-zinc-600 hover:text-zinc-900"
                   >
-                    <X className="w-3 h-3" />
+                    <X className="size-3" />
                     Clear filters
                   </button>
                 </div>
@@ -483,7 +483,7 @@ export default function AdminScholarshipsPage() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex items-center justify-between gap-3 px-4 py-3 bg-slate-900 text-white rounded-lg shadow-lg"
+            className="flex items-center justify-between gap-3 px-4 py-3 bg-zinc-900 text-white rounded-lg shadow-lg"
           >
             <div className="flex items-center gap-3">
               <span className="text-xs font-medium">
@@ -491,7 +491,7 @@ export default function AdminScholarshipsPage() {
               </span>
               <button
                 onClick={clearSelection}
-                className="text-[10px] font-medium uppercase tracking-wider text-slate-400 hover:text-white transition-colors"
+                className="text-[10px] font-medium uppercase tracking-wider text-zinc-400 hover:text-white transition-colors"
               >
                 Clear
               </button>
@@ -501,19 +501,19 @@ export default function AdminScholarshipsPage() {
                 onClick={bulkActivate}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
               >
-                <Power className="w-3 h-3" /> Activate
+                <Power className="size-3" /> Activate
               </button>
               <button
                 onClick={bulkDeactivate}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-zinc-700 hover:bg-zinc-600 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
               >
-                <Power className="w-3 h-3" /> Pause
+                <Power className="size-3" /> Pause
               </button>
               <button
                 onClick={bulkDelete}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-medium uppercase tracking-wider transition-colors"
               >
-                <Trash2 className="w-3 h-3" /> Delete
+                <Trash2 className="size-3" /> Delete
               </button>
             </div>
           </m.div>
@@ -522,16 +522,16 @@ export default function AdminScholarshipsPage() {
 
       {/* ── Content ─────────────────────────────────────── */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center h-80 rounded-2xl bg-white border border-slate-200 shadow-sm">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">Loading Catalog...</p>
+        <div className="flex flex-col items-center justify-center h-80 rounded-2xl bg-white border border-zinc-200 shadow-sm">
+          <Loader2 className="size-8 animate-spin text-blue-500 mb-4" />
+          <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Loading Catalog...</p>
         </div>
       ) : filtered.length === 0 ? (
-        <m.div variants={item} className="bg-white border border-slate-200 rounded-lg shadow-sm py-20 text-center">
-          <div className="w-20 h-20 rounded-full bg-slate-50 flex items-center justify-center mx-auto mb-6">
-            <Search className="w-8 h-8 text-slate-200" />
+        <m.div variants={item} className="bg-white border border-zinc-200 rounded-lg shadow-sm py-20 text-center">
+          <div className="size-20 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-6">
+            <Search className="size-8 text-zinc-200" />
           </div>
-          <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No matching results found</p>
+          <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">No matching results found</p>
           {(search || activeFilterCount > 0) && (
             <button
               onClick={() => updateParams({ q: null, country: [], funding: [], status: null, deadline: null })}
@@ -564,17 +564,17 @@ export default function AdminScholarshipsPage() {
       {/* ── Pagination ──────────────────────────────────── */}
       {!loading && filtered.length > 0 && (
         <m.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-[10px] font-medium text-slate-400 uppercase tracking-widest">
-            Showing <span className="text-slate-900">{pageStart + 1}</span>–
-            <span className="text-slate-900">{pageStart + pageRows.length}</span> of{" "}
-            <span className="text-slate-900">{filtered.length}</span>
+          <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest">
+            Showing <span className="text-zinc-900">{pageStart + 1}</span>–
+            <span className="text-zinc-900">{pageStart + pageRows.length}</span> of{" "}
+            <span className="text-zinc-900">{filtered.length}</span>
           </p>
           {totalPages > 1 && (
             <div className="flex items-center gap-2">
               <button
                 onClick={() => updateParams({ page: String(Math.max(1, safePage - 1)) }, { keepPage: true })}
                 disabled={safePage <= 1}
-                className="w-9 h-9 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="size-9 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Previous page"
               >
                 <ChevronLeft className="h-4 w-4" />
@@ -585,10 +585,10 @@ export default function AdminScholarshipsPage() {
                     key={p}
                     onClick={() => updateParams({ page: String(p) }, { keepPage: true })}
                     aria-current={safePage === p ? "page" : undefined}
-                    className={`w-8 h-8 rounded text-xs font-medium transition-colors ${
+                    className={`size-8 rounded text-xs font-medium transition-colors ${
                       safePage === p
-                        ? "bg-slate-900 text-white"
-                        : "text-slate-500 hover:bg-slate-100"
+                        ? "bg-zinc-900 text-white"
+                        : "text-zinc-500 hover:bg-zinc-100"
                     }`}
                   >
                     {p}
@@ -598,7 +598,7 @@ export default function AdminScholarshipsPage() {
               <button
                 onClick={() => updateParams({ page: String(Math.min(totalPages, safePage + 1)) }, { keepPage: true })}
                 disabled={safePage >= totalPages}
-                className="w-9 h-9 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 hover:bg-slate-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="size-9 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 hover:bg-zinc-50 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 aria-label="Next page"
               >
                 <ChevronRight className="h-4 w-4" />
@@ -632,29 +632,29 @@ function ListView({
   onDelete: (id: string) => void;
 }) {
   return (
-    <m.div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
+    <m.div className="bg-white border border-zinc-200 rounded-lg overflow-hidden shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="bg-slate-50 border-b border-slate-200 text-left">
-              <th className="px-3 py-3 w-10">
+            <tr className="bg-zinc-50 border-b border-zinc-200 text-left">
+              <th className="p-3 w-10">
                 <button
                   onClick={onSelectAll}
-                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                  className="text-zinc-400 hover:text-zinc-700 transition-colors"
                   aria-label={allSelected ? "Deselect all" : "Select all"}
                 >
-                  {allSelected ? <SquareCheck className="w-4 h-4" /> : <Square className="w-4 h-4" />}
+                  {allSelected ? <SquareCheck className="size-4" /> : <Square className="size-4" />}
                 </button>
               </th>
-              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Scholarship</th>
-              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Jurisdiction</th>
-              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Funding</th>
-              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Deadline</th>
-              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Status</th>
-              <th className="px-4 py-3 text-right text-[10px] font-medium uppercase tracking-[0.1em] text-slate-500">Operations</th>
+              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Scholarship</th>
+              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Jurisdiction</th>
+              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Funding</th>
+              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Deadline</th>
+              <th className="px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Status</th>
+              <th className="px-4 py-3 text-right text-[10px] font-medium uppercase tracking-[0.1em] text-zinc-500">Operations</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-zinc-100">
             <AnimatePresence mode="popLayout">
               {rows.map(s => {
                 const isSelected = selectedIds.has(s.id);
@@ -667,28 +667,28 @@ function ListView({
                     exit={{ opacity: 0 }}
                     className={`group hover:bg-blue-50/30 transition-colors ${!s.is_active ? "opacity-60 grayscale-[0.5]" : ""} ${isSelected ? "bg-blue-50/40" : ""}`}
                   >
-                    <td className="px-3 py-3.5">
+                    <td className="p-3.5">
                       <button
                         onClick={() => onSelect(s.id)}
-                        className="text-slate-400 hover:text-slate-700 transition-colors"
+                        className="text-zinc-400 hover:text-zinc-700 transition-colors"
                         aria-label={isSelected ? "Deselect" : "Select"}
                       >
-                        {isSelected ? <SquareCheck className="w-4 h-4 text-blue-600" /> : <Square className="w-4 h-4" />}
+                        {isSelected ? <SquareCheck className="size-4 text-blue-600" /> : <Square className="size-4" />}
                       </button>
                     </td>
                     <td className="px-4 py-3.5 min-w-[280px]">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded bg-slate-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
+                        <div className="size-8 rounded bg-zinc-100 flex items-center justify-center text-lg shadow-inner group-hover:bg-white transition-colors">
                           {countryFlag(s.country)}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-xs font-medium text-slate-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
-                          <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
+                          <p className="text-xs font-medium text-zinc-900 truncate group-hover:text-blue-600 transition-colors">{s.name}</p>
+                          <p className="text-[10px] font-normal text-zinc-500 truncate mt-0.5">{s.provider}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3.5">
-                      <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-slate-200 bg-slate-50 text-[10px] font-medium uppercase tracking-tight text-slate-600">
+                      <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-zinc-200 bg-zinc-50 text-[10px] font-medium uppercase tracking-tight text-zinc-600">
                         {s.country}
                       </span>
                     </td>
@@ -699,8 +699,8 @@ function ListView({
                     </td>
                     <td className="px-4 py-3.5">
                       <div className="flex flex-col">
-                        <span className="text-xs font-medium text-slate-700">{formatDeadline(s.application_deadline)}</span>
-                        <span className="text-[9px] font-medium text-slate-400 uppercase tracking-tighter mt-0.5">Closes</span>
+                        <span className="text-xs font-medium text-zinc-700">{formatDeadline(s.application_deadline)}</span>
+                        <span className="text-[9px] font-medium text-zinc-400 uppercase tracking-tighter mt-0.5">Closes</span>
                       </div>
                     </td>
                     <td className="px-4 py-3.5">
@@ -709,7 +709,7 @@ function ListView({
                         className={`inline-flex items-center gap-2 rounded px-3 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
                           s.is_active
                             ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
-                            : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                            : "bg-zinc-50 text-zinc-500 border-zinc-200 hover:bg-zinc-100"
                         }`}
                       >
                         {s.is_active ? "Live" : "Hold"}
@@ -719,37 +719,37 @@ function ListView({
                       <div className="flex items-center justify-end gap-1.5">
                         <a
                           href={`/admin/scholarships/${s.id}/edit`}
-                          className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                          className="size-8 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 transition-all hover:border-zinc-900 hover:text-zinc-900 shadow-sm active:scale-95"
                           aria-label="Edit"
                         >
-                          <Pencil className="w-3.5 h-3.5" />
+                          <Pencil className="size-3.5" />
                         </a>
                         {s.application_url && (
                           <a
                             href={s.application_url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="w-8 h-8 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                            className="size-8 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 transition-all hover:border-zinc-900 hover:text-zinc-900 shadow-sm active:scale-95"
                             aria-label="Open application URL"
                           >
-                            <ExternalLink className="w-3.5 h-3.5" />
+                            <ExternalLink className="size-3.5" />
                           </a>
                         )}
                         <ActionDropdown
                           actions={[
                             {
                               label: "View Public",
-                              icon: <Eye className="w-3.5 h-3.5" />,
+                              icon: <Eye className="size-3.5" />,
                               onClick: () => window.open(`/scholarships/${s.id}`, "_blank"),
                             },
                             {
                               label: "Copy ID",
-                              icon: <Copy className="w-3.5 h-3.5" />,
+                              icon: <Copy className="size-3.5" />,
                               onClick: () => { navigator.clipboard.writeText(s.id); },
                             },
                             {
                               label: "Delete",
-                              icon: <Trash2 className="w-3.5 h-3.5" />,
+                              icon: <Trash2 className="size-3.5" />,
                               danger: true,
                               onClick: () => onDelete(s.id),
                             },
@@ -797,30 +797,30 @@ function GridView({
               exit={{ opacity: 0 }}
               className={`group bg-white border rounded-lg shadow-sm hover:shadow-md transition-all flex flex-col ${
                 !s.is_active ? "opacity-60 grayscale-[0.4]" : ""
-              } ${isSelected ? "border-blue-400 ring-1 ring-blue-400/30" : "border-slate-200"}`}
+              } ${isSelected ? "border-blue-400 ring-1 ring-blue-400/30" : "border-zinc-200"}`}
             >
               <div className="p-4 flex-1 flex flex-col">
                 <div className="flex items-start gap-3 mb-3">
-                  <div className="w-10 h-10 rounded bg-slate-100 flex items-center justify-center text-xl shadow-inner shrink-0">
+                  <div className="size-10 rounded bg-zinc-100 flex items-center justify-center text-xl shadow-inner shrink-0">
                     {countryFlag(s.country)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-medium text-slate-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-sm font-medium text-zinc-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
                       {s.name}
                     </h3>
-                    <p className="text-[10px] font-normal text-slate-500 truncate mt-0.5">{s.provider}</p>
+                    <p className="text-[10px] font-normal text-zinc-500 truncate mt-0.5">{s.provider}</p>
                   </div>
                   <button
                     onClick={() => onSelect(s.id)}
-                    className="text-slate-400 hover:text-blue-600 transition-colors"
+                    className="text-zinc-400 hover:text-blue-600 transition-colors"
                     aria-label={isSelected ? "Deselect" : "Select"}
                   >
-                    {isSelected ? <SquareCheck className="w-4 h-4 text-blue-600" /> : <Square className="w-4 h-4" />}
+                    {isSelected ? <SquareCheck className="size-4 text-blue-600" /> : <Square className="size-4" />}
                   </button>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-1.5 mb-3">
-                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[9px] font-medium uppercase tracking-tight text-slate-600">
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-zinc-200 bg-zinc-50 text-[9px] font-medium uppercase tracking-tight text-zinc-600">
                     {s.country}
                   </span>
                   <span className={`inline-flex items-center rounded px-2 py-0.5 text-[9px] font-medium uppercase tracking-widest border ${fundingBadgeColor(s.funding_type)} border-current/20`}>
@@ -828,19 +828,19 @@ function GridView({
                   </span>
                 </div>
 
-                <div className="text-[10px] font-medium text-slate-500 flex items-center gap-1.5 mt-auto">
-                  <Calendar className="w-3 h-3 text-slate-400" />
+                <div className="text-[10px] font-medium text-zinc-500 flex items-center gap-1.5 mt-auto">
+                  <Calendar className="size-3 text-zinc-400" />
                   <span className="uppercase tracking-tight">Closes {formatDeadline(s.application_deadline)}</span>
                 </div>
               </div>
 
-              <div className="border-t border-slate-100 px-3 py-2 flex items-center justify-between gap-2">
+              <div className="border-t border-zinc-100 px-3 py-2 flex items-center justify-between gap-2">
                 <button
                   onClick={() => onToggle(s.id, s.is_active)}
                   className={`inline-flex items-center gap-2 rounded px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide transition-all border ${
                     s.is_active
                       ? "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100/80"
-                      : "bg-slate-50 text-slate-500 border-slate-200 hover:bg-slate-100"
+                      : "bg-zinc-50 text-zinc-500 border-zinc-200 hover:bg-zinc-100"
                   }`}
                 >
                   {s.is_active ? "Live" : "Hold"}
@@ -848,20 +848,20 @@ function GridView({
                 <div className="flex items-center gap-1.5">
                   <a
                     href={`/admin/scholarships/${s.id}/edit`}
-                    className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                    className="size-7 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 transition-all hover:border-zinc-900 hover:text-zinc-900 shadow-sm active:scale-95"
                     aria-label="Edit"
                   >
-                    <Pencil className="w-3 h-3" />
+                    <Pencil className="size-3" />
                   </a>
                   {s.application_url && (
                     <a
                       href={s.application_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-7 h-7 flex items-center justify-center rounded bg-white border border-slate-200 text-slate-400 transition-all hover:border-slate-900 hover:text-slate-900 shadow-sm active:scale-95"
+                      className="size-7 flex items-center justify-center rounded bg-white border border-zinc-200 text-zinc-400 transition-all hover:border-zinc-900 hover:text-zinc-900 shadow-sm active:scale-95"
                       aria-label="Open application URL"
                     >
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="size-3" />
                     </a>
                   )}
                   <ActionDropdown
@@ -869,17 +869,17 @@ function GridView({
                     actions={[
                       {
                         label: "View Public",
-                        icon: <Eye className="w-3.5 h-3.5" />,
+                        icon: <Eye className="size-3.5" />,
                         onClick: () => window.open(`/scholarships/${s.id}`, "_blank"),
                       },
                       {
                         label: "Copy ID",
-                        icon: <Copy className="w-3.5 h-3.5" />,
+                        icon: <Copy className="size-3.5" />,
                         onClick: () => { navigator.clipboard.writeText(s.id); },
                       },
                       {
                         label: "Delete",
-                        icon: <Trash2 className="w-3.5 h-3.5" />,
+                        icon: <Trash2 className="size-3.5" />,
                         danger: true,
                         onClick: () => onDelete(s.id),
                       },

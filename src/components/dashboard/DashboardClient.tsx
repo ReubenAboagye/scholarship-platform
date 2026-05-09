@@ -35,7 +35,7 @@ function daysLeft(dateStr: string): number {
 function deadlinePill(days: number) {
   if (days <= 3)  return "bg-red-100 text-red-700 border-red-200";
   if (days <= 14) return "bg-amber-50 text-amber-700 border-amber-200";
-  return "bg-slate-50 text-slate-500 border-slate-200";
+  return "bg-zinc-50 text-zinc-500 border-zinc-200";
 }
 
 function scoreColor(score: number) {
@@ -63,20 +63,20 @@ export default function DashboardClient({
         <m.div variants={fade} className="flex items-start justify-between gap-3 pt-1">
           <div>
             <p className="text-xs font-semibold text-brand-600 uppercase tracking-widest mb-1">Overview</p>
-            <h1 className="text-3xl text-slate-900" style={{ fontFamily: "Fraunces, Georgia, ui-serif, serif", fontWeight: 600 }}>Welcome, {firstName}</h1>
-            <p className="text-sm text-slate-500 mt-1">Here&apos;s what&apos;s happening with your scholarships.</p>
+            <h1 className="text-3xl text-zinc-900" style={{ fontFamily: "Fraunces, Georgia, ui-serif, serif", fontWeight: 600 }}>Welcome, {firstName}</h1>
+            <p className="text-sm text-zinc-500 mt-1">Here&apos;s what&apos;s happening with your scholarships.</p>
           </div>
           <a href="/dashboard/scholarships"
-            className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-slate-800 bg-white border border-slate-300 hover:bg-slate-50 px-3.5 py-2 rounded-md mt-1 transition-all">
-            Browse Directory <ArrowRight className="w-3 h-3" />
+            className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold text-zinc-800 bg-white border border-zinc-300 hover:bg-zinc-50 px-3.5 py-2 rounded-md mt-1 transition-all">
+            Browse Directory <ArrowRight className="size-3" />
           </a>
         </m.div>
 
         {/* ── Profile banner (only when incomplete) ── */}
         {!profileComplete && (
           <m.div variants={fade} className="relative overflow-hidden rounded-lg border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="w-5 h-5 text-amber-500" />
+            <div className="size-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+              <AlertCircle className="size-5 text-amber-500" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-bold text-amber-900">
@@ -110,13 +110,13 @@ export default function DashboardClient({
             { label: "Accepted",  value: acceptedCount,  icon: CheckCircle, href: "/dashboard/tracker", color: "bg-emerald-50 text-emerald-600" },
           ].map((s) => (
             <m.div variants={fade} key={s.label}>
-              <a href={s.href} className="flex items-center gap-3 bg-white border border-slate-200 hover:border-slate-300 px-3 py-3 rounded-lg flex-1 min-w-0 transition-all group">
-                <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0", s.color)}>
-                  <s.icon className="w-3.5 h-3.5" />
+              <a href={s.href} className="flex items-center gap-3 bg-white border border-zinc-200 hover:border-zinc-300 p-3 rounded-lg flex-1 min-w-0 transition-all group">
+                <div className={cn("size-8 rounded-lg flex items-center justify-center flex-shrink-0", s.color)}>
+                  <s.icon className="size-3.5" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-base font-bold text-slate-900 leading-none">{s.value}</p>
-                  <p className="text-xs text-slate-400 mt-0.5">{s.label}</p>
+                  <p className="text-base font-bold text-zinc-900 leading-none">{s.value}</p>
+                  <p className="text-xs text-zinc-400 mt-0.5">{s.label}</p>
                 </div>
               </a>
             </m.div>
@@ -127,8 +127,8 @@ export default function DashboardClient({
         {dueThisWeek.length > 0 && (
           <m.div variants={fade}>
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                <Clock className="w-4 h-4 text-red-500" /> Due this week
+              <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+                <Clock className="size-4 text-red-500" /> Due this week
               </h2>
               <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
             </div>
@@ -140,17 +140,17 @@ export default function DashboardClient({
                   <a
                     key={t.id}
                     href="/dashboard/tracker"
-                    className="flex-shrink-0 w-56 bg-white border border-slate-200 hover:border-slate-300 rounded-lg p-4 transition-all"
+                    className="flex-shrink-0 w-56 bg-white border border-zinc-200 hover:border-zinc-300 rounded-lg p-4 transition-all"
                   >
-                    <p className="text-xs font-bold text-slate-800 leading-snug truncate mb-2">
+                    <p className="text-xs font-bold text-zinc-800 leading-snug truncate mb-2">
                       {t.scholarships?.name ?? "Scholarship"}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className={cn("text-[11px] font-bold px-2 py-0.5 rounded-full border", days ? deadlinePill(days) : "bg-slate-50 text-slate-400 border-slate-200")}>
+                      <span className={cn("text-[11px] font-bold px-2 py-0.5 rounded-full border", days ? deadlinePill(days) : "bg-zinc-50 text-zinc-400 border-zinc-200")}>
                         {days !== null ? `${days}d left` : "TBA"}
                       </span>
                       <span className={cn("text-[10px] font-semibold px-2 py-0.5 rounded-full",
-                        t.status === "In Progress" ? "bg-blue-50 text-blue-600" : "bg-slate-50 text-slate-500"
+                        t.status === "In Progress" ? "bg-blue-50 text-blue-600" : "bg-zinc-50 text-zinc-500"
                       )}>
                         {t.status}
                       </span>
@@ -165,8 +165,8 @@ export default function DashboardClient({
         {/* ── Top matches from last AI run ── */}
         <m.div variants={fade}>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-brand-600" /> Best for you
+            <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+              <Sparkles className="size-4 text-brand-600" /> Best for you
             </h2>
             <a href={hasMatchHistory ? "/dashboard/matches" : "/dashboard/match"}
               className="text-xs font-semibold text-brand-600 hover:text-brand-700">
@@ -175,35 +175,35 @@ export default function DashboardClient({
           </div>
 
           {validTopMatches.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-lg p-6 text-center">
-              <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-2">
-                <Sparkles className="w-5 h-5 text-slate-300" />
+            <div className="bg-white border border-zinc-200 rounded-lg p-6 text-center">
+              <div className="size-10 bg-zinc-50 rounded-xl flex items-center justify-center mx-auto mb-2">
+                <Sparkles className="size-5 text-zinc-300" />
               </div>
-              <p className="text-sm font-semibold text-slate-500">No matches yet</p>
-              <p className="text-xs text-slate-400 mt-1 mb-3">Run the AI engine to get personalised scholarship rankings.</p>
+              <p className="text-sm font-semibold text-zinc-500">No matches yet</p>
+              <p className="text-xs text-zinc-400 mt-1 mb-3">Run the AI engine to get personalised scholarship rankings.</p>
               <a href={profileComplete ? "/dashboard/match" : bannerHref}
-                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 px-4 py-2 rounded-lg transition-all">
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-zinc-900 hover:bg-zinc-800 px-4 py-2 rounded-lg transition-all">
                 {profileComplete ? "Run AI Matching" : "Complete Profile First"}
               </a>
             </div>
           ) : (
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-50">
+            <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden divide-y divide-zinc-50">
               {validTopMatches.map((r: any, i: number) => {
                 const s = r.scholarship;
                 return (
                   <a
                     key={s.id}
                     href={`/dashboard/scholarships/${s.slug || s.id}`}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors group"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 transition-colors group"
                   >
-                    <div className="w-5 h-5 rounded bg-slate-100 flex items-center justify-center flex-shrink-0 text-[10px] font-black text-slate-400">
+                    <div className="size-5 rounded bg-zinc-100 flex items-center justify-center flex-shrink-0 text-[10px] font-black text-zinc-400">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-slate-800 group-hover:text-brand-700 truncate transition-colors">
+                      <p className="text-sm font-semibold text-zinc-800 group-hover:text-brand-700 truncate transition-colors">
                         {s.name}
                       </p>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-zinc-400 truncate">
                         {countryFlag(s.country)} {s.provider} · {formatDeadline(s.application_deadline)}
                       </p>
                     </div>
@@ -220,37 +220,37 @@ export default function DashboardClient({
         {/* ── Application tracker summary ── */}
         <m.div variants={fade}>
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-              <ListChecks className="w-4 h-4 text-indigo-500" /> Application tracker
+            <h2 className="text-sm text-zinc-800 flex items-center gap-2">
+              <ListChecks className="size-4 text-indigo-500" /> Application tracker
             </h2>
             <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">Manage →</a>
           </div>
 
           {tracked.length === 0 ? (
-            <div className="bg-white border border-slate-200 rounded-lg p-5 text-center">
-              <p className="text-sm font-semibold text-slate-500">No applications tracked</p>
+            <div className="bg-white border border-zinc-200 rounded-lg p-5 text-center">
+              <p className="text-sm font-semibold text-zinc-500">No applications tracked</p>
               <a href="/scholarships" className="text-xs text-brand-600 hover:underline mt-1 inline-block">
                 Browse scholarships to start tracking →
               </a>
             </div>
           ) : (
-            <div className="bg-white border border-slate-200 rounded-lg overflow-hidden divide-y divide-slate-50">
+            <div className="bg-white border border-zinc-200 rounded-lg overflow-hidden divide-y divide-zinc-50">
               {tracked.slice(0, 5).map((t: any) => (
                 <div key={t.id} className="flex items-center gap-3 px-4 py-3">
-                  <div className={cn("w-2 h-2 rounded-full flex-shrink-0",
+                  <div className={cn("size-2 rounded-full flex-shrink-0",
                     t.status === "Accepted"          ? "bg-emerald-500"
                     : t.status === "Submitted"       ? "bg-brand-500"
                     : t.status === "In Progress"     ? "bg-blue-400"
                     : t.status === "Awaiting Decision" ? "bg-amber-400"
                     : t.status === "Rejected"        ? "bg-rose-400"
-                    : "bg-slate-300"
+                    : "bg-zinc-300"
                   )} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-slate-800 truncate">{t.scholarships?.name ?? "Scholarship"}</p>
-                    <p className="text-xs text-slate-400">{t.status}</p>
+                    <p className="text-sm text-zinc-800 truncate">{t.scholarships?.name ?? "Scholarship"}</p>
+                    <p className="text-xs text-zinc-400">{t.status}</p>
                   </div>
                   {t.scholarships?.application_deadline && (
-                    <span className="text-[11px] text-slate-400 flex-shrink-0">
+                    <span className="text-[11px] text-zinc-400 flex-shrink-0">
                       {formatDeadline(t.scholarships.application_deadline)}
                     </span>
                   )}
@@ -261,11 +261,11 @@ export default function DashboardClient({
         </m.div>
 
         {/* ── Profile completeness meter ── */}
-        <m.div variants={fade} className="bg-white border border-slate-200 rounded-lg p-4">
+        <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-brand-600" />
-              <h2 className="text-sm font-bold text-slate-800">Profile & match quality</h2>
+              <Sparkles className="size-4 text-brand-600" />
+              <h2 className="text-sm text-zinc-800">Profile & match quality</h2>
             </div>
             <span className="text-xs font-bold text-brand-600">{completionPct}%</span>
           </div>
@@ -274,7 +274,7 @@ export default function DashboardClient({
             {["Basics", "Academic", "Interests"].map((seg, i) => {
               const segPct = Math.max(0, Math.min(100, completionPct - i * 33));
               return (
-                <div key={seg} className="flex-1 bg-slate-100 rounded-full overflow-hidden">
+                <div key={seg} className="flex-1 bg-zinc-100 rounded-full overflow-hidden">
                   <m.div
                     initial={{ width: 0 }}
                     animate={{ width: `${Math.min(100, segPct * 3)}%` }}
@@ -285,7 +285,7 @@ export default function DashboardClient({
               );
             })}
           </div>
-          <div className="flex justify-between text-[10px] text-slate-400 font-medium mb-3">
+          <div className="flex justify-between text-[10px] text-zinc-400 font-medium mb-3">
             <span>Basics</span><span>Academic</span><span>Interests</span>
           </div>
           {completionPct < 100 && (

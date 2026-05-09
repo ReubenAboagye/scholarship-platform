@@ -30,14 +30,14 @@ function FilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-slate-200 last:border-0 py-3">
+    <div className="border-b border-zinc-200 last:border-0 py-3">
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center justify-between w-full text-left"
       >
-        <span className="text-sm font-semibold text-slate-900">{label}</span>
+        <span className="text-sm font-semibold text-zinc-900">{label}</span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
+          className={`size-4 text-zinc-400 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
         />
       </button>
       {open && <div className="pt-2.5">{children}</div>}
@@ -54,8 +54,8 @@ function optionClasses(isActive: boolean) {
     "px-2.5 py-1.5 rounded-md text-sm transition-colors",
     "border-l-2",
     isActive
-      ? "bg-slate-100 text-slate-900 border-brand-600 font-medium"
-      : "text-slate-600 hover:bg-slate-50 border-transparent",
+      ? "bg-zinc-100 text-zinc-900 border-brand-600 font-medium"
+      : "text-zinc-600 hover:bg-zinc-50 border-transparent",
   ].join(" ");
 }
 
@@ -87,12 +87,12 @@ function FilterContent({
           {active.international === "true" && <input type="hidden" name="international" value="true" />}
           {active.effort        !== "any"  && <input type="hidden" name="effort"        value={active.effort} />}
           <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" />
+            <Search className="absolute left-2.5 top-1/2 -tranzinc-y-1/2 size-3.5 text-zinc-400" />
             <input
               name="search" defaultValue={active.search} placeholder="Keyword…"
-              className="w-full pl-8 pr-3 py-2 text-sm bg-white border border-slate-200 rounded-md
+              className="w-full pl-8 pr-3 py-2 text-sm bg-white border border-zinc-200 rounded-md
                          outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500
-                         placeholder:text-slate-400 transition-shadow"
+                         placeholder:text-zinc-400 transition-shadow"
             />
           </div>
         </form>
@@ -133,10 +133,10 @@ function FilterContent({
                 <img
                   src={countryFlagUrl(c)!}
                   alt=""
-                  className="w-4 h-3 object-cover rounded-sm border border-slate-200 shrink-0"
+                  className="w-4 h-3 object-cover rounded-sm border border-zinc-200 shrink-0"
                 />
               ) : (
-                <div className="w-4 h-3 bg-slate-100 rounded-sm shrink-0" />
+                <div className="w-4 h-3 bg-zinc-100 rounded-sm shrink-0" />
               )}
               <span className="truncate">{c === "All" ? "All countries" : c}</span>
             </a>
@@ -210,17 +210,17 @@ function FilterContent({
                 href={buildUrl({ [key]: on ? "" : "true" } as any)}
                 onClick={onClose}
                 className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-sm transition-colors
-                  ${on ? "bg-slate-100 text-slate-900 font-medium" : "text-slate-600 hover:bg-slate-50"}`}
+                  ${on ? "bg-zinc-100 text-zinc-900 font-medium" : "text-zinc-600 hover:bg-zinc-50"}`}
               >
                 <span>{label}</span>
                 <span
                   aria-hidden
                   className={`relative w-8 h-4 rounded-full transition-colors shrink-0
-                    ${on ? "bg-brand-600" : "bg-slate-300"}`}
+                    ${on ? "bg-brand-600" : "bg-zinc-300"}`}
                 >
                   <span
-                    className={`absolute top-0.5 w-3 h-3 bg-white rounded-full shadow-sm transition-transform
-                      ${on ? "translate-x-4" : "translate-x-0.5"}`}
+                    className={`absolute top-0.5 size-3 bg-white rounded-full shadow-sm transition-transform
+                      ${on ? "tranzinc-x-4" : "tranzinc-x-0.5"}`}
                   />
                 </span>
               </a>
@@ -235,8 +235,8 @@ function FilterContent({
           <a
             href={baseUrl}
             onClick={onClose}
-            className="block w-full text-center py-2 text-sm font-medium text-slate-600
-                       border border-slate-200 hover:border-slate-300 hover:text-slate-900
+            className="block w-full text-center py-2 text-sm font-medium text-zinc-600
+                       border border-zinc-200 hover:border-zinc-300 hover:text-zinc-900
                        rounded-md transition-colors"
           >
             Clear all filters
@@ -295,16 +295,16 @@ export default function FilterSidebar({
       {/* Mobile trigger: quiet bar with filter button + active-count */}
       <div
         className="lg:hidden sticky top-[-16px] z-40 -mx-4 px-4 py-3
-                   bg-white/95 backdrop-blur-md border-b border-slate-200 mb-6
+                   bg-white/95 backdrop-blur-md border-b border-zinc-200 mb-6
                    flex items-center justify-between"
       >
         <button
           onClick={() => setDrawerOpen(true)}
           className="inline-flex items-center gap-2 px-3.5 py-2 rounded-md
-                     border border-slate-300 text-sm font-medium text-slate-700
-                     hover:bg-slate-50 transition-colors"
+                     border border-zinc-300 text-sm font-medium text-zinc-700
+                     hover:bg-zinc-50 transition-colors"
         >
-          <SlidersHorizontal className="w-3.5 h-3.5" />
+          <SlidersHorizontal className="size-3.5" />
           Filters
           {activeCount > 0 && (
             <span className="inline-flex items-center justify-center
@@ -314,9 +314,9 @@ export default function FilterSidebar({
             </span>
           )}
         </button>
-        <p className="text-xs text-slate-500 truncate ml-3">
+        <p className="text-xs text-zinc-500 truncate ml-3">
           {active.country === "All" ? "All countries" : active.country}
-          <span className="text-slate-300"> · </span>
+          <span className="text-zinc-300"> · </span>
           {active.funding_type === "All" ? "Any funding" : active.funding_type}
         </p>
       </div>
@@ -326,9 +326,9 @@ export default function FilterSidebar({
         className="hidden lg:block lg:sticky lg:top-4 w-56 flex-shrink-0 self-start
                    max-h-[calc(100vh-2rem)] overflow-y-auto pr-1 custom-scrollbar"
       >
-        <h2 className="text-sm font-semibold text-slate-900 mb-1 px-0.5">Filters</h2>
+        <h2 className="text-sm font-semibold text-zinc-900 mb-1 px-0.5">Filters</h2>
         {hasFilters && (
-          <p className="text-xs text-slate-500 mb-2 px-0.5">
+          <p className="text-xs text-zinc-500 mb-2 px-0.5">
             {activeCount} active
           </p>
         )}
@@ -347,7 +347,7 @@ export default function FilterSidebar({
       {/* Mobile drawer overlay */}
       {drawerOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[60] bg-zinc-900/40 backdrop-blur-sm lg:hidden"
           onClick={() => setDrawerOpen(false)}
         />
       )}
@@ -356,17 +356,17 @@ export default function FilterSidebar({
       <div
         className={`fixed inset-y-0 right-0 z-[70] w-80 bg-white shadow-xl lg:hidden
                     transform transition-transform duration-200 ease-out
-                    ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
+                    ${drawerOpen ? "tranzinc-x-0" : "tranzinc-x-full"}`}
       >
         <div className="h-full flex flex-col">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-            <h2 className="text-base font-semibold text-slate-900">Filters</h2>
+          <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-200">
+            <h2 className="text-base font-semibold text-zinc-900">Filters</h2>
             <button
               onClick={() => setDrawerOpen(false)}
               aria-label="Close filters"
-              className="p-1.5 hover:bg-slate-100 rounded-md transition-colors"
+              className="p-1.5 hover:bg-zinc-100 rounded-md transition-colors"
             >
-              <X className="w-4 h-4 text-slate-500" />
+              <X className="size-4 text-zinc-500" />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto px-5 py-3">
@@ -381,7 +381,7 @@ export default function FilterSidebar({
               onClose={handleClose}
             />
           </div>
-          <div className="p-4 border-t border-slate-200">
+          <div className="p-4 border-t border-zinc-200">
             <button
               onClick={() => setDrawerOpen(false)}
               className="w-full bg-brand-600 text-white py-2.5 rounded-md
