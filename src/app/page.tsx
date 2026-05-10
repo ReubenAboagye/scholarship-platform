@@ -374,19 +374,39 @@ export default async function HomePage() {
 
       <section id="how-it-works" className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="text-center max-w-2xl mx-auto mb-12 lg:mb-16">
             <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
               How it works
             </p>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl text-zinc-900 mb-3 whitespace-nowrap" style={SERIF}>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl text-zinc-900 mb-3" style={SERIF}>
               From sign-up to ranked matches in two minutes
             </h2>
-            <p className="text-sm sm:text-base text-zinc-500 leading-relaxed whitespace-nowrap">
+            <p className="text-sm sm:text-base text-zinc-500 leading-relaxed">
               A straightforward four-step flow with no quizzes, no upsells, and no surveys to unlock your results.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Mobile: vertical timeline | md+: grid */}
+          <div className="md:hidden relative pl-8">
+            {/* Vertical line */}
+            <div className="absolute left-[15px] top-4 bottom-4 w-0.5 bg-zinc-200" />
+
+            {steps.map((step, index) => (
+              <div key={step.n} className="relative mb-8 last:mb-0">
+                {/* Step dot */}
+                <div className="absolute -left-[21px] top-0 w-8 h-8 bg-brand-600 text-white rounded-full flex items-center justify-center font-bold text-sm shadow-md z-10">
+                  {index + 1}
+                </div>
+
+                <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-5">
+                  <h3 className="font-semibold text-zinc-900 mb-1.5 text-[15px]">{step.title}</h3>
+                  <p className="text-sm text-zinc-600 leading-relaxed">{step.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, index) => (
               <div
                 key={step.n}

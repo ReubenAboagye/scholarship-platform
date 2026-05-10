@@ -3,70 +3,83 @@
 import { useEffect, useRef } from "react";
 
 export default function InteractiveGrid() {
-  const gridRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
+  const vLineRef = useRef<HTMLDivElement>(null);
+  const hLineRef = useRef<HTMLDivElement>(null);
+  const crosshairRef = useRef<HTMLDivElement>(null);
+  const rippleRef = useRef<HTMLDivElement>(null);
+
+  const targetRef = useRef({ x: 0, y: 0 });
+  const currentRef = useRef({ x: 0, y: 0 });
+  const rafRef = useRef<number>(0);
 
   useEffect(() => {
-    const grid = gridRef.current;
-    if (!grid) return;
+    const container = containerRef.current;
+    const glow = glowRef.current;
+    const vLine = vLineRef.current;
+    const hLine = hLineRef.current;
+    const crosshair = crosshairRef.current;
+    const ripple = rippleRef.current;
+    if (!container || !glow || !vLine || !hLine || !crosshair || !ripple) return;
+
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const rect = grid.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      // Calculate percentage position
-      const xPercent = (x / rect.width) * 100;
-      const yPercent = (y / rect.height) * 100;
-
-      grid.style.setProperty("--mouse-x", `${xPercent}%`);
-      grid.style.setProperty("--mouse-y", `${yPercent}%`);
+      const rect = container.getBoundingClientRect();
+      targetRef.current.x = e.clientX - rect.left;
+      targetRef.current.y = e.clientY - rect.top;
     };
 
-    grid.addEventListener("mousemove", handleMouseMove);
+    const animate = () => {
+      const target = targetRef.current;
+      const current = currentRef.current;
+
+      current.x = lerp(current.x, target.x, 0.14);
+      current.y = lerp(current.y, target.y, 0.14);
+
+      glow.style.transform = `translate(${current.x - 300}px, ${current.y - 300}px)`;
+      vLine.style.transform = `translateX(${current.x}px)`;
+      hLine.style.transform = `translateY(${current.y}px)`;
+      crosshair.style.transform = `translate(${current.x}px, ${current.y}px) translate(-50%, -50%)`;
+      ripple.style.transform = `translate(${current.x - 50}px, ${current.y - 50}px)`;
+
+      rafRef.current = requestAnimationFrame(animate);
+    };
+
+    container.addEventListener("mousemove", handleMouseMove);
+    rafRef.current = requestAnimationFrame(animate);
+
     return () => {
-      grid.removeEventListener("mousemove", handleMouseMove);
+      container.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
   return (
-    <div
-      ref={gridRef}
-      className="absolute inset-0 opacity-40"
-      style={{
-        "--mouse-x": "50%",
-        "--mouse-y": "50%",
-      } as React.CSSProperties}
-    >
+    <div ref={containerRef} className="absolute inset-0 opacity-40">
       {/* Base grid pattern */}
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoNTksIDEzMCwgMjQ2LCAwLjEpIiBzdHJva2Utd2lkdGg9IjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')]" />
 
       {/* Mouse-following glow effect on grid */}
       <div
-        className="absolute rounded-full blur-3xl pointer-events-none"
+        ref={glowRef}
+        className="absolute top-0 left-0 rounded-full blur-3xl pointer-events-none will-change-transform"
         style={{
           width: "600px",
           height: "600px",
           background: "radial-gradient(circle, rgba(59, 130, 246, 0.3) 0%, transparent 70%)",
-          left: "calc(var(--mouse-x) - 300px)",
-          top: "calc(var(--mouse-y) - 300px)",
-          transition: "left 0.2s ease-out, top 0.2s ease-out",
         }}
       />
 
       {/* Animated grid lines that follow cursor */}
       <div
-        className="absolute w-px h-full bg-gradient-to-b from-transparent via-blue-400/60 to-transparent pointer-events-none"
-        style={{
-          left: "var(--mouse-x)",
-          transition: "left 0.15s ease-out",
-        }}
+        ref={vLineRef}
+        className="absolute top-0 left-0 w-px h-full bg-gradient-to-b from-transparent via-blue-400/60 to-transparent pointer-events-none will-change-transform"
       />
       <div
-        className="absolute h-px w-full bg-gradient-to-r from-transparent via-blue-400/60 to-transparent pointer-events-none"
-        style={{
-          top: "var(--mouse-y)",
-          transition: "top 0.15s ease-out",
-        }}
+        ref={hLineRef}
+        className="absolute top-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-blue-400/60 to-transparent pointer-events-none will-change-transform"
       />
 
       {/* Hexagonal grid overlay */}
@@ -74,13 +87,8 @@ export default function InteractiveGrid() {
 
       {/* Pulsing crosshairs at cursor position */}
       <div
-        className="absolute pointer-events-none"
-        style={{
-          left: "var(--mouse-x)",
-          top: "var(--mouse-y)",
-          transform: "translate(-50%, -50%)",
-          transition: "left 0.15s ease-out, top 0.15s ease-out",
-        }}
+        ref={crosshairRef}
+        className="absolute top-0 left-0 pointer-events-none will-change-transform"
       >
         <div className="relative w-20 h-20">
           <div className="absolute inset-0 border-2 border-blue-400/40 rounded-full animate-ping" />
@@ -93,13 +101,11 @@ export default function InteractiveGrid() {
 
       {/* Scanning ripple effect */}
       <div
-        className="absolute rounded-full border-2 border-blue-400/30 pointer-events-none"
+        ref={rippleRef}
+        className="absolute top-0 left-0 rounded-full border-2 border-blue-400/30 pointer-events-none will-change-transform"
         style={{
           width: "100px",
           height: "100px",
-          left: "calc(var(--mouse-x) - 50px)",
-          top: "calc(var(--mouse-y) - 50px)",
-          transition: "left 0.15s ease-out, top 0.15s ease-out",
           animation: "ripple-expand 2s ease-out infinite",
         }}
       />

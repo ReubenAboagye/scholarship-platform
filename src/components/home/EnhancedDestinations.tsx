@@ -1,14 +1,7 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const COUNTRY_META = [
-  { flag: "gb", name: "United Kingdom", code: "UK" },
-  { flag: "us", name: "United States", code: "USA" },
-  { flag: "de", name: "Germany", code: "Germany" },
-  { flag: "ca", name: "Canada", code: "Canada" },
-] as const;
+import { useRef, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Country {
   code: string;
@@ -23,11 +16,25 @@ interface EnhancedDestinationsProps {
 }
 
 function flagUrl(code: string) {
-  return `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
+  const local: Record<string, string> = {
+    gb: "/images/countries/uk-flag.jpg",
+    us: "/images/countries/usa-flag.jpg",
+    de: "/images/countries/germany-flag.jpg",
+    ca: "/images/countries/canada-flag.jpg",
+  };
+  return local[code.toLowerCase()] ?? `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
 }
 
 export default function EnhancedDestinations({ countries }: EnhancedDestinationsProps) {
   const [hoveredCountry, setHoveredCountry] = useState<string | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  function scrollBy(direction: "left" | "right") {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = el.offsetWidth * 0.75;
+    el.scrollBy({ left: direction === "left" ? -amount : amount, behavior: "smooth" });
+  }
 
   return (
     <section id="countries" className="relative bg-white border-b border-zinc-200/70 overflow-hidden">
@@ -54,71 +61,61 @@ export default function EnhancedDestinations({ countries }: EnhancedDestinations
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {countries.map((country, index) => (
+        <div className="relative">
+          {/* Left arrow (mobile only) */}
+          <button
+            onClick={() => scrollBy("left")}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 sm:hidden bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full p-2 shadow-lg hover:bg-white active:scale-95 transition-all"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft className="size-5 text-zinc-700" />
+          </button>
+
+          {/* Right arrow (mobile only) */}
+          <button
+            onClick={() => scrollBy("right")}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 sm:hidden bg-white/90 backdrop-blur-sm border border-zinc-200 rounded-full p-2 shadow-lg hover:bg-white active:scale-95 transition-all"
+            aria-label="Scroll right"
+          >
+            <ChevronRight className="size-5 text-zinc-700" />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="flex sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 overflow-x-auto sm:overflow-visible snap-x snap-mandatory pb-2 sm:pb-0 -mx-4 px-4 sm:mx-0 sm:px-0 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+          {countries.map((country) => (
             <a
               key={country.code}
               href={`/scholarships?country=${country.code}`}
-              className="group relative block bg-white border border-zinc-200 rounded-lg p-6 hover:border-brand-400 hover:shadow-2xl transition-all duration-300 overflow-hidden"
+              className="group relative block flex-shrink-0 w-[72vw] sm:w-auto aspect-[4/3] rounded-lg overflow-hidden border border-zinc-200 hover:border-brand-400 hover:shadow-2xl transition-all duration-300 snap-center"
               onMouseEnter={() => setHoveredCountry(country.code)}
               onMouseLeave={() => setHoveredCountry(null)}
             >
-              {/* Hover glow effect */}
+              <img
+                src={flagUrl(country.flag)}
+                alt={country.name}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+
+              {/* Hover overlay */}
               {hoveredCountry === country.code && (
-                <div className="absolute inset-0 bg-gradient-to-br from-brand-50 to-blue-50/50 animate-fade-in" />
+                <div className="absolute inset-0 bg-brand-900/10 animate-fade-in" />
               )}
 
               {/* Tech corner accents */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-brand-300/0 group-hover:border-brand-300/50 transition-all duration-300" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-r-2 border-t-2 border-brand-300/0 group-hover:border-brand-300/50 transition-all duration-300" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-brand-300/0 group-hover:border-brand-300/50 transition-all duration-300" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-brand-300/0 group-hover:border-brand-300/50 transition-all duration-300" />
-
-              {/* Content */}
-              <div className="relative">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="relative">
-                    <div className="absolute inset-0 rounded-sm bg-brand-400/0 group-hover:bg-brand-400/20 transition-colors" />
-                    <img 
-                      src={flagUrl(country.flag)} 
-                      alt="" 
-                      className="relative w-10 h-auto rounded-sm shadow-sm group-hover:scale-110 transition-transform duration-300" 
-                      aria-hidden 
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-semibold text-zinc-900 leading-tight group-hover:text-brand-700 transition-colors">
-                      {country.name}
-                    </h3>
-                    <p className="text-xs text-zinc-500">
-                      {country.count} scholarships
-                    </p>
-                  </div>
-                </div>
-
-                <p className="text-[13px] text-zinc-600 leading-relaxed mb-5 line-clamp-2">
-                  {country.top}
-                </p>
-
-                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:gap-2.5 transition-all">
-                  Browse
-                  <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                </div>
-
-                {/* Animated data indicator */}
-                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" />
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
-                  <div className="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse" style={{ animationDelay: '0.4s' }} />
-                </div>
-              </div>
+              <div className="absolute top-0 left-0 w-8 h-8 border-l-2 border-t-2 border-white/0 group-hover:border-white/60 transition-all duration-300" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-r-2 border-t-2 border-white/0 group-hover:border-white/60 transition-all duration-300" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-l-2 border-b-2 border-white/0 group-hover:border-white/60 transition-all duration-300" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-r-2 border-b-2 border-white/0 group-hover:border-white/60 transition-all duration-300" />
 
               {/* Scanning line effect on card */}
               <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-brand-400/30 to-transparent group-hover:animate-card-scan" />
+                <div className="absolute w-full h-0.5 bg-gradient-to-r from-transparent via-brand-400/40 to-transparent group-hover:animate-card-scan" />
               </div>
             </a>
           ))}
+          </div>
         </div>
       </div>
     </section>
