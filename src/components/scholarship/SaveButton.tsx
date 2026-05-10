@@ -35,7 +35,7 @@ export default function SaveButton({ scholarshipId, userId, initialSaved, varian
     : "bg-white/10 backdrop-blur-sm border border-white/25 text-white/90 hover:bg-white/20 hover:border-white/40";
 
   const defaultStyle = saved
-    ? "bg-blue-50 border-blue-200 text-blue-700 hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+    ? "bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100 hover:border-blue-300 hover:text-blue-800"
     : "border-zinc-200 text-zinc-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700";
 
   return (

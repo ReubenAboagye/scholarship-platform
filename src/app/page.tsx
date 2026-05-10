@@ -3,6 +3,10 @@ import { ArrowRight, Check, ChevronDown, Compass, Globe, Lock, Shield, Award, Bo
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import HeroSpotlight from "@/components/home/HeroSpotlight";
+import SciFiAnimations from "@/components/home/SciFiAnimations";
+import InteractiveGrid from "@/components/home/InteractiveGrid";
+import EnhancedTrustStrip from "@/components/home/EnhancedTrustStrip";
+import EnhancedDestinations from "@/components/home/EnhancedDestinations";
 import ScholarshipCategories from "@/components/home/ScholarshipCategories";
 import ScrollToTop from "@/components/home/ScrollToTop";
 import { createClient } from "@/lib/supabase/server";
@@ -162,25 +166,25 @@ export default async function HomePage() {
       <Navbar />
 
       <section className="relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-700 to-brand-900 overflow-x-hidden pt-16">
+        {/* Sci-Fi Animations - Educational elements */}
+        <SciFiAnimations />
+
         {/* Mouse-following spotlight effect */}
         <HeroSpotlight />
 
         {/* Decorative background elements - Unipix-style with floating animations */}
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-0 size-[800px] bg-brand-600 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-float" />
-          <div className="absolute bottom-0 left-0 size-[600px] bg-brand-500 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-float-delayed" />
+          <div className="absolute top-0 right-0 size-[800px] bg-brand-900 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-float" />
+          <div className="absolute bottom-0 left-0 size-[600px] bg-brand-900 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-float-delayed" />
         </div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-30" />
+        
+        {/* Interactive grid that tracks mouse cursor */}
+        <InteractiveGrid />
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-28">
           <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-10 lg:gap-20 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-brand-700/50 backdrop-blur-sm rounded-full border border-brand-500/30 mb-6 sm:mb-8 animate-fade-up" style={{ animationDelay: '0ms' }}>
-                <Sparkles className="size-3.5 sm:w-4 sm:h-4 text-amber-400" />
-                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-amber-200">
-                  Official Scholarship Portal
-                </span>
-              </div>
+              
 
               <h1
                 className="text-[32px] sm:text-[40px] lg:text-[52px] xl:text-[64px] text-white mb-5 sm:mb-6 leading-tight lg:leading-tight animate-fade-up"
@@ -190,7 +194,7 @@ export default async function HomePage() {
                 <br className="hidden sm:block" />
                 to your academic
                 <br className="hidden sm:block" />
-                <span className="text-amber-400"> profile.</span>
+                <span className="text-blue-300"> profile.</span>
               </h1>
 
               <p className="text-base sm:text-lg lg:text-xl text-zinc-300 leading-relaxed mb-8 sm:mb-10 max-w-xl animate-fade-up" style={{ animationDelay: '200ms' }}>
@@ -206,7 +210,7 @@ export default async function HomePage() {
                 ].map((item) => (
                   <div key={item.text} className="flex items-center gap-2 sm:gap-3 text-zinc-200">
                     <div className="size-7 sm:w-8 sm:h-8 rounded-lg bg-brand-700/50 flex items-center justify-center flex-shrink-0">
-                      <item.icon className="size-3.5 sm:w-4 sm:h-4 text-amber-400" strokeWidth={2} />
+                      <item.icon className="size-3.5 sm:w-4 sm:h-4 text-blue-300" strokeWidth={2} />
                     </div>
                     <span className="text-xs sm:text-sm font-medium">{item.text}</span>
                   </div>
@@ -216,7 +220,7 @@ export default async function HomePage() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-up" style={{ animationDelay: '400ms' }}>
                 <a
                   href="/auth/signup"
-                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-white text-brand-600 font-bold text-sm sm:text-base hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3.5 sm:px-8 sm:py-4 bg-amber-600 text-white font-bold text-sm sm:text-base hover:bg-amber-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                 >
                   <span>Find my scholarships</span>
                   <ArrowRight className="size-4 sm:w-5 sm:h-5" />
@@ -230,14 +234,11 @@ export default async function HomePage() {
                 </a>
               </div>
               
-              <p className="mt-5 sm:mt-6 text-xs sm:text-sm text-zinc-400">
-                Free for students • No credit card required • Takes 2 minutes
-              </p>
             </div>
 
             <div className="relative animate-scale-in order-first lg:order-last animate-pulse-glow" style={{ animationDelay: '0.2s' }}>
               <div className="relative">
-                <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-amber-500/20 to-brand-500/20 rounded-2xl blur-2xl animate-float" />
+                <div className="absolute -inset-3 sm:-inset-4 bg-gradient-to-r from-brand-500/20 to-brand-500/20 rounded-2xl blur-2xl animate-float" />
                 <div className="relative overflow-hidden rounded-2xl border border-brand-500/30 shadow-2xl h-[280px] sm:h-[350px] lg:h-[450px] xl:h-[550px]">
                   <Image
                     src="/images/marketing/students-collab.jpg"
@@ -261,7 +262,7 @@ export default async function HomePage() {
                       ))}
                     </div>
                     <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 sm:p-4 border border-white/20">
-                      <p className="text-amber-200 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-1">
+                      <p className="text-blue-200 text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-1">
                         Verified Opportunities
                       </p>
                       <p className="text-white text-xl sm:text-2xl font-bold" style={SERIF}>
@@ -282,23 +283,8 @@ export default async function HomePage() {
       {/* Scholarship Categories Section - adapted from Unipix template */}
       <ScholarshipCategories />
 
-      <section className="bg-white border-b border-zinc-200/70 overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
-            {trustStrip.map((block) => (
-              <div key={block.title} className="flex gap-3 items-start p-4 rounded-lg hover:bg-zinc-50 transition-colors">
-                <div className="size-10 rounded-lg bg-brand-50 flex items-center justify-center flex-shrink-0">
-                  <block.icon className="size-5 text-brand-600" strokeWidth={1.75} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-zinc-900 mb-1">{block.title}</p>
-                  <p className="text-[13px] text-zinc-500 leading-relaxed">{block.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Trust Strip with sci-fi effects */}
+      <EnhancedTrustStrip />
 
       <section className="bg-paper border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
@@ -370,7 +356,7 @@ export default async function HomePage() {
 
                 <div className="flex flex-wrap gap-2 pt-4 border-t border-zinc-100">
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-zinc-600 bg-zinc-50 px-2.5 py-1 rounded">
-                    <span className="size-1.5 rounded-full bg-amber-500" aria-hidden />
+                    <span className="size-1.5 rounded-full bg-blue-500" aria-hidden />
                     Deadline: {formatDeadline(scholarship.application_deadline).replace(" (Closed)", "")}
                   </span>
                   <span className="inline-flex items-center text-[11px] font-medium text-zinc-600 bg-zinc-50 px-2.5 py-1 rounded">
@@ -383,46 +369,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="countries" className="bg-white border-b border-zinc-200/70">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
-          <div className="max-w-2xl mb-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-brand-600 mb-3">
-              Destinations
-            </p>
-            <h2 className="text-3xl lg:text-4xl text-zinc-900 mb-3" style={SERIF}>
-              Four destinations, curated
-            </h2>
-            <p className="text-zinc-500 leading-relaxed">
-              Rather than list 10,000 scholarships we cannot verify, we cover four destinations deeply. Every listing is traceable to an official source.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {countries.map((country) => (
-              <a
-                key={country.code}
-                href={`/scholarships?country=${country.code}`}
-                className="group block bg-white border border-zinc-200 rounded-lg p-6 hover:border-zinc-300 hover:shadow-card-hover transition-all"
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <img src={flagUrl(country.flag)} alt="" className="w-10 h-auto rounded-sm shadow-sm" aria-hidden />
-                  <div>
-                    <h3 className="text-base font-semibold text-zinc-900 leading-tight">{country.name}</h3>
-                    <p className="text-xs text-zinc-500">{country.count} scholarships</p>
-                  </div>
-                </div>
-                <p className="text-[13px] text-zinc-600 leading-relaxed mb-5 line-clamp-2">
-                  {country.top}
-                </p>
-                <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-600 group-hover:gap-2.5 transition-all">
-                  Browse
-                  <ArrowRight className="size-3.5" />
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Enhanced Destinations with sci-fi effects */}
+      <EnhancedDestinations countries={countries} />
 
       <section id="how-it-works" className="bg-white border-b border-zinc-200/70">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">

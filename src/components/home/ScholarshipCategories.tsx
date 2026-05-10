@@ -72,7 +72,7 @@ export default function ScholarshipCategories() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                   </>
                 ) : (
-                  <div className="relative h-full bg-gradient-to-br from-brand-600 to-brand-800 flex items-center justify-center">
+                  <div className="relative h-full bg-gradient-to-br from-brand-700 to-brand-900 flex items-center justify-center">
                     <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTTAgNDBMMDQgMEgwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4xKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-30" />
                     <category.icon className="size-16 text-white/90 group-hover:scale-110 transition-transform duration-300" />
                   </div>

@@ -15,19 +15,19 @@ const config: Config = {
         serif: ['Fraunces', 'Georgia', 'ui-serif', 'serif'],
       },
       colors: {
-        // Brand colors - Unipix-inspired crimson/maroon theme
-        // Primary crimson/maroon for hero sections and CTAs
+        // Brand colors - dark blue theme
+        // Primary dark blue for hero sections and CTAs
         brand: {
-          50:  '#FEF2F2',
-          100: '#FEE2E2',
-          200: '#FECACA',
-          300: '#FCA5A5',
-          400: '#F87171',
-          500: '#EF4444',
-          600: '#890C25', // Primary Crimson (Unipix)
-          700: '#B71A34', // Hover Crimson (Unipix)
-          800: '#991B1B',
-          900: '#7F1D1D', // Deep Crimson
+          50:  '#EFF6FF',
+          100: '#DBEAFE',
+          200: '#BFDBFE',
+          300: '#93C5FD',
+          400: '#60A5FA',
+          500: '#3B82F6',
+          600: '#1E3A8A', // Primary Dark Blue
+          700: '#1D4ED8', // Hover Blue
+          800: '#1E40AF',
+          900: '#172554', // Deep Dark Blue
         },
         // Neutral paper — flat off-white for sections that used to be bg-slate-50
         paper: {

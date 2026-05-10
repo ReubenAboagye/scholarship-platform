@@ -107,22 +107,20 @@ export default function Navbar() {
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-40 safe-top transition-all duration-300 ${
-        scrolled ? "bg-white border-b border-zinc-200/70 shadow-sm" : "bg-transparent border-transparent"
-      }`}>
+      <header className="fixed top-0 left-0 right-0 z-40 safe-top bg-white border-b border-white shadow-sm transition-all duration-300">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
           <a href="/" className="flex items-baseline">
-            <span className={`text-2xl tracking-tight transition-colors ${scrolled ? "text-zinc-900" : "text-white"}`} style={{ ...LOGO_FONT, fontWeight: 600 }}>
-              Scholar<span className={`${scrolled ? "text-brand-600" : "text-amber-400"}`} style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
+            <span className="text-2xl tracking-tight text-zinc-900 transition-colors" style={{ ...LOGO_FONT, fontWeight: 600 }}>
+              Scholar<span className="text-brand-600" style={{ fontStyle: "italic", fontWeight: 500 }}>Bridge</span>
             </span>
           </a>
 
           <nav className="hidden items-center gap-1 md:flex">
             <div ref={studentsRef} className="relative">
               <button onClick={() => { setStudentsOpen(!studentsOpen); setCompanyOpen(false); }}
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
                 Students
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${studentsOpen ? "rotate-180" : ""}`} />
               </button>
@@ -162,7 +160,7 @@ export default function Navbar() {
 
             <div ref={companyRef} className="relative">
               <button onClick={() => { setCompanyOpen(!companyOpen); setStudentsOpen(false); }}
-                className={`flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
+                className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
                 Company
                 <ChevronDown className={`h-3.5 w-3.5 transition-transform ${companyOpen ? "rotate-180" : ""}`} />
               </button>
@@ -193,7 +191,7 @@ export default function Navbar() {
             {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
 
 
-            <a href="/#how-it-works" className={`px-3 py-2 text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>
+            <a href="/#how-it-works" className="px-3 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
               How It Works
             </a>
           </nav>
@@ -205,7 +203,7 @@ export default function Navbar() {
               </a>
             ) : (
               <>
-                <a href="/auth/login" className={`text-sm font-medium transition-colors ${scrolled ? "text-zinc-600 hover:text-zinc-900" : "text-white/90 hover:text-white"}`}>Log in</a>
+                <a href="/auth/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">Log in</a>
                 <a href="/auth/signup" className="inline-flex items-center rounded-md bg-brand-600 hover:bg-brand-700 px-4 py-2 text-sm font-semibold text-white transition-colors">
                   Get started
                 </a>
@@ -222,9 +220,7 @@ export default function Navbar() {
                         size-11 rounded-md border transition-all duration-200 cursor-pointer
                         ${mobileOpen
                           ? "border-zinc-300 bg-zinc-100 text-zinc-900 hamburger-open"
-                          : scrolled
-                            ? "border-zinc-200 bg-white/60 text-zinc-700 hover:bg-zinc-100 hover:border-zinc-300 active:scale-[0.97]"
-                            : "border-white/30 bg-white/10 text-white hover:bg-white/20 hover:border-white/50 active:scale-[0.97]"}`}
+                          : "border-zinc-200 bg-white/60 text-zinc-700 hover:bg-zinc-100 hover:border-zinc-300 active:scale-[0.97]"}`}
           >
             <span className="hamburger-line line-1" />
             <span className="hamburger-line line-2" />

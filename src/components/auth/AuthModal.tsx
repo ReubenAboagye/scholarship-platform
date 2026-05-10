@@ -89,7 +89,7 @@ export default function AuthModal({ isOpen, onClose, featureName, redirectUrl }:
                   <a 
                     href={`/auth/login?redirectTo=${encodeURIComponent(redirectUrl)}`}
                     onClick={onClose}
-                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-3.5 text-sm font-semibold text-white hover:bg-zinc-800 hover:shadow-lg hover:-tranzinc-y-0.5 transition-all duration-200"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-900 px-4 py-3.5 text-sm font-semibold text-white hover:bg-zinc-800 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
                   >
                     Log in to continue
                   </a>
