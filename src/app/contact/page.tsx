@@ -16,7 +16,7 @@ const contactInfo = [
 ];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -141,7 +141,7 @@ export default function ContactPage() {
                     <button 
                       onClick={() => {
                         setSent(false);
-                        setForm({ name: "", email: "", subject: "", message: "" });
+                        setForm({ name: "", email: "", subject: "", message: "", website: "" });
                       }}
                       className="text-sm font-semibold text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-2 mx-auto"
                     >
@@ -157,6 +157,16 @@ export default function ContactPage() {
                       </div>
                     )}
                     <form onSubmit={handleSubmit} className="space-y-6">
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={form.website}
+                        onChange={(e) => setForm(prev => ({ ...prev, website: e.target.value }))}
+                        className="hidden"
+                        aria-hidden="true"
+                      />
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <label className="block text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Full Name</label>

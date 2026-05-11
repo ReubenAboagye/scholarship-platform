@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
 import { z } from "zod";
 import { buildContactEmail } from "@/emails/contact";
+import { getClientIp } from "@/lib/auth/ip";
+import { rateLimitByIp, rateLimitByKey } from "@/lib/rate-limit/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
@@ -14,7 +16,16 @@ const contactSchema = z.object({
   email: z.string().email("Invalid email address"),
   subject: z.string().min(2, "Subject must be at least 2 characters").max(200, "Subject must be less than 200 characters"),
   message: z.string().min(10, "Message must be at least 10 characters").max(2000, "Message must be less than 2000 characters"),
+  website: z.string().max(200).optional().default(""),
 });
+
+function tooManyRequests(reset: number) {
+  const retryAfter = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+  return NextResponse.json(
+    { error: "Too many messages. Please try again later." },
+    { status: 429, headers: { "Retry-After": String(retryAfter) } }
+  );
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -28,6 +39,18 @@ export async function POST(req: NextRequest) {
     }
 
     const { name, email, subject, message } = validationResult.data;
+    if (validationResult.data.website) {
+      return NextResponse.json({ success: true, message: "Message sent successfully" });
+    }
+
+    const ip = await getClientIp();
+    const [ipLimit, emailLimit] = await Promise.all([
+      rateLimitByIp(ip, "contact_ip", 3, 60 * 60),
+      rateLimitByKey(email.toLowerCase(), "contact_email", 2, 60 * 60),
+    ]);
+
+    if (!ipLimit.allowed) return tooManyRequests(ipLimit.reset);
+    if (!emailLimit.allowed) return tooManyRequests(emailLimit.reset);
 
     // Build and send email
     const { subject: emailSubject, html } = buildContactEmail({ name, email, subject, message });

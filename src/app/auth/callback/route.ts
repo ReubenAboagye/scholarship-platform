@@ -2,18 +2,25 @@ import { createClient } from "@/lib/supabase/server";
 import { sanitizeRedirectPath } from "@/lib/auth/redirect";
 import { NextRequest, NextResponse } from "next/server";
 
-function popupHtml(type: "success" | "error", destination?: string, errorMsg?: string) {
+function popupHtml(
+  origin: string,
+  type: "success" | "error",
+  destination?: string,
+  errorMsg?: string
+) {
   const data =
     type === "success"
-      ? `{ type: "oauth:success", destination: "${destination ?? "/dashboard"}" }`
-      : `{ type: "oauth:error", error: "${errorMsg ?? "confirmation_failed"}" }`;
+      ? { type: "oauth:success", destination: destination ?? "/dashboard" }
+      : { type: "oauth:error", error: errorMsg ?? "confirmation_failed" };
+  const payload = JSON.stringify(data).replace(/</g, "\\u003c");
+  const targetOrigin = JSON.stringify(origin).replace(/</g, "\\u003c");
 
   return `<!DOCTYPE html>
 <html>
   <body>
     <script>
       if (window.opener) {
-        window.opener.postMessage(${data}, "*");
+        window.opener.postMessage(${payload}, ${targetOrigin});
       }
       window.close();
     </script>
@@ -48,7 +55,7 @@ export async function GET(request: NextRequest) {
       }
 
       if (isPopup) {
-        return new NextResponse(popupHtml("success", destination), {
+        return new NextResponse(popupHtml(origin, "success", destination), {
           headers: { "Content-Type": "text/html" },
         });
       }
@@ -57,7 +64,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (isPopup) {
-    return new NextResponse(popupHtml("error", undefined, "confirmation_failed"), {
+    return new NextResponse(popupHtml(origin, "error", undefined, "confirmation_failed"), {
       headers: { "Content-Type": "text/html" },
     });
   }

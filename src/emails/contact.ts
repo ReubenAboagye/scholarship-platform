@@ -8,8 +8,25 @@ export interface ContactEmailProps {
   message: string;
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function sanitizeHeader(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
+}
+
 export function buildContactEmail({ name, email, subject, message }: ContactEmailProps): { subject: string; html: string } {
-  const emailSubject = `[${subject}] Contact Form: ${name}`;
+  const safeName = escapeHtml(name);
+  const safeEmail = escapeHtml(email);
+  const safeSubject = escapeHtml(subject);
+  const safeMessage = escapeHtml(message);
+  const emailSubject = `[${sanitizeHeader(subject)}] Contact Form: ${sanitizeHeader(name)}`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -28,19 +45,19 @@ export function buildContactEmail({ name, email, subject, message }: ContactEmai
       
       <div style="margin-bottom:20px;">
         <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;">From</p>
-        <p style="margin:0;font-size:16px;font-weight:600;color:#0f172a;">${name}</p>
-        <a href="mailto:${email}" style="color:#2563eb;font-size:14px;text-decoration:none;">${email}</a>
+        <p style="margin:0;font-size:16px;font-weight:600;color:#0f172a;">${safeName}</p>
+        <a href="mailto:${safeEmail}" style="color:#2563eb;font-size:14px;text-decoration:none;">${safeEmail}</a>
       </div>
 
       <div style="margin-bottom:20px;">
         <p style="margin:0 0 4px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;">Subject</p>
-        <p style="margin:0;font-size:14px;color:#1e293b;">${subject}</p>
+        <p style="margin:0;font-size:14px;color:#1e293b;">${safeSubject}</p>
       </div>
 
       <div>
         <p style="margin:0 0 8px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#64748b;">Message</p>
         <div style="background:#f8fafc;border-radius:8px;padding:16px;border:1px solid #e2e8f0;">
-          <p style="margin:0;font-size:14px;line-height:1.6;color:#334155;white-space:pre-wrap;">${message}</p>
+          <p style="margin:0;font-size:14px;line-height:1.6;color:#334155;white-space:pre-wrap;">${safeMessage}</p>
         </div>
       </div>
 
