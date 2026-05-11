@@ -99,6 +99,18 @@ export interface MatchResult {
   scholarship: Scholarship;
   match_score: number;
   match_reasons: string[];
+  score_breakdown?: MatchScoreBreakdown;
+}
+
+export interface MatchScoreBreakdown {
+  semantic: number;
+  eligibility: number;
+  field: number;
+  deadline: number;
+  funding: number;
+  effort: number;
+  freshness: number;
+  behavior: number;
 }
 
 export interface PlatformStats {

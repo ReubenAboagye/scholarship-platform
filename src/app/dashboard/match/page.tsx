@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import {
   Sparkles, Loader2, ExternalLink, Bookmark, BookmarkCheck,
   ChevronRight, AlertCircle, CheckCircle, History, Trash2,
-  ChevronDown, ChevronUp, Clock,
+  ChevronDown, ChevronUp, Clock, Brain, Database, Zap, Target,
 } from "lucide-react";
 import { countryFlag, formatDeadline, fundingBadgeColor } from "@/lib/utils";
 
@@ -27,6 +27,18 @@ interface MatchResult {
   };
   match_score: number;
   match_reasons: string[];
+  score_breakdown?: MatchScoreBreakdown;
+}
+
+interface MatchScoreBreakdown {
+  semantic: number;
+  eligibility: number;
+  field: number;
+  deadline: number;
+  funding: number;
+  effort: number;
+  freshness: number;
+  behavior: number;
 }
 
 interface MatchResponse {
@@ -87,6 +99,123 @@ function formatRunAt(iso: string) {
   if (diffH < 24) return `${Math.round(diffH)}h ago`;
   if (diffH < 168) return `${Math.floor(diffH / 24)}d ago`;
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function topScoreFactors(breakdown?: MatchScoreBreakdown) {
+  if (!breakdown) return [];
+
+  const labels: Record<keyof MatchScoreBreakdown, string> = {
+    semantic: "Profile fit",
+    eligibility: "Eligibility",
+    field: "Field",
+    deadline: "Deadline",
+    funding: "Funding",
+    effort: "Effort",
+    freshness: "Verified",
+    behavior: "Your signals",
+  };
+
+  return (Object.entries(breakdown) as [keyof MatchScoreBreakdown, number][])
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map(([key, value]) => ({ label: labels[key], value }));
+}
+
+
+// ── Matching animation ───────────────────────────────────────────────────────
+
+function MatchingAnimation() {
+  const steps = [
+    { icon: Brain, label: "Building profile embedding", delay: 0 },
+    { icon: Database, label: "Searching scholarship database", delay: 800 },
+    { icon: Target, label: "Scoring eligibility & fit", delay: 1600 },
+    { icon: Zap, label: "Ranking top matches", delay: 2400 },
+  ];
+
+  const [visible, setVisible] = useState<number>(0);
+
+  useEffect(() => {
+    const timers = steps.map((step, i) =>
+      setTimeout(() => setVisible((prev) => Math.max(prev, i + 1)), step.delay)
+    );
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div className="bg-white border border-zinc-200 rounded-xl px-6 py-10 text-center relative overflow-hidden">
+      {/* Animated background rings */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="absolute size-48 rounded-full border border-blue-100 opacity-0 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite]" />
+        <div className="absolute size-32 rounded-full border border-blue-200 opacity-0 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" />
+        <div className="absolute size-16 rounded-full border border-blue-300 opacity-0 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite_1s]" />
+      </div>
+
+      {/* Central orb */}
+      <div className="relative mb-8">
+        <div className="size-16 bg-gradient-to-br from-blue-500 to-violet-600 rounded-2xl mx-auto flex items-center justify-center shadow-lg shadow-blue-200 animate-pulse">
+          <Sparkles className="size-8 text-white" />
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="size-20 rounded-2xl bg-blue-400/20 animate-[spin_3s_linear_infinite]" />
+        </div>
+      </div>
+
+      <h2 className="text-lg font-semibold text-zinc-900 mb-1">Finding your best matches</h2>
+      <p className="text-sm text-zinc-400 mb-8">Analyzing your profile against every scholarship...</p>
+
+      {/* Steps */}
+      <div className="max-w-xs mx-auto space-y-3">
+        {steps.map((step, i) => {
+          const isVisible = visible > i;
+          const isActive = visible === i + 1;
+          const Icon = step.icon;
+          return (
+            <div
+              key={step.label}
+              className={`flex items-center gap-3 text-left transition-all duration-500 ${
+                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+              }`}
+            >
+              <div
+                className={`size-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300 ${
+                  isActive
+                    ? 'bg-blue-100 text-blue-600'
+                    : isVisible
+                      ? 'bg-emerald-50 text-emerald-500'
+                      : 'bg-zinc-50 text-zinc-300'
+                }`}
+              >
+                {isVisible && !isActive ? (
+                  <CheckCircle className="size-4" />
+                ) : (
+                  <Icon className={`size-4 ${isActive ? 'animate-bounce' : ''}`} />
+                )}
+              </div>
+              <span
+                className={`text-sm font-medium transition-colors duration-300 ${
+                  isActive ? 'text-blue-700' : isVisible ? 'text-zinc-600' : 'text-zinc-300'
+                }`}
+              >
+                {step.label}
+              </span>
+              {isActive && (
+                <Loader2 className="size-3.5 text-blue-400 animate-spin ml-auto flex-shrink-0" />
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Progress bar */}
+      <div className="max-w-xs mx-auto mt-6 h-1 bg-zinc-100 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-blue-400 to-violet-500 rounded-full transition-all duration-1000 ease-out"
+          style={{ width: `${Math.min(100, (visible / steps.length) * 100)}%` }}
+        />
+      </div>
+    </div>
+  );
 }
 
 // ── Match card ────────────────────────────────────────────────────────────────
@@ -150,6 +279,19 @@ function MatchCard({
                   <span key={reason}
                     className="inline-flex items-center gap-1 text-[11px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
                     <CheckCircle className="size-2.5" /> {reason}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {result.score_breakdown && (
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                {topScoreFactors(result.score_breakdown).map((factor) => (
+                  <span
+                    key={factor.label}
+                    className="inline-flex items-center gap-1 text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-200 px-2 py-0.5 rounded-full"
+                  >
+                    {factor.label} {factor.value}%
                   </span>
                 ))}
               </div>
@@ -548,8 +690,11 @@ export default function MatchPage() {
       ══════════════════════════════════════════════════════ */}
       {tab === "run" && (
         <>
+          {/* Loading animation */}
+          {status === "loading" && <MatchingAnimation />}
+
           {/* Idle / error — show run button */}
-          {status !== "done" && (
+          {status !== "done" && status !== "loading" && (
             <div className="bg-white border border-zinc-200 rounded-xl px-6 py-8 text-center">
               <div className="size-12 rounded-xl bg-blue-50 flex items-center justify-center mx-auto mb-3">
                 <Sparkles className="size-6 text-blue-600" />
@@ -568,12 +713,10 @@ export default function MatchPage() {
 
               <button
                 onClick={runMatching}
-                disabled={status === "loading" || profileLoading || !profileComplete}
+                disabled={profileLoading || !profileComplete}
                 className="inline-flex items-center gap-2 px-7 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-zinc-200 disabled:text-zinc-400 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-colors text-sm"
               >
-                {status === "loading"
-                  ? <><Loader2 className="size-4 animate-spin" /><span className="whitespace-nowrap">Matching...</span></>
-                  : <><Sparkles className="size-4" /><span className="whitespace-nowrap">Run AI Matching</span></>}
+                <Sparkles className="size-4" /><span className="whitespace-nowrap">Run AI Matching</span>
               </button>
               {!profileLoading && !profileComplete && (
                 <p className="text-xs text-zinc-400 mt-3">Complete your profile to enable matching</p>

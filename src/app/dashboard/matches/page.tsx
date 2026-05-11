@@ -30,6 +30,18 @@ interface MatchResult {
   };
   match_score: number;
   match_reasons: string[];
+  score_breakdown?: MatchScoreBreakdown;
+}
+
+interface MatchScoreBreakdown {
+  semantic: number;
+  eligibility: number;
+  field: number;
+  deadline: number;
+  funding: number;
+  effort: number;
+  freshness: number;
+  behavior: number;
 }
 
 interface HistorySession {
