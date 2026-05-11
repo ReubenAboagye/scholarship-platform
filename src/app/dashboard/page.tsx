@@ -2,6 +2,26 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import DashboardClient from "@/components/dashboard/DashboardClient";
 
+function relationRow<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
+function estimateFundingValue(value: unknown): number {
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return 0;
+
+  const matches = value.matchAll(/(\d[\d,]*(?:\.\d+)?)\s*(k|m)?/gi);
+  let total = 0;
+  for (const match of matches) {
+    const parsed = Number(match[1].replace(/,/g, ""));
+    if (!Number.isFinite(parsed)) continue;
+    const suffix = match[2]?.toLowerCase();
+    total += parsed * (suffix === "m" ? 1_000_000 : suffix === "k" ? 1_000 : 1);
+  }
+  return Math.round(total);
+}
+
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -20,12 +40,12 @@ export default async function DashboardPage() {
       .maybeSingle(),
     supabase
       .from("saved_scholarships")
-      .select("id, created_at, scholarships(name, application_deadline, amount, country, provider, slug)")
+      .select("id, created_at, scholarships(name, application_deadline, funding_amount, country, provider, slug)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
     supabase
       .from("application_tracker")
-      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug, amount)")
+      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug, funding_amount)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
     supabase
@@ -65,7 +85,7 @@ export default async function DashboardPage() {
   // "Due this week" — tracker items with deadline within 7 days
   const dueThisWeek = (tracked ?? [])
     .filter((t: any) => {
-      const d = t.scholarships?.application_deadline;
+      const d = relationRow(t.scholarships)?.application_deadline;
       if (!d) return false;
       const diff = new Date(d).getTime() - Date.now();
       return diff > 0 && diff <= 7 * 24 * 60 * 60 * 1000;
@@ -78,10 +98,10 @@ export default async function DashboardPage() {
   // Financial calculations
   const potentialValue = (tracked ?? [])
     .filter(t => t.status !== "Rejected")
-    .reduce((sum, t) => sum + (t.scholarships?.[0]?.amount || 0), 0);
+    .reduce((sum, t) => sum + estimateFundingValue(relationRow(t.scholarships)?.funding_amount), 0);
   const acceptedValue = (tracked ?? [])
     .filter(t => t.status === "Accepted")
-    .reduce((sum, t) => sum + (t.scholarships?.[0]?.amount || 0), 0);
+    .reduce((sum, t) => sum + estimateFundingValue(relationRow(t.scholarships)?.funding_amount), 0);
 
   return (
     <DashboardClient

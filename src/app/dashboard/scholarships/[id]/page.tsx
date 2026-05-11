@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import { countryFlagUrl } from "@/lib/utils";
 import {
@@ -51,12 +51,20 @@ export default async function DashboardScholarshipDetailPage({
   const tracked = trackedResult.data;
 
   // Similar scholarships via vector neighbours — up to 3 after filtering self
-  const { data: similarRaw } = scholarship.embedding
-    ? await supabase.rpc("match_scholarships_gated", {
+  let similarRaw: any[] = [];
+  if (scholarship.embedding) {
+    try {
+      const adminSupabase = createAdminClient();
+      const { data, error } = await adminSupabase.rpc("match_scholarships_gated", {
         query_embedding: scholarship.embedding,
         match_count: 4,
-      })
-    : { data: [] };
+      });
+      if (error) console.error("match_scholarships_gated RPC error:", error);
+      similarRaw = (data as any[]) ?? [];
+    } catch (error) {
+      console.error("Unable to load similar scholarships:", error);
+    }
+  }
   const similar = (similarRaw as any[])?.filter((s) => s.id !== scholarship.id).slice(0, 3) || [];
 
   const isPast = scholarship.application_deadline

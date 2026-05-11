@@ -147,6 +147,7 @@ export default function ProfilePage() {
   const [saving,  setSaving]   = useState(false);
   const [saved,   setSaved]    = useState(false);
   const [dirty,   setDirty]    = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [email,   setEmail]    = useState("");
   const [notifPrefs, setNotifPrefs] = useState({
@@ -200,12 +201,13 @@ export default function ProfilePage() {
 
   function update(field: string, value: string) {
     setForm((prev) => ({ ...prev, [field]: value }));
-    setDirty(true); setSaved(false);
+    setDirty(true); setSaved(false); setSaveError("");
   }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
+    setSaveError("");
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -213,7 +215,7 @@ export default function ProfilePage() {
       window.location.href = "/auth/login?redirectTo=/dashboard/profile";
       return;
     }
-    await supabase.from("profiles").update({
+    const { error } = await supabase.from("profiles").update({
       full_name:         form.full_name         || null,
       country_of_origin: form.country_of_origin || null,
       field_of_study:    form.field_of_study    || null,
@@ -228,6 +230,14 @@ export default function ProfilePage() {
       interests:              form.interests.length > 0 ? form.interests : [],
       notification_preferences: notifPrefs,
     }).eq("id", user.id);
+
+    if (error) {
+      console.error("Failed to save profile:", error);
+      setSaveError("We couldn't save your profile. Please try again.");
+      setSaving(false);
+      return;
+    }
+
     setSaving(false); setSaved(true); setDirty(false); setIsEditing(false);
   }
 
@@ -315,6 +325,12 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {saveError && (
+        <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {saveError}
+        </div>
+      )}
 
       <div className="space-y-4">
 

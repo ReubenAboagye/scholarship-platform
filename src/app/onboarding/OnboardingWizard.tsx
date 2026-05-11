@@ -86,6 +86,7 @@ function FieldChip({
 export default function OnboardingWizard() {
   const [step,        setStep]        = useState(0);
   const [saving,      setSaving]      = useState(false);
+  const [saveError,   setSaveError]   = useState("");
   const [fieldSearch, setFieldSearch] = useState("");
   const [showSkipModal, setShowSkipModal] = useState(false);
 
@@ -115,11 +116,16 @@ export default function OnboardingWizard() {
   // ── Save & finish ──────────────────────────────────────────
   async function finish() {
     setSaving(true);
+    setSaveError("");
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      setSaving(false);
+      window.location.href = "/auth/login?redirectTo=/onboarding";
+      return;
+    }
 
-    await supabase.from("profiles").update({
+    const { error } = await supabase.from("profiles").update({
       degree_level:       degreeLevel,
       field_of_study:     fieldsOfStudy[0] ?? null,
       primary_field_slug: resolveStudyFieldSlug(fieldsOfStudy[0] ?? null),
@@ -129,17 +135,29 @@ export default function OnboardingWizard() {
       onboarding_complete: true,
     }).eq("id", user.id);
 
+    if (error) {
+      console.error("Failed to finish onboarding:", error);
+      setSaveError("We couldn't save your onboarding answers. Please try again.");
+      setSaving(false);
+      return;
+    }
+
     window.location.href = "/dashboard";
   }
 
   // ── Skip — saves whatever is filled so far, marks incomplete ─
   async function skip() {
     setSaving(true);
+    setSaveError("");
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    if (!user) {
+      setSaving(false);
+      window.location.href = "/auth/login?redirectTo=/onboarding";
+      return;
+    }
 
-    await supabase.from("profiles").update({
+    const { error } = await supabase.from("profiles").update({
       degree_level:      degreeLevel      || null,
       field_of_study:    fieldsOfStudy[0] || null,
       primary_field_slug: resolveStudyFieldSlug(fieldsOfStudy[0] ?? null),
@@ -148,6 +166,13 @@ export default function OnboardingWizard() {
       bio:               bio.trim() || null,
       onboarding_complete: false, // stays false — banner will show on dashboard
     }).eq("id", user.id);
+
+    if (error) {
+      console.error("Failed to skip onboarding:", error);
+      setSaveError("We couldn't save your onboarding answers. Please try again.");
+      setSaving(false);
+      return;
+    }
 
     window.location.href = "/dashboard";
   }
@@ -177,6 +202,12 @@ export default function OnboardingWizard() {
         <div className="w-full max-w-lg">
 
           <ProgressBar step={step} total={TOTAL_STEPS} />
+
+          {saveError && (
+            <div className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {saveError}
+            </div>
+          )}
 
           {/* ── STEP 0: Degree level ───────────────────────── */}
           {step === 0 && (
