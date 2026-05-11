@@ -7,7 +7,7 @@ import { Shield, Lock, Database, Cookie, UserCheck, AlertCircle, Mail } from "lu
 import { useState, useEffect } from "react";
 
 const SERIF = { fontFamily: "Fraunces, Georgia, ui-serif, serif" } as const;
-const lastUpdated = "April 2026";
+const lastUpdated = "May 2026";
 
 const sections = [
   {
@@ -18,6 +18,7 @@ const sections = [
       "Account information: When you register, we collect your name and email address for authentication purposes.",
       "Profile data: You may voluntarily provide your country of origin, field of study, degree level, GPA, and academic background to enable scholarship matching.",
       "Usage data: We collect anonymised data about how you interact with the platform — pages visited, scholarships viewed, and features used — to improve the service.",
+      "Security and request data: We may collect your IP address and basic request metadata when you submit forms or use the platform. This is used for rate limiting, spam prevention, fraud detection, platform security, and service reliability.",
       "We do not collect payment information, government-issued ID numbers, or sensitive financial data.",
     ],
   },
@@ -29,6 +30,7 @@ const sections = [
       "To provide scholarship matching: Your profile data is processed by our matching engine to surface relevant opportunities.",
       "To operate your account: Name and email are used for authentication, account management, and service communications.",
       "To improve the platform: Anonymised usage data helps us understand which features are most useful to students.",
+      "To protect the service: IP addresses and request metadata help us limit abusive form submissions, detect suspicious activity, and keep the platform available.",
       "We never sell your personal data to third parties for advertising purposes.",
     ],
   },
@@ -41,6 +43,7 @@ const sections = [
       "We implement Row Level Security (RLS) so you can only access your own data.",
       "Passwords are hashed and never stored in plain text.",
       "We use HTTPS/TLS encryption for all data in transit.",
+      "Rate-limit and security records are retained only for as long as necessary to protect the service and enforce abuse-prevention controls.",
     ],
   },
   {

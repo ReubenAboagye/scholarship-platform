@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const SERIF = { fontFamily: "Fraunces, Georgia, ui-serif, serif" } as const;
-const lastUpdated = "April 2026";
+const lastUpdated = "May 2026";
 
 export default function TermsPage() {
   return (
@@ -54,6 +54,7 @@ export default function TermsPage() {
                   content: [
                     "ScholarBridge AI is provided for personal, non-commercial use by students seeking scholarship opportunities.",
                     "You agree not to misuse the platform — including attempting to reverse-engineer, scrape, or automate access to its content.",
+                    "You agree not to submit spam, abusive content, malicious payloads, or automated contact requests. We may use technical safeguards such as IP-based rate limiting to prevent abuse.",
                     "You are responsible for maintaining the security of your account credentials.",
                     "You must be at least 16 years old to create an account.",
                   ],
