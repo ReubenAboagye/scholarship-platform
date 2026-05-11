@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Search, Bookmark, ListChecks,
-  User, ChevronLeft, Sparkles,
+  User, ChevronLeft, Sparkles, Calendar,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +16,7 @@ const navItems = [
   { href: "/dashboard/scholarships", icon: Search,     label: "Browse"    },
   { href: "/dashboard/saved",   icon: Bookmark,        label: "Saved"     },
   { href: "/dashboard/tracker", icon: ListChecks,      label: "Tracker"   },
+  { href: "/dashboard/deadlines", icon: Calendar,         label: "Deadlines" },
   { href: "/dashboard/profile", icon: User,            label: "Profile"   },
 ];
 
@@ -24,6 +25,7 @@ const mobileNavItems = [
   { href: "/dashboard/match",   icon: Sparkles,        label: "Match"   },
   { href: "/dashboard/scholarships", icon: Search,      label: "Browse"  },
   { href: "/dashboard/tracker", icon: ListChecks,      label: "Tracker" },
+  { href: "/dashboard/deadlines", icon: Calendar,         label: "Deadlines" },
   { href: "/dashboard/profile", icon: User,            label: "Profile" },
 ];
 

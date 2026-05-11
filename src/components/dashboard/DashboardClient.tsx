@@ -2,7 +2,7 @@
 
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { Sparkles, Bookmark, ListChecks, ArrowRight, AlertCircle, Clock, CheckCircle, Trophy, PlusCircle, RefreshCw } from "lucide-react";
+import { Sparkles, Bookmark, ListChecks, ArrowRight, AlertCircle, Clock, CheckCircle, Trophy, PlusCircle, RefreshCw, Search, User, CalendarDays } from "lucide-react";
 import { formatDeadline, cn, countryFlag } from "@/lib/utils";
 import { computeMatchConfidence, type ConfidenceResult } from "@/lib/utils/profile-completeness";
 
@@ -86,49 +86,56 @@ export default function DashboardClient({
         </m.div>
 
         {/* ── Quick Actions Bar ── */}
-        <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-semibold text-zinc-800">Quick Actions</h2>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <m.div variants={fade}>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
             {!profileComplete && (
               <a href={bannerHref}
-                className="flex flex-col items-center gap-2 p-3 rounded-lg bg-amber-50 hover:bg-amber-100 transition-colors group">
-                <div className="size-8 bg-amber-200 rounded-lg flex items-center justify-center group-hover:bg-amber-300 transition-colors">
-                  <AlertCircle className="size-4 text-amber-700" />
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/60 hover:border-amber-300 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-amber-100/50">
+                <div className="size-10 bg-gradient-to-br from-amber-200 to-orange-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <AlertCircle className="size-5 text-amber-700" />
                 </div>
-                <span className="text-xs font-medium text-amber-800 text-center">Complete Profile</span>
+                <p className="text-sm font-semibold text-amber-900">Complete Profile</p>
+                <p className="text-[11px] text-amber-600 mt-0.5">Unlock AI matching</p>
+                <ArrowRight className="size-3.5 text-amber-400 absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             )}
             {profileComplete && !hasMatchHistory && (
               <a href="/dashboard/match"
-                className="flex flex-col items-center gap-2 p-3 rounded-lg bg-brand-50 hover:bg-brand-100 transition-colors group">
-                <div className="size-8 bg-brand-200 rounded-lg flex items-center justify-center group-hover:bg-brand-300 transition-colors">
-                  <Sparkles className="size-4 text-brand-700" />
+                className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-50 to-violet-50 border border-brand-200/60 hover:border-brand-300 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-brand-100/50">
+                <div className="size-10 bg-gradient-to-br from-brand-200 to-violet-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                  <Sparkles className="size-5 text-brand-700" />
                 </div>
-                <span className="text-xs font-medium text-brand-800 text-center">Run AI Match</span>
+                <p className="text-sm font-semibold text-brand-900">Run AI Match</p>
+                <p className="text-[11px] text-brand-600 mt-0.5">Find scholarships</p>
+                <ArrowRight className="size-3.5 text-brand-400 absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </a>
             )}
             <a href="/dashboard/scholarships"
-              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
-              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
-                <Bookmark className="size-4 text-zinc-700" />
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-sky-50 to-blue-50 border border-sky-200/60 hover:border-sky-300 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-sky-100/50">
+              <div className="size-10 bg-gradient-to-br from-sky-200 to-blue-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <Search className="size-5 text-sky-700" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 text-center">Browse Scholarships</span>
+              <p className="text-sm font-semibold text-sky-900">Browse Scholarships</p>
+              <p className="text-[11px] text-sky-600 mt-0.5">Explore opportunities</p>
+              <ArrowRight className="size-3.5 text-sky-400 absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a href="/dashboard/profile"
-              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
-              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
-                <ListChecks className="size-4 text-zinc-700" />
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-zinc-50 to-slate-50 border border-zinc-200/80 hover:border-zinc-300 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-zinc-100/50">
+              <div className="size-10 bg-gradient-to-br from-zinc-200 to-slate-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <User className="size-5 text-zinc-700" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 text-center">Update Profile</span>
+              <p className="text-sm font-semibold text-zinc-800">Update Profile</p>
+              <p className="text-[11px] text-zinc-500 mt-0.5">Improve matches</p>
+              <ArrowRight className="size-3.5 text-zinc-400 absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
             <a href="/dashboard/tracker"
-              className="flex flex-col items-center gap-2 p-3 rounded-lg bg-zinc-50 hover:bg-zinc-100 transition-colors group">
-              <div className="size-8 bg-zinc-200 rounded-lg flex items-center justify-center group-hover:bg-zinc-300 transition-colors">
-                <Clock className="size-4 text-zinc-700" />
+              className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 border border-indigo-200/60 hover:border-indigo-300 p-4 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-indigo-100/50">
+              <div className="size-10 bg-gradient-to-br from-indigo-200 to-violet-200 rounded-xl flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+                <ListChecks className="size-5 text-indigo-700" />
               </div>
-              <span className="text-xs font-medium text-zinc-800 text-center">Track Applications</span>
+              <p className="text-sm font-semibold text-indigo-900">Track Applications</p>
+              <p className="text-[11px] text-indigo-600 mt-0.5">Monitor progress</p>
+              <ArrowRight className="size-3.5 text-indigo-400 absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </a>
           </div>
         </m.div>
@@ -139,7 +146,7 @@ export default function DashboardClient({
             <h2 className="text-sm text-zinc-800 flex items-center gap-2">
               <Clock className="size-4 text-red-500" /> Upcoming Deadlines
             </h2>
-            <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
+            <a href="/dashboard/deadlines" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
           </div>
           <div className="bg-white border border-zinc-200 rounded-lg p-4">
             {dueThisWeek.length === 0 ? (
@@ -247,7 +254,7 @@ export default function DashboardClient({
               <h2 className="text-sm text-zinc-800 flex items-center gap-2">
                 <Clock className="size-4 text-red-500" /> Due this week
               </h2>
-              <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
+              <a href="/dashboard/deadlines" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View all →</a>
             </div>
             <div className="flex gap-3 overflow-x-auto pb-1">
               {dueThisWeek.map((t: any) => {
@@ -256,7 +263,7 @@ export default function DashboardClient({
                 return (
                   <a
                     key={t.id}
-                    href="/dashboard/tracker"
+                    href="/dashboard/deadlines"
                     className="flex-shrink-0 w-56 bg-white border border-zinc-200 hover:border-zinc-300 rounded-lg p-4 transition-all"
                   >
                     <p className="text-xs font-bold text-zinc-800 leading-snug truncate mb-2">
@@ -488,7 +495,7 @@ export default function DashboardClient({
                         {s.name}
                       </p>
                       <p className="text-xs text-zinc-400 truncate">
-                        {countryFlag(s.country)} {s.provider} · {s.amount ? `$${s.amount.toLocaleString()}` : 'Amount TBD'}
+                        {countryFlag(s.country)} {s.provider} · {s.funding_amount || "Amount TBD"}
                       </p>
                     </div>
                     <div className="flex-shrink-0 text-right">
