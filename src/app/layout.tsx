@@ -5,7 +5,7 @@ import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import PageViewTracker from "@/components/tracking/PageViewTracker";
 
-const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
+const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 
 const inter = Inter({
   subsets: ["latin"],

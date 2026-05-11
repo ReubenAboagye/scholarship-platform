@@ -6,7 +6,7 @@ import { getClientIp } from "@/lib/auth/ip";
 import { rateLimitByIp, rateLimitByKey } from "@/lib/rate-limit/server";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 const FROM = "ScholarMatch <onboarding@resend.dev>";
 const TO = process.env.CONTACT_EMAIL ?? "reubenaboagye23@gmail.com";
 

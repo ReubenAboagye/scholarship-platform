@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { buildReminderEmail } from "@/emails/reminder";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const APP_URL    = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridge-ai.netlify.app";
+const APP_URL    = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 const APP_DOMAIN = new URL(APP_URL).hostname;
 const FROM       = `ScholarMatch <reminders@${APP_DOMAIN}>`;
 

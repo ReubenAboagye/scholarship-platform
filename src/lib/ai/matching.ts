@@ -48,7 +48,7 @@ function getOpenRouterClient() {
     baseURL: 'https://openrouter.ai/api/v1',
     defaultHeaders: {
       'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL
-        || 'https://scholarbridge-ai.netlify.app',
+        || 'https://scholarbridgeai.netlify.app',
       'X-Title': 'ScholarBridge AI',
     },
   });
