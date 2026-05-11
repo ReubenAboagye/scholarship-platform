@@ -58,29 +58,50 @@ export default function TrackButton({ scholarshipId, userId, initialStatus, vari
     setLoading(true);
     setOpen(false);
     const supabase = createClient();
-    if (isTracked) {
-      await supabase.from("application_tracker")
-        .update({ status: newStatus })
-        .eq("user_id", userId)
-        .eq("scholarship_id", scholarshipId);
-    } else {
-      await supabase.from("application_tracker")
-        .upsert({ user_id: userId, scholarship_id: scholarshipId, status: newStatus });
+    try {
+      const { error } = isTracked
+        ? await supabase.from("application_tracker")
+          .update({ status: newStatus })
+          .eq("user_id", userId)
+          .eq("scholarship_id", scholarshipId)
+        : await supabase.from("application_tracker")
+          .upsert(
+            { user_id: userId, scholarship_id: scholarshipId, status: newStatus },
+            { onConflict: "user_id,scholarship_id" }
+          );
+
+      if (error) {
+        console.error("Failed to update application tracker:", error);
+        window.alert("We couldn't update your application tracker. Please try again.");
+        return;
+      }
+
+      setStatus(newStatus);
+    } finally {
+      setLoading(false);
     }
-    setStatus(newStatus);
-    setLoading(false);
   }
 
   async function removeFromTracker() {
     setLoading(true);
     setOpen(false);
     const supabase = createClient();
-    await supabase.from("application_tracker")
-      .delete()
-      .eq("user_id", userId)
-      .eq("scholarship_id", scholarshipId);
-    setStatus(null);
-    setLoading(false);
+    try {
+      const { error } = await supabase.from("application_tracker")
+        .delete()
+        .eq("user_id", userId)
+        .eq("scholarship_id", scholarshipId);
+
+      if (error) {
+        console.error("Failed to remove application tracker item:", error);
+        window.alert("We couldn't remove this tracker item. Please try again.");
+        return;
+      }
+
+      setStatus(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
   const heroTracked   = "bg-white/25 backdrop-blur-sm border border-white/40 text-white hover:bg-white/35";

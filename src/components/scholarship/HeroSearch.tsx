@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, X, Loader2, Building2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { escapePostgrestLikePattern } from "@/lib/supabase/filters";
 import { countryFlagUrl } from "@/lib/utils";
 
 // Highlight the matched substring in a suggestion title.
@@ -176,11 +177,12 @@ export default function HeroSearch({
       const queryId = ++latestQueryId.current;
       try {
         const supabase = createClient();
+        const pattern = escapePostgrestLikePattern(q);
         const { data, error } = await supabase
           .from("scholarships")
           .select("id, slug, name, provider, country, funding_type")
           .eq("is_active", true)
-          .or(`name.ilike.%${q}%,provider.ilike.%${q}%,description.ilike.%${q}%`)
+          .or(`name.ilike.${pattern},provider.ilike.${pattern},description.ilike.${pattern}`)
           .limit(6);
 
         // Discard if a newer query has started.

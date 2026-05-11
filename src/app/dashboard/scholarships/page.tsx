@@ -4,6 +4,7 @@ import ScholarshipCard from "@/components/scholarship/ScholarshipCard";
 import ScholarshipRow from "@/components/scholarship/ScholarshipRow";
 import ScholarshipTable from "@/components/scholarship/ScholarshipTable";
 import ViewToggle from "@/components/scholarship/ViewToggle";
+import { escapePostgrestLikePattern } from "@/lib/supabase/filters";
 import { Search } from "lucide-react";
 
 interface SearchParams {
@@ -32,7 +33,10 @@ export default async function DashboardScholarshipsPage({ searchParams }: { sear
   if (p.country      && p.country      !== "All") query = query.eq("country", p.country);
   if (p.funding_type && p.funding_type !== "All") query = query.eq("funding_type", p.funding_type);
   if (p.degree_level && p.degree_level !== "All") query = query.contains("degree_levels", [p.degree_level]);
-  if (p.search) query = query.or(`name.ilike.%${p.search}%,description.ilike.%${p.search}%`);
+  if (p.search?.trim()) {
+    const pattern = escapePostgrestLikePattern(p.search);
+    query = query.or(`name.ilike.${pattern},description.ilike.${pattern}`);
+  }
   if (p.renewable    === "true") query = query.eq("renewable", true);
   if (p.international === "true") query = query.eq("open_to_international", true);
 

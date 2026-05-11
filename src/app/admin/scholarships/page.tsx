@@ -201,38 +201,69 @@ export default function AdminScholarshipsPage() {
   }
   function clearSelection() { setSelectedIds(new Set()); }
 
+  async function runBulkRequest(
+    ids: string[],
+    requestFor: (id: string) => Promise<Response>
+  ) {
+    const results = await Promise.allSettled(
+      ids.map(async (id) => {
+        const response = await requestFor(id);
+        if (!response.ok) throw new Error(await response.text());
+        return id;
+      })
+    );
+
+    const succeeded = results.flatMap((result) =>
+      result.status === "fulfilled" ? [result.value] : []
+    );
+    const failed = results.length - succeeded.length;
+    return { succeeded, failed };
+  }
+
   async function bulkActivate() {
     const ids = Array.from(selectedIds);
     if (ids.length === 0) return;
-    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, {
+    const { succeeded, failed } = await runBulkRequest(ids, id => fetch(`/api/scholarships/${id}`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ is_active: true }),
-    })));
-    setScholarships(prev => prev.map(s => selectedIds.has(s.id) ? { ...s, is_active: true } : s));
-    toast.addToast(`${ids.length} scholarship(s) activated`, "success");
-    clearSelection();
+    }));
+    if (succeeded.length > 0) {
+      const succeededSet = new Set(succeeded);
+      setScholarships(prev => prev.map(s => succeededSet.has(s.id) ? { ...s, is_active: true } : s));
+      toast.addToast(`${succeeded.length} scholarship(s) activated`, "success");
+    }
+    if (failed > 0) toast.addToast(`${failed} scholarship action(s) failed`, "error");
+    setSelectedIds(new Set(ids.filter(id => !succeeded.includes(id))));
   }
 
   async function bulkDeactivate() {
     const ids = Array.from(selectedIds);
     if (ids.length === 0) return;
-    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, {
+    const { succeeded, failed } = await runBulkRequest(ids, id => fetch(`/api/scholarships/${id}`, {
       method: "PATCH", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ is_active: false }),
-    })));
-    setScholarships(prev => prev.map(s => selectedIds.has(s.id) ? { ...s, is_active: false } : s));
-    toast.addToast(`${ids.length} scholarship(s) paused`, "success");
-    clearSelection();
+    }));
+    if (succeeded.length > 0) {
+      const succeededSet = new Set(succeeded);
+      setScholarships(prev => prev.map(s => succeededSet.has(s.id) ? { ...s, is_active: false } : s));
+      toast.addToast(`${succeeded.length} scholarship(s) paused`, "success");
+    }
+    if (failed > 0) toast.addToast(`${failed} scholarship action(s) failed`, "error");
+    setSelectedIds(new Set(ids.filter(id => !succeeded.includes(id))));
   }
 
   async function bulkDelete() {
     const ids = Array.from(selectedIds);
     if (ids.length === 0) return;
     if (!confirm(`Delete ${ids.length} scholarship(s)? This cannot be undone.`)) return;
-    await Promise.all(ids.map(id => fetch(`/api/scholarships/${id}`, { method: "DELETE" })));
-    setScholarships(prev => prev.filter(s => !selectedIds.has(s.id)));
-    toast.addToast(`${ids.length} scholarship(s) deleted`, "success");
-    clearSelection();
+    const { succeeded, failed } = await runBulkRequest(ids, id => fetch(`/api/scholarships/${id}`, { method: "DELETE" }));
+    if (succeeded.length > 0) {
+      const succeededSet = new Set(succeeded);
+      setScholarships(prev => prev.filter(s => !succeededSet.has(s.id)));
+      toast.addToast(`${succeeded.length} scholarship(s) deleted`, "success");
+    }
+    if (failed > 0) toast.addToast(`${failed} scholarship action(s) failed`, "error");
+    setSelectedIds(new Set(ids.filter(id => !succeeded.includes(id))));
   }
 
   // ── CSV export ──

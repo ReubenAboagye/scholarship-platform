@@ -30,14 +30,14 @@ function FilterSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-zinc-200 last:border-0 py-3">
+    <div className="border-b border-zinc-200/80 last:border-0 py-3">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-left"
+        className="flex items-center justify-between w-full text-left group"
       >
-        <span className="text-sm font-semibold text-zinc-900">{label}</span>
+        <span className="text-[13px] font-semibold text-zinc-800 group-hover:text-zinc-900 transition-colors">{label}</span>
         <ChevronDown
-          className={`size-4 text-zinc-400 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
+          className={`size-3.5 text-zinc-400 transition-transform duration-150 ${open ? "" : "-rotate-90"}`}
         />
       </button>
       {open && <div className="pt-2.5">{children}</div>}
@@ -321,27 +321,35 @@ export default function FilterSidebar({
         </p>
       </div>
 
-      {/* Desktop sidebar — no outer card, hairline dividers between sections */}
+      {/* Desktop sidebar — sticky wrapper + scrollable inner content keeps sticky reliable. */}
       <aside
-        className="hidden lg:block lg:sticky lg:top-4 w-56 flex-shrink-0 self-start
-                   max-h-[calc(100vh-2rem)] overflow-y-auto pr-1 custom-scrollbar"
+        className="hidden lg:block lg:sticky lg:top-20 lg:self-start w-56 flex-shrink-0 z-10"
       >
-        <h2 className="text-sm font-semibold text-zinc-900 mb-1 px-0.5">Filters</h2>
-        {hasFilters && (
-          <p className="text-xs text-zinc-500 mb-2 px-0.5">
-            {activeCount} active
-          </p>
-        )}
-        <FilterContent
-          active={active}
-          baseUrl={baseUrl}
-          countries={countries}
-          fundingTypes={fundingTypes}
-          degreeLevels={degreeLevels}
-          hasFilters={hasFilters}
-          buildUrl={buildUrl}
-          onClose={handleClose}
-        />
+        <div className="max-h-[calc(100vh-7rem)] overflow-y-auto pr-1 custom-scrollbar">
+          <div className="mb-4 px-0.5">
+            <h2
+              className="text-base text-zinc-900 tracking-tight"
+              style={{ fontFamily: "Fraunces, Georgia, ui-serif, serif", fontWeight: 500 }}
+            >
+              Filters
+            </h2>
+            {hasFilters && (
+              <p className="text-xs text-zinc-500 mt-1">
+                {activeCount} active
+              </p>
+            )}
+          </div>
+          <FilterContent
+            active={active}
+            baseUrl={baseUrl}
+            countries={countries}
+            fundingTypes={fundingTypes}
+            degreeLevels={degreeLevels}
+            hasFilters={hasFilters}
+            buildUrl={buildUrl}
+            onClose={handleClose}
+          />
+        </div>
       </aside>
 
       {/* Mobile modal overlay */}

@@ -19,15 +19,23 @@ export default function SaveButton({ scholarshipId, userId, initialSaved, varian
   async function toggle() {
     setLoading(true);
     const supabase = createClient();
-    if (saved) {
-      await supabase.from("saved_scholarships")
-        .delete().eq("user_id", userId).eq("scholarship_id", scholarshipId);
-    } else {
-      await supabase.from("saved_scholarships")
-        .insert({ user_id: userId, scholarship_id: scholarshipId });
+    try {
+      const { error } = saved
+        ? await supabase.from("saved_scholarships")
+          .delete().eq("user_id", userId).eq("scholarship_id", scholarshipId)
+        : await supabase.from("saved_scholarships")
+          .upsert({ user_id: userId, scholarship_id: scholarshipId }, { onConflict: "user_id,scholarship_id" });
+
+      if (error) {
+        console.error("Failed to update saved scholarship:", error);
+        window.alert("We couldn't update this saved scholarship. Please try again.");
+        return;
+      }
+
+      setSaved(!saved);
+    } finally {
+      setLoading(false);
     }
-    setSaved(!saved);
-    setLoading(false);
   }
 
   const heroStyle = saved
