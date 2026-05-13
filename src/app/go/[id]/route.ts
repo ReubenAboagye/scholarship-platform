@@ -33,6 +33,15 @@ type Ctx = { params: Promise<{ id: string }> };
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+function safeOutboundUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function GET(req: NextRequest, ctx: Ctx) {
   const { id } = await ctx.params;
   const supabase = await createClient();
@@ -90,5 +99,11 @@ export async function GET(req: NextRequest, ctx: Ctx) {
     console.warn("apply_start log failed:", err);
   }
 
-  return NextResponse.redirect(scholarship.application_url, { status: 302 });
+  const outboundUrl = safeOutboundUrl(scholarship.application_url);
+  if (!outboundUrl) {
+    console.warn("Blocked invalid scholarship application_url", { scholarshipId: scholarship.id });
+    return NextResponse.redirect(new URL(`/scholarships/${id}`, req.url));
+  }
+
+  return NextResponse.redirect(outboundUrl, { status: 302 });
 }

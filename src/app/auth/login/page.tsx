@@ -106,9 +106,10 @@ function LoginContent() {
     popup.location.href = result.url;
 
     const handleMessage = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin || e.source !== popup) return;
       if (e.data?.type === "oauth:success") {
         window.removeEventListener("message", handleMessage);
-        window.location.href = e.data.destination ?? "/dashboard";
+        window.location.href = sanitizeRedirectPath(e.data.destination);
       } else if (e.data?.type === "oauth:error") {
         window.removeEventListener("message", handleMessage);
         setError("Authentication failed. Please try again.");

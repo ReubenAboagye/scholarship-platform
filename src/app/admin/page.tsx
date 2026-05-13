@@ -1,5 +1,6 @@
 import { getAdminOverviewBundle } from "@/lib/admin/analytics";
 import { createAdminClient } from "@/lib/supabase/server";
+import { requireAdminPageAccess } from "@/lib/auth/admin";
 import OverviewClient from "./OverviewClient";
 
 // Server component: load the analytics bundle + two supporting
@@ -7,6 +8,7 @@ import OverviewClient from "./OverviewClient";
 // that handles motion/animation.
 
 export default async function AdminPage() {
+  await requireAdminPageAccess();
   const supabase = createAdminClient();
 
   const [bundle, recentScholarships, recentUsers] = await Promise.all([

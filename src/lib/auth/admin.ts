@@ -1,5 +1,7 @@
 import type { SupabaseClient, User } from "@supabase/supabase-js";
+import { redirect } from "next/navigation";
 import { NextResponse } from "next/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function getAuthenticatedUser(
   supabase: SupabaseClient
@@ -50,4 +52,15 @@ export async function requireAdminJson(supabase: SupabaseClient) {
   }
 
   return { ok: true as const, user };
+}
+
+export async function requireAdminPageAccess(): Promise<User> {
+  const supabase = await createClient();
+  const user = await getAuthenticatedUser(supabase);
+  if (!user) redirect("/auth/login");
+
+  const admin = await isAdminUser(supabase, user.id);
+  if (!admin) redirect("/dashboard");
+
+  return user;
 }

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { getClientIp } from '@/lib/auth/ip';
+import { rateLimitByIp, rateLimitByKey } from '@/lib/rate-limit/server';
 
 // ─────────────────────────────────────────────────────────────
 // POST /api/match-events
@@ -38,6 +40,35 @@ type Event = {
 };
 
 const MAX_BATCH = 20;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const EVENT_TYPES = new Set<Event['event_type']>([
+  'click', 'save', 'unsave',
+  'apply_start', 'apply_submit',
+  'dismiss', 'not_relevant', 'view_detail',
+]);
+const REASON_CODES = new Set<NonNullable<Event['reason_code']>>([
+  'wrong_country', 'wrong_degree', 'wrong_eligibility',
+  'too_competitive', 'deadline_too_close', 'not_interested',
+  'duplicate', 'other',
+]);
+
+function tooManyRequests(reset: number) {
+  const retryAfter = Math.max(1, Math.ceil((reset - Date.now()) / 1000));
+  return NextResponse.json(
+    { error: 'Too many events. Please slow down.' },
+    { status: 429, headers: { 'Retry-After': String(retryAfter) } }
+  );
+}
+
+function isValidEvent(e: Event): boolean {
+  if (!UUID_RE.test(e.scholarship_id)) return false;
+  if (!EVENT_TYPES.has(e.event_type)) return false;
+  if (e.rank_position != null && (!Number.isInteger(e.rank_position) || e.rank_position < 0 || e.rank_position > 500)) return false;
+  if (e.match_score != null && (typeof e.match_score !== 'number' || e.match_score < 0 || e.match_score > 100)) return false;
+  if (e.reason_code != null && !REASON_CODES.has(e.reason_code)) return false;
+  if (e.session_id != null && !UUID_RE.test(e.session_id)) return false;
+  return true;
+}
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
@@ -72,6 +103,19 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  if (!events.every(isValidEvent)) {
+    return NextResponse.json({ error: 'Invalid event payload' }, { status: 400 });
+  }
+
+  const ip = await getClientIp();
+  const [ipLimit, userLimit] = await Promise.all([
+    rateLimitByIp(ip, 'match_events_ip', 120, 60),
+    rateLimitByKey(user.id, 'match_events_user', 60, 60),
+  ]);
+
+  if (!ipLimit.allowed) return tooManyRequests(ipLimit.reset);
+  if (!userLimit.allowed) return tooManyRequests(userLimit.reset);
+
   // Log each event, collecting errors but not short-circuiting.
   // We use Promise.allSettled so one malformed event doesn't lose
   // the others.
@@ -84,6 +128,8 @@ export async function POST(request: NextRequest) {
         p_match_score:    e.match_score   ?? null,
         p_reason_code:    e.reason_code   ?? null,
         p_session_id:     e.session_id    ?? null,
+      }).then(({ error }) => {
+        if (error) throw error;
       })
     )
   );

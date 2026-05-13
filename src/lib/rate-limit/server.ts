@@ -12,12 +12,20 @@ const redis = getRedis();
 
 const limiters = new Map<string, Ratelimit>();
 const memoryBuckets = new Map<string, { count: number; reset: number }>();
+let warnedMissingRedis = false;
+
+function canUseMemoryFallback() {
+  return process.env.NODE_ENV !== "production"
+    || process.env.RATE_LIMIT_ALLOW_MEMORY_FALLBACK === "true";
+}
 
 function getLimiter(namespace: string, maxRequests: number, windowSeconds: number) {
   const key = `${namespace}_${maxRequests}_${windowSeconds}`;
   if (!limiters.has(key)) {
     if (!redis) {
-      // No Redis configured — use a per-process fallback for local/dev.
+      // No Redis configured — use a per-process fallback only for local/dev
+      // or an explicit emergency override. Serverless production memory
+      // buckets are per-instance and are trivial to bypass.
       return null;
     }
     limiters.set(
@@ -51,6 +59,16 @@ export async function rateLimitByKey(
   const limiter = getLimiter(namespace, maxRequests, windowSeconds);
   if (!limiter) {
     const now = Date.now();
+    if (!canUseMemoryFallback()) {
+      if (!warnedMissingRedis) {
+        warnedMissingRedis = true;
+        console.error(
+          "UPSTASH_REDIS_REST_URL/TOKEN are required for production rate limiting."
+        );
+      }
+      return { allowed: false, reset: now + windowSeconds * 1000 };
+    }
+
     const bucketKey = `${namespace}:${key}`;
     const existing = memoryBuckets.get(bucketKey);
     if (!existing || existing.reset <= now) {

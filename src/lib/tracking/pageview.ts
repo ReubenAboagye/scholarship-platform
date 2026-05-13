@@ -21,7 +21,6 @@
 //   - We honour navigator.doNotTrack === '1'.
 // ─────────────────────────────────────────────────────────────
 
-import { createClient } from '@/lib/supabase/client';
 import { parseUserAgent } from './ua';
 
 const SESSION_KEY  = 'sb_session_id';
@@ -124,29 +123,32 @@ async function sendInitial(
   utm:        UtmFields,
   sessionId:  string,
 ): Promise<void> {
-  const supabase = createClient();
   const ua       = navigator.userAgent || '';
   const parsed   = parseUserAgent(ua);
 
   // If this is a bot, don't log anything at all.
   if (parsed.device_type === 'bot') return;
 
-  supabase.rpc('record_page_view', {
-    p_path:         path,
-    p_session_id:   sessionId,
-    p_referrer:     document.referrer || null,
-    p_user_agent:   ua,
-    p_device_type:  parsed.device_type,
-    p_browser:      parsed.browser,
-    p_os:           parsed.os,
-    p_country:      null,                     // server-derived later if desired
-    p_utm_source:   utm.utm_source   ?? null,
-    p_utm_medium:   utm.utm_medium   ?? null,
-    p_utm_campaign: utm.utm_campaign ?? null,
-    p_utm_term:     utm.utm_term     ?? null,
-    p_utm_content:  utm.utm_content  ?? null,
-    p_scroll_depth: null,
-    p_duration_ms:  null,
+  fetch('/api/page-view', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      p_path:         path,
+      p_session_id:   sessionId,
+      p_referrer:     document.referrer || null,
+      p_user_agent:   ua,
+      p_device_type:  parsed.device_type,
+      p_browser:      parsed.browser,
+      p_os:           parsed.os,
+      p_country:      null,                     // server-derived later if desired
+      p_utm_source:   utm.utm_source   ?? null,
+      p_utm_medium:   utm.utm_medium   ?? null,
+      p_utm_campaign: utm.utm_campaign ?? null,
+      p_utm_term:     utm.utm_term     ?? null,
+      p_utm_content:  utm.utm_content  ?? null,
+      p_scroll_depth: null,
+      p_duration_ms:  null,
+    }),
   }).then(() => undefined, () => undefined);  // fire-and-forget
 }
 
@@ -174,24 +176,18 @@ function flushFinalisation(sessionId: string) {
   // the page is unloading". sendBeacon would work too but can't set
   // auth headers, which Supabase's REST endpoint requires.
   try {
-    const url =
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/rpc/record_page_view`;
     const body = JSON.stringify(payload);
-    void fetch(url, {
+    void fetch('/api/page-view', {
       method:    'POST',
       keepalive: true,
       headers: {
         'Content-Type': 'application/json',
-        'apikey':        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-        'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}`,
       },
       body,
     }).catch(() => {
-      // Last-ditch: sendBeacon without auth. Will fail against
-      // Supabase auth but avoids unhandled rejections on exotic
-      // browsers that break keepalive.
+      // Last-ditch: sendBeacon to our own throttled route.
       const blob = new Blob([body], { type: 'application/json' });
-      navigator.sendBeacon?.(url, blob);
+      navigator.sendBeacon?.('/api/page-view', blob);
     });
   } catch {
     // Ignore — we genuinely don't want tracking failures to

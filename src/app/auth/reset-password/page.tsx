@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2, Lock } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { validatePassword } from "@/lib/auth/password";
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
@@ -14,8 +15,9 @@ export default function ResetPasswordPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters.");
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 

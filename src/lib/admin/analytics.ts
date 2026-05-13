@@ -17,6 +17,7 @@
 
 import 'server-only';
 import { createAdminClient } from '@/lib/supabase/server';
+import { requireAdminPageAccess } from '@/lib/auth/admin';
 import {
   type AdminOverviewBundle,
   type MatchFunnelSnapshot,
@@ -36,6 +37,7 @@ const EMPTY_FUNNEL: MatchFunnelSnapshot = {
 };
 
 export async function getAdminOverviewBundle(): Promise<AdminOverviewBundle> {
+  await requireAdminPageAccess();
   const supabase = createAdminClient();
 
   const { data, error } = await supabase.rpc('get_admin_analytics_summary');

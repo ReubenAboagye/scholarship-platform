@@ -13,9 +13,8 @@
 // ─────────────────────────────────────────────────────────────
 
 import "server-only";
-import { redirect } from "next/navigation";
-import { getAuthenticatedUser, isAdminUser } from "@/lib/auth/admin";
-import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { requireAdminPageAccess } from "@/lib/auth/admin";
+import { createAdminClient } from "@/lib/supabase/server";
 import { getAdminOverviewBundle } from '@/lib/admin/analytics';
 import type { AdminOverviewBundle } from '@/lib/admin/analytics-shared';
 
@@ -101,16 +100,6 @@ async function safeSelect<T>(
     console.warn(`analytics loader ${label} threw:`, err);
     return [];
   }
-}
-
-async function requireAdminPageAccess(): Promise<void> {
-  const supabase = await createClient();
-  const user = await getAuthenticatedUser(supabase);
-
-  if (!user) redirect("/auth/login");
-
-  const admin = await isAdminUser(supabase, user.id);
-  if (!admin) redirect("/dashboard");
 }
 
 function aggregateCounts(
