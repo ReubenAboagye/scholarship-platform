@@ -30,7 +30,6 @@ export const metadata: Metadata = {
   verification: {
     google: "goMoxBw1rpkbCyFAH_jITdw0bmLF4BkYFFitr2p-yPY",
   },
-  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     siteName: "ScholarBridge",
@@ -54,11 +53,6 @@ export const metadata: Metadata = {
       { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
     apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: "ScholarBridge",
   },
 };
 

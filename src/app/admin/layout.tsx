@@ -1,7 +1,17 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminLayoutClient from "@/components/admin/AdminLayoutClient";
 import { getAuthenticatedUser, isAdminUser } from "@/lib/auth/admin";
+
+export const metadata: Metadata = {
+  manifest: "/admin-manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "ScholarBridge Admin",
+  },
+};
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
