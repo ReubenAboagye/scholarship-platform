@@ -28,7 +28,7 @@ export default function SciFiAnimations() {
   const [nodes, setNodes] = useState<FloatingNode[]>([]);
   const [particles, setParticles] = useState<Particle[]>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
 
   // Initialize floating educational nodes
   useEffect(() => {
