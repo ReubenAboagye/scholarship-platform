@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import Script from "next/script";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import PageViewTracker from "@/components/tracking/PageViewTracker";
+import ServiceWorkerRegister from "@/components/tracking/ServiceWorkerRegister";
 
 const siteUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 
@@ -85,21 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PageViewTracker />
         </Suspense>
         {children}
-        {process.env.NODE_ENV === 'production' && (
-          <Script
-            id="sw-register"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                if ('serviceWorker' in navigator) {
-                  navigator.serviceWorker.register('/sw.js').catch(function(err) {
-                    console.error('SW registration failed:', err);
-                  });
-                }
-              `,
-            }}
-          />
-        )}
+        <ServiceWorkerRegister />
       </body>
     </html>
   );
