@@ -61,7 +61,7 @@ export default function DashboardHeader({ profile }: Props) {
   return (
     <>
       <header
-        className="sticky top-0 z-50 w-full border-b border-zinc-100 glass-effect flex items-center justify-between px-5 lg:px-10 safe-top min-h-[56px]"
+        className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-paper flex items-center justify-between px-5 lg:px-10 safe-top min-h-[56px] shadow-sm"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
       {/* Left: Breadcrumbs & Title */}

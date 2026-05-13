@@ -7,21 +7,6 @@ function relationRow<T>(value: T | T[] | null | undefined): T | null {
   return value ?? null;
 }
 
-function estimateFundingValue(value: unknown): number {
-  if (typeof value === "number") return value;
-  if (typeof value !== "string") return 0;
-
-  const matches = value.matchAll(/(\d[\d,]*(?:\.\d+)?)\s*(k|m)?/gi);
-  let total = 0;
-  for (const match of matches) {
-    const parsed = Number(match[1].replace(/,/g, ""));
-    if (!Number.isFinite(parsed)) continue;
-    const suffix = match[2]?.toLowerCase();
-    total += parsed * (suffix === "m" ? 1_000_000 : suffix === "k" ? 1_000 : 1);
-  }
-  return Math.round(total);
-}
-
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -40,12 +25,12 @@ export default async function DashboardPage() {
       .maybeSingle(),
     supabase
       .from("saved_scholarships")
-      .select("id, created_at, scholarships(name, application_deadline, funding_amount, country, provider, slug)")
+      .select("id, scholarship_id, created_at, scholarships(id, name, application_deadline, funding_amount, country, provider, slug)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
     supabase
       .from("application_tracker")
-      .select("id, status, deadline_reminder, scholarships(name, application_deadline, slug, funding_amount)")
+      .select("id, scholarship_id, status, deadline_reminder, scholarships(id, name, application_deadline, slug, funding_amount)")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false }),
     supabase
@@ -95,14 +80,6 @@ export default async function DashboardPage() {
   // Top match results (up to 3) from latest session
   const topMatches = ((latestMatch as any)?.results ?? []).slice(0, 3);
 
-  // Financial calculations
-  const potentialValue = (tracked ?? [])
-    .filter(t => t.status !== "Rejected")
-    .reduce((sum, t) => sum + estimateFundingValue(relationRow(t.scholarships)?.funding_amount), 0);
-  const acceptedValue = (tracked ?? [])
-    .filter(t => t.status === "Accepted")
-    .reduce((sum, t) => sum + estimateFundingValue(relationRow(t.scholarships)?.funding_amount), 0);
-
   return (
     <DashboardClient
       firstName={firstName}
@@ -116,8 +93,6 @@ export default async function DashboardPage() {
       dueThisWeek={dueThisWeek}
       topMatches={topMatches}
       hasMatchHistory={!!(latestMatch as any)?.id}
-      potentialValue={potentialValue}
-      acceptedValue={acceptedValue}
     />
   );
 }

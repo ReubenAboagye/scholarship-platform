@@ -18,8 +18,6 @@ interface Props {
   dueThisWeek: any[];
   topMatches: any[];
   hasMatchHistory: boolean;
-  potentialValue: number;
-  acceptedValue: number;
 }
 
 const fade: Variants = {
@@ -34,6 +32,18 @@ const stagger: Variants = {
 
 function daysLeft(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86_400_000);
+}
+
+function relationRow<T>(value: T | T[] | null | undefined): T | null {
+  if (Array.isArray(value)) return value[0] ?? null;
+  return value ?? null;
+}
+
+function daysLabel(days: number | null): string {
+  if (days === null) return "No deadline";
+  if (days <= 0) return "Due today";
+  if (days === 1) return "1 day left";
+  return `${days} days left`;
 }
 
 function deadlinePill(days: number) {
@@ -60,13 +70,43 @@ export default function DashboardClient({
   firstName, profileComplete, onboardingComplete,
   completionPct, bannerHref, saved, savedData, tracked,
   dueThisWeek, topMatches, hasMatchHistory,
-  potentialValue, acceptedValue,
 }: Props) {
 
   const activeCount    = tracked.filter((t) => ["Interested","In Progress"].includes(t.status)).length;
   const submittedCount = tracked.filter((t) => t.status === "Submitted").length;
   const acceptedCount  = tracked.filter((t) => t.status === "Accepted").length;
   const validTopMatches = topMatches.filter((r) => r?.scholarship?.id && r?.scholarship?.name);
+  const activeDeadlineStatuses = ["Interested", "In Progress", "Submitted", "Awaiting Decision"];
+  const trackedScholarshipIds = new Set(
+    tracked
+      .map((t) => t.scholarship_id ?? relationRow(t.scholarships)?.id)
+      .filter(Boolean)
+  );
+  const savedNotTrackedCount = savedData.filter((item) => {
+    const scholarshipId = item.scholarship_id ?? relationRow(item.scholarships)?.id;
+    return scholarshipId && !trackedScholarshipIds.has(scholarshipId);
+  }).length;
+  const nextDeadline = tracked
+    .map((item) => ({ item, scholarship: relationRow(item.scholarships) }))
+    .filter(({ item, scholarship }) => {
+      if (!scholarship?.application_deadline) return false;
+      return activeDeadlineStatuses.includes(item.status) && daysLeft(scholarship.application_deadline) >= 0;
+    })
+    .sort((a, b) => (
+      new Date(a.scholarship!.application_deadline).getTime()
+      - new Date(b.scholarship!.application_deadline).getTime()
+    ))[0] ?? null;
+  const nextDeadlineDays = nextDeadline?.scholarship?.application_deadline
+    ? daysLeft(nextDeadline.scholarship.application_deadline)
+    : null;
+  const hasPriorities = Boolean(nextDeadline || activeCount > 0 || savedNotTrackedCount > 0);
+  const priorityHref = nextDeadline
+    ? "/dashboard/deadlines"
+    : activeCount > 0
+      ? "/dashboard/tracker"
+      : savedNotTrackedCount > 0
+        ? "/dashboard/saved"
+        : "/dashboard/scholarships";
 
   return (
     <LazyMotion features={domAnimation}>
@@ -427,43 +467,63 @@ export default function DashboardClient({
           )}
         </m.div>
 
-        {/* ── Financial Summary ── */}
+        {/* ── Upcoming Priorities ── */}
         <m.div variants={fade} className="bg-white border border-zinc-200 rounded-lg p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <CheckCircle className="size-4 text-emerald-600" />
-              <h2 className="text-sm text-zinc-800">Financial Summary</h2>
+              <CalendarDays className="size-4 text-amber-600" />
+              <h2 className="text-sm text-zinc-800">Upcoming Priorities</h2>
             </div>
-            <a href="/dashboard/tracker" className="text-xs font-semibold text-brand-600 hover:text-brand-700">View details →</a>
+            <a href={priorityHref} className="text-xs font-semibold text-brand-600 hover:text-brand-700">Review →</a>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-3 bg-zinc-50 rounded-lg">
-              <p className="text-2xl font-bold text-zinc-900">
-                ${potentialValue.toLocaleString()}
-              </p>
-              <p className="text-xs text-zinc-500 mt-1">Potential Award Value</p>
-              <p className="text-[10px] text-zinc-400 mt-1">From active applications</p>
-            </div>
-            <div className="text-center p-3 bg-emerald-50 rounded-lg">
-              <p className="text-2xl font-bold text-emerald-700">
-                ${acceptedValue.toLocaleString()}
-              </p>
-              <p className="text-xs text-emerald-600 mt-1">Accepted Funding</p>
-              <p className="text-[10px] text-emerald-500 mt-1">
-                {acceptedCount > 0 ? `${acceptedCount} scholarship${acceptedCount > 1 ? 's' : ''}` : 'None yet'}
-              </p>
-            </div>
-          </div>
-          {potentialValue > 0 && acceptedValue > 0 && (
-            <div className="mt-3 pt-3 border-t border-zinc-100">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-zinc-500">Success rate</span>
-                <span className="font-semibold text-zinc-700">
-                  {Math.round((acceptedValue / potentialValue) * 100)}%
-                </span>
+          <div className="grid gap-3 sm:grid-cols-3">
+            <a href="/dashboard/deadlines" className="group rounded-lg border border-zinc-100 bg-amber-50/60 p-3 transition-all hover:border-amber-200 hover:bg-amber-50">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="size-7 rounded-lg bg-white/80 flex items-center justify-center text-amber-600">
+                  <CalendarDays className="size-3.5" />
+                </div>
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-amber-700">Next deadline</span>
               </div>
-            </div>
-          )}
+              <p className="text-lg font-bold text-zinc-900">{daysLabel(nextDeadlineDays)}</p>
+              <p className="text-xs text-zinc-500 truncate mt-1">
+                {nextDeadline?.scholarship?.name ?? "No active deadlines"}
+              </p>
+            </a>
+
+            <a href="/dashboard/tracker" className="group rounded-lg border border-zinc-100 bg-indigo-50/60 p-3 transition-all hover:border-indigo-200 hover:bg-indigo-50">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="size-7 rounded-lg bg-white/80 flex items-center justify-center text-indigo-600">
+                  <ListChecks className="size-3.5" />
+                </div>
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-indigo-700">Needs action</span>
+              </div>
+              <p className="text-lg font-bold text-zinc-900">{activeCount}</p>
+              <p className="text-xs text-zinc-500 mt-1">
+                {activeCount === 1 ? "application to move forward" : activeCount > 1 ? "applications to move forward" : "No active drafts"}
+              </p>
+            </a>
+
+            <a href="/dashboard/saved" className="group rounded-lg border border-zinc-100 bg-brand-50/60 p-3 transition-all hover:border-brand-200 hover:bg-brand-50">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="size-7 rounded-lg bg-white/80 flex items-center justify-center text-brand-600">
+                  <PlusCircle className="size-3.5" />
+                </div>
+                <span className="text-[11px] font-semibold uppercase tracking-wide text-brand-700">Saved not tracked</span>
+              </div>
+              <p className="text-lg font-bold text-zinc-900">{savedNotTrackedCount}</p>
+              <p className="text-xs text-zinc-500 mt-1">
+                {savedNotTrackedCount === 1 ? "saved scholarship needs a plan" : savedNotTrackedCount > 1 ? "saved scholarships need a plan" : "All saved items tracked"}
+              </p>
+            </a>
+          </div>
+          <div className={cn(
+            "mt-3 rounded-lg px-3 py-2 text-xs",
+            hasPriorities ? "bg-amber-50 text-amber-700" : "bg-emerald-50 text-emerald-700"
+          )}>
+            {hasPriorities
+              ? "Start with the earliest deadline, then move saved scholarships into your tracker."
+              : "You're caught up. Browse new scholarships when you're ready."}
+          </div>
         </m.div>
 
         {/* ── Saved Scholarships Preview ── */}
@@ -613,15 +673,15 @@ export default function DashboardClient({
                 </div>
               )}
 
-              {/* Accepted funding */}
-              {acceptedValue > 0 && (
+              {/* Accepted applications */}
+              {acceptedCount > 0 && (
                 <div className="flex items-start gap-3">
                   <div className="size-8 bg-emerald-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <Trophy className="size-4 text-emerald-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-zinc-800">
-                      <span className="font-semibold">${acceptedValue.toLocaleString()} accepted</span>
+                      <span className="font-semibold">{acceptedCount} application{acceptedCount > 1 ? 's' : ''} accepted</span>
                     </p>
                     <p className="text-xs text-zinc-500 mt-0.5">
                       Congratulations on your success!
