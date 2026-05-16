@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
 
 // ─────────────────────────────────────────────────────────────
 // GET /go/[id]
@@ -87,13 +87,15 @@ export async function GET(req: NextRequest, ctx: Ctx) {
   // hiccup never blocks the actual apply click — the external
   // redirect is the user's primary intent, the event is bonus.
   try {
-    await supabase.rpc("log_match_event", {
-      p_scholarship_id: scholarship.id,
-      p_event_type:     "apply_start",
-      p_rank_position:  null,
-      p_match_score:    null,
-      p_reason_code:    null,
-      p_session_id:     null,
+    const adminSupabase = createAdminClient();
+    await adminSupabase.from("match_events").insert({
+      user_id:        user.id,
+      scholarship_id: scholarship.id,
+      event_type:     "apply_start",
+      rank_position:  null,
+      match_score:    null,
+      reason_code:    null,
+      session_id:     null,
     });
   } catch (err) {
     console.warn("apply_start log failed:", err);

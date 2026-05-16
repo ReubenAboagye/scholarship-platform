@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createAdminClient, createClient } from '@/lib/supabase/server';
 import { getClientIp } from '@/lib/auth/ip';
 import { rateLimitByIp, rateLimitByKey } from '@/lib/rate-limit/server';
 import { readJsonBody } from '@/lib/server/body-size';
@@ -13,15 +13,14 @@ import { readJsonBody } from '@/lib/server/body-size';
 // batch, because UI interactions often chain (e.g. click +
 // view_detail fire together).
 //
-// Auth: the underlying log_match_event RPC is SECURITY DEFINER
-// and uses auth.uid() for user_id, so a forged user_id in the
-// body is ignored. We still require an authenticated session
-// at the route level so we can return a clean 401.
+// Auth: this route requires a user session, then writes with the
+// service-role client so the logging function does not need to be
+// exposed as a SECURITY DEFINER RPC.
 //
-// Validation: the RPC validates event_type against the check
-// constraint and raises on unknown values. We keep the route
-// tolerant — if one event in a batch fails, the others still
-// go through.
+// Validation: the route validates event payloads before writing,
+// and the database constraints remain the final guardrail. We keep
+// the route tolerant: if one event in a batch fails, the others
+// still go through.
 // ─────────────────────────────────────────────────────────────
 
 type Event = {
@@ -41,7 +40,7 @@ type Event = {
 };
 
 const MAX_BATCH = 20;
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const EVENT_TYPES = new Set<Event['event_type']>([
   'click', 'save', 'unsave',
   'apply_start', 'apply_submit',
@@ -114,18 +113,21 @@ export async function POST(request: NextRequest) {
   if (!ipLimit.allowed) return tooManyRequests(ipLimit.reset);
   if (!userLimit.allowed) return tooManyRequests(userLimit.reset);
 
+  const adminSupabase = createAdminClient();
+
   // Log each event, collecting errors but not short-circuiting.
-  // We use Promise.allSettled so one malformed event doesn't lose
+  // We use Promise.allSettled so one database failure doesn't lose
   // the others.
   const outcomes = await Promise.allSettled(
     events.map(e =>
-      supabase.rpc('log_match_event', {
-        p_scholarship_id: e.scholarship_id,
-        p_event_type:     e.event_type,
-        p_rank_position:  e.rank_position ?? null,
-        p_match_score:    e.match_score   ?? null,
-        p_reason_code:    e.reason_code   ?? null,
-        p_session_id:     e.session_id    ?? null,
+      adminSupabase.from('match_events').insert({
+        user_id:        user.id,
+        scholarship_id: e.scholarship_id,
+        event_type:     e.event_type,
+        rank_position:  e.rank_position ?? null,
+        match_score:    e.match_score   ?? null,
+        reason_code:    e.reason_code   ?? null,
+        session_id:     e.session_id    ?? null,
       }).then(({ error }) => {
         if (error) throw error;
       })
