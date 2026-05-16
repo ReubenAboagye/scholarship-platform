@@ -239,7 +239,7 @@ function MatchRow({
 
           {/* Apply */}
           <a
-            href={s.application_url}
+            href={`/go/${s.slug || s.id}`}
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleApply}

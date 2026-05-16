@@ -319,7 +319,7 @@ function MatchCard({
             className="text-xs font-medium text-zinc-500 hover:text-zinc-800 flex items-center gap-1 transition-colors">
             Details <ChevronRight className="size-3" />
           </a>
-          <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+          <a href={`/go/${s.slug || s.id}`} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition-colors">
             Apply <ExternalLink className="size-3" />
           </a>

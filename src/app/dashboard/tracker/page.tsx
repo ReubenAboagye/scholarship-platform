@@ -385,7 +385,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
               className="p-1.5 text-zinc-300 hover:text-zinc-600 rounded-lg transition-all">
               <ExternalLink className="size-3.5" />
             </a>
-            <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+            <a href={`/go/${s.slug || s.id}`} target="_blank" rel="noopener noreferrer"
               className="ml-0.5 flex items-center gap-1 px-2 py-1 bg-zinc-900 text-white rounded-md text-[11px] font-bold hover:bg-zinc-800 transition-all">
               Apply
             </a>
@@ -425,7 +425,7 @@ function TrackerCard({ item, onStatusChange, onDelete, onOpenNotes, hideStepper,
             className="px-2.5 py-1.5 border border-zinc-200 text-zinc-600 rounded-lg text-xs font-semibold hover:border-zinc-300 transition-all">
             Details
           </a>
-          <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+          <a href={`/go/${s.slug || s.id}`} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900 text-white rounded-lg text-xs font-bold hover:bg-zinc-800 transition-all">
             Apply <ExternalLink className="size-3" />
           </a>

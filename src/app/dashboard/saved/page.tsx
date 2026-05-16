@@ -99,7 +99,7 @@ export default async function SavedPage() {
                     className="hidden sm:flex text-xs px-2.5 py-1.5 border border-zinc-200 text-zinc-600 hover:border-zinc-300 transition-colors font-medium rounded-lg">
                     Details
                   </a>
-                  <a href={s.application_url} target="_blank" rel="noopener noreferrer"
+                  <a href={`/go/${s.slug || s.id}`} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-1 text-xs px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-white font-medium transition-colors rounded-lg">
                     Apply <ExternalLink className="size-3" />
                   </a>

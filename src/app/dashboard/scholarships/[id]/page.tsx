@@ -180,7 +180,7 @@ export default async function DashboardScholarshipDetailPage({
         name={scholarship.name}
         country={scholarship.country}
         deadline={scholarship.application_deadline}
-        applicationUrl={scholarship.application_url}
+        applicationUrl={`/go/${scholarship.slug || scholarship.id}`}
         isPast={!!isPast}
       />
 
@@ -355,7 +355,7 @@ export default async function DashboardScholarshipDetailPage({
               <div className="flex flex-wrap gap-3">
                 {!isPast && (
                   <a
-                    href={scholarship.application_url}
+                    href={`/go/${scholarship.slug || scholarship.id}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-600 text-white font-semibold rounded-md hover:bg-brand-700 transition-colors text-sm"
