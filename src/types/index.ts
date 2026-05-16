@@ -55,7 +55,7 @@ export interface UserProfile {
   gpa: number | null;
   bio: string | null;
   avatar_url: string | null;
-  role: 'user' | 'admin';
+  role: 'user' | 'admin' | 'super_admin';
   // High-signal matching fields (added in migration 011)
   citizenship?: string | null;
   financial_need?: boolean | null;

@@ -29,13 +29,14 @@ import { useToast } from "@/components/admin/ToastProvider";
 
 const PAGE_SIZE        = 25;
 const COUNTRY_OPTIONS  = ["UK", "USA", "Germany", "Canada", "Other"] as const;
-const ROLE_OPTIONS     = ["all", "user", "admin"] as const;
+const ROLE_OPTIONS     = ["all", "user", "admin", "super_admin"] as const;
 const ONBOARD_OPTIONS  = ["all", "complete", "incomplete"] as const;
 const JOINED_OPTIONS   = ["all", "7d", "30d", "90d"] as const;
 
 type RoleFilter      = (typeof ROLE_OPTIONS)[number];
 type OnboardFilter   = (typeof ONBOARD_OPTIONS)[number];
 type JoinedFilter    = (typeof JOINED_OPTIONS)[number];
+type RoleType        = Exclude<RoleFilter, "all">;
 
 type UserRow = {
   id:                 string;
@@ -79,7 +80,8 @@ export default function AdminUsersPage() {
   const [loadError,    setLoadError]    = useState<string | null>(null);
   const [filtersOpen,  setFiltersOpen]  = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
-  const [confirm, setConfirm] = useState<{ user: UserRow; nextRole: "user" | "admin" } | null>(null);
+  const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<{ user: UserRow; nextRole: RoleType } | null>(null);
   const [working, setWorking] = useState(false);
   const [detailUser, setDetailUser] = useState<UserRow | null>(null);
 
@@ -120,12 +122,16 @@ export default function AdminUsersPage() {
         throw new Error(profileError?.message ?? userError?.message ?? "Failed to load users");
       }
 
-      setUsers((profile ?? []) as UserRow[]);
-      setCurrentUserId(user?.id ?? null);
+      const rows = (profile ?? []) as UserRow[];
+      const currentId = user?.id ?? null;
+      setUsers(rows);
+      setCurrentUserId(currentId);
+      setCurrentUserRole(rows.find((r) => r.id === currentId)?.role ?? null);
     } catch (err) {
       console.error("admin users load failed:", err);
       setUsers([]);
       setCurrentUserId(null);
+      setCurrentUserRole(null);
       setLoadError("Failed to load user records. Check your connection or try again.");
     } finally {
       setLoading(false);
@@ -203,9 +209,10 @@ export default function AdminUsersPage() {
   }
 
   // ── Role change ──
-  function requestPromote(u: UserRow) {
+  function requestPromote(u: UserRow, nextRole: RoleType) {
     if (u.id === currentUserId) return;     // can't change own role
-    setConfirm({ user: u, nextRole: u.role === "admin" ? "user" : "admin" });
+    if (u.role === nextRole) return;        // no-op
+    setConfirm({ user: u, nextRole });
   }
 
   async function applyPromote() {
@@ -225,7 +232,7 @@ export default function AdminUsersPage() {
       setUsers(prev => prev.map(u =>
         u.id === confirm.user.id ? { ...u, role: confirm.nextRole } : u
       ));
-      toast.addToast(`User ${confirm.nextRole === "admin" ? "promoted" : "demoted"} successfully`, "success");
+      toast.addToast(`Role changed to ${confirm.nextRole} successfully`, "success");
       setConfirm(null);
     } finally {
       setWorking(false);
@@ -473,8 +480,10 @@ export default function AdminUsersPage() {
                     <div className="size-10 rounded bg-zinc-900 flex items-center justify-center text-xs font-medium text-white shadow-sm uppercase">
                       {(u.full_name || u.email)[0].toUpperCase()}
                     </div>
-                    {u.role === "admin" && (
-                      <div className="absolute -top-1 -right-1 size-5 rounded-full bg-amber-400 border-2 border-white flex items-center justify-center shadow-sm">
+                    {(u.role === "admin" || u.role === "super_admin") && (
+                      <div className={`absolute -top-1 -right-1 size-5 rounded-full border-2 border-white flex items-center justify-center shadow-sm ${
+                        u.role === "super_admin" ? "bg-red-500" : "bg-amber-400"
+                      }`}>
                         <Shield className="size-2.5 text-white" />
                       </div>
                     )}
@@ -508,26 +517,32 @@ export default function AdminUsersPage() {
                   </div>
 
                   <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-widest border ${
-                    u.role === "admin"
-                      ? "bg-amber-50 text-amber-600 border-amber-200/50"
-                      : "bg-blue-50 text-blue-600 border-blue-200/50"
+                    u.role === "super_admin"
+                      ? "bg-red-50 text-red-600 border-red-200/50"
+                      : u.role === "admin"
+                        ? "bg-amber-50 text-amber-600 border-amber-200/50"
+                        : "bg-blue-50 text-blue-600 border-blue-200/50"
                   }`}>
                     {u.role}
                   </span>
 
-                  <button
-                    onClick={() => requestPromote(u)}
-                    disabled={u.id === currentUserId}
-                    title={
-                      u.id === currentUserId
-                        ? "You cannot change your own role"
-                        : u.role === "admin" ? "Demote to user" : "Promote to admin"
-                    }
-                    className="ml-auto sm:ml-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-wide border bg-white border-zinc-200 text-zinc-600 hover:border-zinc-900 hover:text-zinc-900 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
-                    {u.role === "admin" ? <UserCheck className="size-3" /> : <Crown className="size-3" />}
-                    <span>{u.role === "admin" ? "Demote" : "Promote"}</span>
-                  </button>
+                  {currentUserRole === "super_admin" && u.id !== currentUserId ? (
+                    <select
+                      value={u.role}
+                      onChange={(e) => requestPromote(u, e.target.value as RoleType)}
+                      className="ml-auto sm:ml-0 rounded border border-zinc-200 bg-white text-[10px] font-medium uppercase tracking-wide text-zinc-700 py-1 px-2 hover:border-zinc-400 focus:border-zinc-900 focus:outline-none transition-colors cursor-pointer"
+                      title="Change role"
+                    >
+                      <option value="user">user</option>
+                      <option value="admin">admin</option>
+                      <option value="super_admin">super_admin</option>
+                    </select>
+                  ) : (
+                    <span className="ml-auto sm:ml-0 inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-medium uppercase tracking-wide border bg-zinc-50 border-zinc-200 text-zinc-400 disabled:opacity-40 disabled:cursor-not-allowed">
+                      <Shield className="size-3" />
+                      <span>Locked</span>
+                    </span>
+                  )}
 
                   <ActionDropdown
                     actions={[
@@ -621,15 +636,21 @@ export default function AdminUsersPage() {
               >
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`size-10 rounded flex items-center justify-center ${
-                    confirm.nextRole === "admin" ? "bg-amber-100" : "bg-blue-100"
+                    confirm.nextRole === "super_admin"
+                      ? "bg-red-100"
+                      : confirm.nextRole === "admin"
+                        ? "bg-amber-100"
+                        : "bg-blue-100"
                   }`}>
-                    {confirm.nextRole === "admin"
-                      ? <Crown className="size-5 text-amber-600" />
-                      : <UserCheck className="size-5 text-blue-600" />}
+                    {confirm.nextRole === "super_admin"
+                      ? <Crown className="size-5 text-red-600" />
+                      : confirm.nextRole === "admin"
+                        ? <Crown className="size-5 text-amber-600" />
+                        : <UserCheck className="size-5 text-blue-600" />}
                   </div>
                   <div>
                     <h2 className="text-base font-medium text-zinc-900">
-                      {confirm.nextRole === "admin" ? "Promote to admin?" : "Demote to user?"}
+                      Change role to {confirm.nextRole}?
                     </h2>
                     <p className="text-xs text-zinc-500 mt-0.5">
                       This change takes effect immediately.
@@ -641,9 +662,11 @@ export default function AdminUsersPage() {
                   <p className="text-sm font-medium text-zinc-900">{confirm.user.full_name || confirm.user.email}</p>
                   <p className="text-xs text-zinc-500 mt-0.5">{confirm.user.email}</p>
                 </div>
-                {confirm.nextRole === "admin" && (
+                {(confirm.nextRole === "admin" || confirm.nextRole === "super_admin") && (
                   <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded p-2.5 mb-5 leading-relaxed">
-                    Admins can manage scholarships, view all user data, and change other users&apos; roles. Only promote people you trust.
+                    {confirm.nextRole === "super_admin"
+                      ? "Super admins have unrestricted access including the ability to promote or demote other admins. This is the highest privilege level. Only grant it to people you trust absolutely."
+                      : "Admins can manage scholarships, view all user data, and access the admin console. Only promote people you trust."}
                   </p>
                 )}
                 <div className="flex justify-end gap-2">
@@ -658,12 +681,14 @@ export default function AdminUsersPage() {
                     onClick={applyPromote}
                     disabled={working}
                     className={`px-3 py-1.5 rounded text-xs font-medium uppercase tracking-widest text-white transition-colors disabled:opacity-50 ${
-                      confirm.nextRole === "admin"
-                        ? "bg-amber-600 hover:bg-amber-700"
-                        : "bg-zinc-900 hover:bg-zinc-800"
+                      confirm.nextRole === "super_admin"
+                        ? "bg-red-600 hover:bg-red-700"
+                        : confirm.nextRole === "admin"
+                          ? "bg-amber-600 hover:bg-amber-700"
+                          : "bg-zinc-900 hover:bg-zinc-800"
                     }`}
                   >
-                    {working ? "Working…" : confirm.nextRole === "admin" ? "Promote" : "Demote"}
+                    {working ? "Working…" : "Confirm Change"}
                   </button>
                 </div>
               </m.div>
@@ -718,9 +743,11 @@ export default function AdminUsersPage() {
                         <div>
                           <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">Role</p>
                           <span className={`inline-flex items-center gap-1.5 mt-1 px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-widest border ${
-                            detailUser.role === "admin"
-                              ? "bg-amber-50 text-amber-600 border-amber-200/50"
-                              : "bg-blue-50 text-blue-600 border-blue-200/50"
+                            detailUser.role === "super_admin"
+                              ? "bg-red-50 text-red-600 border-red-200/50"
+                              : detailUser.role === "admin"
+                                ? "bg-amber-50 text-amber-600 border-amber-200/50"
+                                : "bg-blue-50 text-blue-600 border-blue-200/50"
                           }`}>
                             {detailUser.role}
                           </span>
@@ -776,18 +803,16 @@ export default function AdminUsersPage() {
                     >
                       <Mail className="size-3.5" /> Email User
                     </a>
-                    {detailUser.id !== currentUserId && (
-                      <button
-                        onClick={() => { setDetailUser(null); requestPromote(detailUser); }}
-                        className={`flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded text-xs font-medium uppercase tracking-wider transition-colors ${
-                          detailUser.role === "admin"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100"
-                            : "bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100"
-                        }`}
+                    {detailUser.id !== currentUserId && currentUserRole === "super_admin" && (
+                      <select
+                        value={detailUser.role}
+                        onChange={(e) => { setDetailUser(null); requestPromote(detailUser, e.target.value as RoleType); }}
+                        className="flex-1 rounded border border-zinc-200 bg-white text-xs font-medium uppercase tracking-wider text-zinc-700 py-2 px-3 hover:border-zinc-400 focus:border-zinc-900 focus:outline-none transition-colors cursor-pointer"
                       >
-                        {detailUser.role === "admin" ? <UserCheck className="size-3.5" /> : <Crown className="size-3.5" />}
-                        {detailUser.role === "admin" ? "Demote" : "Promote"}
-                      </button>
+                        <option value="user">user</option>
+                        <option value="admin">admin</option>
+                        <option value="super_admin">super_admin</option>
+                      </select>
                     )}
                   </div>
                 </div>
