@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { getClientIp } from '@/lib/auth/ip';
 import { rateLimitByIp, rateLimitByKey } from '@/lib/rate-limit/server';
+import { readJsonBody } from '@/lib/server/body-size';
 
 // ─────────────────────────────────────────────────────────────
 // POST /api/match-events
@@ -78,12 +79,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
-  }
+  const bodyResult = await readJsonBody(request, 32_768);
+  if (!bodyResult.ok) return bodyResult.response;
+  const body = bodyResult.data;
 
   // Accept either a single event or { events: Event[] }.
   const events: Event[] = Array.isArray((body as any)?.events)

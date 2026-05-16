@@ -3,6 +3,7 @@ import { z } from "zod";
 import { getClientIp } from "@/lib/auth/ip";
 import { rateLimitByIp, rateLimitByKey } from "@/lib/rate-limit/server";
 import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { readJsonBody } from "@/lib/server/body-size";
 
 const pageViewSchema = z.object({
   p_path: z.string().min(1).max(500),
@@ -31,19 +32,10 @@ function tooManyRequests(reset: number) {
 }
 
 export async function POST(request: NextRequest) {
-  const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 8_192) {
-    return NextResponse.json({ error: "Payload too large" }, { status: 413 });
-  }
+  const bodyResult = await readJsonBody(request, 8_192);
+  if (!bodyResult.ok) return bodyResult.response;
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
-
-  const parsed = pageViewSchema.safeParse(body);
+  const parsed = pageViewSchema.safeParse(bodyResult.data);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid page view payload" }, { status: 400 });
   }

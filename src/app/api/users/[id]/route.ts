@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
+import { readJsonBody } from "@/lib/server/body-size";
 
 // ─────────────────────────────────────────────────────────────
 // PATCH /api/users/[id]
@@ -29,7 +30,7 @@ type AllowedRole = (typeof ALLOWED_ROLES)[number];
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   const supabase = await createClient();
-  const { id }   = await context.params;
+  const { id } = await context.params;
 
   const adminCheck = await requireAdminJson(supabase);
   if (!adminCheck.ok) return adminCheck.response;
@@ -43,12 +44,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
-  }
+  const bodyResult = await readJsonBody(request, 8_192);
+  if (!bodyResult.ok) return bodyResult.response;
+  const body = bodyResult.data;
 
   const role = (body as { role?: unknown })?.role;
   if (typeof role !== "string" || !ALLOWED_ROLES.includes(role as AllowedRole)) {

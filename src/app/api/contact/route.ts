@@ -4,6 +4,7 @@ import { z } from "zod";
 import { buildContactEmail } from "@/emails/contact";
 import { getClientIp } from "@/lib/auth/ip";
 import { rateLimitByIp, rateLimitByKey } from "@/lib/rate-limit/server";
+import { readJsonBody } from "@/lib/server/body-size";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
@@ -27,9 +28,13 @@ function tooManyRequests(reset: number) {
   );
 }
 
+const MAX_BODY_BYTES = 16_384; // 16 KB — generous for a contact form
+
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const bodyResult = await readJsonBody(req, MAX_BODY_BYTES);
+    if (!bodyResult.ok) return bodyResult.response;
+    const body = bodyResult.data;
 
     // Validate form data
     const validationResult = contactSchema.safeParse(body);

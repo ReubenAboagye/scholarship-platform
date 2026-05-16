@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
 import { resolveStudyFieldSlugs } from "@/lib/constants/study-fields";
 import { scholarshipUpdateSchema } from "@/lib/validation/scholarship";
+import { readJsonBody } from "@/lib/server/body-size";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -22,8 +23,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   const adminCheck = await requireAdminJson(supabase);
   if (!adminCheck.ok) return adminCheck.response;
 
-  const body = await request.json();
-  const parsed = scholarshipUpdateSchema.safeParse(body);
+  const bodyResult = await readJsonBody(request, 65_536);
+  if (!bodyResult.ok) return bodyResult.response;
+  const parsed = scholarshipUpdateSchema.safeParse(bodyResult.data);
   if (!parsed.success) {
     return NextResponse.json(
       { error: "Invalid scholarship payload", issues: parsed.error.flatten() },

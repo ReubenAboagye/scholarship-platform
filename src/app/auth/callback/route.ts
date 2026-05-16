@@ -28,11 +28,17 @@ function popupHtml(
 </html>`;
 }
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const next = sanitizeRedirectPath(searchParams.get("next") ?? searchParams.get("redirectTo"));
   const isPopup = searchParams.get("popup") === "true";
+
+  // Use the canonical app origin, never the request origin, to prevent
+  // Host-header poisoning of redirect and postMessage targets.
+  const origin = APP_URL;
 
   if (code) {
     const supabase = await createClient();
