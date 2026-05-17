@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -161,12 +161,16 @@ export default function AdminUsersPage() {
   const toast        = useToast();
 
   // ── URL-driven state ──
-  const search        = searchParams.get("q") ?? "";
-  const page          = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
-  const roleFilter    = readStringParam(searchParams, "role",     ROLE_OPTIONS,    "all") as RoleFilter;
-  const onboardFilter = readStringParam(searchParams, "onboard",  ONBOARD_OPTIONS, "all") as OnboardFilter;
-  const joinedFilter  = readStringParam(searchParams, "joined",   JOINED_OPTIONS,  "all") as JoinedFilter;
-  const countries     = readArrayParam(searchParams, "country",   COUNTRY_OPTIONS);
+  // Derive everything from the stable *string* representation so that
+  // useCallback / useMemo don't re-fire on every render (Next.js
+  // returns a new ReadonlyURLSearchParams object reference each time).
+  const spStr         = searchParams.toString();
+  const search        = useMemo(() => searchParams.get("q") ?? "",                                                              [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
+  const page          = useMemo(() => Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1),                          [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
+  const roleFilter    = useMemo(() => readStringParam(searchParams, "role",    ROLE_OPTIONS,    "all") as RoleFilter,           [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
+  const onboardFilter = useMemo(() => readStringParam(searchParams, "onboard", ONBOARD_OPTIONS, "all") as OnboardFilter,        [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
+  const joinedFilter  = useMemo(() => readStringParam(searchParams, "joined",  JOINED_OPTIONS,  "all") as JoinedFilter,         [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
+  const countries     = useMemo(() => readArrayParam(searchParams,  "country", COUNTRY_OPTIONS),                                [spStr]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Local-only state ──
   const [users,        setUsers]        = useState<UserRow[]>([]);
@@ -1004,19 +1008,7 @@ export default function AdminUsersPage() {
                         Copy Email
                       </button>
                     </div>
-                    {detailUser.id !== currentUserId && (
-                      <button
-                        onClick={() => {
-  
-                          setDetailUser(null);
 
-                        }}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm font-semibold hover:bg-amber-100 transition-colors"
-                      >
-                        <UserCheck className="size-4" />
-                        Impersonate User
-                      </button>
-                    )}
                   </div>
 
                   {/* Role Management */}

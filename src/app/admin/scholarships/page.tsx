@@ -8,7 +8,7 @@ import {
   Plus, Pencil, Loader2, ExternalLink, Search,
   LayoutGrid, LayoutList, ChevronLeft, ChevronRight,
   Filter, Download, X, Calendar, Trash2, Eye, Copy,
-  Square, SquareCheck, Power,
+  Square, SquareCheck, Power, RefreshCcw,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
@@ -49,6 +49,7 @@ type Scholarship = {
   application_url:      string | null;
   is_active:            boolean;
   created_at:           string;
+  deleted_at:           string | null;
 };
 
 // ── Page component ───────────────────────────────────────────
@@ -64,13 +65,15 @@ export default function AdminScholarshipsPage() {
   const search       = searchParams.get("q") ?? "";
   const view         = readStringParam(searchParams, "view", ["list", "grid"] as const, "list");
   const page         = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10) || 1);
-  const countries    = readArrayParam(searchParams, "country",  COUNTRY_OPTIONS);
-  const fundings     = readArrayParam(searchParams, "funding",  FUNDING_OPTIONS);
+  const countries    = useMemo(() => readArrayParam(searchParams, "country",  COUNTRY_OPTIONS), [searchParams]);
+  const fundings     = useMemo(() => readArrayParam(searchParams, "funding",  FUNDING_OPTIONS), [searchParams]);
   const statusFilter = readStringParam(searchParams, "status",   STATUS_OPTIONS,   "all") as StatusFilter;
   const deadlineFilt = readStringParam(searchParams, "deadline", DEADLINE_OPTIONS, "all") as DeadlineFilter;
 
-  // ── Local-only state ──
+  // ── Local state ──
   const [scholarships, setScholarships] = useState<Scholarship[]>([]);
+  const [totalScholarships, setTotalScholarships] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading,      setLoading]      = useState(true);
   const [filtersOpen,  setFiltersOpen]  = useState(false);
   const [selectedIds,  setSelectedIds]  = useState<Set<string>>(new Set());
@@ -97,13 +100,29 @@ export default function AdminScholarshipsPage() {
 
   // ── Data load ──
   const load = useCallback(async () => {
-    const { data } = await supabase
-      .from("scholarships")
-      .select("*")
-      .order("created_at", { ascending: false });
-    setScholarships((data ?? []) as Scholarship[]);
-    setLoading(false);
-  }, [supabase]);
+    setLoading(true);
+    const qs = new URLSearchParams();
+    if (search) qs.set("q", search);
+    if (countries.length) qs.set("country", countries.join(","));
+    if (fundings.length) qs.set("funding", fundings.join(","));
+    if (statusFilter !== "all") qs.set("status", statusFilter);
+    if (deadlineFilt !== "all") qs.set("deadline", deadlineFilt);
+    qs.set("page", String(page));
+    qs.set("pageSize", String(PAGE_SIZE));
+
+    try {
+      const response = await fetch(`/api/admin/scholarships?${qs.toString()}`);
+      if (!response.ok) throw new Error("Failed to load");
+      const { scholarships, total, totalPages } = await response.json();
+      setScholarships(scholarships);
+      setTotalScholarships(total);
+      setTotalPages(totalPages);
+    } catch (err) {
+      toast.addToast("Failed to load scholarships", "error");
+    } finally {
+      setLoading(false);
+    }
+  }, [search, countries, fundings, statusFilter, deadlineFilt, page]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -152,38 +171,25 @@ export default function AdminScholarshipsPage() {
     toast.addToast("Scholarship removed (soft delete)", "success");
   }
 
-  // ── Filtering ──
-  const filtered = useMemo(() => {
-    const q   = search.trim().toLowerCase();
-    const now = new Date();
-    const in30 = new Date(); in30.setDate(in30.getDate() + 30);
-
-    return scholarships.filter(s => {
-      // Text search across name, country, provider.
-      if (q) {
-        const hay = `${s.name} ${s.country} ${s.provider ?? ""}`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      if (countries.length && !countries.includes(s.country)) return false;
-      if (fundings.length  && !fundings.includes(s.funding_type)) return false;
-      if (statusFilter === "active"   && !s.is_active) return false;
-      if (statusFilter === "inactive" &&  s.is_active) return false;
-
-      if (deadlineFilt !== "all") {
-        const dl = s.application_deadline ? new Date(s.application_deadline) : null;
-        if (deadlineFilt === "open"       && (!dl || dl < now))                         return false;
-        if (deadlineFilt === "closing30"  && (!dl || dl < now || dl > in30))           return false;
-        if (deadlineFilt === "closed"     && (!dl || dl >= now))                       return false;
-      }
-      return true;
+  // ── Restore ──
+  async function restoreScholarship(id: string) {
+    const response = await fetch(`/api/scholarships/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "restore" }),
     });
-  }, [scholarships, search, countries, fundings, statusFilter, deadlineFilt]);
+    if (!response.ok) {
+      toast.addToast("Failed to restore scholarship", "error");
+      return;
+    }
+    setScholarships(prev => prev.map(s => s.id === id ? { ...s, deleted_at: null, is_active: true } : s));
+    toast.addToast("Scholarship restored", "success");
+  }
 
   // ── Pagination ──
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage   = Math.min(page, totalPages);
+  const safePage   = Math.min(page, Math.max(1, totalPages));
   const pageStart  = (safePage - 1) * PAGE_SIZE;
-  const pageRows   = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageRows   = scholarships;
 
   // ── Bulk selection helpers (must be after pageRows) ──
   const allPageSelected = pageRows.length > 0 && pageRows.every(r => selectedIds.has(r.id));
@@ -286,7 +292,7 @@ export default function AdminScholarshipsPage() {
 
   // ── CSV export ──
   function exportCsv() {
-    const csv = rowsToCsv(filtered, [
+    const csv = rowsToCsv(scholarships, [
       { key: "name",                 header: "Name" },
       { key: "provider",             header: "Provider" },
       { key: "country",              header: "Country" },
@@ -341,7 +347,7 @@ export default function AdminScholarshipsPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={exportCsv}
-            disabled={loading || filtered.length === 0}
+            disabled={loading || scholarships.length === 0}
             className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white border border-zinc-200 text-zinc-600 font-medium rounded text-xs uppercase tracking-widest transition-all hover:bg-zinc-50 active:scale-95 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
             title="Download filtered list as CSV"
           >
@@ -509,7 +515,7 @@ export default function AdminScholarshipsPage() {
               {activeFilterCount > 0 && (
                 <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
                   <p className="text-[10px] font-medium uppercase tracking-widest text-zinc-400">
-                    {filtered.length} of {scholarships.length} match current filters
+                    {totalScholarships} match current filters
                   </p>
                   <button
                     onClick={clearFilters}
@@ -575,7 +581,7 @@ export default function AdminScholarshipsPage() {
           <Loader2 className="size-8 animate-spin text-blue-500 mb-4" />
           <p className="text-zinc-400 font-bold uppercase tracking-widest text-xs">Loading Catalog...</p>
         </div>
-      ) : filtered.length === 0 ? (
+      ) : scholarships.length === 0 ? (
         <m.div variants={item} className="bg-white border border-zinc-200 rounded-lg shadow-sm py-20 text-center">
           <div className="size-20 rounded-full bg-zinc-50 flex items-center justify-center mx-auto mb-6">
             <Search className="size-8 text-zinc-200" />
@@ -599,6 +605,7 @@ export default function AdminScholarshipsPage() {
           onSelectAll={toggleSelectAll}
           allSelected={allPageSelected}
           onDelete={deleteScholarship}
+          onRestore={restoreScholarship}
         />
       ) : (
         <GridView
@@ -607,16 +614,17 @@ export default function AdminScholarshipsPage() {
           selectedIds={selectedIds}
           onSelect={toggleSelect}
           onDelete={deleteScholarship}
+          onRestore={restoreScholarship}
         />
       )}
 
       {/* ── Pagination ──────────────────────────────────── */}
-      {!loading && filtered.length > 0 && (
+      {!loading && scholarships.length > 0 && (
         <m.div variants={item} className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-[10px] font-medium text-zinc-400 uppercase tracking-widest">
             Showing <span className="text-zinc-900">{pageStart + 1}</span>–
             <span className="text-zinc-900">{pageStart + pageRows.length}</span> of{" "}
-            <span className="text-zinc-900">{filtered.length}</span>
+            <span className="text-zinc-900">{totalScholarships}</span>
           </p>
           {totalPages > 1 && (
             <div className="flex items-center gap-2">
@@ -671,6 +679,7 @@ function ListView({
   onSelectAll,
   allSelected,
   onDelete,
+  onRestore,
 }: {
   rows: Scholarship[];
   onToggle: (id: string, current: boolean) => void;
@@ -679,6 +688,7 @@ function ListView({
   onSelectAll: () => void;
   allSelected: boolean;
   onDelete: (id: string) => void;
+  onRestore: (id: string) => void;
 }) {
   return (
     <m.div className="bg-white border border-zinc-200 rounded-lg overflow-hidden shadow-sm">
@@ -796,12 +806,18 @@ function ListView({
                               icon: <Copy className="size-3.5" />,
                               onClick: () => { navigator.clipboard.writeText(s.id); },
                             },
-                            {
-                              label: "Delete",
-                              icon: <Trash2 className="size-3.5" />,
-                              danger: true,
-                              onClick: () => onDelete(s.id),
-                            },
+                            s.deleted_at
+                              ? {
+                                  label: "Restore",
+                                  icon: <RefreshCcw className="size-3.5" />,
+                                  onClick: () => onRestore(s.id),
+                                }
+                              : {
+                                  label: "Delete",
+                                  icon: <Trash2 className="size-3.5" />,
+                                  danger: true,
+                                  onClick: () => onDelete(s.id),
+                                },
                           ]}
                         />
                       </div>
@@ -825,12 +841,14 @@ function GridView({
   selectedIds,
   onSelect,
   onDelete,
+  onRestore,
 }: {
   rows: Scholarship[];
   onToggle: (id: string, current: boolean) => void;
   selectedIds: Set<string>;
   onSelect: (id: string) => void;
   onDelete: (id: string) => void;
+  onRestore: (id: string) => void;
 }) {
   return (
     <m.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -926,12 +944,18 @@ function GridView({
                         icon: <Copy className="size-3.5" />,
                         onClick: () => { navigator.clipboard.writeText(s.id); },
                       },
-                      {
-                        label: "Delete",
-                        icon: <Trash2 className="size-3.5" />,
-                        danger: true,
-                        onClick: () => onDelete(s.id),
-                      },
+                      s.deleted_at
+                        ? {
+                            label: "Restore",
+                            icon: <RefreshCcw className="size-3.5" />,
+                            onClick: () => onRestore(s.id),
+                          }
+                        : {
+                            label: "Delete",
+                            icon: <Trash2 className="size-3.5" />,
+                            danger: true,
+                            onClick: () => onDelete(s.id),
+                          },
                     ]}
                   />
                 </div>

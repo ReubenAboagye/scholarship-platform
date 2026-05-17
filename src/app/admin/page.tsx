@@ -1,6 +1,6 @@
 import { getAdminOverviewBundle } from "@/lib/admin/analytics";
-import { createAdminClient } from "@/lib/supabase/server";
-import { requireAdminPageAccess } from "@/lib/auth/admin";
+import { createAdminClient, createClient } from "@/lib/supabase/server";
+import { requireAdminPageAccess, isSuperAdminUser } from "@/lib/auth/admin";
 import OverviewClient from "./OverviewClient";
 import { type ActivityEvent } from "@/components/admin/SystemActivityFeed";
 
@@ -9,8 +9,10 @@ import { type ActivityEvent } from "@/components/admin/SystemActivityFeed";
 // that handles motion/animation.
 
 export default async function AdminPage() {
-  await requireAdminPageAccess();
-  const supabase = createAdminClient();
+  const user = await requireAdminPageAccess();
+  const adminSupabase = createAdminClient();
+  const normalSupabase = await createClient();
+  const isSuper = await isSuperAdminUser(normalSupabase, user.id);
 
   const [
     bundle,
@@ -19,13 +21,13 @@ export default async function AdminPage() {
     auditRows,
   ] = await Promise.all([
     getAdminOverviewBundle(),
-    supabase
+    adminSupabase
       .from("scholarships")
       .select("id, name, country, funding_type, application_deadline, created_at")
       .order("created_at", { ascending: false })
       .limit(5)
       .then(r => r.data ?? []),
-    supabase
+    adminSupabase
       .from("profiles")
       .select("id, full_name, email, created_at, country_of_origin")
       .order("created_at", { ascending: false })
@@ -33,8 +35,9 @@ export default async function AdminPage() {
       .then(r => r.data ?? []),
     // Audit log is super-admin only; degrade gracefully on failure.
     (async () => {
+      if (!isSuper) return [];
       try {
-        const { data } = await supabase
+        const { data } = await adminSupabase
           .from("admin_role_audit_log")
           .select("actor_email, target_email, old_role, new_role, created_at")
           .order("created_at", { ascending: false })
