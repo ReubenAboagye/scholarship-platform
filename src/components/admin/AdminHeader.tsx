@@ -9,6 +9,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/scholarships/new": "New Scholarship",
   "/admin/users": "Users",
   "/admin/analytics": "Analytics",
+  "/admin/security/mfa": "MFA Security",
 };
 
 function pageLabel(path: string): string {

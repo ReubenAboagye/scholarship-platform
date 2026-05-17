@@ -8,12 +8,12 @@ type ToastType = "success" | "error" | "info" | "warning";
 
 interface Toast {
   id: string;
-  message: string;
+  message: React.ReactNode;
   type: ToastType;
 }
 
 interface ToastContextValue {
-  addToast: (message: string, type?: ToastType) => void;
+  addToast: (message: React.ReactNode, type?: ToastType) => void;
 }
 
 const ToastContext = createContext<ToastContextValue | null>(null);
@@ -50,7 +50,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const addToast = useCallback((message: string, type: ToastType = "info") => {
+  const addToast = useCallback((message: React.ReactNode, type: ToastType = "info") => {
     const id = Math.random().toString(36).slice(2);
     setToasts((prev) => [...prev, { id, message, type }]);
     timers.current[id] = setTimeout(() => removeToast(id), 4000);

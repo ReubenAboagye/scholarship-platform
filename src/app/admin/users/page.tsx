@@ -344,7 +344,24 @@ export default function AdminUsersPage() {
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        toast.addToast(body?.error ?? "Role change failed", "error");
+        const message = body?.error ?? "Role change failed";
+        if (typeof message === "string" && message.toLowerCase().includes("multi-factor")) {
+          toast.addToast(
+            <span className="flex items-center gap-2">
+              MFA required.
+              <a
+                href="/admin/security/mfa"
+                className="underline font-semibold hover:text-red-900"
+                onClick={(e) => { e.stopPropagation(); }}
+              >
+                Open MFA Security
+              </a>
+            </span>,
+            "error"
+          );
+        } else {
+          toast.addToast(message, "error");
+        }
         return;
       }
       setUsers(prev => prev.map(u =>

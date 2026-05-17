@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson, requireSuperAdminJson, hasAal2 } from "@/lib/auth/admin";
 import { readJsonBody } from "@/lib/server/body-size";
 
@@ -19,9 +19,10 @@ import { readJsonBody } from "@/lib/server/body-size";
 //     DB trigger so direct table updates cannot bypass it.
 //     Supabase Auth MFA must be enabled in the dashboard for
 //     this to be effective.
-//   - Audit logging is best-effort via the API (enriched with IP
-//     and user-agent). The DB trigger is the fail-closed layer
-//     for role-change authorization.
+//   - Role changes are executed through the private.change_user_role
+//     RPC. The AFTER UPDATE trigger (trg_profiles_audit_role_change)
+//     guarantees an audit row is inserted for every role mutation,
+//     including direct table updates that bypass this API.
 //
 // Deliberately scoped down:
 //   - No PUT/DELETE here. Account deletion is a prohibited
@@ -106,57 +107,22 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     );
   }
 
-  // Deliberately use the session-bound client for the write so
-  // profiles RLS remains the data-layer guard. The route-level
-  // super_admin check is still useful for clearer API behaviour, but
-  // this mutation should also fail closed at the table policy.
-  const { data, error } = await supabase
-    .from("profiles")
-    .update({ role })
-    .eq("id", id)
-    .select("id, role")
-    .single();
-
-  if (error) {
-    const isNotFound = error.code === "PGRST116";
-    return NextResponse.json(
-      { error: isNotFound ? "User not found" : "Failed to update user role." },
-      { status: isNotFound ? 404 : 500 }
-    );
-  }
-
-  if (!data) {
-    return NextResponse.json(
-      { error: "User not found" },
-      { status: 404 }
-    );
-  }
-
-  // Insert audit log via service_role so RLS on the audit table
-  // does not block the write. The service_role key is never sent
-  // to the browser; this happens server-side only.
-  const adminClient = createAdminClient();
-  const ip =
-    request.headers.get("x-forwarded-for") ??
-    request.headers.get("x-real-ip") ??
-    null;
-  const userAgent = request.headers.get("user-agent") ?? null;
-
-  const { error: auditError } = await adminClient.from("admin_role_audit_log").insert({
-    actor_user_id: actor.id,
+  // Use the locked-down RPC so the mutation happens inside a single
+  // DB function. The BEFORE UPDATE trigger (trg_profiles_protect_fields)
+  // is still evaluated as defense-in-depth, and the AFTER UPDATE
+  // trigger (trg_profiles_audit_role_change) guarantees an audit row.
+  const { error } = await supabase.rpc("change_user_role", {
     target_user_id: id,
-    old_role: oldRole,
     new_role: role,
-    actor_email: actor.email ?? null,
-    target_email: targetProfile.email ?? null,
-    ip_address: ip,
-    user_agent: userAgent,
   });
 
-  if (auditError) {
-    // Log but do not fail the request; the role change already succeeded.
-    console.error("Audit log insert failed", { actorId: actor.id, targetId: id, error: auditError });
+  if (error) {
+    console.error("change_user_role RPC failed", { targetId: id, role, error });
+    return NextResponse.json(
+      { error: "Failed to update user role." },
+      { status: 500 }
+    );
   }
 
-  return NextResponse.json({ data });
+  return NextResponse.json({ data: { id, role } });
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft,
+  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft, ShieldCheck,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -15,6 +15,7 @@ const navItems = [
   { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships", exact: false },
   { href: "/admin/users",         icon: Users,           label: "Users",        exact: false },
   { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics",    exact: false },
+  { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA Security", exact: false },
 ];
 
 const mobileNavItems = [
@@ -22,6 +23,7 @@ const mobileNavItems = [
   { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships" },
   { href: "/admin/users",         icon: Users,           label: "Users" },
   { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics" },
+  { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA" },
 ];
 
 interface Props {
