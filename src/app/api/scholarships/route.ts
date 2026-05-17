@@ -4,15 +4,19 @@ import { requireAdminJson } from "@/lib/auth/admin";
 import { resolveStudyFieldSlugs } from "@/lib/constants/study-fields";
 import { scholarshipCreateSchema } from "@/lib/validation/scholarship";
 import { readJsonBody } from "@/lib/server/body-size";
+import { checkSameOrigin } from "@/lib/server/csrf";
+import { getClientIp } from "@/lib/auth/ip";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
   const { searchParams } = request.nextUrl;
 
-  const country      = searchParams.get("country");
-  const degreeLevel  = searchParams.get("degree_level");
-  const fundingType  = searchParams.get("funding_type");
-  const search       = searchParams.get("search")?.trim().toLowerCase();
+  const country     = searchParams.get("country");
+  const degreeLevel = searchParams.get("degree_level");
+  const fundingType = searchParams.get("funding_type");
+  const search      = searchParams.get("search")?.trim().toLowerCase();
+  // include_soft_deleted is admin-only and defaults false
+  const includeDeleted = searchParams.get("include_deleted") === "true";
 
   let query = supabase
     .from("scholarships")
@@ -20,9 +24,16 @@ export async function GET(request: NextRequest) {
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 
-  if (country      && country      !== "All") query = query.eq("country",      country);
-  if (fundingType  && fundingType  !== "All") query = query.eq("funding_type", fundingType);
-  if (degreeLevel  && degreeLevel  !== "All") query = query.contains("degree_levels", [degreeLevel]);
+  if (!includeDeleted) {
+    query = query.is("deleted_at", null);
+  } else {
+    const adminCheck = await requireAdminJson(supabase);
+    if (!adminCheck.ok) return adminCheck.response;
+  }
+
+  if (country     && country     !== "All") query = query.eq("country",      country);
+  if (fundingType && fundingType !== "All") query = query.eq("funding_type", fundingType);
+  if (degreeLevel && degreeLevel !== "All") query = query.contains("degree_levels", [degreeLevel]);
   const { data, error } = await query;
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -42,6 +53,10 @@ export async function POST(request: NextRequest) {
 
   const adminCheck = await requireAdminJson(supabase);
   if (!adminCheck.ok) return adminCheck.response;
+  const actor = adminCheck.user;
+
+  const csrf = checkSameOrigin(request);
+  if (csrf) return csrf;
 
   const bodyResult = await readJsonBody(request, 65_536);
   if (!bodyResult.ok) return bodyResult.response;
@@ -65,5 +80,24 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // ── Audit log ──────────────────────────────────────────────
+  try {
+    const ip = await getClientIp();
+    const ua = request.headers.get("user-agent") ?? null;
+    await supabase.rpc("log_scholarship_audit", {
+      p_actor_user_id: actor.id,
+      p_scholarship_id: data.id,
+      p_action: "create",
+      p_old_snapshot: null,
+      p_new_snapshot: payload,
+      p_reason: null,
+      p_ip_address: ip,
+      p_user_agent: ua,
+    });
+  } catch (auditErr) {
+    console.error("Scholarship create audit failed:", auditErr);
+  }
+
   return NextResponse.json({ data }, { status: 201 });
 }

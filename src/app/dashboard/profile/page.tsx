@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { createClient } from "@/lib/supabase/client";
 import { Loader2, Check, Camera, Sparkles, User, BookOpen, Globe, Star, Target, Heart, ChevronDown, X, Bell } from "lucide-react";
 import { getTopNudge } from "@/lib/utils/profile-completeness";
 import CountrySelect from "@/components/ui/CountrySelect";
 import {
   getStudyFieldName,
-  resolveStudyFieldSlug,
   STUDY_FIELD_OPTIONS,
 } from "@/lib/constants/study-fields";
 import { createPortal } from "react-dom";
@@ -163,37 +161,39 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    const supabase = createClient();
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
+      const res = await fetch("/api/profile");
+      if (res.status === 401) {
         window.location.href = "/auth/login?redirectTo=/dashboard/profile";
         return;
       }
-      setEmail(user.email ?? "");
-      const { data } = await supabase.from("profiles").select("*").eq("id", user.id).single();
-      if (data) {
-        setForm({
-          full_name:         data.full_name         ?? "",
-          country_of_origin: data.country_of_origin ?? "",
-          field_of_study:    data.field_of_study
-                           ?? getStudyFieldName((data as any).primary_field_slug)
-                           ?? "",
-          degree_level:      data.degree_level      ?? "",
-          gpa:               data.gpa?.toString()   ?? "",
-          bio:               data.bio               ?? "",
-          citizenship:       (data as any).citizenship    ?? "",
-          career_goals:      (data as any).career_goals   ?? "",
-          financial_need:    (data as any).financial_need === true ? "true"
-                           : (data as any).financial_need === false ? "false" : "",
-          interests:         (data as any).interests ?? [],
-        });
-        const prefs = (data as any).notification_preferences ?? {};
-        setNotifPrefs({
-          digest_email:       prefs.digest_email       !== false,
-          deadline_reminders: prefs.deadline_reminders !== false,
-        });
+      const json = await res.json().catch(() => null);
+      if (!json?.profile) {
+        setLoading(false);
+        return;
       }
+      const data = json.profile;
+      setEmail(data.email ?? "");
+      setForm({
+        full_name:         data.full_name         ?? "",
+        country_of_origin: data.country_of_origin ?? "",
+        field_of_study:    data.field_of_study
+                         ?? getStudyFieldName(data.primary_field_slug)
+                         ?? "",
+        degree_level:      data.degree_level      ?? "",
+        gpa:               data.gpa?.toString()   ?? "",
+        bio:               data.bio               ?? "",
+        citizenship:       data.citizenship       ?? "",
+        career_goals:      data.career_goals      ?? "",
+        financial_need:    data.financial_need === true ? "true"
+                         : data.financial_need === false ? "false" : "",
+        interests:         data.interests ?? [],
+      });
+      const prefs = data.notification_preferences ?? {};
+      setNotifPrefs({
+        digest_email:       prefs.digest_email       !== false,
+        deadline_reminders: prefs.deadline_reminders !== false,
+      });
       setLoading(false);
     }
     load();
@@ -208,32 +208,29 @@ export default function ProfilePage() {
     e.preventDefault();
     setSaving(true);
     setSaveError("");
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      setSaving(false);
-      window.location.href = "/auth/login?redirectTo=/dashboard/profile";
-      return;
-    }
-    const { error } = await supabase.from("profiles").update({
-      full_name:         form.full_name         || null,
-      country_of_origin: form.country_of_origin || null,
-      field_of_study:    form.field_of_study    || null,
-      primary_field_slug: resolveStudyFieldSlug(form.field_of_study),
-      degree_level:      form.degree_level      || null,
-      gpa:               form.gpa               ? parseFloat(form.gpa) : null,
-      bio:               form.bio               || null,
-      citizenship:       form.citizenship       || null,
-      career_goals:      form.career_goals      || null,
-      financial_need:    form.financial_need === "true" ? true
-                       : form.financial_need === "false" ? false : null,
-      interests:              form.interests.length > 0 ? form.interests : [],
-      notification_preferences: notifPrefs,
-    }).eq("id", user.id);
+    const res = await fetch("/api/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        full_name:         form.full_name         || null,
+        country_of_origin: form.country_of_origin || null,
+        field_of_study:    form.field_of_study    || null,
+        degree_level:      form.degree_level      || null,
+        gpa:               form.gpa               ? parseFloat(form.gpa) : null,
+        bio:               form.bio               || null,
+        citizenship:       form.citizenship       || null,
+        career_goals:      form.career_goals      || null,
+        financial_need:    form.financial_need === "true" ? true
+                         : form.financial_need === "false" ? false : null,
+        interests:         form.interests.length > 0 ? form.interests : [],
+        notification_preferences: notifPrefs,
+      }),
+    });
 
-    if (error) {
-      console.error("Failed to save profile:", error);
-      setSaveError("We couldn't save your profile. Please try again.");
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({} as any));
+      console.error("Failed to save profile:", res.status, body);
+      setSaveError(body?.error || "We couldn't save your profile. Please try again.");
       setSaving(false);
       return;
     }

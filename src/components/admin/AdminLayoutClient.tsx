@@ -4,9 +4,6 @@ import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
 import { ToastProvider } from "./ToastProvider";
 import KeyboardShortcuts from "./KeyboardShortcuts";
-import { ImpersonationProvider } from "./ImpersonationProvider";
-import ImpersonationBanner from "./ImpersonationBanner";
-
 interface Props {
   profile: { full_name: string | null; email: string; role: string } | null;
   children: React.ReactNode;
@@ -14,9 +11,7 @@ interface Props {
 
 export default function AdminLayoutClient({ profile, children }: Props) {
   return (
-    <ImpersonationProvider>
-      <ImpersonationBanner />
-      <div className="h-screen bg-zinc-50 flex overflow-hidden">
+    <div className="h-screen bg-zinc-50 flex overflow-hidden">
         <AdminSidebar profile={profile} />
 
         <div className="flex-1 flex flex-col min-w-0 relative">
@@ -32,6 +27,5 @@ export default function AdminLayoutClient({ profile, children }: Props) {
           </main>
         </div>
       </div>
-    </ImpersonationProvider>
   );
 }

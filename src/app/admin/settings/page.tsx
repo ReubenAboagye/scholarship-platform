@@ -1,28 +1,39 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
+import type React from "react";
+import Link from "next/link";
 import {
-  Settings, Shield, Users, BookOpen, Database,
-  Globe, Clock, Server, AlertTriangle, CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  CheckCircle2,
+  Clock,
+  Database,
+  Globe,
+  Shield,
+  Server,
+  Users,
 } from "lucide-react";
-import { LazyMotion, domAnimation, m } from "framer-motion";
+import { requireAdminPageAccess } from "@/lib/auth/admin";
+import { createAdminClient } from "@/lib/supabase/server";
 
-// ─────────────────────────────────────────────────────────────
 // Admin Settings page
-//
-// Platform configuration and system health read-only view.
-// Settings mutations can be added later when a platform_settings
-// table is introduced.
-// ─────────────────────────────────────────────────────────────
+// Read-only operational view. Settings mutations can be added later when
+// a platform_settings table, authorization rules, and audit trails exist.
+
+type HealthStatus = "healthy" | "degraded" | "unknown";
 
 type SystemStats = {
   totalUsers: number;
   totalScholarships: number;
   totalApplications: number;
   totalSaved: number;
-  dbStatus: "healthy" | "degraded" | "unknown";
+  dbStatus: HealthStatus;
+  warnings: string[];
+};
+
+type CountResult = {
+  label: string;
+  count: number;
+  error: string | null;
 };
 
 function SettingsCard({
@@ -54,196 +65,249 @@ function SettingsCard({
   );
 }
 
-function StatRow({ label, value, icon: Icon }: { label: string; value: string | number; icon: React.ComponentType<{ className?: string }> }) {
+function StatRow({
+  label,
+  value,
+  icon: Icon,
+}: {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
   return (
-    <div className="flex items-center justify-between py-2.5 border-b border-zinc-50 last:border-0">
-      <div className="flex items-center gap-2.5">
-        <Icon className="size-3.5 text-zinc-400" />
-        <span className="text-sm text-zinc-600">{label}</span>
+    <div className="flex items-center justify-between py-2.5 border-b border-zinc-50 last:border-0 gap-4">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <Icon className="size-3.5 text-zinc-400 shrink-0" />
+        <span className="text-sm text-zinc-600 truncate">{label}</span>
       </div>
-      <span className="text-sm font-semibold text-zinc-900">{value}</span>
+      <span className="text-sm font-semibold text-zinc-900 text-right">{value}</span>
     </div>
   );
 }
 
-export default function AdminSettingsPage() {
-  const router = useRouter();
-  const supabase = createClient();
-  const [stats, setStats] = useState<SystemStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  // Gate: admin only
-  useEffect(() => {
-    async function check() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { router.replace("/auth/login"); return; }
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (!profile?.role || !["admin", "super_admin"].includes(profile.role)) {
-        router.replace("/admin");
-        return;
-      }
-      setIsAdmin(true);
-    }
-    check();
-  }, [router, supabase]);
-
-  // Load system stats
-  useEffect(() => {
-    if (!isAdmin) return;
-    async function load() {
-      try {
-        const [
-          { count: users },
-          { count: scholarships },
-          { count: applications },
-          { count: saved },
-        ] = await Promise.all([
-          supabase.from("profiles").select("*", { count: "exact", head: true }),
-          supabase.from("scholarships").select("*", { count: "exact", head: true }),
-          supabase.from("application_tracker").select("*", { count: "exact", head: true }),
-          supabase.from("saved_scholarships").select("*", { count: "exact", head: true }),
-        ]);
-        setStats({
-          totalUsers: users ?? 0,
-          totalScholarships: scholarships ?? 0,
-          totalApplications: applications ?? 0,
-          totalSaved: saved ?? 0,
-          dbStatus: "healthy",
-        });
-      } catch {
-        setStats({
-          totalUsers: 0, totalScholarships: 0,
-          totalApplications: 0, totalSaved: 0,
-          dbStatus: "degraded",
-        });
-      } finally {
-        setLoading(false);
-      }
-    }
-    load();
-  }, [isAdmin, supabase]);
-
-  if (!isAdmin) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin size-6 border-2 border-zinc-300 border-t-zinc-900 rounded-full" />
-      </div>
-    );
-  }
+function StatusPill({ status }: { status: HealthStatus }) {
+  const className =
+    status === "healthy"
+      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+      : status === "degraded"
+        ? "bg-amber-50 text-amber-700 border-amber-200"
+        : "bg-zinc-50 text-zinc-500 border-zinc-200";
 
   return (
-    <LazyMotion features={domAnimation}>
-      <m.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-8 max-w-4xl"
-      >
-        {/* ── Page Header ── */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-medium text-zinc-900 display">Settings</h1>
-            <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.2em] mt-1.5">
-              Platform configuration & system health
-            </p>
-          </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded text-[11px] text-emerald-700 font-medium">
-            <CheckCircle2 className="size-3.5" />
-            <span>All systems operational</span>
-          </div>
-        </div>
+    <span className={`inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded border ${className}`}>
+      {status === "healthy" ? <CheckCircle2 className="size-3" /> : <AlertTriangle className="size-3" />}
+      {status}
+    </span>
+  );
+}
 
-        {/* ── System Health ── */}
-        <SettingsCard
-          title="System Health"
-          description="Real-time platform metrics"
-          icon={Server}
-        >
-          {loading || !stats ? (
-            <div className="flex items-center justify-center h-32">
-              <div className="animate-spin size-5 border-2 border-zinc-300 border-t-zinc-900 rounded-full" />
+function ActionLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-1 text-[11px] font-semibold text-zinc-700 hover:text-zinc-950 uppercase tracking-wider"
+    >
+      {children}
+      <ArrowRight className="size-3" />
+    </Link>
+  );
+}
+
+function SecurityRow({
+  label,
+  detail,
+  icon: Icon,
+  tone,
+  action,
+}: {
+  label: string;
+  detail: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone: "ok" | "warn" | "info";
+  action?: React.ReactNode;
+}) {
+  const toneClass = {
+    ok: "text-emerald-700 bg-emerald-50 border-emerald-200",
+    warn: "text-amber-700 bg-amber-50 border-amber-200",
+    info: "text-blue-700 bg-blue-50 border-blue-200",
+  }[tone];
+
+  return (
+    <div className="flex flex-col gap-2 py-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center gap-2.5">
+        <Icon className="size-3.5 text-zinc-400" />
+        <span className="text-sm text-zinc-600">{label}</span>
+      </div>
+      <div className="flex items-center gap-3 sm:justify-end">
+        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded border uppercase tracking-wider ${toneClass}`}>
+          {detail}
+        </span>
+        {action}
+      </div>
+    </div>
+  );
+}
+
+async function countTable(
+  supabase: ReturnType<typeof createAdminClient>,
+  table: string,
+  label: string,
+): Promise<CountResult> {
+  const { count, error } = await supabase
+    .from(table)
+    .select("*", { count: "exact", head: true });
+
+  return {
+    label,
+    count: count ?? 0,
+    error: error?.message ?? null,
+  };
+}
+
+async function getSettingsOverview() {
+  const supabase = createAdminClient();
+
+  const [users, scholarships, applications, saved, superAdmins, auditRows] = await Promise.all([
+    countTable(supabase, "profiles", "Total Users"),
+    countTable(supabase, "scholarships", "Scholarships"),
+    countTable(supabase, "application_tracker", "Applications Tracked"),
+    countTable(supabase, "saved_scholarships", "Saved Entries"),
+    supabase
+      .from("profiles")
+      .select("*", { count: "exact", head: true })
+      .eq("role", "super_admin")
+      .then(({ count, error }) => ({ count: count ?? 0, error: error?.message ?? null })),
+    supabase
+      .from("admin_role_audit_log")
+      .select("*", { count: "exact", head: true })
+      .then(({ count, error }) => ({ count: count ?? 0, error: error?.message ?? null })),
+  ]);
+
+  const countResults = [users, scholarships, applications, saved];
+  const warnings = countResults
+    .filter((result) => result.error)
+    .map((result) => `${result.label}: ${result.error}`);
+
+  if (superAdmins.error) warnings.push(`Super Admin Coverage: ${superAdmins.error}`);
+  if (auditRows.error) warnings.push(`Audit Logging: ${auditRows.error}`);
+
+  const stats: SystemStats = {
+    totalUsers: users.count,
+    totalScholarships: scholarships.count,
+    totalApplications: applications.count,
+    totalSaved: saved.count,
+    dbStatus: warnings.length ? "degraded" : "healthy",
+    warnings,
+  };
+
+  return {
+    stats,
+    superAdminCount: superAdmins.count,
+    auditRowCount: auditRows.count,
+  };
+}
+
+export default async function AdminSettingsPage() {
+  await requireAdminPageAccess();
+
+  const { stats, superAdminCount, auditRowCount } = await getSettingsOverview();
+  const hasSuperAdminCoverage = superAdminCount >= 2;
+
+  return (
+    <div className="space-y-8 max-w-4xl">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-medium text-zinc-900 display">Settings</h1>
+          <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.2em] mt-1.5">
+            Platform configuration & system health
+          </p>
+        </div>
+        <div className={`flex items-center gap-2 px-3 py-1.5 border rounded text-[11px] font-medium ${
+          stats.dbStatus === "healthy"
+            ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+            : "bg-amber-50 border-amber-200 text-amber-700"
+        }`}>
+          {stats.dbStatus === "healthy" ? <CheckCircle2 className="size-3.5" /> : <AlertTriangle className="size-3.5" />}
+          <span>{stats.dbStatus === "healthy" ? "Systems reporting healthy" : "Systems need attention"}</span>
+        </div>
+      </div>
+
+      {/* System Health */}
+      <SettingsCard
+        title="System Health"
+        description="Server-side platform metrics"
+        icon={Server}
+      >
+        <div className="space-y-0">
+          <StatRow label="Total Users" value={stats.totalUsers.toLocaleString()} icon={Users} />
+          <StatRow label="Scholarships" value={stats.totalScholarships.toLocaleString()} icon={BookOpen} />
+          <StatRow label="Applications Tracked" value={stats.totalApplications.toLocaleString()} icon={Database} />
+          <StatRow label="Saved Entries" value={stats.totalSaved.toLocaleString()} icon={Globe} />
+          <div className="flex items-center justify-between py-2.5 gap-4">
+            <div className="flex items-center gap-2.5">
+              <Database className="size-3.5 text-zinc-400" />
+              <span className="text-sm text-zinc-600">Database Status</span>
             </div>
-          ) : (
-            <div className="space-y-0">
-              <StatRow label="Total Users" value={stats.totalUsers.toLocaleString()} icon={Users} />
-              <StatRow label="Scholarships" value={stats.totalScholarships.toLocaleString()} icon={BookOpen} />
-              <StatRow label="Applications Tracked" value={stats.totalApplications.toLocaleString()} icon={Database} />
-              <StatRow label="Saved Entries" value={stats.totalSaved.toLocaleString()} icon={Globe} />
-              <div className="flex items-center justify-between py-2.5">
-                <div className="flex items-center gap-2.5">
-                  <Database className="size-3.5 text-zinc-400" />
-                  <span className="text-sm text-zinc-600">Database Status</span>
-                </div>
-                <span className={`inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded border ${
-                  stats.dbStatus === "healthy"
-                    ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                    : stats.dbStatus === "degraded"
-                      ? "bg-amber-50 text-amber-700 border-amber-200"
-                      : "bg-zinc-50 text-zinc-500 border-zinc-200"
-                }`}>
-                  {stats.dbStatus === "healthy" ? <CheckCircle2 className="size-3" /> : <AlertTriangle className="size-3" />}
-                  {stats.dbStatus}
-                </span>
-              </div>
+            <StatusPill status={stats.dbStatus} />
+          </div>
+          {stats.warnings.length > 0 && (
+            <div className="mt-3 rounded border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800 space-y-1">
+              {stats.warnings.map((warning) => (
+                <p key={warning}>{warning}</p>
+              ))}
             </div>
           )}
-        </SettingsCard>
+        </div>
+      </SettingsCard>
 
-        {/* ── Platform Info ── */}
-        <SettingsCard
-          title="Platform Information"
-          description="Read-only system details"
-          icon={Globe}
-        >
-          <div className="space-y-0">
-            <StatRow label="Platform Name" value="ScholarBridge" icon={Globe} />
-            <StatRow label="Version" value="1.0.0" icon={Clock} />
-            <StatRow label="Environment" value={process.env.NODE_ENV === "production" ? "Production" : "Development"} icon={Server} />
-            <StatRow label="Timezone" value="UTC" icon={Clock} />
-          </div>
-        </SettingsCard>
+      {/* Platform Info */}
+      <SettingsCard
+        title="Platform Information"
+        description="Read-only system details"
+        icon={Globe}
+      >
+        <div className="space-y-0">
+          <StatRow label="Platform Name" value="ScholarBridge" icon={Globe} />
+          <StatRow label="Version" value="1.0.0" icon={Clock} />
+          <StatRow label="Environment" value={process.env.NODE_ENV === "production" ? "Production" : "Development"} icon={Server} />
+          <StatRow label="Timezone" value="UTC" icon={Clock} />
+        </div>
+      </SettingsCard>
 
-        {/* ── Security ── */}
-        <SettingsCard
-          title="Security"
-          description="Authentication & access control"
-          icon={Shield}
-        >
-          <div className="space-y-3">
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center gap-2.5">
-                <Shield className="size-3.5 text-zinc-400" />
-                <span className="text-sm text-zinc-600">Multi-Factor Authentication</span>
-              </div>
-              <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded uppercase tracking-wider">
-                Required for role changes
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center gap-2.5">
-                <Users className="size-3.5 text-zinc-400" />
-                <span className="text-sm text-zinc-600">Role-based Access Control</span>
-              </div>
-              <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded uppercase tracking-wider">
-                Active
-              </span>
-            </div>
-            <div className="flex items-center justify-between py-2">
-              <div className="flex items-center gap-2.5">
-                <Database className="size-3.5 text-zinc-400" />
-                <span className="text-sm text-zinc-600">Audit Logging</span>
-              </div>
-              <span className="text-[11px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded uppercase tracking-wider">
-                Enabled
-              </span>
-            </div>
+      {/* Security */}
+      <SettingsCard
+        title="Security Operations"
+        description="Verified controls and operator checkpoints"
+        icon={Shield}
+      >
+        <div className="space-y-3">
+          <SecurityRow
+            label="Multi-Factor Authentication"
+            detail="Manage enrollment"
+            icon={Shield}
+            tone="info"
+            action={<ActionLink href="/admin/security/mfa">Open MFA</ActionLink>}
+          />
+          <SecurityRow
+            label="Super Admin Coverage"
+            detail={`${superAdminCount} configured`}
+            icon={Users}
+            tone={hasSuperAdminCoverage ? "ok" : "warn"}
+            action={<ActionLink href="/admin/users?role=super_admin">Review users</ActionLink>}
+          />
+          <SecurityRow
+            label="Role Change Audit Log"
+            detail={`${auditRowCount.toLocaleString()} events`}
+            icon={Database}
+            tone="info"
+            action={<ActionLink href="/admin/audit">Open audit</ActionLink>}
+          />
+          <div className="rounded border border-zinc-200 bg-zinc-50 p-3 text-xs text-zinc-600 leading-relaxed">
+            MFA enforcement and audit guarantees are implemented in database triggers/RPCs. Supabase dashboard MFA policy and security advisor status still require operator verification before production deploy.
           </div>
-        </SettingsCard>
-      </m.div>
-    </LazyMotion>
+        </div>
+      </SettingsCard>
+    </div>
   );
 }

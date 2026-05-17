@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson, requireSuperAdminJson, hasAal2 } from "@/lib/auth/admin";
 import { readJsonBody } from "@/lib/server/body-size";
+import { checkSameOrigin } from "@/lib/server/csrf";
 
 // ─────────────────────────────────────────────────────────────
 // PATCH /api/users/[id]
@@ -44,6 +45,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
   const adminCheck = await requireAdminJson(supabase);
   if (!adminCheck.ok) return adminCheck.response;
   const actor = adminCheck.user;
+
+  const csrf = checkSameOrigin(request);
+  if (csrf) return csrf;
 
   // Block self-modification — see header comment.
   if (actor.id === id) {

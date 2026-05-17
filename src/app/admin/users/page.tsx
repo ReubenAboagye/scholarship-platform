@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { createClient } from "@/lib/supabase/client";
 import {
   Users, Search, Mail, MapPin, Calendar, Shield, CheckCircle2, Circle,
   Filter, Download, ChevronLeft, ChevronRight, X, Crown, UserCheck,
@@ -14,7 +13,6 @@ import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
 import { readArrayParam, readStringParam } from "@/lib/admin/url-state";
 import ActionDropdown from "@/components/admin/ActionDropdown";
 import { useToast } from "@/components/admin/ToastProvider";
-import { useImpersonation } from "@/components/admin/ImpersonationProvider";
 
 // ─────────────────────────────────────────────────────────────
 // Admin users page — Professional Directory Redesign
@@ -161,7 +159,6 @@ export default function AdminUsersPage() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const toast        = useToast();
-  const { startImpersonation } = useImpersonation();
 
   // ── URL-driven state ──
   const search        = searchParams.get("q") ?? "";
@@ -181,6 +178,9 @@ export default function AdminUsersPage() {
   const [confirm, setConfirm] = useState<{ user: UserRow; nextRole: RoleType } | null>(null);
   const [working, setWorking] = useState(false);
   const [detailUser, setDetailUser] = useState<UserRow | null>(null);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [serverStats, setServerStats] = useState({ total: 0, admins: 0, newThisWeek: 0, onboardRate: 0 });
 
   const updateParams = useCallback((patch: Record<string, string | string[] | null>, opts?: { keepPage?: boolean }) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -198,96 +198,67 @@ export default function AdminUsersPage() {
     router.replace(qs ? `?${qs}` : "?", { scroll: false });
   }, [router, searchParams]);
 
-  // ── Data load ──
+  // ── Data load (server-side paginated) ──
   const load = useCallback(async () => {
-    const supabase = createClient();
     setLoading(true);
     setLoadError(null);
     try {
-      const [
-        { data: profile, error: profileError },
-        { data: { user }, error: userError },
-      ] = await Promise.all([
-        supabase
-          .from("profiles")
-          .select("id, full_name, email, role, country_of_origin, onboarding_complete, created_at")
-          .order("created_at", { ascending: false }),
-        supabase.auth.getUser(),
-      ]);
+      const params = new URLSearchParams();
+      if (search) params.set("q", search);
+      if (roleFilter !== "all") params.set("role", roleFilter);
+      if (onboardFilter !== "all") params.set("onboard", onboardFilter);
+      if (joinedFilter !== "all") params.set("joined", joinedFilter);
+      if (countries.length) params.set("country", countries.join(","));
+      params.set("page", String(page));
+      params.set("pageSize", String(PAGE_SIZE));
 
-      if (profileError || userError) {
-        throw new Error(profileError?.message ?? userError?.message ?? "Failed to load users");
-      }
+      const res = await fetch(`/api/users?${params.toString()}`);
+      if (!res.ok) throw new Error("Failed to load users");
+      const json = await res.json();
 
-      const rows = (profile ?? []) as UserRow[];
-      const currentId = user?.id ?? null;
-      setUsers(rows);
-      setCurrentUserId(currentId);
-      setCurrentUserRole(rows.find((r) => r.id === currentId)?.role ?? null);
+      setUsers(json.users ?? []);
+      setTotalUsers(json.total ?? 0);
+      setTotalPages(json.totalPages ?? 1);
+      setServerStats(json.stats ?? { total: 0, admins: 0, newThisWeek: 0, onboardRate: 0 });
     } catch (err) {
       console.error("admin users load failed:", err);
       setUsers([]);
-      setCurrentUserId(null);
-      setCurrentUserRole(null);
+      setTotalUsers(0);
+      setTotalPages(1);
       setLoadError("Failed to load user records. Check your connection or try again.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [search, roleFilter, onboardFilter, joinedFilter, countries, page]);
 
   useEffect(() => {
     void load();
   }, [load]);
 
-  // ── Filtering ──
-  const filtered = useMemo(() => {
-    const q   = search.trim().toLowerCase();
-    const now = Date.now();
-    const dayMs = 86_400_000;
-    const joinedCutoff =
-      joinedFilter === "7d"  ? now -  7 * dayMs :
-      joinedFilter === "30d" ? now - 30 * dayMs :
-      joinedFilter === "90d" ? now - 90 * dayMs :
-      null;
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((r) => r.json())
+      .then((json) => {
+        const me = json?.profile;
+        if (me) {
+          setCurrentUserId(me.id);
+          setCurrentUserRole(me.role);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
-    return users.filter(u => {
-      if (q) {
-        const hay = `${u.full_name ?? ""} ${u.email}`.toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      if (roleFilter !== "all" && u.role !== roleFilter) return false;
-      if (countries.length) {
-        const c = u.country_of_origin ?? "Other";
-        if (!countries.includes(c)) return false;
-      }
-      if (onboardFilter === "complete"   && !u.onboarding_complete) return false;
-      if (onboardFilter === "incomplete" &&  u.onboarding_complete) return false;
-      if (joinedCutoff !== null && new Date(u.created_at).getTime() < joinedCutoff) return false;
-      return true;
-    });
-  }, [users, search, roleFilter, countries, onboardFilter, joinedFilter]);
-
-  // ── Pagination ──
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage   = Math.min(page, totalPages);
+  // ── Pagination is server-side ──
+  const safePage   = Math.min(page, totalPages || 1);
   const pageStart  = (safePage - 1) * PAGE_SIZE;
-  const pageRows   = filtered.slice(pageStart, pageStart + PAGE_SIZE);
+  const pageRows   = users;
 
-  // ── Stats ──
-  const stats = useMemo(() => {
-    const now = Date.now();
-    const weekAgo = now - 7 * 86_400_000;
-    const total = users.length;
-    const admins = users.filter(u => u.role === "admin" || u.role === "super_admin").length;
-    const newThisWeek = users.filter(u => new Date(u.created_at).getTime() > weekAgo).length;
-    const onboarded = users.filter(u => u.onboarding_complete).length;
-    const rate = total > 0 ? Math.round((onboarded / total) * 100) : 0;
-    return { total, admins, newThisWeek, rate };
-  }, [users]);
+  // ── Stats come from server ──
+  const stats = serverStats;
 
-  // ── CSV export ──
+  // ── CSV export (exports current page) ──
   function exportCsv() {
-    const csv = rowsToCsv(filtered, [
+    const csv = rowsToCsv(pageRows, [
       { key: "email",                header: "Email" },
       { key: "full_name",            header: "Full Name" },
       { key: "role",                 header: "Role" },
@@ -421,7 +392,7 @@ export default function AdminUsersPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={exportCsv}
-              disabled={filtered.length === 0}
+              disabled={users.length === 0}
               className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-zinc-200 text-zinc-700 font-medium rounded-lg text-xs uppercase tracking-wider transition-all hover:bg-zinc-50 active:scale-95 shadow-sm disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <Download className="size-3.5" />
@@ -433,9 +404,9 @@ export default function AdminUsersPage() {
         {/* ── Stat Cards ──────────────────────────────────── */}
         <m.div variants={item} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard label="Total Users" value={stats.total.toLocaleString()} icon={Users} />
-          <StatCard label="Administrators" value={stats.admins} sub={`${users.length ? Math.round((stats.admins / users.length) * 100) : 0}% of total`} icon={Shield} />
+          <StatCard label="Administrators" value={stats.admins} sub={`${stats.total ? Math.round((stats.admins / stats.total) * 100) : 0}% of total`} icon={Shield} />
           <StatCard label="New This Week" value={`+${stats.newThisWeek}`} tone={stats.newThisWeek > 0 ? "up" : "neutral"} icon={ArrowUpRight} />
-          <StatCard label="Onboarded Rate" value={`${stats.rate}%`} sub={stats.rate >= 80 ? "Strong" : stats.rate >= 50 ? "Moderate" : "Needs attention"} tone={stats.rate >= 80 ? "up" : stats.rate >= 50 ? "neutral" : "down"} icon={CheckCircle2} />
+          <StatCard label="Onboarded Rate" value={`${stats.onboardRate}%`} sub={stats.onboardRate >= 80 ? "Strong" : stats.onboardRate >= 50 ? "Moderate" : "Needs attention"} tone={stats.onboardRate >= 80 ? "up" : stats.onboardRate >= 50 ? "neutral" : "down"} icon={CheckCircle2} />
         </m.div>
 
         {/* ── Control Bar ─────────────────────────────────── */}
@@ -465,9 +436,9 @@ export default function AdminUsersPage() {
                 <ChevronDown className={`size-3 transition-transform ${filtersOpen ? "rotate-180" : ""}`} />
               </button>
               <div className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-zinc-50 border border-zinc-100">
-                <span className="text-xs font-semibold text-zinc-700">{filtered.length}</span>
+                <span className="text-xs font-semibold text-zinc-700">{totalUsers}</span>
                 <span className="text-[10px] font-medium text-zinc-400 uppercase tracking-wider">
-                  {filtered.length === 1 ? "entry" : "entries"}
+                  {totalUsers === 1 ? "entry" : "entries"}
                 </span>
               </div>
             </div>
@@ -574,7 +545,7 @@ export default function AdminUsersPage() {
                   {activeFilterCount > 0 && (
                     <div className="mt-4 pt-3 border-t border-zinc-100 flex items-center justify-between">
                       <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
-                        {filtered.length} of {users.length} match current filters
+                        {totalUsers} of {users.length} match current filters
                       </p>
                       <button
                         onClick={clearFilters}
@@ -712,11 +683,7 @@ export default function AdminUsersPage() {
                                   icon: <ClipboardCopy className="size-3.5" />,
                                   onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
                                 },
-                                {
-                                  label: "Impersonate",
-                                  icon: <UserCheck className="size-3.5" />,
-                                  onClick: () => { startImpersonation(u.id, u.email, u.full_name); toast.addToast("Now impersonating " + (u.full_name || u.email), "info"); },
-                                },
+
                                 {
                                   label: "Copy User ID",
                                   icon: <ClipboardCopy className="size-3.5" />,
@@ -775,11 +742,7 @@ export default function AdminUsersPage() {
                               icon: <ClipboardCopy className="size-3.5" />,
                               onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
                             },
-                            {
-                              label: "Impersonate",
-                              icon: <UserCheck className="size-3.5" />,
-                              onClick: () => { startImpersonation(u.id, u.email, u.full_name); toast.addToast("Now impersonating " + (u.full_name || u.email), "info"); },
-                            },
+
                           ]}
                         />
                       </div>
@@ -809,7 +772,7 @@ export default function AdminUsersPage() {
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-5 py-3.5 border-t border-zinc-200 bg-zinc-50/40">
                 <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
-                  Showing {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, filtered.length)} of {filtered.length}
+                  Showing {pageStart + 1}–{Math.min(pageStart + PAGE_SIZE, totalUsers)} of {totalUsers}
                 </p>
                 <div className="flex items-center gap-1.5">
                   <button
@@ -1044,9 +1007,9 @@ export default function AdminUsersPage() {
                     {detailUser.id !== currentUserId && (
                       <button
                         onClick={() => {
-                          startImpersonation(detailUser.id, detailUser.email, detailUser.full_name);
+  
                           setDetailUser(null);
-                          toast.addToast("Now impersonating " + (detailUser.full_name || detailUser.email), "info");
+
                         }}
                         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm font-semibold hover:bg-amber-100 transition-colors"
                       >

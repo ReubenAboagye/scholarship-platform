@@ -131,3 +131,14 @@ export async function requireAdminPageAccess(): Promise<User> {
 
   return user;
 }
+
+export async function requireSuperAdminPageAccess(): Promise<User> {
+  const supabase = await createClient();
+  const user = await getAuthenticatedUser(supabase);
+  if (!user) redirect("/auth/login");
+
+  const isSuper = await isSuperAdminUser(supabase, user.id);
+  if (!isSuper) redirect("/admin");
+
+  return user;
+}

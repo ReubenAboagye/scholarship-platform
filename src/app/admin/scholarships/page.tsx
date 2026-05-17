@@ -122,13 +122,34 @@ export default function AdminScholarshipsPage() {
   }
 
   // ── Delete ──
+  // -- Soft Delete --
+  const [confirmDelete, setConfirmDelete] = useState<{ id: string; reason: string } | null>(null);
+
   async function deleteScholarship(id: string) {
-    if (!confirm("Are you sure you want to delete this scholarship? This action cannot be undone.")) return;
-    const response = await fetch(`/api/scholarships/${id}`, { method: "DELETE" });
-    if (!response.ok) { toast.addToast("Failed to delete scholarship", "error"); return; }
+    setConfirmDelete({ id, reason: "" });
+  }
+
+  async function applyDelete() {
+    if (!confirmDelete) return;
+    const { id, reason } = confirmDelete;
+    if (!reason.trim() || reason.trim().length < 5) {
+      toast.addToast("Please provide a reason with at least 5 characters.", "error");
+      return;
+    }
+    const response = await fetch(`/api/scholarships/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "soft_delete", reason: reason.trim() }),
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      toast.addToast(body?.error ?? "Failed to delete scholarship", "error");
+      return;
+    }
     setScholarships(prev => prev.filter(s => s.id !== id));
     setSelectedIds(prev => { const next = new Set(prev); next.delete(id); return next; });
-    toast.addToast("Scholarship deleted", "success");
+    setConfirmDelete(null);
+    toast.addToast("Scholarship removed (soft delete)", "success");
   }
 
   // ── Filtering ──
@@ -237,18 +258,30 @@ export default function AdminScholarshipsPage() {
     setSelectedIds(new Set(ids.filter(id => !succeeded.includes(id))));
   }
 
+  const [bulkDeleteReason, setBulkDeleteReason] = useState("");
+
   async function bulkDelete() {
     const ids = Array.from(selectedIds);
     if (ids.length === 0) return;
-    if (!confirm(`Delete ${ids.length} scholarship(s)? This cannot be undone.`)) return;
-    const { succeeded, failed } = await runBulkRequest(ids, id => fetch(`/api/scholarships/${id}`, { method: "DELETE" }));
+    if (!bulkDeleteReason.trim() || bulkDeleteReason.trim().length < 5) {
+      toast.addToast("Please provide a reason with at least 5 characters for bulk removal.", "error");
+      return;
+    }
+    const { succeeded, failed } = await runBulkRequest(ids, id =>
+      fetch(`/api/scholarships/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "soft_delete", reason: bulkDeleteReason.trim() }),
+      })
+    );
     if (succeeded.length > 0) {
       const succeededSet = new Set(succeeded);
       setScholarships(prev => prev.filter(s => !succeededSet.has(s.id)));
-      toast.addToast(`${succeeded.length} scholarship(s) deleted`, "success");
+      toast.addToast(`${succeeded.length} scholarship(s) removed (soft delete)`, "success");
     }
     if (failed > 0) toast.addToast(`${failed} scholarship action(s) failed`, "error");
     setSelectedIds(new Set(ids.filter(id => !succeeded.includes(id))));
+    setBulkDeleteReason("");
   }
 
   // ── CSV export ──
