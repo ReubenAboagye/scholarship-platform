@@ -14,6 +14,7 @@ import {
   formatDelta,
   type AdminOverviewBundle,
 } from "@/lib/admin/analytics-shared";
+import SystemActivityFeed, { type ActivityEvent } from "@/components/admin/SystemActivityFeed";
 
 type RecentScholarship = {
   id:                   string;
@@ -36,6 +37,7 @@ interface Props {
   bundle:             AdminOverviewBundle;
   recentScholarships: RecentScholarship[];
   recentUsers:        RecentUser[];
+  feedEvents:         ActivityEvent[];
 }
 
 // ── Stat-card helpers ────────────────────────────────────────
@@ -111,6 +113,7 @@ export default function OverviewClient({
   bundle,
   recentScholarships,
   recentUsers,
+  feedEvents,
 }: Props) {
   const { summary, signups_30d, pageviews_30d } = bundle;
 
@@ -268,7 +271,7 @@ export default function OverviewClient({
           </div>
         </m.div>
 
-        {/* ── Main Content: recent scholarships + users ──── */}
+        {/* ── Main Content: recent scholarships + users + activity ──── */}
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Recent Scholarships */}
           <m.div variants={item} className="lg:col-span-3 space-y-3">
@@ -327,43 +330,49 @@ export default function OverviewClient({
             </div>
           </m.div>
 
-          {/* Recent Users */}
-          <m.div variants={item} className="lg:col-span-2 space-y-3">
-            <div className="flex items-center justify-between px-1">
-              <h2 className="text-[11px] font-medium text-zinc-900 uppercase tracking-widest">New Enrollees</h2>
-              <MiniLink
-                href="/admin/users"
-                className="text-[10px] font-medium text-zinc-400 hover:text-zinc-900 uppercase tracking-widest transition-colors flex items-center gap-1"
-              >
-                Directory <Users className="size-3" />
-              </MiniLink>
-            </div>
+          {/* Right column: Recent Users + System Activity Feed */}
+          <m.div variants={item} className="lg:col-span-2 space-y-8">
+            {/* Recent Users */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <h2 className="text-[11px] font-medium text-zinc-900 uppercase tracking-widest">New Enrollees</h2>
+                <MiniLink
+                  href="/admin/users"
+                  className="text-[10px] font-medium text-zinc-400 hover:text-zinc-900 uppercase tracking-widest transition-colors flex items-center gap-1"
+                >
+                  Directory <Users className="size-3" />
+                </MiniLink>
+              </div>
 
-            <div className="bg-white border border-zinc-200 rounded-lg p-1.5 shadow-sm">
-              <div className="space-y-1">
-                {recentUsers.length === 0 ? (
-                  <div className="px-3 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-zinc-400">
-                    No users yet
-                  </div>
-                ) : recentUsers.map((u) => (
-                  <div key={u.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-zinc-50 transition-all group">
-                    <div className="relative">
-                      <div className="size-8 rounded bg-zinc-900 flex items-center justify-center text-[10px] font-medium text-white uppercase">
-                        {(u.full_name || u.email)[0].toUpperCase()}
+              <div className="bg-white border border-zinc-200 rounded-lg p-1.5 shadow-sm">
+                <div className="space-y-1">
+                  {recentUsers.length === 0 ? (
+                    <div className="px-3 py-10 text-center text-[11px] font-medium uppercase tracking-widest text-zinc-400">
+                      No users yet
+                    </div>
+                  ) : recentUsers.map((u) => (
+                    <div key={u.id} className="flex items-center gap-3 p-3 rounded-md hover:bg-zinc-50 transition-all group">
+                      <div className="relative">
+                        <div className="size-8 rounded bg-zinc-900 flex items-center justify-center text-[10px] font-medium text-white uppercase">
+                          {(u.full_name || u.email)[0].toUpperCase()}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-medium text-zinc-900 truncate">{u.full_name || "New Explorer"}</p>
+                        <p className="text-[10px] font-medium text-zinc-400 truncate mt-0.5">{u.email}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[9px] font-medium text-zinc-900 uppercase tracking-tight">{u.country_of_origin || "Global"}</p>
+                        <p className="text-[9px] font-medium text-zinc-400 mt-0.5">Joined</p>
                       </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-medium text-zinc-900 truncate">{u.full_name || "New Explorer"}</p>
-                      <p className="text-[10px] font-medium text-zinc-400 truncate mt-0.5">{u.email}</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[9px] font-medium text-zinc-900 uppercase tracking-tight">{u.country_of_origin || "Global"}</p>
-                      <p className="text-[9px] font-medium text-zinc-400 mt-0.5">Joined</p>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
+
+            {/* System Activity Feed */}
+            <SystemActivityFeed events={feedEvents} />
           </m.div>
         </div>
       </m.div>

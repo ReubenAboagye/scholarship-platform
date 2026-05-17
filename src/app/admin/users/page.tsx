@@ -11,8 +11,10 @@ import {
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
+import { readArrayParam, readStringParam } from "@/lib/admin/url-state";
 import ActionDropdown from "@/components/admin/ActionDropdown";
 import { useToast } from "@/components/admin/ToastProvider";
+import { useImpersonation } from "@/components/admin/ImpersonationProvider";
 
 // ─────────────────────────────────────────────────────────────
 // Admin users page — Professional Directory Redesign
@@ -49,20 +51,8 @@ type UserRow = {
   created_at:         string;
 };
 
-function readArrayParam(sp: URLSearchParams, key: string, allowed: readonly string[]): string[] {
-  const raw = sp.get(key);
-  if (!raw) return [];
-  return raw.split(",").filter(v => allowed.includes(v));
-}
-
-function readStringParam<T extends string>(
-  sp: URLSearchParams, key: string, allowed: readonly T[], fallback: T,
-): T {
-  const raw = sp.get(key);
-  return (raw && (allowed as readonly string[]).includes(raw) ? raw : fallback) as T;
-}
-
 // ── Deterministic avatar color based on initial ──
+
 const AVATAR_COLORS = [
   "bg-zinc-800",
   "bg-brand-700",
@@ -171,6 +161,7 @@ export default function AdminUsersPage() {
   const router       = useRouter();
   const searchParams = useSearchParams();
   const toast        = useToast();
+  const { startImpersonation } = useImpersonation();
 
   // ── URL-driven state ──
   const search        = searchParams.get("q") ?? "";
@@ -722,6 +713,11 @@ export default function AdminUsersPage() {
                                   onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
                                 },
                                 {
+                                  label: "Impersonate",
+                                  icon: <UserCheck className="size-3.5" />,
+                                  onClick: () => { startImpersonation(u.id, u.email, u.full_name); toast.addToast("Now impersonating " + (u.full_name || u.email), "info"); },
+                                },
+                                {
                                   label: "Copy User ID",
                                   icon: <ClipboardCopy className="size-3.5" />,
                                   onClick: () => { navigator.clipboard.writeText(u.id); toast.addToast("User ID copied", "info"); },
@@ -778,6 +774,11 @@ export default function AdminUsersPage() {
                               label: "Copy Email",
                               icon: <ClipboardCopy className="size-3.5" />,
                               onClick: () => { navigator.clipboard.writeText(u.email); toast.addToast("Email copied", "info"); },
+                            },
+                            {
+                              label: "Impersonate",
+                              icon: <UserCheck className="size-3.5" />,
+                              onClick: () => { startImpersonation(u.id, u.email, u.full_name); toast.addToast("Now impersonating " + (u.full_name || u.email), "info"); },
                             },
                           ]}
                         />
@@ -1040,6 +1041,19 @@ export default function AdminUsersPage() {
                         Copy Email
                       </button>
                     </div>
+                    {detailUser.id !== currentUserId && (
+                      <button
+                        onClick={() => {
+                          startImpersonation(detailUser.id, detailUser.email, detailUser.full_name);
+                          setDetailUser(null);
+                          toast.addToast("Now impersonating " + (detailUser.full_name || detailUser.email), "info");
+                        }}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-sm font-semibold hover:bg-amber-100 transition-colors"
+                      >
+                        <UserCheck className="size-4" />
+                        Impersonate User
+                      </button>
+                    )}
                   </div>
 
                   {/* Role Management */}

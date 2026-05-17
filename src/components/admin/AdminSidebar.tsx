@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft, ShieldCheck, History,
+  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft, ShieldCheck, History, Settings,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -27,6 +27,7 @@ export default function AdminSidebar({ profile }: Props) {
     { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics",    exact: false },
     { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA Security", exact: false },
     ...(isSuperAdmin ? [{ href: "/admin/audit", icon: History, label: "Audit Log", exact: false }] : []),
+    { href: "/admin/settings",      icon: Settings,        label: "Settings",     exact: false },
   ];
 
   const mobileNavItems = [
@@ -36,6 +37,7 @@ export default function AdminSidebar({ profile }: Props) {
     { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics" },
     { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA" },
     ...(isSuperAdmin ? [{ href: "/admin/audit", icon: History, label: "Audit" }] : []),
+    { href: "/admin/settings",      icon: Settings,        label: "Settings" },
   ];
 
   function isActive(href: string) {

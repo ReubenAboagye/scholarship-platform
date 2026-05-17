@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { LazyMotion, domAnimation, m, AnimatePresence } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
+import { readArrayParam, readStringParam } from "@/lib/admin/url-state";
 import ActionDropdown from "@/components/admin/ActionDropdown";
 import { useToast } from "@/components/admin/ToastProvider";
 
@@ -50,24 +51,8 @@ type Scholarship = {
   created_at:           string;
 };
 
-// ── URL helpers ──────────────────────────────────────────────
-// Read params with sensible fallbacks; write back without
-// triggering a full reload (router.replace, scroll: false).
-
-function readArrayParam(sp: URLSearchParams, key: string, allowed: readonly string[]): string[] {
-  const raw = sp.get(key);
-  if (!raw) return [];
-  return raw.split(",").filter(v => allowed.includes(v));
-}
-
-function readStringParam<T extends string>(
-  sp: URLSearchParams, key: string, allowed: readonly T[], fallback: T,
-): T {
-  const raw = sp.get(key);
-  return (raw && (allowed as readonly string[]).includes(raw) ? raw : fallback) as T;
-}
-
 // ── Page component ───────────────────────────────────────────
+
 
 export default function AdminScholarshipsPage() {
   const supabase     = createClient();

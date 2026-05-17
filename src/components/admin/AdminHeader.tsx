@@ -14,6 +14,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/analytics": "Analytics",
   "/admin/security/mfa": "MFA Security",
   "/admin/audit": "Audit Log",
+  "/admin/settings": "Settings",
 };
 
 function pageLabel(path: string): string {

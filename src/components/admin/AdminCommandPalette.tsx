@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import {
   Search, X, ArrowRight, LayoutDashboard, BookOpen, Users,
-  BarChart3, ShieldCheck, History, Crown, ArrowUpRight,
+  BarChart3, ShieldCheck, History, Crown, ArrowUpRight, Settings,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -54,6 +54,7 @@ const PAGES: PageItem[] = [
   { id: "page-analytics", kind: "page", title: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { id: "page-mfa", kind: "page", title: "MFA Security", href: "/admin/security/mfa", icon: ShieldCheck },
   { id: "page-audit", kind: "page", title: "Audit Log", href: "/admin/audit", icon: History },
+  { id: "page-settings", kind: "page", title: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 function normalize(s: string) {
@@ -218,7 +219,7 @@ export default function AdminCommandPalette({ open, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-start justify-center pt-[15vh] bg-zinc-900/50 p-4"
+      className="fixed inset-0 z-[60] flex items-start justify-center pt-[15vh] bg-zinc-900/60 backdrop-blur-sm p-4"
       onClick={() => onClose()}
     >
       <div

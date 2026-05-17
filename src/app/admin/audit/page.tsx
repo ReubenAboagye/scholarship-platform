@@ -5,19 +5,15 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   History,
-  Search,
-  Download,
-  ChevronLeft,
-  ChevronRight,
   ArrowRightLeft,
   Shield,
-  X,
   Crown,
   Users,
 } from "lucide-react";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { rowsToCsv, downloadCsv, todayStamp } from "@/lib/admin/csv";
 import { useToast } from "@/components/admin/ToastProvider";
+import DataTable from "@/components/admin/DataTable";
 
 // ─────────────────────────────────────────────────────────────
 // Admin Audit Log page
@@ -85,12 +81,33 @@ function fmtDateTime(iso: string): string {
   });
 }
 
-function fmtDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
+function StatCard({
+  label, value, icon: Icon, tone = "neutral",
+}: {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: "neutral" | "up";
+}) {
+  const toneClass = tone === "up" ? "text-emerald-600" : "text-zinc-400";
+  return (
+    <m.div
+      className="bg-white border border-zinc-200 rounded-xl p-5 shadow-card hover:shadow-card-hover transition-shadow"
+      whileHover={{ y: -1 }}
+      transition={{ duration: 0.15 }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.12em]">{label}</p>
+        <div className="size-8 rounded-lg bg-zinc-50 flex items-center justify-center text-zinc-400">
+          <Icon className="size-4" />
+        </div>
+      </div>
+      <div className="flex items-baseline gap-2">
+        <h3 className="text-2xl font-semibold text-zinc-900 tracking-tight">{value}</h3>
+        {tone === "up" && <span className={`text-[10px] font-medium ${toneClass}`}>+ active</span>}
+      </div>
+    </m.div>
+  );
 }
 
 export default function AdminAuditPage() {
@@ -107,22 +124,14 @@ export default function AdminAuditPage() {
   // ── Gate: super_admin only ──
   useEffect(() => {
     async function checkRole() {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.replace("/auth/login");
-        return;
-      }
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { router.replace("/auth/login"); return; }
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")
         .eq("id", user.id)
         .maybeSingle();
-      if (profile?.role !== "super_admin") {
-        router.replace("/admin");
-        return;
-      }
+      if (profile?.role !== "super_admin") { router.replace("/admin"); return; }
       setCurrentRole("super_admin");
     }
     checkRole();
@@ -144,9 +153,7 @@ export default function AdminAuditPage() {
     setLoading(false);
   }, [supabase, toast]);
 
-  useEffect(() => {
-    if (currentRole === "super_admin") load();
-  }, [currentRole, load]);
+  useEffect(() => { if (currentRole === "super_admin") load(); }, [currentRole, load]);
 
   // ── Filtering ──
   const filtered = useMemo(() => {
@@ -157,11 +164,6 @@ export default function AdminAuditPage() {
       return hay.includes(q);
     });
   }, [rows, search]);
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const safePage = Math.min(page, totalPages);
-  const pageStart = (safePage - 1) * PAGE_SIZE;
-  const pageRows = filtered.slice(pageStart, pageStart + PAGE_SIZE);
 
   // ── Derived stats ──
   const stats = useMemo(() => {
@@ -175,10 +177,7 @@ export default function AdminAuditPage() {
 
   // ── CSV export ──
   function exportCsv() {
-    if (filtered.length === 0) {
-      toast.addToast("Nothing to export", "info");
-      return;
-    }
+    if (filtered.length === 0) { toast.addToast("Nothing to export", "info"); return; }
     const csv = rowsToCsv(filtered, [
       { key: "created_at", header: "Timestamp", format: (r) => fmtDateTime(r.created_at) },
       { key: "actor_email", header: "Actor" },
@@ -214,14 +213,6 @@ export default function AdminAuditPage() {
               Immutable role-change history — super admin only
             </p>
           </div>
-          <button
-            onClick={exportCsv}
-            disabled={loading || rows.length === 0}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-zinc-200 text-zinc-700 font-medium rounded-lg text-xs uppercase tracking-wider transition-all hover:bg-zinc-50 disabled:opacity-40"
-          >
-            <Download className="size-3.5" />
-            Export CSV
-          </button>
         </div>
 
         {/* ── Stats ── */}
@@ -231,162 +222,48 @@ export default function AdminAuditPage() {
           <StatCard label="Unique Actors" value={stats.uniqueActors} icon={Users} />
         </div>
 
-        {/* ── Filters ── */}
-        <div className="flex items-center gap-3">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-zinc-400" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search actor, target, or role..."
-              className="w-full pl-9 pr-4 py-2 bg-white border border-zinc-200 rounded-lg text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10 transition-all placeholder:text-zinc-400"
-            />
-          </div>
-          {search && (
-            <button
-              onClick={() => {
-                setSearch("");
-                setPage(1);
-              }}
-              className="p-2 text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 rounded-lg transition-colors"
-            >
-              <X className="size-4" />
-            </button>
-          )}
-        </div>
-
-        {/* ── Table ── */}
-        <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin size-6 border-2 border-zinc-300 border-t-zinc-900 rounded-full" />
-            </div>
-          ) : pageRows.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-zinc-400">
-              <History className="size-8 mb-3 opacity-40" />
-              <p className="text-sm font-medium">No audit events found</p>
-              <p className="text-xs mt-1">Role changes will appear here automatically</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-zinc-50 text-left text-[10px] font-semibold uppercase tracking-wider text-zinc-500 border-b border-zinc-200">
-                    <th className="px-4 py-3 w-48">Timestamp</th>
-                    <th className="px-4 py-3">Actor</th>
-                    <th className="px-4 py-3">Target</th>
-                    <th className="px-4 py-3">Change</th>
-                    <th className="px-4 py-3 text-right">IP Address</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-100">
-                  {pageRows.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="hover:bg-zinc-50/50 transition-colors"
-                    >
-                      <td className="px-4 py-3 text-zinc-600 tabular-nums text-xs">
-                        {fmtDateTime(row.created_at)}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <div className="size-6 rounded bg-zinc-100 flex items-center justify-center text-[10px] font-medium text-zinc-600 shrink-0">
-                            {(row.actor_email ?? "?")[0].toUpperCase()}
-                          </div>
-                          <span className="text-xs font-medium text-zinc-900 truncate">
-                            {row.actor_email ?? "System"}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="text-xs font-medium text-zinc-900">
-                          {row.target_email ?? "—"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5">
-                          <RoleBadge role={row.old_role} />
-                          <ArrowRightLeft className="size-3 text-zinc-300 shrink-0" />
-                          <RoleBadge role={row.new_role} />
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-right text-xs text-zinc-400 tabular-nums">
-                        {row.ip_address ?? "—"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* ── Pagination ── */}
-          {!loading && filtered.length > 0 && (
-            <div className="flex items-center justify-between px-4 py-3 border-t border-zinc-200 bg-zinc-50/50">
-              <p className="text-xs text-zinc-500">
-                Showing {pageStart + 1}-
-                {Math.min(pageStart + PAGE_SIZE, filtered.length)} of{" "}
-                {filtered.length}
-              </p>
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
-                  disabled={safePage <= 1}
-                  className="p-1.5 rounded hover:bg-zinc-100 disabled:opacity-30 transition-colors"
-                >
-                  <ChevronLeft className="size-4" />
-                </button>
-                <span className="text-xs font-medium text-zinc-600 px-2">
-                  Page {safePage} of {totalPages}
-                </span>
-                <button
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                  disabled={safePage >= totalPages}
-                  className="p-1.5 rounded hover:bg-zinc-100 disabled:opacity-30 transition-colors"
-                >
-                  <ChevronRight className="size-4" />
-                </button>
+        {/* ── Data Table ── */}
+        <DataTable
+          rows={filtered}
+          loading={loading}
+          emptyMessage="No audit events found"
+          keyExtractor={(r) => r.id}
+          renderRow={(r) => (
+            <div className="flex items-center justify-between px-5 py-3.5">
+              <div className="flex items-center gap-4 min-w-0">
+                <div className="size-8 rounded-full bg-zinc-100 flex items-center justify-center text-[10px] font-medium text-zinc-600 flex-shrink-0">
+                  {(r.actor_email ?? "?")[0].toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-zinc-900 truncate">
+                      {r.actor_email ?? "System"}
+                    </span>
+                    <span className="text-zinc-300">→</span>
+                    <span className="text-sm font-medium text-zinc-700 truncate">
+                      {r.target_email ?? "Unknown"}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-zinc-400 mt-0.5">{fmtDateTime(r.created_at)}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <RoleBadge role={r.old_role} />
+                <span className="text-zinc-300 text-xs">→</span>
+                <RoleBadge role={r.new_role} />
               </div>
             </div>
           )}
-        </div>
+          search={search}
+          onSearchChange={(v) => { setSearch(v); setPage(1); }}
+          searchPlaceholder="Search actor, target, or role..."
+          page={page}
+          pageSize={PAGE_SIZE}
+          totalRows={filtered.length}
+          onPageChange={setPage}
+          onExportCsv={exportCsv}
+        />
       </m.div>
     </LazyMotion>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  icon: Icon,
-  tone = "neutral",
-}: {
-  label: string;
-  value: number;
-  icon: React.ComponentType<{ className?: string }>;
-  tone?: "neutral" | "up";
-}) {
-  return (
-    <m.div
-      className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm"
-      whileHover={{ y: -1 }}
-      transition={{ duration: 0.15 }}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <p className="text-[10px] font-semibold text-zinc-400 uppercase tracking-[0.12em]">
-          {label}
-        </p>
-        <div className="size-8 rounded-lg bg-zinc-50 flex items-center justify-center text-zinc-400">
-          <Icon className="size-4" />
-        </div>
-      </div>
-      <h3 className="text-2xl font-semibold text-zinc-900 tracking-tight">
-        {value.toLocaleString()}
-      </h3>
-    </m.div>
   );
 }
