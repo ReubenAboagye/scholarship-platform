@@ -55,7 +55,7 @@ export async function isSuperAdminUser(
 
 export async function requireAdminJson(supabase: SupabaseClient) {
   const user = await getAuthenticatedUser(supabase);
-  if (!user) {
+  if (!user || !user.email_confirmed_at) {
     return {
       ok: false as const,
       response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
@@ -75,7 +75,7 @@ export async function requireAdminJson(supabase: SupabaseClient) {
 
 export async function requireSuperAdminJson(supabase: SupabaseClient) {
   const user = await getAuthenticatedUser(supabase);
-  if (!user) {
+  if (!user || !user.email_confirmed_at) {
     return {
       ok: false as const,
       response: NextResponse.json({ error: "Unauthorized" }, { status: 401 }),
@@ -125,6 +125,7 @@ export async function requireAdminPageAccess(): Promise<User> {
   const supabase = await createClient();
   const user = await getAuthenticatedUser(supabase);
   if (!user) redirect("/auth/login");
+  if (!user.email_confirmed_at) redirect("/dashboard?error=unverified");
 
   const admin = await isAdminUser(supabase, user.id);
   if (!admin) redirect("/dashboard");
@@ -136,6 +137,7 @@ export async function requireSuperAdminPageAccess(): Promise<User> {
   const supabase = await createClient();
   const user = await getAuthenticatedUser(supabase);
   if (!user) redirect("/auth/login");
+  if (!user.email_confirmed_at) redirect("/dashboard?error=unverified");
 
   const isSuper = await isSuperAdminUser(supabase, user.id);
   if (!isSuper) redirect("/admin");

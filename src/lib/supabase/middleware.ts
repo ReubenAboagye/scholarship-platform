@@ -22,15 +22,20 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  // Wrap getClaims in try/catch — a malformed/expired token can throw,
-  // which (without this guard) would 500 the request and create
-  // perceived loops in the browser as it retries.
+  // Use getUser() (not getClaims()) so we validate against Supabase Auth.
+  // getClaims() only decodes the local JWT and will happily return a userId
+  // even when the refresh token is dead — causing every downstream API call
+  // to throw "Invalid Refresh Token" in a loop. getUser() catches this at
+  // the edge and lets us nuke the stale cookies before they reach any route.
   let userId: string | null = null;
   let claimsFailed = false;
   try {
-    const { data, error } = await supabase.auth.getClaims();
-    if (error) claimsFailed = true;
-    userId = typeof data?.claims?.sub === 'string' ? data.claims.sub : null;
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      claimsFailed = true;
+    } else {
+      userId = data.user?.id ?? null;
+    }
   } catch {
     claimsFailed = true;
     userId = null;

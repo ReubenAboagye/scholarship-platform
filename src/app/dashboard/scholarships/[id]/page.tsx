@@ -29,9 +29,10 @@ export default async function DashboardScholarshipDetailPage({
   const { id } = await params;
 
   const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+  const columns = "id, name, description, provider, country, degree_levels, funding_type, funding_amount, application_deadline, is_active, created_at, updated_at, slug, citizenship_required, min_gpa, fields_of_study, verified_at, effort_minutes, renewable, deleted_at, eligibility_criteria";
   const { data: scholarship } = isUuid
-    ? await supabase.from("scholarships").select("*").eq("id", id).single()
-    : await supabase.from("scholarships").select("*").eq("slug", id).single();
+    ? await supabase.from("scholarships").select(columns).eq("id", id).single()
+    : await supabase.from("scholarships").select(columns).eq("slug", id).single();
 
   if (!scholarship) notFound();
 
@@ -52,18 +53,19 @@ export default async function DashboardScholarshipDetailPage({
 
   // Similar scholarships via vector neighbours — up to 3 after filtering self
   let similarRaw: any[] = [];
-  if (scholarship.embedding) {
-    try {
-      const adminSupabase = createAdminClient();
+  try {
+    const adminSupabase = createAdminClient();
+    const { data: embedData } = await adminSupabase.from("scholarships").select("embedding").eq("id", scholarship.id).single();
+    if (embedData?.embedding) {
       const { data, error } = await adminSupabase.rpc("match_scholarships_gated", {
-        query_embedding: scholarship.embedding,
+        query_embedding: embedData.embedding,
         match_count: 4,
       });
       if (error) console.error("match_scholarships_gated RPC error:", error);
       similarRaw = (data as any[]) ?? [];
-    } catch (error) {
-      console.error("Unable to load similar scholarships:", error);
     }
+  } catch (error) {
+    console.error("Unable to load similar scholarships:", error);
   }
   const similar = (similarRaw as any[])?.filter((s) => s.id !== scholarship.id).slice(0, 3) || [];
 
