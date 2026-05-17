@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
   let query = supabase
     .from("scholarships")
-    .select("*")
+    .select("id, name, description, provider, country, degree_levels, funding_type, funding_amount, application_deadline, is_active, created_at, updated_at, slug, citizenship_required, min_gpa, fields_of_study, verified_at, effort_minutes, renewable, deleted_at")
     .eq("is_active", true)
     .order("created_at", { ascending: false });
 

@@ -6,6 +6,7 @@ import { scholarshipUpdateSchema } from "@/lib/validation/scholarship";
 import { readJsonBody } from "@/lib/server/body-size";
 import { checkSameOrigin } from "@/lib/server/csrf";
 import { getClientIp } from "@/lib/auth/ip";
+import { rateLimitByIp } from "@/lib/rate-limit/server";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -31,6 +32,15 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
   const csrf = checkSameOrigin(request);
   if (csrf) return csrf;
+
+  const ip = await getClientIp();
+  const { allowed, reset } = await rateLimitByIp(ip, "admin_scholarship_api", 50, 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "X-RateLimit-Reset": reset.toString() } }
+    );
+  }
 
   const bodyResult = await readJsonBody(request, 65_536);
   if (!bodyResult.ok) return bodyResult.response;
@@ -154,6 +164,15 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
 
   const csrf = checkSameOrigin(request);
   if (csrf) return csrf;
+
+  const ip = await getClientIp();
+  const { allowed, reset } = await rateLimitByIp(ip, "admin_scholarship_api", 50, 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "X-RateLimit-Reset": reset.toString() } }
+    );
+  }
 
   // Require a reason for hard deletes
   const bodyResult = await readJsonBody(request, 8_192);

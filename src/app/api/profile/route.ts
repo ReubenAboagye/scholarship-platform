@@ -4,6 +4,8 @@ import { readJsonBody } from "@/lib/server/body-size";
 import { checkSameOrigin } from "@/lib/server/csrf";
 import { z } from "zod";
 import { resolveStudyFieldSlug } from "@/lib/constants/study-fields";
+import { rateLimitByIp } from "@/lib/rate-limit/server";
+import { getClientIp } from "@/lib/auth/ip";
 
 // ─────────────────────────────────────────────────────────────
 // GET /api/profile
@@ -88,6 +90,15 @@ export async function PATCH(request: NextRequest) {
 
   const csrf = checkSameOrigin(request);
   if (csrf) return csrf;
+
+  const ip = await getClientIp();
+  const { allowed, reset } = await rateLimitByIp(ip, "profile_api", 20, 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "X-RateLimit-Reset": reset.toString() } }
+    );
+  }
 
   const bodyResult = await readJsonBody<ProfilePatchInput>(request, 65_536);
   if (!bodyResult.ok) return bodyResult.response;

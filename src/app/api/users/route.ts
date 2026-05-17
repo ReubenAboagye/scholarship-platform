@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdminJson } from "@/lib/auth/admin";
+import { rateLimitByIp } from "@/lib/rate-limit/server";
+import { getClientIp } from "@/lib/auth/ip";
 
 // ─────────────────────────────────────────────────────────────
 // GET /api/users
@@ -21,8 +23,17 @@ export async function GET(request: NextRequest) {
   const adminCheck = await requireAdminJson(supabase);
   if (!adminCheck.ok) return adminCheck.response;
 
+  const ip = await getClientIp();
+  const { allowed, reset } = await rateLimitByIp(ip, "admin_users_api", 100, 60);
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429, headers: { "X-RateLimit-Reset": reset.toString() } }
+    );
+  }
+
   const { searchParams } = new URL(request.url);
-  const q = (searchParams.get("q") ?? "").trim().toLowerCase();
+  const q = (searchParams.get("q") ?? "").trim().replace(/,/g, ' ').toLowerCase();
   const role = searchParams.get("role");
   const onboard = searchParams.get("onboard");
   const joined = searchParams.get("joined");
