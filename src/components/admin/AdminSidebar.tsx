@@ -3,28 +3,12 @@
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft, ShieldCheck,
+  LayoutDashboard, BookOpen, Users, BarChart3, LogOut, ChevronLeft, ShieldCheck, History,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 
 const LOGO_FONT = { fontFamily: "Fraunces, Georgia, ui-serif, serif" };
-
-const navItems = [
-  { href: "/admin",               icon: LayoutDashboard, label: "Overview",     exact: true },
-  { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships", exact: false },
-  { href: "/admin/users",         icon: Users,           label: "Users",        exact: false },
-  { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics",    exact: false },
-  { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA Security", exact: false },
-];
-
-const mobileNavItems = [
-  { href: "/admin",               icon: LayoutDashboard, label: "Home" },
-  { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships" },
-  { href: "/admin/users",         icon: Users,           label: "Users" },
-  { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics" },
-  { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA" },
-];
 
 interface Props {
   profile: { full_name: string | null; email: string; role: string } | null;
@@ -33,6 +17,26 @@ interface Props {
 export default function AdminSidebar({ profile }: Props) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+
+  const isSuperAdmin = profile?.role === "super_admin";
+
+  const navItems = [
+    { href: "/admin",               icon: LayoutDashboard, label: "Overview",     exact: true },
+    { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships", exact: false },
+    { href: "/admin/users",         icon: Users,           label: "Users",        exact: false },
+    { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics",    exact: false },
+    { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA Security", exact: false },
+    ...(isSuperAdmin ? [{ href: "/admin/audit", icon: History, label: "Audit Log", exact: false }] : []),
+  ];
+
+  const mobileNavItems = [
+    { href: "/admin",               icon: LayoutDashboard, label: "Home" },
+    { href: "/admin/scholarships",  icon: BookOpen,        label: "Scholarships" },
+    { href: "/admin/users",         icon: Users,           label: "Users" },
+    { href: "/admin/analytics",     icon: BarChart3,       label: "Analytics" },
+    { href: "/admin/security/mfa",   icon: ShieldCheck,     label: "MFA" },
+    ...(isSuperAdmin ? [{ href: "/admin/audit", icon: History, label: "Audit" }] : []),
+  ];
 
   function isActive(href: string) {
     return href === "/admin"

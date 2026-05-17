@@ -31,7 +31,7 @@ export default function KeyboardShortcuts() {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-zinc-900/50 p-4"
       onClick={() => setOpen(false)}
     >
       <div

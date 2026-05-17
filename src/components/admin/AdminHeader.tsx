@@ -1,7 +1,10 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Search, Bell, ExternalLink } from "lucide-react";
+import { Search, ExternalLink } from "lucide-react";
+import AdminNotificationCenter from "./AdminNotificationCenter";
+import AdminCommandPalette from "./AdminCommandPalette";
 
 const PAGE_TITLES: Record<string, string> = {
   "/admin": "Dashboard",
@@ -10,6 +13,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/users": "Users",
   "/admin/analytics": "Analytics",
   "/admin/security/mfa": "MFA Security",
+  "/admin/audit": "Audit Log",
 };
 
 function pageLabel(path: string): string {
@@ -26,6 +30,19 @@ function pageLabel(path: string): string {
 export default function AdminHeader() {
   const pathname = usePathname() || "/admin";
   const title = pageLabel(pathname);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  // Global ⌘K / Ctrl+K to open command palette
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setPaletteOpen(true);
+      }
+    }
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 min-h-[56px] bg-white/90 backdrop-blur-md border-b border-zinc-200 flex items-center justify-between px-5 lg:px-10 safe-top">
@@ -43,21 +60,21 @@ export default function AdminHeader() {
 
       {/* Right: Actions */}
       <div className="flex items-center gap-5">
-        {/* Functional-looking Search */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded text-zinc-400 focus-within:ring-2 focus-within:ring-blue-500/10 focus-within:border-blue-500/50 transition-all">
+        {/* Search trigger — opens command palette */}
+        <button
+          onClick={() => setPaletteOpen(true)}
+          className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded text-zinc-400 hover:border-zinc-300 hover:bg-white transition-all"
+        >
           <Search className="size-3.5" />
-          <input
-            type="text"
-            placeholder="Search Console..."
-            className="bg-transparent border-none outline-none text-xs text-zinc-900 w-32 lg:w-40 placeholder:text-zinc-400"
-          />
-        </div>
+          <span className="text-xs text-zinc-500 w-32 lg:w-40 text-left">Search Console...</span>
+          <kbd className="hidden lg:inline-flex items-center gap-0.5 px-1 py-0.5 bg-white border border-zinc-200 rounded text-[10px] font-mono text-zinc-400">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </button>
+        <AdminCommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
 
         <div className="flex items-center gap-2">
-          <button className="relative size-9 flex items-center justify-center rounded-lg hover:bg-zinc-100 transition-colors" aria-label="Notifications">
-            <Bell className="size-5 text-zinc-600" />
-            <span className="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white" />
-          </button>
+          <AdminNotificationCenter />
 
           <a
             href="/"

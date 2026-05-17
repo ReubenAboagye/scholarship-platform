@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   BarChart3, Users, BookOpen, ListChecks, Bookmark,
   Eye, MousePointerClick, Send, CheckCircle2, ArrowDown,
@@ -122,13 +122,17 @@ function TimeSeriesChart({
   color:   string;
   height?: number;
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   const series = data.map(row => ({
     label: shortDay(row.day),
     [dataKey]: (row[dataKey] as number | undefined) ?? 0,
   }));
   return (
     <div style={{ height }}>
-      <ResponsiveContainer width="100%" height="100%">
+      {mounted && (
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
         <LineChart data={series} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
           <XAxis
@@ -163,6 +167,7 @@ function TimeSeriesChart({
           />
         </LineChart>
       </ResponsiveContainer>
+      )}
     </div>
   );
 }
@@ -338,12 +343,16 @@ const DEVICE_COLORS: Record<string, string> = {
 };
 
 function DeviceDonut({ rows }: { rows: AnalyticsBundle["devices"] }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+
   if (rows.length === 0 || rows.every(r => r.sessions === 0)) {
     return <p className="text-[11px] font-medium uppercase tracking-widest text-zinc-400 text-center py-8">No device data yet.</p>;
   }
   return (
     <div className="h-56">
-      <ResponsiveContainer width="100%" height="100%">
+      {mounted && (
+      <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
         <PieChart>
           <Pie
             data={rows}
@@ -371,6 +380,7 @@ function DeviceDonut({ rows }: { rows: AnalyticsBundle["devices"] }) {
           />
         </PieChart>
       </ResponsiveContainer>
+      )}
     </div>
   );
 }
