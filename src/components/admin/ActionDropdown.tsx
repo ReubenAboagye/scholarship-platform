@@ -19,7 +19,21 @@ interface Props {
 
 export default function ActionDropdown({ actions, align = "right" }: Props) {
   const [open, setOpen] = useState(false);
+  const [flipUp, setFlipUp] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (open && ref.current && menuRef.current) {
+      const rect = ref.current.getBoundingClientRect();
+      const menuHeight = menuRef.current.offsetHeight;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = rect.top;
+
+      // Prefer down; flip up only when not enough room below
+      setFlipUp(spaceBelow < menuHeight + 8 && spaceAbove > spaceBelow);
+    }
+  }, [open]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -44,9 +58,11 @@ export default function ActionDropdown({ actions, align = "right" }: Props) {
 
       {open && (
         <div
+          ref={menuRef}
           className={cn(
-            "absolute z-50 mt-1 w-44 bg-white border border-zinc-200 rounded-lg shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100",
-            align === "right" ? "right-0" : "left-0"
+            "absolute z-50 w-44 bg-white border border-zinc-200 rounded-lg shadow-lg py-1 animate-in fade-in zoom-in-95 duration-100",
+            align === "right" ? "right-0" : "left-0",
+            flipUp ? "bottom-full mb-1" : "mt-1"
           )}
         >
           {actions.map((action, i) => (
