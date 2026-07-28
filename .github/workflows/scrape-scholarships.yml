@@ -2,7 +2,7 @@ name: Scrape scholarships
 
 on:
   schedule:
-    - cron: "0 3 * * 1" # Every Monday 03:00 UTC — weekly, matches source update cadence
+    - cron: "0 3 * * 1,3,5" # Monday, Wednesday, Friday 03:00 UTC
   workflow_dispatch: {} # allows manual trigger from the Actions tab
 
 jobs:
