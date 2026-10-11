@@ -52,6 +52,7 @@ Open `http://localhost:3000` (or your configured port)
 | `pnpm build` | Production build |
 | `pnpm start` | Run production build locally |
 | `pnpm tsx scripts/generate-embeddings.ts` | Generate AI vectors (once) |
+| `pnpm scrape:scholarships` | Run the scholarship ingestion pipeline locally |
 
 ---
 
@@ -90,6 +91,15 @@ scripts/                  <- generate-embeddings.ts (one-time setup)
 3. Add all .env.local values to Netlify environment variables
 4. Update Supabase Auth > Site URL to your live domain
 5. Deploy
+
+### Automated scholarship ingestion
+
+Published Netlify deploys run `scholarship-ingestion-schedule` every day at 02:00 UTC.
+It securely dispatches a background function, which fetches the configured trusted
+sources, extracts scholarship data, and upserts it into Supabase. Set
+`SCHOLARSHIP_INGESTION_SECRET` in Netlify to a random 32-byte value alongside the
+existing Supabase and OpenRouter server-side environment variables. The background
+function can be started manually from the Netlify Functions dashboard when needed.
 
 ---
 
