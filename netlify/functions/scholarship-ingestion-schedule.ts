@@ -1,9 +1,17 @@
 export default async function handler() {
-  const siteUrl = process.env.URL;
+  const siteUrl =
+    process.env.NEXT_PUBLIC_APP_URL ??
+    process.env.DEPLOY_PRIME_URL ??
+    process.env.URL;
   const triggerSecret = process.env.SCHOLARSHIP_INGESTION_SECRET;
 
-  if (!siteUrl || !triggerSecret) {
-    console.error("Scholarship ingestion scheduler is missing URL or SCHOLARSHIP_INGESTION_SECRET");
+  if (!siteUrl) {
+    console.error("Scholarship ingestion scheduler is missing NEXT_PUBLIC_APP_URL");
+    return new Response(null, { status: 500 });
+  }
+
+  if (!triggerSecret) {
+    console.error("Scholarship ingestion scheduler is missing SCHOLARSHIP_INGESTION_SECRET");
     return new Response(null, { status: 500 });
   }
 
