@@ -3,7 +3,6 @@ import { createAdminClient } from "@/lib/supabase/server";
 import { Resend } from "resend";
 import { buildDigestEmail } from "@/emails/digest";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL    = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 const APP_DOMAIN = new URL(APP_URL).hostname;
 const FROM       = `ScholarMatch <digest@${APP_DOMAIN}>`;
@@ -14,6 +13,13 @@ export async function POST(req: NextRequest) {
   if (secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
   }
+
+  const resendApiKey = process.env.RESEND_API_KEY;
+  if (!resendApiKey) {
+    console.error("RESEND_API_KEY is not configured");
+    return NextResponse.json({ error: "Email service is unavailable" }, { status: 503 });
+  }
+  const resend = new Resend(resendApiKey);
 
   const supabase = createAdminClient();
 

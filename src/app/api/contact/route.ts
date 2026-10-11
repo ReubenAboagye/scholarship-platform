@@ -6,7 +6,6 @@ import { getClientIp } from "@/lib/auth/ip";
 import { rateLimitByIp, rateLimitByKey } from "@/lib/rate-limit/server";
 import { readJsonBody } from "@/lib/server/body-size";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://scholarbridgeai.netlify.app";
 const FROM = "ScholarMatch <onboarding@resend.dev>";
 const TO = process.env.CONTACT_EMAIL ?? "reubenaboagye23@gmail.com";
@@ -56,6 +55,13 @@ export async function POST(req: NextRequest) {
 
     if (!ipLimit.allowed) return tooManyRequests(ipLimit.reset);
     if (!emailLimit.allowed) return tooManyRequests(emailLimit.reset);
+
+    const resendApiKey = process.env.RESEND_API_KEY;
+    if (!resendApiKey) {
+      console.error("RESEND_API_KEY is not configured");
+      return NextResponse.json({ error: "Email service is unavailable. Please try again later." }, { status: 503 });
+    }
+    const resend = new Resend(resendApiKey);
 
     // Build and send email
     const { subject: emailSubject, html } = buildContactEmail({ name, email, subject, message });

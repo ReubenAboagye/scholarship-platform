@@ -8,7 +8,7 @@ export default function DashboardNotFound() {
       </div>
       <h2 className="text-2xl font-semibold text-zinc-900 mb-2">Page Not Found</h2>
       <p className="text-zinc-500 max-w-md mx-auto mb-8">
-        The dashboard page you're looking for doesn't exist or has been moved.
+        The dashboard page you&apos;re looking for doesn&apos;t exist or has been moved.
       </p>
       <a
         href="/dashboard"
